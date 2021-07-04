@@ -20,7 +20,7 @@ const CustomCard = ({ title, meals }) => {
         </div>
         <CardContent>
           <Grid container>
-            {meals.map((meal) => (
+            {meals && meals.length && meals.map((meal) => (
               <>
                 <Grid item xs="12" sm="2">
                   {meal.title}

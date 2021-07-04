@@ -14,13 +14,13 @@ import {
 import AddIcon from "@material-ui/icons/Add";
 import CustomCard from "../../../common/Card/Card";
 
-const Plan = ({ planName, details }) => {
+const Plan = ({ planName, schedule }) => {
   const [spacing, setSpacing] = React.useState(3);
   const classes = useStyles();
   return (
     <Grid item xs={12}>
       <Grid container justify="center" direction="column" spacing={spacing}>
-        {details.map((day) => (
+        {schedule.map((day) => (
           <Grid key={day.title} item>
             <CustomCard
               title={day.title}

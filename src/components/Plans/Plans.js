@@ -1,4 +1,5 @@
 import React, { useState, useEffec } from "react";
+import { connect } from 'react-redux';
 import { useHistory } from "react-router-dom";
 import useStyles from "./styles";
 import CustomCard from "../../common/Card/Card";
@@ -15,10 +16,14 @@ import {
 import AddIcon from "@material-ui/icons/Add";
 import Plan from "./Plan/Plan";
 
+
+import { onSelectPlan } from '../../actions/planActions';
+
 const plans = [
   {
     name: "plan1",
-    details: [
+    id: 'plan1',
+    schedule: [
       {
         title: "Monday",
         meals: [
@@ -82,10 +87,11 @@ const plans = [
   },
   {
     name: "plan2",
-    details: [
+    id: 'plan2',
+    schedule: [
       {
         title: "Tuesday",
-        meal: [
+        meals: [
           {
             title: "Breakfast",
             dishes: [
@@ -110,13 +116,21 @@ const plans = [
   },
 ];
 
-const Plans = () => {
+const Plans = ({ selectedPlan, onSelectPlan }) => {
   const [spacing, setSpacing] = React.useState(3);
   const classes = useStyles();
   const history = useHistory();
   const handleAddNewPlan = () => {
     history.push("/plans/new");
   };
+
+  const onSelectedPlanChange = (id) => {
+    const newSelectedPlan = plans.find(plan => plan.id === id); // fetch plan by id
+    console.log(newSelectedPlan);
+    if (newSelectedPlan) {
+      onSelectPlan(newSelectedPlan);
+    }
+  }
 
   return (
     <Container maxWidth="lg" className={classes.root}>
@@ -125,10 +139,11 @@ const Plans = () => {
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
-          value={plans[0].name}
+          value={selectedPlan.id}
+          onChange={e => onSelectedPlanChange(e.target.value)}
         >
           {plans.map((plan) => (
-            <MenuItem key={plan.name} value={plan.name}>{plan.name}</MenuItem>
+            <MenuItem key={plan.id} value={plan.id}>{plan.name}</MenuItem>
           ))}
         </Select>
       </FormControl>
@@ -143,13 +158,22 @@ const Plans = () => {
         New Plan
       </Button>
       
-      <Plan 
-        planName={plans[0].name}
-        details={plans[0].details}
+      {selectedPlan && selectedPlan.id ? <Plan 
+        planName={selectedPlan.name}
+        schedule={selectedPlan.schedule}
       />
+      : <h2>Please select a Plan.</h2>}
 
     </Container>
   );
 };
 
-export default Plans;
+const mapStateToProps = ({ plans }) => ({
+  selectedPlan: plans.selectedPlan,
+});
+
+const mapDispatchToProps = dispatch => ({
+  onSelectPlan: id => dispatch(onSelectPlan(id)), 
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Plans);
