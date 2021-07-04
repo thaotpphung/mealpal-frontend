@@ -1,7 +1,13 @@
 import { makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles((theme) => ({
+  root: {
+  },
+  cardContainer: {
+  },
   card: {
-    marginBottom: theme.spacing(6)
+  },
+  button: {
+    float: 'right',
   }
 }));

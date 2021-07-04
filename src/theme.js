@@ -6,9 +6,15 @@ export const theme = createMuiTheme({
   palette: {
     primary: {
       main: cyan[400],
+      light: "",
+      dark: "",
+      contrastText: ""
     },
     secondary: {
       main: blue[200],
+      light: "",
+      dark: "",
+      contrastText: ""
     }
   },
   typography: {

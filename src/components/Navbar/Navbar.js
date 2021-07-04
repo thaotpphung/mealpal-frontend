@@ -60,7 +60,8 @@ const Navbar = () => {
             </Link>
           </nav>
           <Button
-            href="#"
+            component={RouterLink}
+            to="/auth"
             color="primary"
             variant="outlined"
             className={classes.link}

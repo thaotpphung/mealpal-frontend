@@ -2,16 +2,21 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    marginBottom: theme.spacing(7)
   },
   title: {
     padding: theme.spacing(2),
     borderBottom: theme.palette.divider,
     borderBottomStyle: 'solid',
-    borderBottomWidth: 'thin'
+    borderBottomWidth: 'thin',
+  },
+  icon : {
+    float: 'right',
+    '&:hover': {
+      cursor: 'pointer'
+    }
   },
   list: {
-    width: '500px'
+    width: '100%'
   },
   item: {
     marginBottom: theme.spacing(2),
@@ -20,5 +25,6 @@ const useStyles = makeStyles((theme) => ({
     borderBottomWidth: 'thin'
   }
 }));
+
 
 export default useStyles;
