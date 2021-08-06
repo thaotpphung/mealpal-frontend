@@ -4,18 +4,8 @@ import 'lato-font';
 
 export const theme = createMuiTheme({
   palette: {
-    primary: {
-      main: cyan[400],
-      light: "",
-      dark: "",
-      contrastText: ""
-    },
-    secondary: {
-      main: blue[200],
-      light: "",
-      dark: "",
-      contrastText: ""
-    }
+    primary: cyan,
+    secondary: blue
   },
   typography: {
     fontFamily: [
@@ -31,6 +21,10 @@ export const theme = createMuiTheme({
       '"Segoe UI Emoji"',
       '"Segoe UI Symbol"',
     ].join(','),
-    fontSize: 15
+    fontSize: 15,
+    fontWeightLight: 300,
+    fontWeightRegular: 400,
+    fontWeightMedium: 700,
+    fontWeightBold: 900
   },
 });

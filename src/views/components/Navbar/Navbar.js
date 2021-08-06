@@ -25,9 +25,19 @@ const Navbar = () => {
             noWrap
             className={classes.toolbarTitle}
           >
-            MealShare
+            MealPal
           </Typography>
           <nav>
+            <Link
+              variant="button"
+              component={RouterLink}
+              color="textPrimary"
+              exact to="/"
+              className={classes.link}
+              activeClassName={classes.activeClassName}
+            >
+              Home
+            </Link>
             <Link
               variant="button"
               component={RouterLink}

@@ -8,11 +8,9 @@ import { CssBaseline } from "@material-ui/core";
 import { theme } from "./theme";
 import { ThemeProvider } from "@material-ui/core/styles";
 
-import Navbar from "./components/Navbar/Navbar";
-import Plans from "./components/Plans/Plans";
-import NewPlan from "./components/Plans/NewPlan/NewPlan";
-import Auth from "./components/Auth/Auth";
-
+import Navbar from "../components/Navbar/Navbar";
+import PlanPage from "../pages/PlanPage/PlanPage";
+import HomePage from "../pages/HomePage/HomePage";
 
 function App() {
   const classes = useStyles();
@@ -24,9 +22,8 @@ function App() {
         <Navbar />
         <Container className={classes.root}>
           <Switch>
-            <Route path="/plans" exact component={Plans} />
-            <Route path="/plans/new" exact component={NewPlan} />
-            <Route path="/auth" exact component={Auth} />
+            <Route exact path="/" component={HomePage} />
+            <Route path="/plans" component={PlanPage} />
           </Switch>
         </Container>
       </BrowserRouter>
