@@ -30,8 +30,8 @@ const register = (formData, router) => async (dispatch) => {
 }
 
 const logout = () => (dispatch) => {
+  dispatch({ type: USER_LOGOUT, payload: "Successfully logged out!" })
   localStorage.removeItem('currentUser');
-  dispatch({ type: USER_LOGOUT })
 }
 
 export { signin, register, logout };

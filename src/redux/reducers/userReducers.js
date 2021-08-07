@@ -9,7 +9,7 @@ const userSigninReducer = (state = {}, action) => {
     case USER_SIGNIN_FAIL:
       return { loading: false, error: action.payload };
     case USER_LOGOUT:
-      return {};
+      return { success: action.payload};
     default: return state;
   }
 }
