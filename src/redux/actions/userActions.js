@@ -14,7 +14,7 @@ const signin = (formData, router) => async (dispatch) => {
     dispatch({ type: USER_SIGNIN_SUCCESS, payload: data });
     localStorage.setItem('currentUser', JSON.stringify(data));
   } catch (error) {
-    dispatch({ type: USER_SIGNIN_FAIL, payload: error.message });
+    dispatch({ type: USER_SIGNIN_FAIL, payload: error.response.data.message });
   }
 }
 
@@ -25,7 +25,7 @@ const register = (formData, router) => async (dispatch) => {
     dispatch({ type: USER_REGISTER_SUCCESS, payload: data });
     localStorage.setItem('currentUser', JSON.stringify(data));
   } catch (error) {
-    dispatch({ type: USER_REGISTER_FAIL, payload: error.message });
+    dispatch({ type: USER_REGISTER_FAIL, payload: error.response.data.message });
   }
 }
 
