@@ -7,4 +7,11 @@ export default makeStyles((theme) => ({
     //   padding: theme.spacing(9),
     // },
   },
+  '@global': {
+    ul: {
+      margin: 0,
+      padding: 0,
+      listStyle: 'none',
+    },
+  },
 }));

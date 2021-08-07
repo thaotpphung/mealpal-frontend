@@ -1,5 +1,0 @@
-export const PLAN_LIST_REQUEST = 'PLAN_LIST_REQUEST';
-export const PLAN_LIST_SUCCESS = 'PLAN_LIST_SUCCESS';
-export const PLAN_LIST_FAIL = 'PLAN_LIST_FAIL';
-
-export const PLAN_SELECT = 'PLAN_SELECT'

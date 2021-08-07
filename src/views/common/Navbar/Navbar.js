@@ -1,14 +1,26 @@
 import React from "react";
-import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import Link from '@material-ui/core/Link';
+import AppBar from "@material-ui/core/AppBar";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+import Link from "@material-ui/core/Link";
 import { NavLink as RouterLink } from "react-router-dom";
 import useStyles from "./styles";
-import Toolbar from '@material-ui/core/Toolbar';
+import Toolbar from "@material-ui/core/Toolbar";
+import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../../redux/actions/userActions";
 
 const Navbar = () => {
   const classes = useStyles();
+  const userSignin = useSelector((state) => state.userSignin);
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const { loading, currentUser, error } = userSignin;
+
+  const handleLogout = () => {
+    dispatch(logout());
+    history.push("/auth");
+  };
 
   return (
     <>
@@ -32,7 +44,8 @@ const Navbar = () => {
               variant="button"
               component={RouterLink}
               color="textPrimary"
-              exact to="/"
+              exact
+              to="/"
               className={classes.link}
               activeClassName={classes.activeClassName}
             >
@@ -69,15 +82,28 @@ const Navbar = () => {
               Cart
             </Link>
           </nav>
-          <Button
-            component={RouterLink}
-            to="/auth"
-            color="primary"
-            variant="outlined"
-            className={classes.link}
-          >
-            Login
-          </Button>
+          {currentUser ? (
+            <Button
+              component={RouterLink}
+              to="/auth"
+              color="primary"
+              variant="outlined"
+              className={classes.link}
+              onClick={handleLogout}
+            >
+              Logout
+            </Button>
+          ) : (
+            <Button
+              component={RouterLink}
+              to="/auth"
+              color="primary"
+              variant="outlined"
+              className={classes.link}
+            >
+              Log In
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
     </>
