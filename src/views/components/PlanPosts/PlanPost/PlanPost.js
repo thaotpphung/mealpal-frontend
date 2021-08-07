@@ -21,7 +21,7 @@ import moment from "moment";
 
 import useStyles from "./styles";
 
-const Plan = ({ plan, setCurrentId }) => {
+const PlanPost = ({ plan, setCurrentId }) => {
   const dispatch = useDispatch();
   const classes = useStyles();
 
@@ -76,4 +76,4 @@ const Plan = ({ plan, setCurrentId }) => {
   );
 };
 
-export default Plan;
+export default PlanPost;

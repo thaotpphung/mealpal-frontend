@@ -4,7 +4,7 @@ import useStyles from "./styles";
 import { Grid, Paper, Avatar, IconButton } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
-import Plans from "../../components/Plans/Plans";
+import PlanPosts from "../../components/PlanPosts/PlanPosts";
 import FriendList from "../../components/FriendList/FriendList";
 
 const Home = () => {
@@ -14,7 +14,7 @@ const Home = () => {
   return (
     <Grid container justify="space-between" alignItems="stretch" spacing={3}>
       <Grid item xs={12} sm={8}>
-        <Plans />
+        <PlanPosts />
       </Grid>
       <Grid item xs={12} sm={4}>
         <FriendList />

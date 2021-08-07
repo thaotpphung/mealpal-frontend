@@ -10,16 +10,31 @@ const WeekList = () => {
     <List
       data={[
         {
-          userName: "andy123",
-          link: "",
+          icon: <Avatar>A</Avatar>,
+          content: "andy123",
+          action: (
+            <IconButton aria-label="settings">
+              <MoreHorizIcon />
+            </IconButton>
+          ),
         },
         {
-          userName: "andy123",
-          link: "",
+          icon: <Avatar>A</Avatar>,
+          content: "andy123",
+          action: (
+            <IconButton aria-label="settings">
+              <MoreHorizIcon />
+            </IconButton>
+          ),
         },
         {
-          userName: "andy123",
-          link: "",
+          icon: <Avatar>A</Avatar>,
+          content: "andy123",
+          action: (
+            <IconButton aria-label="settings">
+              <MoreHorizIcon />
+            </IconButton>
+          ),
         },
       ]}
       title={"Friend List"}
@@ -28,7 +43,6 @@ const WeekList = () => {
           <MoreHorizIcon />
         </IconButton>
       }
-      type="friend"
     />
   );
 };

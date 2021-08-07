@@ -1,8 +1,7 @@
 import React from 'react';
 import { Grid, CircularProgress } from '@material-ui/core';
 import { useSelector } from 'react-redux';
-
-import Plan from './Plan/Plan';
+import PlanPost from './PlanPost/PlanPost';
 import useStyles from './styles';
 
 const plans = [
@@ -36,7 +35,7 @@ const plans = [
   },
 ]
 
-const Plans = () => {
+const PlanPosts = () => {
   const classes = useStyles();
 
   return (
@@ -44,7 +43,7 @@ const Plans = () => {
       <Grid className={classes.container} container alignItems="stretch" spacing={3}>
         {plans.map((plan) => (
           <Grid key={plan._id} item xs={12} sm={6} md={6}>
-            <Plan plan={plan}/>
+            <PlanPost plan={plan}/>
           </Grid>
         ))}
       </Grid>
@@ -52,5 +51,5 @@ const Plans = () => {
   );
 };
 
-export default Plans;
+export default PlanPosts;
 
