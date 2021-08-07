@@ -5,6 +5,7 @@ const useStyles = makeStyles((theme) => ({
   },
   header: {
     padding: theme.spacing(0, 2),
+    height: "50px",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",

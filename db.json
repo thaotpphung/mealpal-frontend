@@ -138,26 +138,3 @@
     }
   ]
 }
-
-
-const Plan = {
-  id: 'number',
-  name: 'string',
-  schedule: Schedule[];
-}
-
-const Schedule = {
-  id: 'number',
-  name: 'string',
-  meals: Meal[];
-}
-
-const Plan_Schedule = {
-  id: 'number',
-  planId: 'number',
-  scheduleId: 'number'
-}
-
-const Meal = {
-  id: 'number',
-}
