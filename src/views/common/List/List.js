@@ -8,10 +8,6 @@ const List = ({
   title,
   action,
   data,
-  type,
-  itemAvatar,
-  itemContent,
-  itemAction,
 }) => {
   const classes = useStyles();
 
@@ -26,11 +22,9 @@ const List = ({
           {data.map((item, idx) => {
             return (
               <li key={`item-${idx}`} className={classes.item}>
-                <div className={classes.itemAvatar}>
-                  <Avatar>{item.userName.charAt(0).toUpperCase()}</Avatar>
-                </div>
-                <div className={classes.itemContent}>{item.userName}</div>
-                <div className={classes.itemAction}>{itemAction}</div>
+                <div className={classes.itemIcon}>{item.icon}</div>
+                <div className={classes.itemContent}>{item.content}</div>
+                <div className={classes.itemAction}>{item.action}</div>
               </li>
             );
           })}

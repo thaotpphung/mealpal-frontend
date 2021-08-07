@@ -1,8 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-  },
+export default makeStyles((theme) => ({
   header: {
     padding: theme.spacing(0, 2),
     height: "50px",
@@ -14,11 +12,13 @@ const useStyles = makeStyles((theme) => ({
   list: {
     listStyle: "none",
   },
-  item: {
-    display: "flex",
-    alignItems: "center",
-    padding: theme.spacing(1, 2),
-    // border: `1px solid ${theme.palette.divider}`
+  content: {
+    display: "grid",
+    gridTemplateColumns: "2fr 6fr",
+    columnGap: theme.spacing(2),
+    '& div': {
+      padding: theme.spacing(2)
+    }
   },
   itemAvatar: {
     flex: "0 0 auto",
@@ -32,7 +32,10 @@ const useStyles = makeStyles((theme) => ({
     alignSelf: "flex-start",
     marginTop: theme.spacing(-1),
     marginRight: theme.spacing(-1)
+  },
+  menu: {
+    '& li': {
+      paddingBottom: theme.spacing(0.5),
+    }
   }
 }));
-
-export default useStyles;
