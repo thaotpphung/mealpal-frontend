@@ -55,7 +55,7 @@ const Navbar = () => {
               variant="button"
               component={RouterLink}
               color="textPrimary"
-              to="/plans"
+              to="/plans/:planId/weeks/:weekId"
               className={classes.link}
               activeClassName={classes.activeClassName}
             >

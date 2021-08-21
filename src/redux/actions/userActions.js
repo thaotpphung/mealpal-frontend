@@ -8,6 +8,7 @@ import {
 import * as api from '../../api/index';
 
 const signin = (formData, router) => async (dispatch) => {
+  console.log("form data sign in", formData);
   dispatch({ type: USER_SIGNIN_REQUEST, payload: formData});
   try {
     const { data } = await api.signin(formData);

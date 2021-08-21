@@ -1,6 +1,18 @@
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles((theme) => ({
+  formRow: {
+    display: "grid",
+    gridTemplateColumns: "1fr 5fr",
+    margin: theme.spacing(3, 0),
+    alignItems: "center",
+  },
+  fieldsContainer: {
+    '& > button': {
+      marginLeft: theme.spacing(7)
+    },
+    verticalAlign: "middle"
+  },
   root: {
     marginBottom: theme.spacing(3)
   },

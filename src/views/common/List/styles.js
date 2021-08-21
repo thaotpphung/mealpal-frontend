@@ -15,23 +15,29 @@ const useStyles = makeStyles((theme) => ({
     listStyle: "none",
   },
   item: {
+    height: "55px",
     display: "flex",
     alignItems: "center",
-    padding: theme.spacing(1, 2),
-    // border: `1px solid ${theme.palette.divider}`
+    padding: theme.spacing(2),
+    cursor: "pointer",
+    '&hover': {
+      backgroundColor: theme.palette.grey[200]
+    }
   },
   itemIcon: {
     flex: "0 0 auto",
-    marginRight: theme.spacing(3)
+    marginRight: theme.spacing(3),
   },
   itemContent: {
     flex: "1 1 auto",
   },
   itemAction: {
     flex: "0 0 auto",
-    alignSelf: "flex-start",
     marginTop: theme.spacing(-1),
     marginRight: theme.spacing(-1)
+  },
+  selected: {
+    backgroundColor: theme.palette.grey[200]
   }
 }));
 

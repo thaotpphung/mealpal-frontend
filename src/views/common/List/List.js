@@ -8,6 +8,8 @@ const List = ({
   title,
   action,
   data,
+  style,
+  handleClickItem = () => {},
 }) => {
   const classes = useStyles();
 
@@ -21,8 +23,12 @@ const List = ({
         <ul className={classes.list}>
           {data.map((item, idx) => {
             return (
-              <li key={`item-${idx}`} className={classes.item}>
-                <div className={classes.itemIcon}>{item.icon}</div>
+              <li key={`item-${idx}`} 
+                className={`${classes.item} ${item.isSelected ? classes.selected : null}`} 
+                style={style} 
+                onClick={handleClickItem}
+              >
+                {item.icon && <div className={classes.itemIcon}>{item.icon}</div>}
                 <div className={classes.itemContent}>{item.content}</div>
                 <div className={classes.itemAction}>{item.action}</div>
               </li>

@@ -1,24 +1,54 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import useStyles from "./styles";
-import { Grid } from "@material-ui/core";
+import { Grid, Paper, Typography, Button , Chip} from "@material-ui/core";
+import Menu from "../../components/Menu/Menu";
+import StarIcon from "@material-ui/icons/Star";
 import PlanList from "../../components/PlanList/PlanList";
 import WeekList from "../../components/WeekList/WeekList";
-import Menu from "../../components/Menu/Menu";
+import { plans, currentPlan, weeks, currentWeek, currentWeekDetails } from "../../../constants/data";
 
 const Plans = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+
+  // useEffect(() => {
+  //   return () => {};
+  // }, [])
+
+  const handleClickSetDefault = (e) => {
+    console.log("click set default")
+  }
+
   return (
-    <Grid container justify="space-between" alignItems="stretch" spacing={3}>
-      <Grid item xs={12} sm={3}>
-        <PlanList />
+    <div>
+      <Paper className={classes.header}>
+        <Chip
+          label={<Typography>Plan name</Typography>}
+        />
+        <Chip
+          label={<Typography>Week 1</Typography>}
+        />
+        <Button
+          variant="outlined"
+          color="primary"
+          className={classes.button}
+          startIcon={<StarIcon />}
+          onClick={handleClickSetDefault}
+        >Set Default</Button>
+      </Paper>
+      <Grid container justify="space-between" alignItems="stretch" spacing={3}>
+        <Grid item xs={12} sm={3}>
+          <PlanList plans={plans} currentPlan={currentPlan}/>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <Menu week={currentWeekDetails}/>
+        </Grid>
+        <Grid item xs={12} sm={3}>
+          <WeekList weeks={weeks} currentWeek={currentWeek}/>
+        </Grid>
       </Grid>
-      <Grid item xs={12} sm={6}>
-        <Menu />
-      </Grid>
-      <Grid item xs={12} sm={3}>
-        <WeekList />
-      </Grid>
-    </Grid>
+    </div>
   );
 };
 

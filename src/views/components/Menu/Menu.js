@@ -1,38 +1,52 @@
 import React, { useState, useEffect } from "react";
 import useStyles from "./styles";
-import { Grid, IconButton, Paper } from "@material-ui/core";
-import List from "../../common/List/List";
-import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
+import { IconButton, Paper} from "@material-ui/core";
+import EditIcon from "@material-ui/icons/Edit";
 import RestaurantMenuIcon from "@material-ui/icons/RestaurantMenu";
 
-const Menu = () => {
+const Menu = ({week}) => {
   const classes = useStyles();
+  
+  const handleClickEditMeal = (e) => {
+    console.log("click edit meal");
+  };
 
   return (
-    <Paper className={classes.root}>
-      <div className={classes.header}>
-        <div>title</div>
-        <div className={classes.action}>
-          <MoreHorizIcon />
-        </div>
-      </div>
-      <div className={classes.content}>
-        <div className={classes.itemAvatar}>Breakfast</div>
-        <div className={classes.itemContent}>
-          <ul className={classes.menu}>
-            <li>
-              <RestaurantMenuIcon /> veggies
-            </li>
-            <li>
-              <RestaurantMenuIcon /> shrimp asparagus
-            </li>
-            <li>
-              <RestaurantMenuIcon /> veggies
-            </li>
-          </ul>
-        </div>
-      </div>
-    </Paper>
+    <div>
+      {week.days.map((day, dayIdx) => {
+        return (
+          <Paper className={classes.root}>
+            <div className={classes.header}>
+              <div>{day.dayName}</div>
+              <IconButton className={classes.action}>
+                <EditIcon onClick={handleClickEditMeal} />
+              </IconButton>
+            </div>
+            <div className={classes.content}>
+              {day.meals.map((meal, mealIdx) => {
+                return (
+                  <div className={classes.menuMeal}>
+                    <div className={classes.menuMealTitle}>{meal.mealName}</div>
+                    <div className={classes.menuMealContent}>
+                      <ul className={classes.menu}>
+                        {meal.food.map((recipe, recipeIdx) => {
+                          return (
+                            <li>
+                              <RestaurantMenuIcon />
+                              <span>{recipe.recipeName}</span>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </Paper>
+        );
+      })}
+    </div>
   );
 };
 

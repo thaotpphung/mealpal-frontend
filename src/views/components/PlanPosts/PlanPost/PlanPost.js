@@ -47,18 +47,18 @@ const PlanPost = ({ plan, setCurrentId }) => {
             <MoreVertIcon />
           </IconButton>
         }
-        title="user2131"
-        subheader="September 14, 2016"
+        title="{plan.fullname}"
+        subheader="plan.createdTime"
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="h2">
-          KETO MEAL PLAN
+          plan.planName
         </Typography>
         <Typography variant="body2" color="textSecondary" component="p">
-          This meal plan has a variety of ingredients and very healthy
+          plan.planDescription
         </Typography>
         <div className={classes.chips}>
-          <Chip size="medium" label="Keto" />
+          <Chip size="medium" label="plan.category" />
           <Chip size="medium" label="vegan" />
           <Chip size="medium" label="vegetarian" />
           <Chip size="medium" label="vegan" />
