@@ -9,8 +9,8 @@ import FriendList from "../../components/FriendList/FriendList";
 
 const Home = () => {
   const classes = useStyles();
-  const userSignin = useSelector(state => state.userSignin);
-  const { success } = userSignin;
+  const user = useSelector(state => state.user);
+  const { success } = user;
   return (
     <Grid container justify="space-between" alignItems="stretch" spacing={3}>
       <Grid item xs={12} sm={8}>

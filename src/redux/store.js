@@ -1,31 +1,21 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
-import {
-  userSigninReducer,
-  userRegisterReducer,
-} from './reducers/userReducers';
-import {
-  planListReducer,
-  planDetailsReducer,
-  planCreateReducer,
-  planDeleteReducer,
-  planUpdateReducer,
-} from './reducers/planReducers';
+import { userReducer } from './reducers/userReducers';
+import { planListReducer } from './reducers/planReducers';
+import { weekListReducer } from './reducers/weekReducers';
 
-const currentUser = localStorage.getItem("currentUser") || null;
+const currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
+const currentPlan = localStorage.getItem("currentPlan") || null;
+const currentWeek = localStorage.getItem("currentWeek") || null;
 
 const initialState = {
-  userSignin: { currentUser }
+  user: { currentUser, currentPlan, currentWeek}
 };
 
 const rootReducer = combineReducers({
-  userSignin: userSigninReducer,
-  userRegister: userRegisterReducer,
+  user: userReducer,
   planList: planListReducer,
-  planDetails: planDetailsReducer,
-  planCreate: planCreateReducer,
-  planDelete: planDeleteReducer,
-  planUpdate: planUpdateReducer
+  weekList: weekListReducer
 });
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

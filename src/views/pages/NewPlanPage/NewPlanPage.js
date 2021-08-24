@@ -28,8 +28,7 @@ const NewPlanPage = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
-  const planCreate = useSelector(state => state.planCreate);
-  const { loading, success, error, plan } = planCreate;
+  const { loading, success, error, plans } = useSelector(state => state.planList);
 
   const [initialPlan, setInitialPlan] = useState({
     planName: 'test',
@@ -41,7 +40,7 @@ const NewPlanPage = () => {
 
   const handleSubmitInitialPlan = async (e) => {
     e.preventDefault();
-    dispatch(createPlan(initialPlan));
+    dispatch(createPlan(initialPlan, history));
   };
 
   const handleChange = (event) => {
@@ -49,15 +48,6 @@ const NewPlanPage = () => {
     let formattedValue = name === 'planTags' ? value.split(',') : value;
     setInitialPlan({ ...initialPlan, [name]: formattedValue });
   };
-
-  useEffect(() => {
-    if (success) {
-      // console.log("success", plan._id);
-      history.push("/plans/1/weeks/1");
-    }
-
-  }, [success]);
-
 
   return (loading ? <Spinner/> : error ? <div>{error}</div> :
     <div>
@@ -112,7 +102,7 @@ const NewPlanPage = () => {
 
       <hr />
 
-      <Typography variant="h4">Weeks</Typography>
+      {/* <Typography variant="h4">Weeks</Typography>
 
       <div className={classes.formRow}>
         <Typography>Week Name</Typography>
@@ -155,7 +145,9 @@ const NewPlanPage = () => {
             </div>
           </div>
         </div>
-      </Paper>
+      </Paper> */}
+
+      
     </div>
   );
 };

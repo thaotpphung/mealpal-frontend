@@ -29,8 +29,8 @@ const initialState = {
 const AuthPage = () => {
   const [form, setForm] = useState(initialState);
   const [isRegister, setIsRegister] = useState(false);
-  const userSignin = useSelector(state => state.userSignin);
-  const { loading, currentUser, error } = userSignin;
+  const user = useSelector(state => state.user);
+  const { loading, currentUser, error } = user;
   const dispatch = useDispatch();
   const history = useHistory();
   const classes = useStyles();

@@ -7,17 +7,17 @@ import StarIcon from "@material-ui/icons/Star";
 import PlanList from "../../components/PlanList/PlanList";
 import WeekList from "../../components/WeekList/WeekList";
 import { plans, currentPlan, weeks, currentWeek, currentWeekDetails } from "../../../constants/data";
+import { setCurrentPlan } from "../../../redux/actions/planActions";
 
 const Plans = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   return () => {};
-  // }, [])
+  useEffect(() => {
+    
+  })
 
-  const handleClickSetDefault = (e) => {
-    console.log("click set default")
+  const handleClickSetCurrent = (e) => {
   }
 
   return (
@@ -34,8 +34,8 @@ const Plans = () => {
           color="primary"
           className={classes.button}
           startIcon={<StarIcon />}
-          onClick={handleClickSetDefault}
-        >Set Default</Button>
+          onClick={handleClickSetCurrent}
+        >Set Current</Button>
       </Paper>
       <Grid container justify="space-between" alignItems="stretch" spacing={3}>
         <Grid item xs={12} sm={3}>

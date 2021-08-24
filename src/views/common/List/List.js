@@ -9,7 +9,7 @@ const List = ({
   action,
   data,
   style,
-  handleClickItem = () => {},
+  handleClickItem,
 }) => {
   const classes = useStyles();
 
@@ -26,7 +26,7 @@ const List = ({
               <li key={`item-${idx}`} 
                 className={`${classes.item} ${item.isSelected ? classes.selected : null}`} 
                 style={style} 
-                onClick={handleClickItem}
+                onClick={(e) => handleClickItem(e, item.id)}
               >
                 {item.icon && <div className={classes.itemIcon}>{item.icon}</div>}
                 <div className={classes.itemContent}>{item.content}</div>

@@ -12,10 +12,10 @@ import { logout } from "../../../redux/actions/userActions";
 
 const Navbar = () => {
   const classes = useStyles();
-  const userSignin = useSelector((state) => state.userSignin);
+  const user = useSelector((state) => state.user);
+  const { loading, currentUser, error } = user;
   const history = useHistory();
   const dispatch = useDispatch();
-  const { loading, currentUser, error } = userSignin;
 
   const handleLogout = () => {
     dispatch(logout());

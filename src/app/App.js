@@ -15,8 +15,6 @@ import HomePage from "../views/pages/HomePage/HomePage";
 import AuthPage from "../views/pages/AuthPage/AuthPage";
 
 function App() {
-  const userSignin = useSelector((state) => state.userSignin);
-  const { currentUser } = userSignin;
   const classes = useStyles();
 
   return (
@@ -24,14 +22,15 @@ function App() {
       <CssBaseline />
       <BrowserRouter>
         <Navbar />
-        <Container className={classes.root}>
+        <div className={classes.root}>
           <Switch>
             <Route path="/" exact component={HomePage}/>
             <Route path="/plans/:planId/weeks/:weekId" exact component={PlanPage}/>
             <Route path="/plans/new" exact component={NewPlanPage}/>
+            <Route path="/plans/new" exact component={NewPlanPage}/>
             <Route path="/auth" exact component={AuthPage}/> 
           </Switch>
-        </Container>
+        </div>
       </BrowserRouter>
     </ThemeProvider>
   );
