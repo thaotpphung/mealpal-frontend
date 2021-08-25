@@ -11,6 +11,7 @@ API.interceptors.request.use((req) => {
 
 export const signin = (formData) => API.post('api/users/signin', formData);
 export const register = (formData) => API.post('api/users/register', formData);
+export const setCurrentPlan = (planId, weekId) => API.put('api/users/currentplan', {planId, weekId})
 
 export const createPlan = (newPlan) => API.post('api/plans', newPlan);
 export const getPlanList = () => API.get('api/plans');

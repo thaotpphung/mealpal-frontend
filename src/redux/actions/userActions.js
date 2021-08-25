@@ -1,9 +1,21 @@
 import {
-  USER_SIGNIN_REQUEST, USER_SIGNIN_SUCCESS,
-  USER_SIGNIN_FAIL, USER_REGISTER_REQUEST,
-  USER_REGISTER_SUCCESS, USER_REGISTER_FAIL, USER_LOGOUT, 
+  USER_SIGNIN_REQUEST, 
+  USER_SIGNIN_SUCCESS,
+  USER_SIGNIN_FAIL, 
+  
+  USER_REGISTER_REQUEST,
+  USER_REGISTER_SUCCESS, 
+  USER_REGISTER_FAIL, 
+  
+  USER_LOGOUT, 
+
+  USER_SET_CURRENT_PLAN_REQUEST,
+  USER_SET_CURRENT_PLAN_SUCCESS, 
+  USER_SET_CURRENT_PLAN_FAIL, 
 } from "../constants/userConstants";
 import * as api from '../../api/index';
+
+export { signin, register, logout, setCurrentPlan };
 
 const signin = (formData, router) => async (dispatch) => {
   dispatch({ type: USER_SIGNIN_REQUEST, payload: formData});
@@ -36,4 +48,16 @@ const logout = () => (dispatch) => {
   dispatch({ type: USER_LOGOUT, payload: "Successfully logged out!" })
 }
 
-export { signin, register, logout };
+const setCurrentPlan = (planId, weekId) => async (dispatch) => {
+  console.log('in user action')
+  dispatch({ type: USER_SET_CURRENT_PLAN_REQUEST, payload: {planId, weekId} });
+  try {
+    const { data } = await api.setCurrentPlan(planId, weekId);
+    dispatch({ type: USER_SET_CURRENT_PLAN_SUCCESS, payload: data });
+    localStorage.setItem('currentPlan', planId);
+    localStorage.setItem('currentWeek', weekId);
+  } catch (error) {
+    dispatch({ type: USER_SET_CURRENT_PLAN_FAIL, payload: error.response.data.message });
+  }
+}
+

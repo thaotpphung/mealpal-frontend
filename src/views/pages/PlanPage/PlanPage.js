@@ -7,27 +7,31 @@ import StarIcon from "@material-ui/icons/Star";
 import PlanList from "../../components/PlanList/PlanList";
 import WeekList from "../../components/WeekList/WeekList";
 import { plans, currentPlan, weeks, currentWeek, currentWeekDetails } from "../../../constants/data";
-import { setCurrentPlan } from "../../../redux/actions/planActions";
+import { setCurrentPlan } from "../../../redux/actions/userActions";
 
 const Plans = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const { selectedPlan } = useSelector(state => state.planList);
+  const { selectedWeek }= useSelector(state => state.weekList);
 
   useEffect(() => {
-    
+    // dispatch(setCurrentPlan(selectedPlan, selectedWeek));
   })
 
   const handleClickSetCurrent = (e) => {
+    console.log('click set current')
+    dispatch(setCurrentPlan(selectedPlan, selectedWeek));
   }
 
   return (
     <div>
       <Paper className={classes.header}>
         <Chip
-          label={<Typography>Plan name</Typography>}
+          label={<Typography>{selectedPlan}</Typography>}
         />
         <Chip
-          label={<Typography>Week 1</Typography>}
+          label={<Typography>{selectedWeek}</Typography>}
         />
         <Button
           variant="outlined"
