@@ -26,11 +26,11 @@ const List = ({
               <li key={`item-${idx}`} 
                 className={`${classes.item} ${item.isSelected ? classes.selected : null}`} 
                 style={style} 
-                onClick={(e) => handleClickItem(e, item.id)}
+                onClick={(e) => handleClickItem(e, item._id)}
               >
                 {item.icon && <div className={classes.itemIcon}>{item.icon}</div>}
                 <div className={classes.itemContent}>{item.content}</div>
-                <div className={classes.itemAction}>{item.action}</div>
+                <div className={classes.itemAction} >{item.action}</div>
               </li>
             );
           })}

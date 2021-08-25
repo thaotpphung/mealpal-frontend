@@ -15,17 +15,15 @@ import Spinner from "../../common/Spinner/Spinner";
 const PlanList = ({ currentPlan }) => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const { loading, success, error, plans } = useSelector(state => state.planList);
+  const { loading, success, error, plans, selectedPlan } = useSelector(state => state.planList);
 
   useEffect(() => {
     dispatch(getPlanList());
   }, [])
 
-  const handleChoosePlan = (e, id) => {
-    console.log("id", id)
-    // dispatch(setSelectedPlan(id)); 
+  const handleSelectPlan = (e, planId) => {
+    dispatch(setSelectedPlan(planId)); 
   };
-
 
   return (loading ? <Spinner/> : error ? <div>{error}</div> :
     plans ? 
@@ -36,7 +34,7 @@ const PlanList = ({ currentPlan }) => {
           <AddIcon />
         </IconButton>
       }
-      handleClickItem={handleChoosePlan}
+      handleClickItem={handleSelectPlan}
       data={plans}
     />
     

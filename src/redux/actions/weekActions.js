@@ -7,12 +7,15 @@ import {
   WEEK_LIST_SUCCESS,
   WEEK_LIST_FAIL,
 
+  WEEK_SET_SELECTED
+
 } from "../constants/weekConstants";
 import * as api from '../../api/index';
 
 export {
   createWeek,
   getWeekListByPlanId,
+  setSelectedWeek
 };
 
 const createWeek = (week, router) => async (dispatch) => {
@@ -36,5 +39,11 @@ const getWeekListByPlanId = (planId) => async (dispatch) => {
   }
 }
 
-
+const setSelectedWeek = (weekId) => async (dispatch) => {
+  try {
+    dispatch({type: WEEK_SET_SELECTED, payload: weekId})
+  } catch (error) {
+    console.log(error);
+  }
+}
 

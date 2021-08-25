@@ -13,25 +13,25 @@ import {
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import List from "../../common/List/List";
-import StarIcon from "@material-ui/icons/Star";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
+
 import AddIcon from "@material-ui/icons/Add";
 import Spinner from "../../common/Spinner/Spinner";
-import { getWeekListByPlanId, createWeek } from "../../../redux/actions/weekActions";
+import { getWeekListByPlanId, createWeek, setSelectedWeek} from "../../../redux/actions/weekActions";
 
 const WeekList = ({ currentWeek }) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const [weekName, setWeekName] = useState('');
   const currentPlan = useSelector(state => state.user).currentPlan;
-  const { loading, success, error, weeks } = useSelector(state => state.weekList);
+  const { loading, success, error, weeks, selectedWeek } = useSelector(state => state.weekList);
+  
 
   useEffect(() => {
     dispatch(getWeekListByPlanId(currentPlan));
   }, []);
 
-  const handleChooseWeek = (e, id) => {
-    // dispatch(getWeekListByPlanId(selectedPlan));
+  const handleSelectWeek = (e, weekId) => {
+    dispatch(setSelectedWeek(weekId)); 
   };
 
   const handleChangeWeekName = (event) => {
@@ -54,7 +54,7 @@ const WeekList = ({ currentWeek }) => {
             <AddIcon />
           </IconButton>
         }
-        handleClickItem={handleChooseWeek}
+        handleClickItem={handleSelectWeek}
         data={weeks}
       />
 

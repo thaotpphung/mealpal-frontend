@@ -15,8 +15,8 @@ import * as api from '../../api/index';
 export {
   createPlan,
   getPlanList,
+  setSelectedPlan
 };
-
 
 const createPlan = (plan, router) => async (dispatch) => {
   try {
@@ -42,7 +42,7 @@ const getPlanList = () => async (dispatch) => {
 
 const setSelectedPlan = (planId) => async (dispatch) => {
   try {
-    dispatch({type: PLAN_SET_SELECTED})
+    dispatch({type: PLAN_SET_SELECTED, payload: planId})
   } catch (error) {
     console.log(error);
   }
