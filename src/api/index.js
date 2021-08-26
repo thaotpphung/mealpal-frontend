@@ -19,6 +19,8 @@ export const getPlanList = () => API.get('api/plans');
 export const createWeek = (newWeek) => API.post('api/weeks', newWeek);
 export const getWeekListByPlanId = (planId) => API.get(`api/weeks/${planId}`);
 
+export const getDayListByWeekId = (weekId) => API.get(`api/days/${weekId}`);
+
 
 
 

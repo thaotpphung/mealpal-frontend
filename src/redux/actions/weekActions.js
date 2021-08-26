@@ -23,7 +23,6 @@ const createWeek = (week, router) => async (dispatch) => {
     dispatch({ type: WEEK_CREATE_REQUEST, payload: week });
     const { data } = await api.createWeek(week);
     dispatch({ type: WEEK_CREATE_SUCCESS, payload: data });
-    // router.push(`/plans/${data.planId}/weeks/${data._id}`);
   } catch (error) {
     dispatch({ type: WEEK_CREATE_FAIL, payload: error.response.data.message });
   }

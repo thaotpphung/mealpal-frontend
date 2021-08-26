@@ -12,17 +12,17 @@ import { setCurrentPlan } from "../../../redux/actions/userActions";
 const Plans = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { selectedPlan } = useSelector(state => state.planList);
   const { selectedWeek }= useSelector(state => state.weekList);
-
-  useEffect(() => {
-    // dispatch(setCurrentPlan(selectedPlan, selectedWeek));
-  })
+  const { selectedPlan }= useSelector(state => state.planList);
 
   const handleClickSetCurrent = (e) => {
-    console.log('click set current')
     dispatch(setCurrentPlan(selectedPlan, selectedWeek));
   }
+
+  useEffect(() => {
+    console.log('use effect in planpage', selectedPlan, selectedWeek)
+    dispatch(setCurrentPlan(selectedPlan, selectedWeek));
+  }, []);
 
   return (
     <div>
@@ -43,13 +43,13 @@ const Plans = () => {
       </Paper>
       <Grid container justify="space-between" alignItems="stretch" spacing={3}>
         <Grid item xs={12} sm={3}>
-          <PlanList plans={plans} currentPlan={currentPlan}/>
+          <PlanList />
         </Grid>
         <Grid item xs={12} sm={6}>
           <Menu week={currentWeekDetails}/>
         </Grid>
         <Grid item xs={12} sm={3}>
-          <WeekList weeks={weeks} currentWeek={currentWeek}/>
+          <WeekList/>
         </Grid>
       </Grid>
     </div>

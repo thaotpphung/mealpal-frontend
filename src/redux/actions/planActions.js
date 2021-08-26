@@ -23,7 +23,7 @@ const createPlan = (plan, router) => async (dispatch) => {
     dispatch({ type: PLAN_CREATE_REQUEST, payload: plan });
     const { data } = await api.createPlan(plan);
     dispatch({ type: PLAN_CREATE_SUCCESS, payload: data });
-    router.push(`/plans/${data._id}/weeks/${null}`);
+    router.push(`/plans`);
   } catch (error) {
     dispatch({ type: PLAN_CREATE_FAIL, payload: error.response.data.message });
   }

@@ -1,5 +1,5 @@
 import { createMuiTheme} from "@material-ui/core/styles";
-import { blue, cyan } from '@material-ui/core/colors';
+import { cyan } from '@material-ui/core/colors';
 import 'lato-font';
 
 export const theme = createMuiTheme({

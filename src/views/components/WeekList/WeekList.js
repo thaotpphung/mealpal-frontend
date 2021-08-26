@@ -22,13 +22,12 @@ const WeekList = ({ currentWeek }) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const [weekName, setWeekName] = useState('');
-  const currentPlan = useSelector(state => state.user).currentPlan;
-  const { loading, success, error, weeks, selectedWeek } = useSelector(state => state.weekList);
-  
+  const { selectedPlan } = useSelector(state => state.planList);
+  const { loading, success, error, weeks } = useSelector(state => state.weekList);
 
   useEffect(() => {
-    dispatch(getWeekListByPlanId(currentPlan));
-  }, []);
+    dispatch(getWeekListByPlanId(selectedPlan));
+  }, [selectedPlan]);
 
   const handleSelectWeek = (e, weekId) => {
     dispatch(setSelectedWeek(weekId)); 
@@ -41,7 +40,7 @@ const WeekList = ({ currentWeek }) => {
   const handleAddWeek = (e) => {};
 
   const handleSubmitAddWeek = (e) => {
-    dispatch(createWeek({weekName, planId: currentPlan}, history));
+    dispatch(createWeek({weekName, planId: selectedPlan}, history));
   };
 
   return ( loading ? <Spinner/> : error ? <div>{error}</div> : 

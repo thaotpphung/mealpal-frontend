@@ -23,8 +23,6 @@ const signin = (formData, router) => async (dispatch) => {
     const { data } = await api.signin(formData);
     dispatch({ type: USER_SIGNIN_SUCCESS, payload: data });
     localStorage.setItem('currentUser', JSON.stringify(data));
-
-    console.log('data', data);
     localStorage.setItem('currentPlan', data.result.currentPlan);
     localStorage.setItem('currentWeek', data.result.currentWeek);
   } catch (error) {
@@ -49,11 +47,10 @@ const logout = () => (dispatch) => {
 }
 
 const setCurrentPlan = (planId, weekId) => async (dispatch) => {
-  console.log('in user action')
   dispatch({ type: USER_SET_CURRENT_PLAN_REQUEST, payload: {planId, weekId} });
   try {
     const { data } = await api.setCurrentPlan(planId, weekId);
-    dispatch({ type: USER_SET_CURRENT_PLAN_SUCCESS, payload: data });
+    dispatch({ type: USER_SET_CURRENT_PLAN_SUCCESS, payload: {planId, weekId} });
     localStorage.setItem('currentPlan', planId);
     localStorage.setItem('currentWeek', weekId);
   } catch (error) {

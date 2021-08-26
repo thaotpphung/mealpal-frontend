@@ -3,6 +3,7 @@ import thunk from 'redux-thunk';
 import { userReducer } from './reducers/userReducers';
 import { planListReducer } from './reducers/planReducers';
 import { weekListReducer } from './reducers/weekReducers';
+import { dayListReducer } from './reducers/dayReducers';
 
 const currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
 const currentPlan = localStorage.getItem("currentPlan") || null;
@@ -15,7 +16,8 @@ const initialState = {
 const rootReducer = combineReducers({
   user: userReducer,
   planList: planListReducer,
-  weekList: weekListReducer
+  weekList: weekListReducer,
+  dayList: dayListReducer
 });
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

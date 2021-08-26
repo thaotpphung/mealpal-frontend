@@ -56,7 +56,6 @@ const NewPlanPage = () => {
         <Typography>Plan Name</Typography>
         <div>
           <TextField
-            id="outlined-basic"
             variant="outlined"
             name="planName"
             value={planName}
@@ -69,7 +68,6 @@ const NewPlanPage = () => {
         <Typography>Plan Description</Typography>
         <div>
           <TextField 
-            id="outlined-basic" 
             variant="outlined" 
             name="planDescription"
             value={planDescription}
@@ -82,7 +80,6 @@ const NewPlanPage = () => {
         <Typography>Plan Categories</Typography>
         <div>
           <TextField 
-            id="outlined-basic" 
             variant="outlined" 
             name="planTags"
             value={planTags}
@@ -99,54 +96,6 @@ const NewPlanPage = () => {
       >
         Submit
       </Button>
-
-      <hr />
-
-      {/* <Typography variant="h4">Weeks</Typography>
-
-      <div className={classes.formRow}>
-        <Typography>Week Name</Typography>
-        <div className={classes.fieldsContainer}>
-          <TextField id="outlined-basic" variant="outlined" />
-          <Button variant="outlined" color="primary" className={classes.button}>
-            + Add Another
-          </Button>
-          <Button
-            variant="outlined"
-            color="secondary"
-            className={classes.button}
-          >
-            - Remove Week
-          </Button>
-        </div>
-      </div>
-
-      <Paper className={classes.root}>
-        <div className={classes.header}>
-          <div>Monday</div>
-          <IconButton className={classes.action}>
-            <EditIcon />
-          </IconButton>
-        </div>
-        <div className={classes.content}>
-          <div className={classes.menuMeal}>
-            <div className={classes.menuMealTitle}>Breakfast</div>
-            <div className={classes.menuMealContent}>
-              <ul className={classes.menu}>
-                <li>
-                  <RestaurantMenuIcon />
-                  <span></span>
-                </li>
-                <li>
-                  <RestaurantMenuIcon />
-                  <span>carrot</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </Paper> */}
-
       
     </div>
   );
