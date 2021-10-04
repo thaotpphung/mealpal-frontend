@@ -7,26 +7,13 @@ import {
   WEEK_CREATE_FAIL,
   WEEK_SET_SELECTED,
 } from '../constants/weekConstants';
-import Chip from '@material-ui/core/Chip';
-import StarIcon from '@material-ui/icons/Star';
+import _ from 'lodash';
 
 const INITIAL_STATE = {
-  weeks: [],
+  weeks: {},
   loading: false,
   error: null,
   selectedWeek: null,
-};
-
-const mappedWeek = (week, selectedWeek) => {
-  return {
-    content: week.weekName,
-    isSelected: selectedWeek === week._id,
-    action:
-      selectedWeek === week._id ? (
-        <Chip size="small" label="Current" icon={<StarIcon />} />
-      ) : null,
-    _id: week._id,
-  };
 };
 
 const weekListReducer = (state = INITIAL_STATE, action) => {
@@ -37,31 +24,24 @@ const weekListReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: false,
-        weeks: [...state.weeks, mappedWeek(action.payload)],
+        weeks: { ...state.weeks, [action.payload._id]: action.payload },
       };
     case WEEK_CREATE_FAIL:
       return { ...state, loading: false, error: action.payload };
 
-    case WEEK_LIST_REQUEST:
+    case WEEK_LIST_REQUEST: {
       return { ...state, loading: true };
+    }
     case WEEK_LIST_SUCCESS: {
-      const mappedWeeks = action.payload.map((week) =>
-        mappedWeek(week, state.selectedWeek)
-      );
-      return { ...state, loading: false, weeks: mappedWeeks };
+      const weeks = _.mapKeys(action.payload, '_id');
+      return { ...state, loading: false, weeks: weeks };
     }
     case WEEK_LIST_FAIL:
       return { ...state, loading: false, error: action.payload };
 
     case WEEK_SET_SELECTED: {
-      const mappedWeeksSelected = state.weeks.map((week) => ({
-        ...week,
-        isSelected: action.payload === week._id,
-      }));
       return {
         ...state,
-        selectedWeek: action.payload,
-        weeks: mappedWeeksSelected,
       };
     }
     default:

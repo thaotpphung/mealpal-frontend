@@ -4,27 +4,31 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import useStyles from './styles';
 import { Paper, IconButton } from '@material-ui/core';
-
-import { getPlanList, deletePlan } from '../../../redux/actions/planActions';
 import Spinner from '../../common/Spinner/Spinner';
-
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import {
+  getPlanList,
+  deletePlan,
+  setSelectedPlan,
+} from '../../../redux/actions/planActions';
 
 const PlanList = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const classes = useStyles();
-  const { loading, error, plans } = useSelector((state) => state.planList);
+  const { loading, error, plans, selectedPlan } = useSelector(
+    (state) => state.planList
+  );
 
   useEffect(() => {
     dispatch(getPlanList());
   }, []);
 
-  // const handleSelectPlan = (e, planId) => {
-  //   dispatch(setSelectedPlan(planId));
-  // };
+  const handleSelectPlan = (planId) => {
+    dispatch(setSelectedPlan(planId));
+  };
 
   const handleDeletePlan = (planId) => {
     dispatch(deletePlan(planId));
@@ -51,7 +55,13 @@ const PlanList = () => {
       <div className={classes.content}>
         <ul className={classes.list}>
           {Object.values(plans).map((plan, index) => (
-            <li key={plan._id} className={`${classes.item}`}>
+            <li
+              key={plan._id}
+              className={`${classes.item} ${
+                plan._id === selectedPlan ? classes.selected : null
+              }`}
+              onClick={() => handleSelectPlan(plan._id)}
+            >
               <div className={classes.itemIcon}>icon</div>
               <div className={classes.itemContent}>{plan.planName}</div>
               <div className={classes.itemAction}>

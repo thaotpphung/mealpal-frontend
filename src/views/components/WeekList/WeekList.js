@@ -1,79 +1,89 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-// import { useHistory } from 'react-router';
-// import { Paper, IconButton, TextField, Button } from '@material-ui/core';
-// import List from '../../common/List/List';
-
-// import AddIcon from '@material-ui/icons/Add';
-import Spinner from '../../common/Spinner/Spinner';
+import useStyles from './styles';
+import { Paper, IconButton, TextField, Button } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
+// import DeleteIcon from '@mui/icons-material/Delete';
+// import EditIcon from '@mui/icons-material/Edit';
 import {
   getWeekListByPlanId,
-  // createWeek,
-  // setSelectedWeek,
+  createWeek,
 } from '../../../redux/actions/weekActions';
 
 const WeekList = () => {
-  // const history = useHistory();
   const dispatch = useDispatch();
-  // const [weekName, setWeekName] = useState('');
+  const classes = useStyles();
   const { selectedPlan } = useSelector((state) => state.planList);
-  const { loading, error, weeks } = useSelector((state) => state.weekList);
+  const { weeks } = useSelector((state) => state.weekList);
+  const [newWeekName, setNewWeekName] = useState('');
 
   useEffect(() => {
     dispatch(getWeekListByPlanId(selectedPlan));
   }, [selectedPlan]);
 
-  // const handleSelectWeek = (e, weekId) => {
-  //   dispatch(setSelectedWeek(weekId));
+  const handleChangeNewWeekName = (event) => {
+    setNewWeekName(event.target.value);
+  };
+
+  const handleSubmitCreateWeek = () => {
+    dispatch(createWeek({ weekName: newWeekName, planId: selectedPlan }));
+  };
+
+  // const handleDeleteWeek = (weekId) => {
+  //   dispatch(deleteWeek(weekId));
   // };
 
-  // const handleChangeWeekName = (event) => {
-  //   setWeekName(event.target.value);
+  // const handleEditWeek = (weekId) => {
+  //   dispatch(deleteWeek(weekId));
   // };
 
-  // const handleAddWeek = () => {};
-
-  // const handleSubmitAddWeek = () => {
-  //   dispatch(createWeek({ weekName, planId: selectedPlan }, history));
-  // };
-
-  return loading ? (
-    <Spinner />
-  ) : error ? (
-    <div>{error}</div>
-  ) : weeks ? (
-    <>
-      {/* <List
-        title={'Week List'}
-        action={
-          <IconButton onClick={handleAddWeek}>
+  return (
+    <Paper className={classes.root}>
+      <div className={classes.header}>
+        <div>Week List</div>
+        <div className={classes.action}>
+          <IconButton onClick={() => history.push('/weeks/new')}>
             <AddIcon />
           </IconButton>
-        }
-        handleClickItem={handleSelectWeek}
-        data={weeks}
-      />
+        </div>
+      </div>
+      <div className={classes.content}>
+        <ul className={classes.list}>
+          {Object.values(weeks).map((week) => (
+            <li key={week._id} className={`${classes.item}`}>
+              <div className={classes.itemIcon}>icon</div>
+              <div className={classes.itemContent}>{week.weekName}</div>
+              <div className={classes.itemAction}>
+                {/* <IconButton onClick={() => handleEditWeek(week._id)}>
+                  <EditIcon />
+                </IconButton>
+                <IconButton onClick={() => handleDeleteWeek(week._id)}>
+                  <DeleteIcon />
+                </IconButton> */}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
 
       {selectedPlan && (
         <Paper>
           <TextField
             variant="outlined"
-            value={weekName}
-            onChange={handleChangeWeekName}
+            value={newWeekName}
+            onChange={handleChangeNewWeekName}
           />
           <Button
             variant="contained"
             color="primary"
-            // className={classes.button}
-            onClick={handleSubmitAddWeek}
+            className={classes.button}
+            onClick={handleSubmitCreateWeek}
           >
             Add Week
           </Button>
         </Paper>
-      )} */}
-    </>
-  ) : (
-    <Spinner />
+      )}
+    </Paper>
   );
 };
 

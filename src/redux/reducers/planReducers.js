@@ -37,8 +37,8 @@ const planListReducer = (state = INITIAL_STATE, action) => {
     case PLAN_LIST_REQUEST:
       return { ...state, loading: true };
     case PLAN_LIST_SUCCESS: {
-      const newPlans = _.mapKeys(action.payload, '_id');
-      return { ...state, loading: false, plans: newPlans };
+      const plans = _.mapKeys(action.payload, '_id');
+      return { ...state, loading: false, plans: plans };
     }
     case PLAN_LIST_FAIL:
       return {
@@ -63,14 +63,9 @@ const planListReducer = (state = INITIAL_STATE, action) => {
 
     // set selected plan
     case PLAN_SET_SELECTED: {
-      const mappedPlansSelected = state.plans.map((plan) => ({
-        ...plan,
-        isSelected: action.payload === plan._id,
-      }));
       return {
         ...state,
         selectedPlan: action.payload,
-        plans: mappedPlansSelected,
       };
     }
     default:
