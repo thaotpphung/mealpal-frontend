@@ -8,19 +8,15 @@ import Spinner from '../../common/Spinner/Spinner';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import {
-  getPlanList,
-  deletePlan,
-  setSelectedPlan,
-} from '../../../redux/actions/planActions';
+import { getPlanList, deletePlan } from '../../../redux/actions/planActions';
+import { setSelectedPlan } from '../../../redux/actions/selectActions';
 
 const PlanList = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const classes = useStyles();
-  const { loading, error, plans, selectedPlan } = useSelector(
-    (state) => state.planList
-  );
+  const { loading, error, plans } = useSelector((state) => state.planList);
+  const { selectedPlan } = useSelector((state) => state.select);
 
   useEffect(() => {
     dispatch(getPlanList());
@@ -72,7 +68,6 @@ const PlanList = () => {
                   <DeleteIcon />
                 </IconButton>
               </div>
-              {console.log(plan)}
             </li>
           ))}
         </ul>

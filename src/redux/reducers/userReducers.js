@@ -46,6 +46,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
     case USER_SET_CURRENT_PLAN_REQUEST:
       return { ...state, loading: true };
     case USER_SET_CURRENT_PLAN_SUCCESS:
+      console.log(action.payload.user);
       return { ...state, loading: false, currentUser: action.payload.user };
     case USER_SET_CURRENT_PLAN_FAIL:
       return { ...state, loading: false, error: action.payload };

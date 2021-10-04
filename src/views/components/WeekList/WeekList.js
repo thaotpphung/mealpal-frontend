@@ -4,17 +4,18 @@ import useStyles from './styles';
 import { Paper, IconButton, TextField, Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-// import EditIcon from '@mui/icons-material/Edit';
+import EditIcon from '@mui/icons-material/Edit';
 import {
   getWeekListByPlanId,
   createWeek,
   deleteWeek,
 } from '../../../redux/actions/weekActions';
+import { setSelectedWeek } from '../../../redux/actions/selectActions';
 
 const WeekList = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
-  const { selectedPlan } = useSelector((state) => state.planList);
+  const { selectedPlan, selectedWeek } = useSelector((state) => state.select);
   const { weeks } = useSelector((state) => state.weekList);
   const [newWeekName, setNewWeekName] = useState('');
 
@@ -34,9 +35,13 @@ const WeekList = () => {
     dispatch(deleteWeek(weekId));
   };
 
-  // const handleEditWeek = (weekId) => {
-  //   dispatch(deleteWeek(weekId));
-  // };
+  const handleEditWeek = (weekId) => {
+    dispatch(deleteWeek(weekId));
+  };
+
+  const handleSelectWeek = (weekId) => {
+    dispatch(setSelectedWeek(weekId));
+  };
 
   return (
     <Paper className={classes.root}>
@@ -51,13 +56,19 @@ const WeekList = () => {
       <div className={classes.content}>
         <ul className={classes.list}>
           {Object.values(weeks).map((week) => (
-            <li key={week._id} className={`${classes.item}`}>
+            <li
+              key={week._id}
+              className={`${classes.item} ${
+                week._id === selectedWeek ? classes.selected : null
+              }`}
+              onClick={() => handleSelectWeek(week._id)}
+            >
               <div className={classes.itemIcon}>icon</div>
               <div className={classes.itemContent}>{week.weekName}</div>
               <div className={classes.itemAction}>
-                {/* <IconButton onClick={() => handleEditWeek(week._id)}>
+                <IconButton onClick={() => handleEditWeek(week._id)}>
                   <EditIcon />
-                </IconButton> */}
+                </IconButton>
                 <IconButton onClick={() => handleDeleteWeek(week._id)}>
                   <DeleteIcon />
                 </IconButton>

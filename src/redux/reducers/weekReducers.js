@@ -56,9 +56,11 @@ const weekListReducer = (state = INITIAL_STATE, action) => {
         error: action.payload,
       };
 
+    // set selected week
     case WEEK_SET_SELECTED: {
       return {
         ...state,
+        selectedWeek: action.payload,
       };
     }
     default:
