@@ -2,23 +2,16 @@ import {
   WEEK_CREATE_REQUEST,
   WEEK_CREATE_SUCCESS,
   WEEK_CREATE_FAIL,
-
   WEEK_LIST_REQUEST,
   WEEK_LIST_SUCCESS,
   WEEK_LIST_FAIL,
-
-  WEEK_SET_SELECTED
-
-} from "../constants/weekConstants";
+  WEEK_SET_SELECTED,
+} from '../constants/weekConstants';
 import * as api from '../../api/index';
 
-export {
-  createWeek,
-  getWeekListByPlanId,
-  setSelectedWeek
-};
+export { createWeek, getWeekListByPlanId, setSelectedWeek };
 
-const createWeek = (week, router) => async (dispatch) => {
+const createWeek = (week) => async (dispatch) => {
   try {
     dispatch({ type: WEEK_CREATE_REQUEST, payload: week });
     const { data } = await api.createWeek(week);
@@ -36,13 +29,12 @@ const getWeekListByPlanId = (planId) => async (dispatch) => {
   } catch (error) {
     dispatch({ type: WEEK_LIST_FAIL, payload: error.response.data.message });
   }
-}
+};
 
 const setSelectedWeek = (weekId) => async (dispatch) => {
   try {
-    dispatch({type: WEEK_SET_SELECTED, payload: weekId})
+    dispatch({ type: WEEK_SET_SELECTED, payload: weekId });
   } catch (error) {
     console.log(error);
   }
-}
-
+};

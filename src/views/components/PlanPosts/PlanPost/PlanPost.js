@@ -1,28 +1,21 @@
-import React from "react";
+import React from 'react';
 import {
   Card,
   CardHeader,
   CardActions,
   CardContent,
-  CardMedia,
   Button,
   Typography,
   Avatar,
   IconButton,
   Chip,
-} from "@material-ui/core/";
-import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
-import DeleteIcon from "@material-ui/icons/Delete";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import ShareIcon from "@material-ui/icons/Share";
-import ThumbUpAltOutlined from "@material-ui/icons/ThumbUpAltOutlined";
-import { useDispatch } from "react-redux";
-import moment from "moment";
+} from '@material-ui/core/';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import ShareIcon from '@material-ui/icons/Share';
+import ThumbUpAltOutlined from '@material-ui/icons/ThumbUpAltOutlined';
+import useStyles from './styles';
 
-import useStyles from "./styles";
-
-const PlanPost = ({ plan, setCurrentId }) => {
-  const dispatch = useDispatch();
+const PlanPost = () => {
   const classes = useStyles();
 
   const Likes = () => {

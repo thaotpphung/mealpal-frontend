@@ -1,25 +1,25 @@
-import React from "react";
-import AppBar from "@material-ui/core/AppBar";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import Link from "@material-ui/core/Link";
-import { NavLink as RouterLink } from "react-router-dom";
-import useStyles from "./styles";
-import Toolbar from "@material-ui/core/Toolbar";
-import { useHistory } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../../redux/actions/userActions";
+import React from 'react';
+import AppBar from '@material-ui/core/AppBar';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import Link from '@material-ui/core/Link';
+import { NavLink as RouterLink } from 'react-router-dom';
+import useStyles from './styles';
+import Toolbar from '@material-ui/core/Toolbar';
+import { useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../../../redux/actions/userActions';
 
 const Navbar = () => {
   const classes = useStyles();
   const user = useSelector((state) => state.user);
-  const { loading, currentUser, error } = user;
+  const { currentUser } = user;
   const history = useHistory();
   const dispatch = useDispatch();
 
   const handleLogout = () => {
     dispatch(logout());
-    history.push("/auth");
+    history.push('/auth');
   };
 
   return (

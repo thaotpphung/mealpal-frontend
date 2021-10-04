@@ -1,4 +1,4 @@
 export default {
   HOME_PAGE: '/',
-  PLAN_PAGE: '/plans'
-}
+  PLAN_PAGE: '/plans',
+};

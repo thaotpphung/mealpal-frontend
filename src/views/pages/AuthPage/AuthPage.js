@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
-import useStyles from "./styles";
-import { GoogleLogin } from "react-google-login";
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import useStyles from './styles';
+// import { GoogleLogin } from 'react-google-login';
 import {
   Avatar,
   Button,
@@ -10,26 +10,26 @@ import {
   Grid,
   Typography,
   Container,
-} from "@material-ui/core";
+} from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import Icon from "./icon";
-import Input from "./Input";
-import Spinner from "../../common/Spinner/Spinner";
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+// import Icon from './icon';
+import Input from './Input';
+import Spinner from '../../common/Spinner/Spinner';
 import { signin, register } from '../../../redux/actions/userActions';
 
 const initialState = {
-  firstName: "",
-  lastName: "",
-  email: "",
-  password: "",
-  confirmPassword: "",
+  firstName: '',
+  lastName: '',
+  email: '',
+  password: '',
+  confirmPassword: '',
 };
 
 const AuthPage = () => {
   const [form, setForm] = useState(initialState);
   const [isRegister, setIsRegister] = useState(false);
-  const user = useSelector(state => state.user);
+  const user = useSelector((state) => state.user);
   const { loading, currentUser, error } = user;
   const dispatch = useDispatch();
   const history = useHistory();
@@ -58,35 +58,34 @@ const AuthPage = () => {
     }
   };
 
-  const googleSuccess = async (res) => {
-    const result = res?.profileObj;
-    const token = res?.tokenId;
-    try {
-      // TODO dispatch sign in with Google
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const googleSuccess = async (res) => {
+  //   const result = res?.profileObj;
+  //   const token = res?.tokenId;
+  //   try {
+  //     // TODO dispatch sign in with Google
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
-  const googleError = () => {};
+  // const googleError = () => {};
 
-  const handleChange = (e) =>
-  {
-    setForm({ ...form, [e.target.name]: e.target.value })
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   return (
     <Container component="main" maxWidth="xs">
       <Paper className={classes.paper} elevation={3}>
-        <Typography> 
-          {loading && <Spinner/>}
+        <Typography>
+          {loading && <Spinner />}
           {error && <MuiAlert severity="error">{error}</MuiAlert>}
         </Typography>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          {isRegister ? "Sign up" : "Sign in"}
+          {isRegister ? 'Sign up' : 'Sign in'}
         </Typography>
         <form className={classes.form} onSubmit={handleSubmit}>
           <Grid container spacing={2}>
@@ -117,7 +116,7 @@ const AuthPage = () => {
               name="password"
               label="Password"
               handleChange={handleChange}
-              type={showPassword ? "text" : "password"}
+              type={showPassword ? 'text' : 'password'}
               handleShowPassword={handleShowPassword}
             />
             {isRegister && (
@@ -136,9 +135,9 @@ const AuthPage = () => {
             color="primary"
             className={classes.submit}
           >
-            {isRegister ? "Sign Up" : "Sign In"}
+            {isRegister ? 'Sign Up' : 'Sign In'}
           </Button>
-          <GoogleLogin
+          {/* <GoogleLogin
             clientId="343383256194-un7o7lkllj4dc5q6sogr4l6jk1jak0h2.apps.googleusercontent.com"
             render={(renderProps) => (
               <Button
@@ -155,12 +154,12 @@ const AuthPage = () => {
             onSuccess={googleSuccess}
             onFailure={googleError}
             cookiePolicy="single_host_origin"
-          />
+          /> */}
           <Grid container justify="flex-end">
             <Grid item>
               <Button onClick={switchMode}>
                 {isRegister
-                  ? "Already have an account? Sign in"
+                  ? 'Already have an account? Sign in'
                   : "Don't have an account? Sign Up"}
               </Button>
             </Grid>

@@ -1,4 +1,4 @@
-import { createMuiTheme} from "@material-ui/core/styles";
+import { createMuiTheme } from '@material-ui/core/styles';
 import { cyan } from '@material-ui/core/colors';
 import 'lato-font';
 
@@ -24,6 +24,6 @@ export const theme = createMuiTheme({
     fontWeightLight: 300,
     fontWeightRegular: 400,
     fontWeightMedium: 700,
-    fontWeightBold: 900
+    fontWeightBold: 900,
   },
 });

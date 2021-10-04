@@ -1,51 +1,36 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
-import useStyles from "./styles";
-import {
-  Backdrop,
-  Button,
-  Grid,
-  IconButton,
-  Paper,
-  Typography,
-  TextField,
-} from "@material-ui/core";
-import Menu from "../../components/Menu/Menu";
-import {
-  plans,
-  currentPlan,
-  weeks,
-  currentWeek,
-  currentWeekDetails,
-} from "../../../constants/data";
-import EditIcon from "@material-ui/icons/Edit";
-import RestaurantMenuIcon from "@material-ui/icons/RestaurantMenu";
-import { createPlan } from "../../../redux/actions/planActions";
-import Spinner from "../../common/Spinner/Spinner";
+import React, { useState } from 'react';
+// import { useDispatch } from 'react-redux';
+// import { useHistory } from 'react-router-dom';
+import useStyles from './styles';
+import { Button, Typography, TextField } from '@material-ui/core';
+// import Menu from '../../components/Menu/Menu';
+// import EditIcon from '@material-ui/icons/Edit';
+// import RestaurantMenuIcon from '@material-ui/icons/RestaurantMenu';
+// import { createPlan } from '../../../redux/actions/planActions';
+// import Spinner from '../../common/Spinner/Spinner';
 
 const EditDayPage = () => {
   const classes = useStyles();
-  const dispatch = useDispatch();
-  const history = useHistory();
+  // const dispatch = useDispatch();
+  // const history = useHistory();
 
   const [meals, setMeals] = useState([
     {
-      mealName: "Breakfast",
-      food: [""],
+      mealName: 'Breakfast',
+      food: [''],
     },
     {
-      mealName: "Lunch",
-      food: [""],
+      mealName: 'Lunch',
+      food: [''],
     },
     {
-      mealName: "Dinner",
-      food: [""],
+      mealName: 'Dinner',
+      food: [''],
     },
   ]);
 
   const handleAddRecipe = (e, mealIdx) => {
-    const updatedFood = [...meals[mealIdx].food, ""];
+    const updatedFood = [...meals[mealIdx].food, ''];
 
     const updatedMeals = [
       ...JSON.parse(JSON.stringify(meals)).slice(0, mealIdx),
@@ -90,9 +75,9 @@ const EditDayPage = () => {
     setMeals(updatedMeals);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = () => {
     // dispatch(updateDay())
-  }
+  };
 
   return (
     <div>
@@ -130,9 +115,9 @@ const EditDayPage = () => {
         </div>
       ))}
 
-      <Button 
-        variant="contained" 
-        color="primary" 
+      <Button
+        variant="contained"
+        color="primary"
         className={classes.button}
         onClick={handleSubmit}
       >

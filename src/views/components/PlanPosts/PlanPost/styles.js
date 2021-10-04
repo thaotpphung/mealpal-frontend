@@ -9,8 +9,7 @@ export default makeStyles((theme) => ({
   chips: {
     margin: theme.spacing(2, 0),
     '& > *': {
-      margin: theme.spacing(0.2)
-    }
-  }
+      margin: theme.spacing(0.2),
+    },
+  },
 }));
-

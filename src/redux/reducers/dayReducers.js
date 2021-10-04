@@ -2,8 +2,7 @@ import {
   DAY_LIST_REQUEST,
   DAY_LIST_SUCCESS,
   DAY_LIST_FAIL,
-
-} from "../constants/dayConstants";
+} from '../constants/dayConstants';
 
 const INITIAL_STATE = {
   days: [],
@@ -11,12 +10,12 @@ const INITIAL_STATE = {
   error: null,
 };
 
-export const dayListReducer = (state = INITIAL_STATE, action) => {
+const dayListReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case DAY_LIST_REQUEST:
       return { ...state, loading: true };
     case DAY_LIST_SUCCESS:
-      return { ...state, loading : false, days: action.payload };
+      return { ...state, loading: false, days: action.payload };
     case DAY_LIST_FAIL:
       return { ...state, loading: false, error: action.payload };
 
@@ -24,3 +23,5 @@ export const dayListReducer = (state = INITIAL_STATE, action) => {
       return state;
   }
 };
+
+export default dayListReducer;

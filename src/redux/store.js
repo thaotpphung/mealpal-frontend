@@ -1,30 +1,25 @@
-import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
+import { persistStore, persistReducer } from 'redux-persist';
 import thunk from 'redux-thunk';
-import { userReducer } from './reducers/userReducers';
-import { planListReducer } from './reducers/planReducers';
-import { weekListReducer } from './reducers/weekReducers';
-import { dayListReducer } from './reducers/dayReducers';
+import logger from 'redux-logger';
+import storage from 'redux-persist/lib/storage';
 
-const currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
-const currentPlan = localStorage.getItem("currentPlan") || null;
-const currentWeek = localStorage.getItem("currentWeek") || null;
-
-const initialState = {
-  user: { currentUser, currentPlan, currentWeek}
-};
-
-const rootReducer = combineReducers({
-  user: userReducer,
-  planList: planListReducer,
-  weekList: weekListReducer,
-  dayList: dayListReducer
-});
+import rootReducer from './rootReducer';
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const store = createStore(
-  rootReducer,
-  initialState,
-  composeEnhancer(applyMiddleware(thunk))
-);
+
+const middlewares = applyMiddleware(thunk, logger);
+
+const persistConfig = {
+  key: 'root',
+  storage,
+  whitelist: ['user'],
+};
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+const store = createStore(persistedReducer, composeEnhancer(middlewares));
+
+export const persistor = persistStore(store);
 
 export default store;
