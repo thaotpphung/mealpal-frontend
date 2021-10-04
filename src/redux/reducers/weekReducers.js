@@ -5,6 +5,9 @@ import {
   WEEK_CREATE_REQUEST,
   WEEK_CREATE_SUCCESS,
   WEEK_CREATE_FAIL,
+  WEEK_DELETE_REQUEST,
+  WEEK_DELETE_SUCCESS,
+  WEEK_DELETE_FAIL,
   WEEK_SET_SELECTED,
 } from '../constants/weekConstants';
 import _ from 'lodash';
@@ -38,6 +41,20 @@ const weekListReducer = (state = INITIAL_STATE, action) => {
     }
     case WEEK_LIST_FAIL:
       return { ...state, loading: false, error: action.payload };
+
+    // delete week
+    case WEEK_DELETE_REQUEST:
+      return { ...state, loading: true };
+    case WEEK_DELETE_SUCCESS: {
+      const updatedWeeks = _.omit(state.weeks, action.payload);
+      return { ...state, loading: false, weeks: updatedWeeks };
+    }
+    case WEEK_DELETE_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
 
     case WEEK_SET_SELECTED: {
       return {

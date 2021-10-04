@@ -5,11 +5,14 @@ import {
   WEEK_LIST_REQUEST,
   WEEK_LIST_SUCCESS,
   WEEK_LIST_FAIL,
+  WEEK_DELETE_REQUEST,
+  WEEK_DELETE_SUCCESS,
+  WEEK_DELETE_FAIL,
   WEEK_SET_SELECTED,
 } from '../constants/weekConstants';
 import * as api from '../../api/index';
 
-export { createWeek, getWeekListByPlanId, setSelectedWeek };
+export { createWeek, getWeekListByPlanId, deleteWeek, setSelectedWeek };
 
 const createWeek = (week) => async (dispatch) => {
   try {
@@ -28,6 +31,16 @@ const getWeekListByPlanId = (planId) => async (dispatch) => {
     dispatch({ type: WEEK_LIST_SUCCESS, payload: data });
   } catch (error) {
     dispatch({ type: WEEK_LIST_FAIL, payload: error.response.data.message });
+  }
+};
+
+const deleteWeek = (weekId) => async (dispatch) => {
+  try {
+    dispatch({ type: WEEK_DELETE_REQUEST });
+    await api.deleteWeek(weekId);
+    dispatch({ type: WEEK_DELETE_SUCCESS, payload: weekId });
+  } catch (error) {
+    dispatch({ type: WEEK_DELETE_FAIL, payload: error.response.data.message });
   }
 };
 

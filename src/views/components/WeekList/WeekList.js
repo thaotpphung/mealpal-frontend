@@ -3,11 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import useStyles from './styles';
 import { Paper, IconButton, TextField, Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-// import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from '@mui/icons-material/Delete';
 // import EditIcon from '@mui/icons-material/Edit';
 import {
   getWeekListByPlanId,
   createWeek,
+  deleteWeek,
 } from '../../../redux/actions/weekActions';
 
 const WeekList = () => {
@@ -29,9 +30,9 @@ const WeekList = () => {
     dispatch(createWeek({ weekName: newWeekName, planId: selectedPlan }));
   };
 
-  // const handleDeleteWeek = (weekId) => {
-  //   dispatch(deleteWeek(weekId));
-  // };
+  const handleDeleteWeek = (weekId) => {
+    dispatch(deleteWeek(weekId));
+  };
 
   // const handleEditWeek = (weekId) => {
   //   dispatch(deleteWeek(weekId));
@@ -56,10 +57,10 @@ const WeekList = () => {
               <div className={classes.itemAction}>
                 {/* <IconButton onClick={() => handleEditWeek(week._id)}>
                   <EditIcon />
-                </IconButton>
+                </IconButton> */}
                 <IconButton onClick={() => handleDeleteWeek(week._id)}>
                   <DeleteIcon />
-                </IconButton> */}
+                </IconButton>
               </div>
             </li>
           ))}

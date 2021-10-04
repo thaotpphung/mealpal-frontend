@@ -32,6 +32,7 @@ export const deletePlan = (id) => API.delete(`api/plans/${id}`);
 // weeks
 export const createWeek = (newWeek) => API.post('api/weeks', newWeek);
 export const getWeekListByPlanId = (planId) => API.get(`api/weeks/${planId}`);
+export const deleteWeek = (weekId) => API.delete(`api/weeks/${weekId}`);
 
 // days
 export const getDayListByWeekId = (weekId) => API.get(`api/days/${weekId}`);
