@@ -19,15 +19,6 @@ const createPlan = (plan, router) => async (dispatch) => {
     dispatch({ type: PLAN_CREATE_REQUEST, payload: plan });
     const { data } = await api.createPlan(plan);
     dispatch({ type: PLAN_CREATE_SUCCESS, payload: { data } });
-
-    // const planId = data._id;
-    // const weekId = null;
-
-    // if (isNewUser) {
-    //   dispatch({ type: USER_SET_CURRENT_PLAN_SUCCESS, payload: { planId , weekId}  });
-    //   localStorage.setItem('currentPlan', planId);
-    // }
-
     router.push(`/plans`);
   } catch (error) {
     dispatch({ type: PLAN_CREATE_FAIL, payload: error.response.data.message });

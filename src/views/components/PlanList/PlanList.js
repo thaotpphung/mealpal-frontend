@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
@@ -9,6 +10,7 @@ import Spinner from '../../common/Spinner/Spinner';
 
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 const PlanList = () => {
   const history = useHistory();
@@ -28,6 +30,10 @@ const PlanList = () => {
     dispatch(deletePlan(planId));
   };
 
+  const handleEditPlan = (planId) => {
+    dispatch(deletePlan(planId));
+  };
+
   return loading ? (
     <Spinner />
   ) : error ? (
@@ -44,23 +50,21 @@ const PlanList = () => {
       </div>
       <div className={classes.content}>
         <ul className={classes.list}>
-          {plans.map((plan, idx) => {
-            return (
-              <li
-                key={`item-${idx}`}
-                // className={`${classes.item} ${item._id === selectedPlan ? classes.selected : null}`}
-                // onClick={handleSelectPlan(plan_id)}
-              >
-                {/* {item.icon && <div className={classes.itemIcon}>{item.icon}</div>}
-                <div className={classes.itemContent}>{item.content}</div>
-                <div className={classes.itemAction}>{item.action}</div> */}
-                {plan.planName}
+          {Object.values(plans).map((plan, index) => (
+            <li key={plan._id} className={`${classes.item}`}>
+              <div className={classes.itemIcon}>icon</div>
+              <div className={classes.itemContent}>{plan.planName}</div>
+              <div className={classes.itemAction}>
+                <IconButton onClick={() => handleEditPlan(plan._id)}>
+                  <EditIcon />
+                </IconButton>
                 <IconButton onClick={() => handleDeletePlan(plan._id)}>
                   <DeleteIcon />
                 </IconButton>
-              </li>
-            );
-          })}
+              </div>
+              {console.log(plan)}
+            </li>
+          ))}
         </ul>
       </div>
     </Paper>

@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router';
-import { Paper, IconButton, TextField, Button } from '@material-ui/core';
-import List from '../../common/List/List';
+// import { useHistory } from 'react-router';
+// import { Paper, IconButton, TextField, Button } from '@material-ui/core';
+// import List from '../../common/List/List';
 
-import AddIcon from '@material-ui/icons/Add';
+// import AddIcon from '@material-ui/icons/Add';
 import Spinner from '../../common/Spinner/Spinner';
 import {
   getWeekListByPlanId,
-  createWeek,
-  setSelectedWeek,
+  // createWeek,
+  // setSelectedWeek,
 } from '../../../redux/actions/weekActions';
 
 const WeekList = () => {
-  const history = useHistory();
+  // const history = useHistory();
   const dispatch = useDispatch();
-  const [weekName, setWeekName] = useState('');
+  // const [weekName, setWeekName] = useState('');
   const { selectedPlan } = useSelector((state) => state.planList);
   const { loading, error, weeks } = useSelector((state) => state.weekList);
 
@@ -23,19 +23,19 @@ const WeekList = () => {
     dispatch(getWeekListByPlanId(selectedPlan));
   }, [selectedPlan]);
 
-  const handleSelectWeek = (e, weekId) => {
-    dispatch(setSelectedWeek(weekId));
-  };
+  // const handleSelectWeek = (e, weekId) => {
+  //   dispatch(setSelectedWeek(weekId));
+  // };
 
-  const handleChangeWeekName = (event) => {
-    setWeekName(event.target.value);
-  };
+  // const handleChangeWeekName = (event) => {
+  //   setWeekName(event.target.value);
+  // };
 
-  const handleAddWeek = () => {};
+  // const handleAddWeek = () => {};
 
-  const handleSubmitAddWeek = () => {
-    dispatch(createWeek({ weekName, planId: selectedPlan }, history));
-  };
+  // const handleSubmitAddWeek = () => {
+  //   dispatch(createWeek({ weekName, planId: selectedPlan }, history));
+  // };
 
   return loading ? (
     <Spinner />
@@ -43,7 +43,7 @@ const WeekList = () => {
     <div>{error}</div>
   ) : weeks ? (
     <>
-      <List
+      {/* <List
         title={'Week List'}
         action={
           <IconButton onClick={handleAddWeek}>
@@ -70,7 +70,7 @@ const WeekList = () => {
             Add Week
           </Button>
         </Paper>
-      )}
+      )} */}
     </>
   ) : (
     <Spinner />

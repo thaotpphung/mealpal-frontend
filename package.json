@@ -55,5 +55,8 @@
     "json-server": "^0.16.3",
     "prettier": "^2.4.1",
     "redux-logger": "^3.0.6"
+  },
+  "prettier": {
+    "singleQuote": true
   }
 }

@@ -10,10 +10,10 @@ import {
   PLAN_DELETE_FAIL,
   PLAN_SET_SELECTED,
 } from '../constants/planConstants';
-// import _ from 'lodash';
+import _ from 'lodash';
 
 const INITIAL_STATE = {
-  plans: [],
+  plans: {},
   loading: false,
   error: null,
   selectedPlan: null,
@@ -24,15 +24,12 @@ const planListReducer = (state = INITIAL_STATE, action) => {
     // create plan
     case PLAN_CREATE_REQUEST:
       return { ...state, loading: true };
-    case PLAN_CREATE_SUCCESS:
+    case PLAN_CREATE_SUCCESS: {
       return {
         ...state,
         loading: false,
-        plans: [...state.plans, action.payload.data],
-        ...(action.payload.isNewUser && {
-          selectedPlan: action.payload.data._id,
-        }),
       };
+    }
     case PLAN_CREATE_FAIL:
       return { ...state, loading: false, error: action.payload };
 
@@ -40,7 +37,8 @@ const planListReducer = (state = INITIAL_STATE, action) => {
     case PLAN_LIST_REQUEST:
       return { ...state, loading: true };
     case PLAN_LIST_SUCCESS: {
-      return { ...state, loading: false, plans: action.payload };
+      const newPlans = _.mapKeys(action.payload, '_id');
+      return { ...state, loading: false, plans: newPlans };
     }
     case PLAN_LIST_FAIL:
       return {
@@ -53,7 +51,8 @@ const planListReducer = (state = INITIAL_STATE, action) => {
     case PLAN_DELETE_REQUEST:
       return { ...state, loading: true };
     case PLAN_DELETE_SUCCESS: {
-      return { ...state, loading: false };
+      const updatedPlans = _.omit(state.plans, action.payload);
+      return { ...state, loading: false, plans: updatedPlans };
     }
     case PLAN_DELETE_FAIL:
       return {
