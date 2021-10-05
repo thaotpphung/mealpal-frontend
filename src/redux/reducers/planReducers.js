@@ -8,7 +8,6 @@ import {
   PLAN_DELETE_REQUEST,
   PLAN_DELETE_SUCCESS,
   PLAN_DELETE_FAIL,
-  PLAN_SET_SELECTED,
 } from '../constants/planConstants';
 import _ from 'lodash';
 
@@ -61,13 +60,6 @@ const planListReducer = (state = INITIAL_STATE, action) => {
         error: action.payload,
       };
 
-    // set selected plan
-    case PLAN_SET_SELECTED: {
-      return {
-        ...state,
-        selectedPlan: action.payload,
-      };
-    }
     default:
       return state;
   }

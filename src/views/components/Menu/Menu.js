@@ -20,45 +20,43 @@ const Menu = () => {
 
   return (
     <div>
-      {days.map((day, dayIdx) => {
-        return (
-          <Paper key={`day-card-${dayIdx}`} className={classes.root}>
-            <div className={classes.header}>
-              <div>{day.dayName}</div>
-              <IconButton
-                className={classes.action}
-                onClick={() => history.push('/days/edit')}
-              >
-                <EditIcon />
-              </IconButton>
-            </div>
-            <div className={classes.content}>
-              {day.meals.map((meal, mealIdx) => {
-                return (
-                  <div
-                    key={`meal-in-day-card-${mealIdx}`}
-                    className={classes.menuMeal}
-                  >
-                    <div className={classes.menuMealTitle}>{meal.mealName}</div>
-                    <div className={classes.menuMealContent}>
-                      <ul className={classes.menu}>
-                        {meal.food.map((recipe, recipeIdx) => {
-                          return (
-                            <li key={`dish-in-meal-${recipeIdx}`}>
-                              <RestaurantMenuIcon />
-                              <span>{recipe.recipeName}</span>
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    </div>
+      {Object.values(days).map((day, dayIdx) => (
+        <Paper key={`day-card-${dayIdx}`} className={classes.root}>
+          <div className={classes.header}>
+            <div>{day.dayName}</div>
+            <IconButton
+              className={classes.action}
+              onClick={() => history.push('/days/edit')}
+            >
+              <EditIcon />
+            </IconButton>
+          </div>
+          <div className={classes.content}>
+            {day.meals.map((meal, mealIdx) => {
+              return (
+                <div
+                  key={`meal-in-day-card-${mealIdx}`}
+                  className={classes.menuMeal}
+                >
+                  <div className={classes.menuMealTitle}>{meal.mealName}</div>
+                  <div className={classes.menuMealContent}>
+                    <ul className={classes.menu}>
+                      {meal.food.map((recipe, recipeIdx) => {
+                        return (
+                          <li key={`dish-in-meal-${recipeIdx}`}>
+                            <RestaurantMenuIcon />
+                            <span>{recipe.recipeName}</span>
+                          </li>
+                        );
+                      })}
+                    </ul>
                   </div>
-                );
-              })}
-            </div>
-          </Paper>
-        );
-      })}
+                </div>
+              );
+            })}
+          </div>
+        </Paper>
+      ))}
     </div>
   );
 };

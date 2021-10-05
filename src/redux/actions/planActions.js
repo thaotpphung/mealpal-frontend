@@ -8,11 +8,10 @@ import {
   PLAN_DELETE_REQUEST,
   PLAN_DELETE_SUCCESS,
   PLAN_DELETE_FAIL,
-  PLAN_SET_SELECTED,
 } from '../constants/planConstants';
 import * as api from '../../api/index';
 
-export { createPlan, getPlanList, setSelectedPlan, deletePlan };
+export { createPlan, getPlanList, deletePlan };
 
 const createPlan = (plan, router) => async (dispatch) => {
   try {
@@ -42,13 +41,5 @@ const deletePlan = (planId) => async (dispatch) => {
     dispatch({ type: PLAN_DELETE_SUCCESS, payload: planId });
   } catch (error) {
     dispatch({ type: PLAN_DELETE_FAIL, payload: error.response.data.message });
-  }
-};
-
-const setSelectedPlan = (planId) => async (dispatch) => {
-  try {
-    dispatch({ type: PLAN_SET_SELECTED, payload: planId });
-  } catch (error) {
-    console.log(error);
   }
 };

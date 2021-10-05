@@ -8,7 +8,6 @@ import {
   WEEK_DELETE_REQUEST,
   WEEK_DELETE_SUCCESS,
   WEEK_DELETE_FAIL,
-  WEEK_SET_SELECTED,
 } from '../constants/weekConstants';
 import _ from 'lodash';
 
@@ -16,7 +15,6 @@ const INITIAL_STATE = {
   weeks: {},
   loading: false,
   error: null,
-  selectedWeek: null,
 };
 
 const weekListReducer = (state = INITIAL_STATE, action) => {
@@ -56,13 +54,6 @@ const weekListReducer = (state = INITIAL_STATE, action) => {
         error: action.payload,
       };
 
-    // set selected week
-    case WEEK_SET_SELECTED: {
-      return {
-        ...state,
-        selectedWeek: action.payload,
-      };
-    }
     default:
       return state;
   }

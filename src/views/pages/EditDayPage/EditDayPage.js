@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-// import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 // import { useHistory } from 'react-router-dom';
 import useStyles from './styles';
 import { Button, Typography, TextField } from '@material-ui/core';
@@ -13,19 +13,21 @@ const EditDayPage = () => {
   const classes = useStyles();
   // const dispatch = useDispatch();
   // const history = useHistory();
+  const { days } = useSelector((state) => state.dayList);
 
+  console.log('days', days);
   const [meals, setMeals] = useState([
     {
       mealName: 'Breakfast',
-      food: [''],
+      food: [],
     },
     {
       mealName: 'Lunch',
-      food: [''],
+      food: [],
     },
     {
       mealName: 'Dinner',
-      food: [''],
+      food: [],
     },
   ]);
 
@@ -76,6 +78,7 @@ const EditDayPage = () => {
   };
 
   const handleSubmit = () => {
+    console.log(meals);
     // dispatch(updateDay())
   };
 
