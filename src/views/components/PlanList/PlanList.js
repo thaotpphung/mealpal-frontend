@@ -22,8 +22,8 @@ const PlanList = () => {
     dispatch(getPlanList());
   }, []);
 
-  const handleSelectPlan = (planId) => {
-    dispatch(setSelectedPlan(planId));
+  const handleSelectPlan = (plan) => {
+    dispatch(setSelectedPlan(plan));
   };
 
   const handleDeletePlan = (planId) => {
@@ -54,9 +54,9 @@ const PlanList = () => {
             <li
               key={plan._id}
               className={`${classes.item} ${
-                plan._id === selectedPlan ? classes.selected : null
+                plan._id === selectedPlan.id ? classes.selected : null
               }`}
-              onClick={() => handleSelectPlan(plan._id)}
+              onClick={() => handleSelectPlan(plan)}
             >
               <div className={classes.itemIcon}>icon</div>
               <div className={classes.itemContent}>{plan.planName}</div>

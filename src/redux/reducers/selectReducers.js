@@ -5,27 +5,47 @@ import {
 } from '../constants/selectConstants';
 
 const INITIAL_STATE = {
-  selectedPlan: null,
-  selectedWeek: null,
+  selectedPlan: {
+    id: null,
+    name: null,
+  },
+  selectedWeek: {
+    id: null,
+    name: null,
+  },
 };
 
 const planListReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    // set selected plan
     case SET_SELECTED_WEEK:
       return {
         ...state,
-        selectedWeek: action.payload,
+        selectedWeek: {
+          id: action.payload._id,
+          name: action.payload.weekName,
+        },
       };
     case SET_SELECTED_PLAN:
       return {
-        selectedPlan: action.payload,
-        selectedWeek: 'Please select a week in this plan',
+        selectedPlan: {
+          id: action.payload._id,
+          name: action.payload.planName,
+        },
+        selectedWeek: {
+          id: null,
+          name: 'Please select a week in this plan',
+        },
       };
     case SET_INITIAL_SELECT:
       return {
-        selectedPlan: action.payload.planId,
-        selectedWeek: action.payload.weekId,
+        selectedPlan: {
+          id: action.payload.currentPlan._id,
+          name: action.payload.currentPlan.planName,
+        },
+        selectedWeek: {
+          id: action.payload.currentWeek._id,
+          name: action.payload.currentWeek.weekName,
+        },
       };
 
     default:

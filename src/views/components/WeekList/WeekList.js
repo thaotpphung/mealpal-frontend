@@ -20,15 +20,15 @@ const WeekList = () => {
   const [newWeekName, setNewWeekName] = useState('');
 
   useEffect(() => {
-    dispatch(getWeekListByPlanId(selectedPlan));
-  }, [selectedPlan]);
+    dispatch(getWeekListByPlanId(selectedPlan.id));
+  }, [selectedPlan.id]);
 
   const handleChangeNewWeekName = (event) => {
     setNewWeekName(event.target.value);
   };
 
   const handleSubmitCreateWeek = () => {
-    dispatch(createWeek({ weekName: newWeekName, planId: selectedPlan }));
+    dispatch(createWeek({ weekName: newWeekName, planId: selectedPlan.id }));
   };
 
   const handleDeleteWeek = (weekId) => {
@@ -39,8 +39,8 @@ const WeekList = () => {
     dispatch(deleteWeek(weekId));
   };
 
-  const handleSelectWeek = (weekId) => {
-    dispatch(setSelectedWeek(weekId));
+  const handleSelectWeek = (week) => {
+    dispatch(setSelectedWeek(week));
   };
 
   return (
@@ -59,9 +59,9 @@ const WeekList = () => {
             <li
               key={week._id}
               className={`${classes.item} ${
-                week._id === selectedWeek ? classes.selected : null
+                week._id === selectedWeek.id ? classes.selected : null
               }`}
-              onClick={() => handleSelectWeek(week._id)}
+              onClick={() => handleSelectWeek(week)}
             >
               <div className={classes.itemIcon}>icon</div>
               <div className={classes.itemContent}>{week.weekName}</div>

@@ -19,13 +19,13 @@ const PlanPageHeader = () => {
   }, []);
 
   const handleClickSetCurrent = () => {
-    dispatch(setCurrentPlan(selectedPlan, selectedWeek));
+    dispatch(setCurrentPlan(selectedPlan.id, selectedWeek.id));
   };
 
   return (
     <Paper className={classes.header}>
-      <Chip label={<Typography>{selectedPlan}</Typography>} />
-      <Chip label={<Typography>{selectedWeek}</Typography>} />
+      <Chip label={<Typography>{selectedPlan.name}</Typography>} />
+      <Chip label={<Typography>{selectedWeek.name}</Typography>} />
       <Button
         variant="outlined"
         color="primary"

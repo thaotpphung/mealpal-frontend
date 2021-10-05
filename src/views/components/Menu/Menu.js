@@ -11,17 +11,12 @@ const Menu = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const classes = useStyles();
-
-  const { selectedWeek } = useSelector((state) => state.weekList);
+  const { selectedWeek } = useSelector((state) => state.select);
   const { days } = useSelector((state) => state.dayList);
 
   useEffect(() => {
-    dispatch(getDayListByWeekId(selectedWeek));
-  }, [selectedWeek]);
-
-  // const handleClickEditMeal = (e) => {
-  //   console.log('click edit meal');
-  // };
+    dispatch(getDayListByWeekId(selectedWeek.id));
+  }, [selectedWeek.id]);
 
   return (
     <div>
