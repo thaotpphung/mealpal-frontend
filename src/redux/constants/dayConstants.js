@@ -5,5 +5,3 @@ export const DAY_UPDATE_FAIL = 'DAY_UPDATE_FAIL';
 export const DAY_LIST_REQUEST = 'DAY_LIST_REQUEST';
 export const DAY_LIST_SUCCESS = 'DAY_LIST_SUCCESS';
 export const DAY_LIST_FAIL = 'DAY_LIST_FAIL';
-
-export const DAY_SET_SELECTED = 'DAY_SET_SELECTED';

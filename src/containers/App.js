@@ -24,7 +24,7 @@ function App() {
           <Route path="/" exact component={HomePage} />
           <Route path="/plans/" exact component={PlanPage} />
           <Route path="/plans/new" exact component={NewPlanPage} />
-          <Route path="/days/edit" exact component={EditDayPage} />
+          <Route path="/days/:dayId/edit" exact component={EditDayPage} />
           <Route path="/auth" exact component={AuthPage} />
         </Switch>
       </div>

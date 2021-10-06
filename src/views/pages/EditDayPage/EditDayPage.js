@@ -1,35 +1,17 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-// import { useHistory } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import useStyles from './styles';
 import { Button, Typography, TextField } from '@material-ui/core';
-// import Menu from '../../components/Menu/Menu';
-// import EditIcon from '@material-ui/icons/Edit';
-// import RestaurantMenuIcon from '@material-ui/icons/RestaurantMenu';
-// import { createPlan } from '../../../redux/actions/planActions';
-// import Spinner from '../../common/Spinner/Spinner';
+import { updateDay } from '../../../redux/actions/dayActions';
 
 const EditDayPage = () => {
   const classes = useStyles();
-  // const dispatch = useDispatch();
-  // const history = useHistory();
+  const dispatch = useDispatch();
+  const { dayId } = useParams();
   const { days } = useSelector((state) => state.dayList);
 
-  console.log('days', days);
-  const [meals, setMeals] = useState([
-    {
-      mealName: 'Breakfast',
-      food: [],
-    },
-    {
-      mealName: 'Lunch',
-      food: [],
-    },
-    {
-      mealName: 'Dinner',
-      food: [],
-    },
-  ]);
+  const [meals, setMeals] = useState(days[dayId].meals);
 
   const handleAddRecipe = (e, mealIdx) => {
     const updatedFood = [...meals[mealIdx].food, ''];
@@ -37,6 +19,7 @@ const EditDayPage = () => {
     const updatedMeals = [
       ...JSON.parse(JSON.stringify(meals)).slice(0, mealIdx),
       {
+        _id: meals[mealIdx]._id,
         mealName: meals[mealIdx].mealName,
         food: updatedFood,
       },
@@ -55,6 +38,7 @@ const EditDayPage = () => {
     const updatedMeals = [
       ...JSON.parse(JSON.stringify(meals)).slice(0, mealIdx),
       {
+        _id: meals[mealIdx]._id,
         mealName: meals[mealIdx].mealName,
         food: updatedFood,
       },
@@ -69,6 +53,7 @@ const EditDayPage = () => {
     const updatedMeals = [
       ...JSON.parse(JSON.stringify(meals)).slice(0, mealIdx),
       {
+        _id: meals[mealIdx]._id,
         mealName: meals[mealIdx].mealName,
         food: updatedFood,
       },
@@ -78,8 +63,7 @@ const EditDayPage = () => {
   };
 
   const handleSubmit = () => {
-    console.log(meals);
-    // dispatch(updateDay())
+    dispatch(updateDay(dayId, meals));
   };
 
   return (

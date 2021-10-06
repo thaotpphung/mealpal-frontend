@@ -16,15 +16,11 @@
         "sourceType": "module"
     },
     "plugins": [
-        "react"
+        "react",
+        "only-warn"
     ],
     "rules": {
         "react/react-in-jsx-scope": "off",
-        "prettier/prettier": [
-            "warn",
-            {
-              "singleQuote": true,
-            }
-          ]
+        "prettier/prettier": 1
     }
 }

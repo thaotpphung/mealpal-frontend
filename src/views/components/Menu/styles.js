@@ -15,19 +15,19 @@ export default makeStyles((theme) => ({
   list: {
     listStyle: 'none',
   },
-  menuMeal: {
+  item: {
     display: 'grid',
-    gridTemplateColumns: '2fr 6fr',
+    gridTemplateColumns: '2fr 6fr 1fr',
     columnGap: theme.spacing(2),
     '& div': {
       padding: theme.spacing(2),
     },
   },
-  menuMealTitle: {
+  itemIcon: {
     flex: '0 0 auto',
     marginRight: theme.spacing(3),
   },
-  menuMealContent: {
+  itemContent: {
     flex: '1 1 auto',
   },
   menu: {
