@@ -2,115 +2,81 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import useStyles from './styles';
-import { Button, Typography, TextField } from '@material-ui/core';
-import { updateDay } from '../../../redux/actions/dayActions';
+import { IconButton, Paper, TextField, Button } from '@material-ui/core';
+import RestaurantMenuIcon from '@material-ui/icons/RestaurantMenu';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { createMeal, deleteMeal } from '../../../redux/actions/mealActions';
 
-const EditDayPage = () => {
+const EditDayPage = (day) => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const [newMealName, setNewMealName] = useState('');
   const { dayId } = useParams();
   const { days } = useSelector((state) => state.dayList);
 
-  const [meals, setMeals] = useState(days[dayId].meals);
-
-  const handleAddRecipe = (e, mealIdx) => {
-    const updatedFood = [...meals[mealIdx].food, ''];
-
-    const updatedMeals = [
-      ...JSON.parse(JSON.stringify(meals)).slice(0, mealIdx),
-      {
-        _id: meals[mealIdx]._id,
-        mealName: meals[mealIdx].mealName,
-        food: updatedFood,
-      },
-      ...JSON.parse(JSON.stringify(meals)).slice(mealIdx + 1),
-    ];
-    setMeals(updatedMeals);
+  const handleDeleteMeal = (mealId) => {
+    dispatch(deleteMeal(mealId, dayId));
   };
 
-  const handleChangeRecipe = (e, mealIdx, recipeIdx) => {
-    const updatedFood = [
-      ...meals[mealIdx].food.slice(0, recipeIdx),
-      e.target.value,
-      ...meals[mealIdx].food.slice(recipeIdx + 1),
-    ];
-
-    const updatedMeals = [
-      ...JSON.parse(JSON.stringify(meals)).slice(0, mealIdx),
-      {
-        _id: meals[mealIdx]._id,
-        mealName: meals[mealIdx].mealName,
-        food: updatedFood,
-      },
-      ...JSON.parse(JSON.stringify(meals)).slice(mealIdx + 1),
-    ];
-    setMeals(updatedMeals);
+  const handleChangeNewMealName = (event) => {
+    setNewMealName(event.target.value);
   };
 
-  const handleDeleteRecipe = (e, mealIdx, recipeIdx) => {
-    const updatedFood = [...meals[mealIdx].food];
-    updatedFood.splice(recipeIdx, 1);
-    const updatedMeals = [
-      ...JSON.parse(JSON.stringify(meals)).slice(0, mealIdx),
-      {
-        _id: meals[mealIdx]._id,
-        mealName: meals[mealIdx].mealName,
-        food: updatedFood,
-      },
-      ...JSON.parse(JSON.stringify(meals)).slice(mealIdx + 1),
-    ];
-    setMeals(updatedMeals);
-  };
-
-  const handleSubmit = () => {
-    dispatch(updateDay(dayId, meals));
+  const handleSubmitAddMeal = () => {
+    dispatch(createMeal({ mealName: newMealName, dayId: dayId }));
   };
 
   return (
-    <div>
-      <Typography variant="h3">Edit Day Form</Typography>
-      {meals.map((meal, mealIdx) => (
-        <div key={`meal-field=${mealIdx}`} className={classes.row}>
-          <Typography>{meal.mealName} </Typography>
-          {meal.food.map((recipe, recipeIdx) => (
-            <div key={`recipe-field-${recipeIdx}`} className={classes.field}>
-              <TextField
-                variant="outlined"
-                name="recipeField"
-                value={recipe}
-                onChange={(e) => handleChangeRecipe(e, mealIdx, recipeIdx)}
-              />
-              <Button
-                variant="outlined"
-                color="secondary"
-                className={classes.button}
-                onClick={(e) => handleDeleteRecipe(e, mealIdx, recipeIdx)}
-              >
-                - Remove Dish
-              </Button>
+    <Paper className={classes.root}>
+      <div className={classes.header}>
+        <div>{days[dayId].dayName}</div>
+      </div>
+      <div className={classes.content}>
+        {days[dayId].meals.map((meal, mealIdx) => {
+          return (
+            <div key={`meal-in-day-card-${mealIdx}`} className={classes.item}>
+              <div className={classes.itemIcon}>{meal.mealName}</div>
+              <div className={classes.itemContent}>
+                <ul className={classes.menu}>
+                  {meal.food.map((recipe, recipeIdx) => {
+                    return (
+                      <li key={`dish-in-meal-${recipeIdx}`}>
+                        <RestaurantMenuIcon />
+                        <span>{recipe}</span>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+              <div className={classes.itemAction}>
+                <IconButton>
+                  <EditIcon />
+                </IconButton>
+                <IconButton onClick={() => handleDeleteMeal(meal._id)}>
+                  <DeleteIcon />
+                </IconButton>
+              </div>
             </div>
-          ))}
-
-          <Button
+          );
+        })}
+        <div>
+          <TextField
             variant="outlined"
+            value={newMealName}
+            onChange={handleChangeNewMealName}
+          />
+          <Button
+            variant="contained"
             color="primary"
             className={classes.button}
-            onClick={(e) => handleAddRecipe(e, mealIdx)}
+            onClick={handleSubmitAddMeal}
           >
-            + Add Another
+            + Add Meal
           </Button>
         </div>
-      ))}
-
-      <Button
-        variant="contained"
-        color="primary"
-        className={classes.button}
-        onClick={handleSubmit}
-      >
-        Submit
-      </Button>
-    </div>
+      </div>
+    </Paper>
   );
 };
 
