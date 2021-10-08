@@ -5,10 +5,13 @@ import {
   MEAL_DELETE_REQUEST,
   MEAL_DELETE_SUCCESS,
   MEAL_DELETE_FAIL,
+  MEAL_UPDATE_REQUEST,
+  MEAL_UPDATE_SUCCESS,
+  MEAL_UPDATE_FAIL,
 } from '../constants/mealConstants';
 import * as api from '../../api/index';
 
-export { createMeal, deleteMeal };
+export { createMeal, deleteMeal, updateMeal };
 
 const createMeal = (meal) => async (dispatch) => {
   try {
@@ -27,5 +30,15 @@ const deleteMeal = (mealId, dayId) => async (dispatch) => {
     dispatch({ type: MEAL_DELETE_SUCCESS, payload: { mealId, dayId } });
   } catch (error) {
     dispatch({ type: MEAL_DELETE_FAIL, payload: error.response.data.message });
+  }
+};
+
+const updateMeal = (mealId, food) => async (dispatch) => {
+  try {
+    dispatch({ type: MEAL_UPDATE_REQUEST });
+    const { data } = await api.updateMeal(mealId, food);
+    dispatch({ type: MEAL_UPDATE_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({ type: MEAL_UPDATE_FAIL, payload: error.response.data.message });
   }
 };

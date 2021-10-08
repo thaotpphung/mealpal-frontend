@@ -21,9 +21,7 @@ export default makeStyles((theme) => ({
     display: 'grid',
     gridTemplateColumns: '2fr 6fr 2fr',
     columnGap: theme.spacing(2),
-    '& div': {
-      padding: theme.spacing(2),
-    },
+    margin: theme.spacing(2),
   },
   itemIcon: {
     flex: '0 0 auto',

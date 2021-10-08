@@ -41,3 +41,5 @@ export const updateDay = (dayId, meals) => API.put(`api/days/${dayId}`, meals);
 // meals
 export const createMeal = (newMeal) => API.post('api/meals', newMeal);
 export const deleteMeal = (mealId) => API.delete(`api/meals/${mealId}`);
+export const updateMeal = (mealId, food) =>
+  API.put(`api/meals/${mealId}`, food);
