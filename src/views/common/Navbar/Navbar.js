@@ -9,6 +9,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../../redux/actions/userActions';
+import routes from '../../../constants/routes';
 
 const Navbar = () => {
   const classes = useStyles();
@@ -45,7 +46,7 @@ const Navbar = () => {
               component={RouterLink}
               color="textPrimary"
               exact
-              to="/"
+              to={routes.HOME_PAGE}
               className={classes.link}
               activeClassName={classes.activeClassName}
             >
@@ -55,17 +56,17 @@ const Navbar = () => {
               variant="button"
               component={RouterLink}
               color="textPrimary"
-              to="/plans"
+              to={routes.EXPLORE_PAGE}
               className={classes.link}
               activeClassName={classes.activeClassName}
             >
-              Plans
+              Explore
             </Link>
             <Link
               variant="button"
               component={RouterLink}
               color="textPrimary"
-              to="/recipes"
+              to={routes.RECIPE_PAGE}
               className={classes.link}
               activeClassName={classes.activeClassName}
             >
@@ -75,7 +76,7 @@ const Navbar = () => {
               variant="button"
               component={RouterLink}
               color="textPrimary"
-              to="/cart"
+              to={routes.CART_PAGE}
               className={classes.link}
               activeClassName={classes.activeClassName}
             >
@@ -85,7 +86,7 @@ const Navbar = () => {
           {currentUser ? (
             <Button
               component={RouterLink}
-              to="/auth"
+              to={routes.AUTH_PAGE}
               color="primary"
               variant="outlined"
               className={classes.link}
@@ -96,7 +97,7 @@ const Navbar = () => {
           ) : (
             <Button
               component={RouterLink}
-              to="/auth"
+              to={routes.AUTH_PAGE}
               color="primary"
               variant="outlined"
               className={classes.link}

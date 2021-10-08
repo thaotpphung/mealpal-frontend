@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useStyles from './styles';
+import { useHistory } from 'react-router-dom';
 import { Paper, IconButton, TextField, Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import {
-  getWeekListByPlanId,
+  getAllWeeks,
   createWeek,
   deleteWeek,
 } from '../../../redux/actions/weekActions';
@@ -14,22 +15,14 @@ import { setSelectedWeek } from '../../../redux/actions/selectActions';
 
 const WeekList = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const classes = useStyles();
-  const { selectedPlan, selectedWeek } = useSelector((state) => state.select);
+  const { selectedWeek } = useSelector((state) => state.select);
   const { weeks } = useSelector((state) => state.weekList);
-  const [newWeekName, setNewWeekName] = useState('');
 
   useEffect(() => {
-    dispatch(getWeekListByPlanId(selectedPlan.id));
-  }, [selectedPlan.id]);
-
-  const handleChangeNewWeekName = (event) => {
-    setNewWeekName(event.target.value);
-  };
-
-  const handleSubmitCreateWeek = () => {
-    dispatch(createWeek({ weekName: newWeekName, planId: selectedPlan.id }));
-  };
+    dispatch(getAllWeeks());
+  }, []);
 
   const handleDeleteWeek = (weekId) => {
     dispatch(deleteWeek(weekId));
@@ -77,24 +70,6 @@ const WeekList = () => {
           ))}
         </ul>
       </div>
-
-      {selectedPlan && (
-        <Paper>
-          <TextField
-            variant="outlined"
-            value={newWeekName}
-            onChange={handleChangeNewWeekName}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            onClick={handleSubmitCreateWeek}
-          >
-            Add Week
-          </Button>
-        </Paper>
-      )}
     </Paper>
   );
 };

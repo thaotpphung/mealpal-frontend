@@ -11,7 +11,7 @@ import {
 } from '../constants/weekConstants';
 import * as api from '../../api/index';
 
-export { createWeek, getWeekListByPlanId, deleteWeek };
+export { createWeek, getAllWeeks, deleteWeek };
 
 const createWeek = (week) => async (dispatch) => {
   try {
@@ -23,10 +23,10 @@ const createWeek = (week) => async (dispatch) => {
   }
 };
 
-const getWeekListByPlanId = (planId) => async (dispatch) => {
+const getAllWeeks = () => async (dispatch) => {
   try {
     dispatch({ type: WEEK_LIST_REQUEST });
-    const { data } = await api.getWeekListByPlanId(planId);
+    const { data } = await api.getWeeks();
     dispatch({ type: WEEK_LIST_SUCCESS, payload: data });
   } catch (error) {
     dispatch({ type: WEEK_LIST_FAIL, payload: error.response.data.message });
