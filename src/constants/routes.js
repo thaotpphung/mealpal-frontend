@@ -7,4 +7,6 @@ export default {
   EDIT_DAY_PAGE: '/days/:dayId/edit',
   AUTH_PAGE: '/auth',
   NEW_WEEK_PAGE: '/weeks/new',
+  RECIPE_DETAILS_PAGE: '/recipes/:recipeId',
+  NEW_RECIPE_PAGE: '/recipes/new',
 };

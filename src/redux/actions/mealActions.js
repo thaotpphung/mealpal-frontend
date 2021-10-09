@@ -33,11 +33,14 @@ const deleteMeal = (mealId, dayId) => async (dispatch) => {
   }
 };
 
-const updateMeal = (mealId, food) => async (dispatch) => {
+const updateMeal = (mealId, food, mealIdx, dayId) => async (dispatch) => {
   try {
     dispatch({ type: MEAL_UPDATE_REQUEST });
     const { data } = await api.updateMeal(mealId, food);
-    dispatch({ type: MEAL_UPDATE_SUCCESS, payload: data });
+    dispatch({
+      type: MEAL_UPDATE_SUCCESS,
+      payload: { food: data.data, mealId, mealIdx, dayId },
+    });
   } catch (error) {
     dispatch({ type: MEAL_UPDATE_FAIL, payload: error.response.data.message });
   }

@@ -3,9 +3,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useParams, Link } from 'react-router-dom';
 import useStyles from './styles';
 import { IconButton, Paper, TextField, Button } from '@material-ui/core';
+import Autocomplete from '@mui/material/Autocomplete';
+import Box from '@mui/material/Box';
 import RestaurantMenuIcon from '@material-ui/icons/RestaurantMenu';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import DoneIcon from '@mui/icons-material/Done';
 import {
   createMeal,
@@ -19,11 +23,13 @@ const EditDayPage = () => {
   const [newMealName, setNewMealName] = useState('');
   const { dayId } = useParams();
   const { days } = useSelector((state) => state.dayList);
+  const { recipes } = useSelector((state) => state.recipeList);
   const dayLength = Object.keys(days).length;
   const [isInEditMealMode, setIsInEditMealMode] = useState(
     new Array(dayLength).fill(false)
   );
   const [foodFields, setFoodFields] = useState([]);
+  const [foodFromRecipes, setFoodFromRecipes] = useState([]); // fields with ids that will be sent to backend
 
   const handleDeleteMeal = (mealId) => {
     dispatch(deleteMeal(mealId, dayId));
@@ -37,23 +43,51 @@ const EditDayPage = () => {
     dispatch(createMeal({ mealName: newMealName, dayId: dayId }));
   };
 
-  const handleEnableEditMealMode = (mealIdx, food) => {
+  const handleEnableEditMealMode = (mealIdx) => {
     const edits = new Array(dayLength).fill(false);
     edits[mealIdx] = true;
     setIsInEditMealMode(edits);
-    setFoodFields(food.length === 0 ? [''] : [...food]);
+    setFoodFields(['']);
+    setFoodFromRecipes([]);
   };
 
-  const handleSubmitUpdateMeal = (mealId) => {
+  const handleSubmitUpdateMeal = (mealId, mealIdx, dayId) => {
     const edits = new Array(dayLength).fill(false);
     setIsInEditMealMode(edits);
-    dispatch(updateMeal(mealId, foodFields));
+    dispatch(updateMeal(mealId, foodFields, mealIdx, dayId));
   };
 
   const handleChangeFoodField = (event, recipeIdx) => {
     const fields = [...foodFields];
     fields[recipeIdx] = event.target.value;
     setFoodFields(fields);
+  };
+
+  const handleAddFoodField = () => {
+    const fields = [...foodFields];
+    fields.push('');
+    setFoodFields(fields);
+  };
+
+  const handleDeleteFoodField = (recipeIdx) => {
+    const fields = [...foodFields];
+    fields.splice(recipeIdx, 1);
+    setFoodFields(fields);
+  };
+
+  const extractedFieldsForAutoComplete = Object.values(recipes).map(
+    (recipe) => {
+      return {
+        label: recipe.recipeName,
+        recipeId: recipe._id,
+      };
+    }
+  );
+
+  const handleAddFoodFromRecipes = (value) => {
+    const recipes = [...foodFromRecipes];
+    recipes.push(value);
+    setFoodFromRecipes(recipes);
   };
 
   return (
@@ -68,36 +102,89 @@ const EditDayPage = () => {
               <div className={classes.itemIcon}>{meal.mealName}</div>
               <div className={classes.itemContent}>
                 <ul className={classes.menu}>
-                  {foodFields.map((recipe, recipeIdx) => {
-                    return isInEditMealMode[mealIdx] ? (
-                      <li key={`dish-in-meal-${recipeIdx}`}>
+                  {meal.food.map((recipe) => {
+                    return (
+                      <li key={recipe._id}>
                         <RestaurantMenuIcon />
-                        <TextField
-                          variant="outlined"
-                          value={foodFields[recipeIdx]}
-                          onChange={(event) =>
-                            handleChangeFoodField(event, recipeIdx)
-                          }
-                        />
-                      </li>
-                    ) : (
-                      <li key={`dish-in-meal-${recipeIdx}`}>
-                        <RestaurantMenuIcon />
-                        <span>{meal.food[recipeIdx]}</span>
+                        {recipe.recipeName}
                       </li>
                     );
                   })}
+                  {foodFields.map((recipe, recipeIdx) => {
+                    return (
+                      isInEditMealMode[mealIdx] && (
+                        <li key={`food-field-${recipeIdx}`}>
+                          <RestaurantMenuIcon />
+                          <TextField
+                            variant="outlined"
+                            value={recipe}
+                            onChange={(event) =>
+                              handleChangeFoodField(event, recipeIdx)
+                            }
+                          />
+                          <IconButton
+                            onClick={() => handleDeleteFoodField(recipeIdx)}
+                          >
+                            <HighlightOffIcon className={classes.deleteIcon} />
+                          </IconButton>
+                          <IconButton onClick={handleAddFoodField}>
+                            <AddCircleOutlineIcon />
+                          </IconButton>
+                        </li>
+                      )
+                    );
+                  })}
+                  {isInEditMealMode[mealIdx] && (
+                    <>
+                      {foodFromRecipes.map((recipe, recipeIdx) => {
+                        return (
+                          <li
+                            key={`recipe-food-${recipe.recipeId}-${recipeIdx}`}
+                          >
+                            <RestaurantMenuIcon />
+                            {recipe.label}
+                            <IconButton
+                              onClick={() => handleDeleteFoodField(recipeIdx)}
+                            >
+                              <HighlightOffIcon
+                                className={classes.deleteIcon}
+                              />
+                            </IconButton>
+                          </li>
+                        );
+                      })}
+                      <Autocomplete
+                        onChange={(event, value) =>
+                          handleAddFoodFromRecipes(value)
+                        }
+                        disablePortal
+                        getOptionLabel={(option) => option.label}
+                        options={extractedFieldsForAutoComplete}
+                        sx={{ width: 300 }}
+                        renderOption={(props, option) => (
+                          <Box component="li" {...props} key={option.recipeId}>
+                            {option.label}
+                          </Box>
+                        )}
+                        renderInput={(params) => (
+                          <TextField {...params} label="Add from recipes" />
+                        )}
+                      />
+                    </>
+                  )}
                 </ul>
               </div>
               <div className={classes.itemAction}>
                 {isInEditMealMode[mealIdx] ? (
-                  <IconButton onClick={() => handleSubmitUpdateMeal(meal._id)}>
+                  <IconButton
+                    onClick={() =>
+                      handleSubmitUpdateMeal(meal._id, mealIdx, dayId)
+                    }
+                  >
                     <DoneIcon />
                   </IconButton>
                 ) : (
-                  <IconButton
-                    onClick={() => handleEnableEditMealMode(mealIdx, meal.food)}
-                  >
+                  <IconButton onClick={() => handleEnableEditMealMode(mealIdx)}>
                     <EditIcon />
                   </IconButton>
                 )}

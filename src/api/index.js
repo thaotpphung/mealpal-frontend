@@ -42,4 +42,9 @@ export const updateDay = (dayId, meals) => API.put(`api/days/${dayId}`, meals);
 export const createMeal = (newMeal) => API.post('api/meals', newMeal);
 export const deleteMeal = (mealId) => API.delete(`api/meals/${mealId}`);
 export const updateMeal = (mealId, food) =>
-  API.put(`api/meals/${mealId}`, food);
+  API.patch(`api/meals/${mealId}`, food);
+
+// recipes
+export const createRecipe = (newRecipe) => API.post('api/recipes', newRecipe);
+export const getRecipes = () => API.get(`api/recipes/`);
+export const deleteRecipe = (recipeId) => API.delete(`api/recipes/${recipeId}`);

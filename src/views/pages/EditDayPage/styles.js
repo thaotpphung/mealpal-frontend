@@ -36,9 +36,9 @@ export default makeStyles((theme) => ({
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
-      '& span': {
-        marginLeft: theme.spacing(2),
-      },
     },
+  },
+  deleteIcon: {
+    color: theme.palette.error.main,
   },
 }));

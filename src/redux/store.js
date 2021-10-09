@@ -13,7 +13,7 @@ const middlewares = applyMiddleware(thunk, logger);
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['user', 'dayList'],
+  whitelist: ['user', 'dayList', 'recipeList'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

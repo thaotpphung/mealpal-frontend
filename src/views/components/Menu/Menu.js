@@ -42,7 +42,7 @@ const Menu = () => {
                         return (
                           <li key={`dish-in-meal-${recipeIdx}`}>
                             <RestaurantMenuIcon />
-                            <span>{recipe}</span>
+                            <span>{recipe.recipeName}</span>
                           </li>
                         );
                       })}

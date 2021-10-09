@@ -6,12 +6,9 @@ import { Paper, IconButton, TextField, Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import {
-  getAllWeeks,
-  createWeek,
-  deleteWeek,
-} from '../../../redux/actions/weekActions';
+import { getAllWeeks, deleteWeek } from '../../../redux/actions/weekActions';
 import { setSelectedWeek } from '../../../redux/actions/selectActions';
+import routes from '../../../constants/routes';
 
 const WeekList = () => {
   const dispatch = useDispatch();
@@ -41,7 +38,7 @@ const WeekList = () => {
       <div className={classes.header}>
         <div>Week List</div>
         <div className={classes.action}>
-          <IconButton onClick={() => history.push('/weeks/new')}>
+          <IconButton onClick={() => history.push(routes.NEW_WEEK_PAGE)}>
             <AddIcon />
           </IconButton>
         </div>
@@ -56,16 +53,7 @@ const WeekList = () => {
               }`}
               onClick={() => handleSelectWeek(week)}
             >
-              <div className={classes.itemIcon}>icon</div>
-              <div className={classes.itemContent}>{week.weekName}</div>
-              <div className={classes.itemAction}>
-                <IconButton onClick={() => handleEditWeek(week._id)}>
-                  <EditIcon />
-                </IconButton>
-                <IconButton onClick={() => handleDeleteWeek(week._id)}>
-                  <DeleteIcon />
-                </IconButton>
-              </div>
+              <div className={classes.itemIcon}>{week.weekName}</div>
             </li>
           ))}
         </ul>

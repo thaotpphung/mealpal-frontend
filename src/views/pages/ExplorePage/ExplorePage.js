@@ -1,25 +1,28 @@
 import React from 'react';
-// import { useSelector } from 'react-redux';
-// import useStyles from './styles';
+import { useDispatch, useSelector } from 'react-redux';
 import { Grid } from '@material-ui/core';
-// import MoreVertIcon from '@material-ui/icons/MoreVert';
-// import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import PlanPosts from '../../components/PlanPosts/PlanPosts';
-import FriendList from '../../components/FriendList/FriendList';
+import useStyles from './styles';
+import WeekInfoCard from '../../components/WeekInfoCard/WeekInfoCard';
 
 const ExplorePage = () => {
-  // const classes = useStyles();
-  // const user = useSelector((state) => state.user);
-  // const { success } = user;
+  const classes = useStyles();
+  const { weeks } = useSelector((state) => state.weekList);
+
   return (
-    <Grid container justify="space-between" alignItems="stretch" spacing={3}>
-      <Grid item xs={12} sm={8}>
-        <PlanPosts />
+    <div>
+      <Grid
+        className={classes.container}
+        container
+        alignItems="stretch"
+        spacing={3}
+      >
+        {Object.values(weeks).map((week) => (
+          <Grid key={week._id} item xs={12} sm={3} md={3}>
+            <WeekInfoCard week={week} />
+          </Grid>
+        ))}
       </Grid>
-      <Grid item xs={12} sm={4}>
-        <FriendList />
-      </Grid>
-    </Grid>
+    </div>
   );
 };
 

@@ -13,13 +13,14 @@ import {
   Collapse,
 } from '@material-ui/core/';
 import { styled } from '@mui/material/styles';
+import useStyles from './styles';
+
 import EditIcon from '@material-ui/icons/Edit';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ShareIcon from '@material-ui/icons/Share';
 import ThumbUpAltOutlined from '@material-ui/icons/ThumbUpAltOutlined';
-
-import useStyles from './styles';
+import { deleteWeek } from '../../../redux/actions/weekActions';
 
 const Likes = () => {
   return (
@@ -41,12 +42,15 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-const WeekInfo = () => {
+const WeekInfoCard = ({ week }) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const [expanded, setExpanded] = useState(false);
-  const { weeks } = useSelector((state) => state.weekList);
-  const { selectedWeek } = useSelector((state) => state.select);
   const { currentUser } = useSelector((state) => state.user);
+
+  const handleDeleteWeek = (weekId) => {
+    dispatch(deleteWeek(weekId));
+  };
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -62,7 +66,10 @@ const WeekInfo = () => {
         }
         action={
           <>
-            <IconButton aria-label="settings">
+            <IconButton
+              aria-label="settings"
+              onClick={() => handleDeleteWeek(week._id)}
+            >
               <DeleteIcon />
             </IconButton>
             <IconButton aria-label="settings">
@@ -70,13 +77,13 @@ const WeekInfo = () => {
             </IconButton>
           </>
         }
-        title={currentUser.fullName}
+        title="thao phung"
         subheader="created at 10/4/2021"
       />
       <CardContent>
-        <Typography>Name: {weeks[selectedWeek.id]?.weekName} </Typography>
-        <Typography>Diet: {weeks[selectedWeek.id]?.diets}</Typography>
-        <Typography>Plan Tags: {weeks[selectedWeek.id]?.planTags}</Typography>
+        <Typography>Name: {week?.weekName} </Typography>
+        <Typography>Diet: {week?.diets}</Typography>
+        <Typography>Plan Tags: {week?.planTags}</Typography>
       </CardContent>
       <CardActions className={classes.cardActions}>
         <Button size="small" color="primary">
@@ -101,4 +108,4 @@ const WeekInfo = () => {
   );
 };
 
-export default WeekInfo;
+export default WeekInfoCard;
