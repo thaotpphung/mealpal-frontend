@@ -1,4 +1,5 @@
 import {
+  MEAL_LIST_SET,
   MEAL_CREATE_REQUEST,
   MEAL_CREATE_SUCCESS,
   MEAL_CREATE_FAIL,
@@ -11,7 +12,11 @@ import {
 } from '../constants/mealConstants';
 import * as api from '../../api/index';
 
-export { createMeal, deleteMeal, updateMeal };
+export { setMeals, createMeal, deleteMeal, updateMeal };
+
+const setMeals = (meals) => async (dispatch) => {
+  dispatch({ type: MEAL_LIST_SET, payload: meals });
+};
 
 const createMeal = (meal) => async (dispatch) => {
   try {
@@ -33,15 +38,19 @@ const deleteMeal = (mealId, dayId) => async (dispatch) => {
   }
 };
 
-const updateMeal = (mealId, food, mealIdx, dayId) => async (dispatch) => {
-  try {
-    dispatch({ type: MEAL_UPDATE_REQUEST });
-    const { data } = await api.updateMeal(mealId, food);
-    dispatch({
-      type: MEAL_UPDATE_SUCCESS,
-      payload: { food: data.data, mealId, mealIdx, dayId },
-    });
-  } catch (error) {
-    dispatch({ type: MEAL_UPDATE_FAIL, payload: error.response.data.message });
-  }
-};
+const updateMeal =
+  (mealId, food, mealIdx, dayId, foodFromRecipe) => async (dispatch) => {
+    try {
+      dispatch({ type: MEAL_UPDATE_REQUEST });
+      const { data } = await api.updateMeal(mealId, { food, foodFromRecipe });
+      dispatch({
+        type: MEAL_UPDATE_SUCCESS,
+        payload: { food: data.data, mealId, mealIdx, dayId },
+      });
+    } catch (error) {
+      dispatch({
+        type: MEAL_UPDATE_FAIL,
+        payload: error.response.data.message,
+      });
+    }
+  };
