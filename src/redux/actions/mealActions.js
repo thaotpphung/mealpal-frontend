@@ -28,29 +28,28 @@ const createMeal = (meal) => async (dispatch) => {
   }
 };
 
-const deleteMeal = (mealId, dayId) => async (dispatch) => {
+const deleteMeal = (mealId) => async (dispatch) => {
   try {
     dispatch({ type: MEAL_DELETE_REQUEST });
     await api.deleteMeal(mealId);
-    dispatch({ type: MEAL_DELETE_SUCCESS, payload: { mealId, dayId } });
+    dispatch({ type: MEAL_DELETE_SUCCESS, payload: { mealId } });
   } catch (error) {
     dispatch({ type: MEAL_DELETE_FAIL, payload: error.response.data.message });
   }
 };
 
-const updateMeal =
-  (mealId, food, mealIdx, dayId, foodFromRecipe) => async (dispatch) => {
-    try {
-      dispatch({ type: MEAL_UPDATE_REQUEST });
-      const { data } = await api.updateMeal(mealId, { food, foodFromRecipe });
-      dispatch({
-        type: MEAL_UPDATE_SUCCESS,
-        payload: { food: data.data, mealId, mealIdx, dayId },
-      });
-    } catch (error) {
-      dispatch({
-        type: MEAL_UPDATE_FAIL,
-        payload: error.response.data.message,
-      });
-    }
-  };
+const updateMeal = (mealId, food, mealIdx) => async (dispatch) => {
+  try {
+    dispatch({ type: MEAL_UPDATE_REQUEST });
+    await api.updateMeal(mealId, food);
+    dispatch({
+      type: MEAL_UPDATE_SUCCESS,
+      payload: { food, mealId, mealIdx },
+    });
+  } catch (error) {
+    dispatch({
+      type: MEAL_UPDATE_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};

@@ -43,6 +43,8 @@ export const createMeal = (newMeal) => API.post('api/meals', newMeal);
 export const deleteMeal = (mealId) => API.delete(`api/meals/${mealId}`);
 export const updateMeal = (mealId, food) =>
   API.patch(`api/meals/${mealId}`, food);
+export const deleteFood = (mealId, recipeId) =>
+  API.delete(`api/meals/${mealId}/recipes/${recipeId}`);
 
 // recipes
 export const createRecipe = (newRecipe) => API.post('api/recipes', newRecipe);

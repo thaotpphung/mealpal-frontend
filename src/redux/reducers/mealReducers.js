@@ -41,20 +41,21 @@ const mealListReducer = (state = INITIAL_STATE, action) => {
       return { ...state, loading: true };
     case MEAL_DELETE_SUCCESS: {
       const updatedDay = _.cloneDeep(state.day);
-      updatedDay.meals.filter((meal) => meal._id !== action.payload.mealId);
+      const updatedMeals = updatedDay.meals.filter(
+        (meal) => meal._id !== action.payload.mealId
+      );
+      updatedDay.meals = updatedMeals;
       return { ...state, loading: false, day: updatedDay };
     }
     case MEAL_DELETE_FAIL:
       return { ...state, loading: false, error: action.payload };
 
-    // update meal (add food)
+    // update meal
     case MEAL_UPDATE_REQUEST:
       return { ...state, loading: true };
     case MEAL_UPDATE_SUCCESS: {
       const updatedDay = _.cloneDeep(state.day);
-      action.payload.food.forEach((foodItem) => {
-        updatedDay.meals[action.payload.mealIdx].food.push(foodItem);
-      });
+      updatedDay.meals[action.payload.mealIdx].food = action.payload.food;
       return { ...state, loading: false, day: updatedDay };
     }
     case MEAL_UPDATE_FAIL:
