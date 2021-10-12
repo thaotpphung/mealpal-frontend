@@ -9,7 +9,6 @@ import {
   Typography,
   Avatar,
   IconButton,
-  Chip,
   Collapse,
 } from '@material-ui/core/';
 import { styled } from '@mui/material/styles';
@@ -18,9 +17,11 @@ import useStyles from './styles';
 import EditIcon from '@material-ui/icons/Edit';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DeleteIcon from '@material-ui/icons/Delete';
+import StarIcon from '@material-ui/icons/Star';
 import ShareIcon from '@material-ui/icons/Share';
 import ThumbUpAltOutlined from '@material-ui/icons/ThumbUpAltOutlined';
 import { deleteWeek } from '../../../redux/actions/weekActions';
+import { setCurrentWeek } from '../../../redux/actions/userActions';
 
 const Likes = () => {
   return (
@@ -49,7 +50,19 @@ const WeekInfoCard = ({ week }) => {
   const { currentUser } = useSelector((state) => state.user);
 
   const handleDeleteWeek = (weekId) => {
-    dispatch(deleteWeek(weekId));
+    if (weekId !== undefined) {
+      dispatch(deleteWeek(weekId));
+    }
+    // TODO
+    // else display error
+  };
+
+  const handleSetCurrentWeek = (weekId) => {
+    if (weekId !== undefined) {
+      dispatch(setCurrentWeek(weekId));
+    }
+    // TODO
+    // else display error
   };
 
   const handleExpandClick = () => {
@@ -68,12 +81,18 @@ const WeekInfoCard = ({ week }) => {
           <>
             <IconButton
               aria-label="settings"
-              onClick={() => handleDeleteWeek(week._id)}
+              onClick={() => handleDeleteWeek(week?._id)}
             >
               <DeleteIcon />
             </IconButton>
             <IconButton aria-label="settings">
               <EditIcon />
+            </IconButton>
+            <IconButton
+              aria-label="settings"
+              onClick={() => handleSetCurrentWeek(week?._id)}
+            >
+              <StarIcon />
             </IconButton>
           </>
         }
@@ -82,8 +101,8 @@ const WeekInfoCard = ({ week }) => {
       />
       <CardContent>
         <Typography>Name: {week?.weekName} </Typography>
-        <Typography>Diet: {week?.diets}</Typography>
-        <Typography>Plan Tags: {week?.planTags}</Typography>
+        <Typography>Diet: {week?.weekDiet}</Typography>
+        <Typography>Tags: {week?.weekTags}</Typography>
       </CardContent>
       <CardActions className={classes.cardActions}>
         <Button size="small" color="primary">

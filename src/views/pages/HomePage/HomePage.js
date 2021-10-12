@@ -5,11 +5,16 @@ import useStyles from './styles';
 import WeekList from '../../components/WeekList/WeekList';
 import Menu from '../../components/Menu/Menu';
 import WeekInfoCard from '../../components/WeekInfoCard/WeekInfoCard';
+import { setSelectedWeek } from '../../../redux/actions/selectActions';
 
 const HomePage = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const { selectedWeek } = useSelector((state) => state.select);
   const { weeks } = useSelector((state) => state.weekList);
+  const { currentUser } = useSelector((state) => state.user);
+
+  useEffect(() => dispatch(setSelectedWeek(currentUser.currentWeek)), []);
 
   return (
     <div>

@@ -6,16 +6,17 @@ import {
   USER_REGISTER_SUCCESS,
   USER_REGISTER_FAIL,
   USER_LOGOUT,
-  USER_SET_CURRENT_PLAN_REQUEST,
-  USER_SET_CURRENT_PLAN_SUCCESS,
-  USER_SET_CURRENT_PLAN_FAIL,
+  USER_SET_CURRENT_WEEK_REQUEST,
+  USER_SET_CURRENT_WEEK_SUCCESS,
+  USER_SET_CURRENT_WEEK_FAIL,
   USER_GET_REQUEST,
   USER_GET_SUCCESS,
   USER_GET_FAIL,
 } from '../constants/userConstants';
 import * as api from '../../api/index';
+import { SET_SELECTED_WEEK } from '../constants/selectConstants';
 
-export { signin, register, logout, setCurrentPlan, getUser };
+export { signin, register, logout, setCurrentWeek, getUser };
 
 const signin = (formData) => async (dispatch) => {
   dispatch({ type: USER_SIGNIN_REQUEST, payload: formData });
@@ -48,14 +49,14 @@ const logout = () => (dispatch) => {
   dispatch({ type: USER_LOGOUT, payload: 'Successfully logged out!' });
 };
 
-const setCurrentPlan = (planId, weekId) => async (dispatch) => {
-  dispatch({ type: USER_SET_CURRENT_PLAN_REQUEST });
+const setCurrentWeek = (weekId) => async (dispatch) => {
+  dispatch({ type: USER_SET_CURRENT_WEEK_REQUEST });
   try {
-    const { data } = await api.setCurrentPlan(planId, weekId);
-    dispatch({ type: USER_SET_CURRENT_PLAN_SUCCESS, payload: data });
+    const { data } = await api.setCurrentWeek(weekId);
+    dispatch({ type: USER_SET_CURRENT_WEEK_SUCCESS, payload: data });
   } catch (error) {
     dispatch({
-      type: USER_SET_CURRENT_PLAN_FAIL,
+      type: USER_SET_CURRENT_WEEK_FAIL,
       payload: error.response.data.message,
     });
   }

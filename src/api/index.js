@@ -16,8 +16,8 @@ export const signin = (formData) => API.post('api/users/signin', formData);
 export const register = (formData) => API.post('api/users/register', formData);
 
 // users
-export const setCurrentPlan = (planId, weekId) =>
-  API.put('api/users/currentplan', { planId, weekId });
+export const setCurrentWeek = (weekId) =>
+  API.patch('api/users/currentweek', { weekId });
 export const getUser = () => API.get('api/users/');
 
 // plans

@@ -62,7 +62,7 @@ const AuthPage = () => {
   //   const result = res?.profileObj;
   //   const token = res?.tokenId;
   //   try {
-  //     // TODO dispatch sign in with Google
+  //     TODO dispatch sign in with Google
   //   } catch (error) {
   //     console.log(error);
   //   }

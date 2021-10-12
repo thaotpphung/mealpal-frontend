@@ -20,10 +20,10 @@ const NewWeekPage = () => {
     weekName: 'test',
     weekDescription: 'test',
     weekTags: ['test', 'test'],
-    weekDiet: ['vegan', 'vegetarian'],
+    weekDiet: 'vegan',
   });
 
-  const { weekName, weekDescription, weekTags } = initialWeek;
+  const { weekName, weekDescription, weekTags, weekDiet } = initialWeek;
 
   const handleSubmitInitialWeek = async () => {
     dispatch(createWeek({ ...initialWeek, userId: currentUser._id }));
@@ -72,15 +72,15 @@ const NewWeekPage = () => {
         <div>
           <TextField
             variant="outlined"
-            name="weekTags"
-            value={weekTags}
+            name="weekDiet"
+            value={weekDiet}
             onChange={handleChange}
           />
         </div>
       </div>
 
       <div className={classes.formRow}>
-        <Typography>Plan Tags</Typography>
+        <Typography>Tags</Typography>
         <div>
           <TextField
             variant="outlined"

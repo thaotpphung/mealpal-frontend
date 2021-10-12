@@ -6,9 +6,9 @@ import {
   USER_REGISTER_SUCCESS,
   USER_REGISTER_FAIL,
   USER_LOGOUT,
-  USER_SET_CURRENT_PLAN_REQUEST,
-  USER_SET_CURRENT_PLAN_SUCCESS,
-  USER_SET_CURRENT_PLAN_FAIL,
+  USER_SET_CURRENT_WEEK_REQUEST,
+  USER_SET_CURRENT_WEEK_SUCCESS,
+  USER_SET_CURRENT_WEEK_FAIL,
   USER_GET_REQUEST,
   USER_GET_SUCCESS,
   USER_GET_FAIL,
@@ -43,12 +43,12 @@ const userReducer = (state = INITIAL_STATE, action) => {
     case USER_REGISTER_FAIL:
       return { ...state, loading: false, error: action.payload };
 
-    case USER_SET_CURRENT_PLAN_REQUEST:
+    case USER_SET_CURRENT_WEEK_REQUEST:
       return { ...state, loading: true };
-    case USER_SET_CURRENT_PLAN_SUCCESS:
+    case USER_SET_CURRENT_WEEK_SUCCESS:
       console.log(action.payload.user);
       return { ...state, loading: false, currentUser: action.payload.user };
-    case USER_SET_CURRENT_PLAN_FAIL:
+    case USER_SET_CURRENT_WEEK_FAIL:
       return { ...state, loading: false, error: action.payload };
 
     case USER_GET_REQUEST:

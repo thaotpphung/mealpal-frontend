@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useStyles from './styles';
 import { useHistory } from 'react-router-dom';
-import { Paper, IconButton, TextField, Button } from '@material-ui/core';
+import { Paper, IconButton } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import { getAllWeeks, deleteWeek } from '../../../redux/actions/weekActions';
+import StarOutlineIcon from '@mui/icons-material/StarOutline';
+import { getAllWeeks } from '../../../redux/actions/weekActions';
 import { setSelectedWeek } from '../../../redux/actions/selectActions';
 import routes from '../../../constants/routes';
 
@@ -20,14 +19,6 @@ const WeekList = () => {
   useEffect(() => {
     dispatch(getAllWeeks());
   }, []);
-
-  const handleDeleteWeek = (weekId) => {
-    dispatch(deleteWeek(weekId));
-  };
-
-  const handleEditWeek = (weekId) => {
-    dispatch(deleteWeek(weekId));
-  };
 
   const handleSelectWeek = (week) => {
     dispatch(setSelectedWeek(week));
@@ -53,7 +44,10 @@ const WeekList = () => {
               }`}
               onClick={() => handleSelectWeek(week)}
             >
-              <div className={classes.itemIcon}>{week.weekName}</div>
+              <div className={classes.itemIcon}>
+                <StarOutlineIcon className={classes.deleteIcon} />
+              </div>
+              <div className={classes.itemContent}>{week.weekName}</div>
             </li>
           ))}
         </ul>
