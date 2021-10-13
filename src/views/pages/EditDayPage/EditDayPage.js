@@ -31,6 +31,7 @@ const EditDayPage = () => {
   const { recipes } = useSelector((state) => state.recipeList);
   const { day } = useSelector((state) => state.mealList);
   const { currentUser } = useSelector((state) => state.user);
+  const { selectedWeek } = useSelector((state) => state.select);
 
   // autocompelte
   const filter = createFilterOptions();
@@ -79,7 +80,13 @@ const EditDayPage = () => {
   };
 
   const handleSubmitCreateMeal = () => {
-    dispatch(createMeal({ mealName: newMealName, dayId: dayId }));
+    dispatch(
+      createMeal({
+        mealName: newMealName,
+        dayId: dayId,
+        weekId: selectedWeek.id,
+      })
+    );
   };
 
   const handleSubmitUpdateMeal = (mealId, mealIdx) => {

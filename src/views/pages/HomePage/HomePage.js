@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Grid } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import useStyles from './styles';
 import WeekList from '../../components/WeekList/WeekList';
 import Menu from '../../components/Menu/Menu';
@@ -24,7 +24,10 @@ const HomePage = () => {
           <WeekList />
         </Grid>
         <Grid item xs={12} sm={8}>
-          <Menu />
+          {!!selectedWeek && <Menu />}
+          {selectedWeek.id === undefined && (
+            <Typography>Please select a week</Typography>
+          )}
         </Grid>
       </Grid>
     </div>

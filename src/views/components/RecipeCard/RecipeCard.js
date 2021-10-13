@@ -139,6 +139,12 @@ const RecipeCard = ({ recipe }) => {
                 handleChange={handleChange}
               />
               <Input
+                name="servings"
+                label="Servings"
+                value={recipeForm?.servings}
+                handleChange={handleChange}
+              />
+              <Input
                 name="prepTime"
                 label="Prep Time"
                 value={recipeForm?.prepTime}
