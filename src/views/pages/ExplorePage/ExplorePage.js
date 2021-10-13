@@ -16,8 +16,14 @@ const ExplorePage = () => {
         alignItems="stretch"
         spacing={3}
       >
-        {Object.values(weeks).map((week) => (
-          <Grid key={week._id} item xs={12} sm={3} md={3}>
+        {Object.values(weeks).map((week, weekIdx) => (
+          <Grid
+            key={`{'explore-page-${week._id}-${weekIdx}`}
+            item
+            xs={12}
+            sm={3}
+            md={3}
+          >
             <WeekInfoCard week={week} />
           </Grid>
         ))}

@@ -10,6 +10,9 @@ import {
   RECIPE_DELETE_REQUEST,
   RECIPE_DELETE_SUCCESS,
   RECIPE_DELETE_FAIL,
+  RECIPE_UPDATE_REQUEST,
+  RECIPE_UPDATE_SUCCESS,
+  RECIPE_UPDATE_FAIL,
 } from '../constants/recipeConstants';
 
 const INITIAL_STATE = {
@@ -56,6 +59,20 @@ const recipeListReducer = (state = INITIAL_STATE, action) => {
         loading: false,
         error: action.payload,
       };
+
+    // update recipe
+    case RECIPE_UPDATE_REQUEST:
+      return { ...state, loading: true };
+    case RECIPE_UPDATE_SUCCESS: {
+      console.log(action.payload);
+      const updatedRecipes = {
+        ...state.recipes,
+        [action.payload._id]: action.payload,
+      };
+      return { ...state, loading: false, recipes: updatedRecipes };
+    }
+    case RECIPE_UPDATE_FAIL:
+      return { ...state, loading: false, error: action.payload };
     default:
       return state;
   }

@@ -36,7 +36,6 @@ export const deleteWeek = (weekId) => API.delete(`api/weeks/${weekId}`);
 
 // days
 export const getDayListByWeekId = (weekId) => API.get(`api/days/${weekId}`);
-export const updateDay = (dayId, meals) => API.put(`api/days/${dayId}`, meals);
 
 // meals
 export const createMeal = (newMeal) => API.post('api/meals', newMeal);
@@ -50,3 +49,5 @@ export const deleteFood = (mealId, recipeId) =>
 export const createRecipe = (newRecipe) => API.post('api/recipes', newRecipe);
 export const getRecipes = () => API.get(`api/recipes/`);
 export const deleteRecipe = (recipeId) => API.delete(`api/recipes/${recipeId}`);
+export const updateRecipe = (recipeId, updatedRecipe) =>
+  API.patch(`api/recipes/${recipeId}`, updatedRecipe);

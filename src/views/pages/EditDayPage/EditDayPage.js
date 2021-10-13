@@ -26,30 +26,41 @@ const EditDayPage = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { dayId } = useParams();
-
-  // autocompelte
-  const filter = createFilterOptions();
-  const [open, toggleOpen] = useState(false);
-
   // selectors
   const { days } = useSelector((state) => state.dayList);
   const { recipes } = useSelector((state) => state.recipeList);
   const { day } = useSelector((state) => state.mealList);
   const { currentUser } = useSelector((state) => state.user);
 
-  const [foodFieldsForm, setFoodFieldsForm] = useState([]);
+  // autocompelte
+  const filter = createFilterOptions();
+  const [open, toggleOpen] = useState(false);
 
+  // dialog
   const handleClose = () => {
     setDialogValue({
       recipeName: '',
     });
     toggleOpen(false);
   };
-
   const [dialogValue, setDialogValue] = useState({
     recipeName: '',
   });
 
+  // states
+  const [foodFieldsForm, setFoodFieldsForm] = useState([]);
+  const dayLength = Object.keys(days).length;
+  const [isInEditMealMode, setIsInEditMealMode] = useState(
+    new Array(dayLength).fill(false)
+  );
+  const [newMealName, setNewMealName] = useState('');
+
+  // life cycles
+  useEffect(() => {
+    dispatch(setMeals(days[dayId]));
+  }, []);
+
+  // methods
   const handleSubmit = (event) => {
     event.preventDefault();
     // create new recipe
@@ -61,17 +72,6 @@ const EditDayPage = () => {
     );
     handleClose();
   };
-
-  // states
-  const dayLength = Object.keys(days).length;
-  const [isInEditMealMode, setIsInEditMealMode] = useState(
-    new Array(dayLength).fill(false)
-  );
-  const [newMealName, setNewMealName] = useState('');
-
-  useEffect(() => {
-    dispatch(setMeals(days[dayId]));
-  }, []);
 
   // crud meals
   const handleDeleteMeal = (mealId) => {
@@ -88,7 +88,7 @@ const EditDayPage = () => {
     dispatch(updateMeal(mealId, foodFieldsForm, mealIdx));
   };
 
-  // others
+  // change form
   const handleChangeNewMealName = (event) => {
     setNewMealName(event.target.value);
   };
@@ -172,9 +172,6 @@ const EditDayPage = () => {
                           ))}
                         </>
                       )}
-
-                      {console.log('food', foodFieldsForm)}
-
                       {isInEditMealMode[mealIdx] && (
                         <>
                           {foodFieldsForm.map((recipe, recipeIdx) => (

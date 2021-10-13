@@ -1,6 +1,9 @@
-import * as React from 'react';
+import React, { useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
+import Grid from '@mui/material/Grid';
 import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
@@ -9,11 +12,24 @@ import Collapse from '@mui/material/Collapse';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
+import {
+  CardActionArea,
+  TextField,
+  InputAdornment,
+  Button,
+} from '@mui/material';
 import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import EditIcon from '@mui/icons-material/Edit';
+import DoneIcon from '@mui/icons-material/Done';
+import DescriptionIcon from '@mui/icons-material/Description';
+import CloseIcon from '@mui/icons-material/Close';
+import FileInputComponent from 'react-file-input-previews-base64';
+import Input from '../../common/Input/Input';
+import { updateRecipe } from '../../../redux/actions/recipeActions';
+
 import useStyles from './styles';
 
 const ExpandMore = styled((props) => {
@@ -29,11 +45,30 @@ const ExpandMore = styled((props) => {
 
 const RecipeCard = ({ recipe }) => {
   const classes = useStyles();
-
-  const [expanded, setExpanded] = React.useState(false);
-
+  const dispatch = useDispatch();
+  const [expanded, setExpanded] = useState(false);
+  const [isInEditMode, setIsInEditMode] = useState(false);
   const handleExpandClick = () => {
     setExpanded(!expanded);
+  };
+
+  const handleToggleEditMode = () => {
+    setIsInEditMode(!isInEditMode);
+  };
+
+  const handleSelectFile = (file) => {
+    setRecipeForm({ ...recipeForm, recipeImage: file.base64 });
+  };
+
+  const [recipeForm, setRecipeForm] = useState(recipe);
+
+  const handleChange = (e) => {
+    setRecipeForm({ ...recipeForm, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(updateRecipe(recipe._id, recipeForm));
   };
 
   return (
@@ -45,24 +80,101 @@ const RecipeCard = ({ recipe }) => {
           </Avatar>
         }
         action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
+          isInEditMode ? (
+            <IconButton onClick={handleToggleEditMode}>
+              <DoneIcon />
+            </IconButton>
+          ) : (
+            <IconButton onClick={handleToggleEditMode}>
+              <EditIcon />
+            </IconButton>
+          )
         }
-        title={recipe.recipeName}
-        subheader="September 14, 2016"
+        title={
+          <Link to={{ pathname: `/recipes/${recipe._id}` }}>
+            {recipe.recipeName}
+          </Link>
+        }
       />
+
       <CardMedia
         component="img"
         height="194"
-        image="/static/images/cards/paella.jpg"
+        image={
+          recipeForm?.recipeImage
+            ? recipeForm?.recipeImage
+            : 'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'
+        }
         alt={recipe.recipeName}
       />
       <CardContent>
-        <Typography variant="body2" color="text.secondary">
-          {recipe?.recipeDescription}
-        </Typography>
+        {!isInEditMode && (
+          <div variant="body2" color="text.secondary">
+            Description: {recipe?.recipeDescription}
+            <Grid container>
+              <Grid item xs={12} sm={6}>
+                <div>Calories: {recipe?.calories}</div>
+                <div>Servings: {recipe?.servings}</div>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <div>Prep Time: {recipe?.prepTime}</div>
+                <div>Cook Time: {recipe?.cookTime}</div>
+              </Grid>
+            </Grid>
+          </div>
+        )}
+        {isInEditMode && (
+          <form className={classes.form} onSubmit={handleSubmit}>
+            <Grid container spacing={2}>
+              <Input
+                name="recipeDescription"
+                label="Description"
+                value={recipeForm?.recipeDescription}
+                handleChange={handleChange}
+              />
+              <Input
+                name="calories"
+                label="Calories"
+                value={recipeForm?.calories}
+                handleChange={handleChange}
+              />
+              <Input
+                name="prepTime"
+                label="Prep Time"
+                value={recipeForm?.prepTime}
+                handleChange={handleChange}
+              />
+              <Input
+                name="cookTime"
+                label="Cook Time"
+                value={recipeForm?.cookTime}
+                handleChange={handleChange}
+              />
+            </Grid>
+            <FileInputComponent
+              labelText=""
+              labelStyle={{ display: 'none' }}
+              multiple={false}
+              callbackFunction={(file) => {
+                handleSelectFile(file);
+              }}
+              imagePreview={false}
+              buttonComponent={<Button variant="outlined">Upload</Button>}
+              accept="image/*"
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              Submit
+            </Button>
+          </form>
+        )}
       </CardContent>
+
       <CardActions disableSpacing>
         <IconButton aria-label="add to favorites">
           <FavoriteIcon />

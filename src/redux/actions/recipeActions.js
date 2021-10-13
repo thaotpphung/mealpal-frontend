@@ -8,10 +8,13 @@ import {
   RECIPE_DELETE_REQUEST,
   RECIPE_DELETE_SUCCESS,
   RECIPE_DELETE_FAIL,
+  RECIPE_UPDATE_REQUEST,
+  RECIPE_UPDATE_SUCCESS,
+  RECIPE_UPDATE_FAIL,
 } from '../constants/recipeConstants';
 import * as api from '../../api/index';
 
-export { getAllRecipes, createRecipe, deleteRecipe };
+export { getAllRecipes, createRecipe, deleteRecipe, updateRecipe };
 
 const createRecipe = (recipe) => async (dispatch) => {
   try {
@@ -44,6 +47,19 @@ const deleteRecipe = (recipeId) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: RECIPE_DELETE_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
+
+const updateRecipe = (recipeId, recipe) => async (dispatch) => {
+  try {
+    dispatch({ type: RECIPE_UPDATE_REQUEST });
+    const { data } = await api.updateRecipe(recipeId, recipe);
+    dispatch({ type: RECIPE_UPDATE_SUCCESS, payload: data.data });
+  } catch (error) {
+    dispatch({
+      type: RECIPE_UPDATE_FAIL,
       payload: error.response.data.message,
     });
   }
