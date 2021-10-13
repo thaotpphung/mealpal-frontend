@@ -1,8 +1,4 @@
-import {
-  SET_SELECTED_PLAN,
-  SET_SELECTED_WEEK,
-  SET_INITIAL_SELECT,
-} from '../constants/selectConstants';
+import { SET_SELECTED_WEEK } from '../constants/selectConstants';
 
 const INITIAL_STATE = {
   selectedPlan: {
@@ -21,8 +17,8 @@ const planListReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         selectedWeek: {
-          id: action.payload._id,
-          name: action.payload.weekName,
+          id: action.payload?._id,
+          name: action.payload?.weekName,
         },
       };
 
