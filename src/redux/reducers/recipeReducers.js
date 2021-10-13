@@ -64,7 +64,6 @@ const recipeListReducer = (state = INITIAL_STATE, action) => {
     case RECIPE_UPDATE_REQUEST:
       return { ...state, loading: true };
     case RECIPE_UPDATE_SUCCESS: {
-      console.log(action.payload);
       const updatedRecipes = {
         ...state.recipes,
         [action.payload._id]: action.payload,
@@ -73,6 +72,8 @@ const recipeListReducer = (state = INITIAL_STATE, action) => {
     }
     case RECIPE_UPDATE_FAIL:
       return { ...state, loading: false, error: action.payload };
+
+    // default
     default:
       return state;
   }

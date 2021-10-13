@@ -8,6 +8,9 @@ import {
   WEEK_DELETE_REQUEST,
   WEEK_DELETE_SUCCESS,
   WEEK_DELETE_FAIL,
+  WEEK_UPDATE_REQUEST,
+  WEEK_UPDATE_SUCCESS,
+  WEEK_UPDATE_FAIL,
 } from '../constants/weekConstants';
 import _ from 'lodash';
 
@@ -55,6 +58,19 @@ const weekListReducer = (state = INITIAL_STATE, action) => {
         loading: false,
         error: action.payload,
       };
+
+    // update week
+    case WEEK_UPDATE_REQUEST:
+      return { ...state, loading: true };
+    case WEEK_UPDATE_SUCCESS: {
+      const updatedWeeks = {
+        ...state.weeks,
+        [action.payload._id]: action.payload,
+      };
+      return { ...state, loading: false, weeks: updatedWeeks };
+    }
+    case WEEK_UPDATE_FAIL:
+      return { ...state, loading: false, error: action.payload };
 
     default:
       return state;

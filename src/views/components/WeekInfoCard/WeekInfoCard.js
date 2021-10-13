@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Card,
@@ -7,21 +7,23 @@ import {
   CardContent,
   Button,
   Typography,
+  Grid,
   Avatar,
   IconButton,
   Collapse,
 } from '@material-ui/core/';
 import { styled } from '@mui/material/styles';
 import useStyles from './styles';
-
 import EditIcon from '@material-ui/icons/Edit';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DeleteIcon from '@material-ui/icons/Delete';
 import StarIcon from '@material-ui/icons/Star';
 import ShareIcon from '@material-ui/icons/Share';
+import DoneIcon from '@material-ui/icons/Done';
 import ThumbUpAltOutlined from '@material-ui/icons/ThumbUpAltOutlined';
-import { deleteWeek } from '../../../redux/actions/weekActions';
+import { deleteWeek, updateWeek } from '../../../redux/actions/weekActions';
 import { setCurrentWeek } from '../../../redux/actions/userActions';
+import Input from '../../common/Input/Input';
 
 const Likes = () => {
   return (
@@ -48,6 +50,28 @@ const WeekInfoCard = ({ week }) => {
   const dispatch = useDispatch();
   const [expanded, setExpanded] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
+  const { selectedWeek } = useSelector((state) => state.select);
+
+  const [isInEditMode, setIsInEditMode] = useState(false);
+
+  const [weekForm, setWeekForm] = useState({});
+
+  useEffect(() => {
+    setWeekForm(week);
+  }, [selectedWeek.id]);
+
+  const handleChange = (e) => {
+    setWeekForm({ ...weekForm, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(updateWeek(week._id, weekForm));
+  };
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
 
   const handleDeleteWeek = (weekId) => {
     if (weekId !== undefined) {
@@ -65,15 +89,15 @@ const WeekInfoCard = ({ week }) => {
     // else display error
   };
 
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
+  const handleToggleEditMode = () => {
+    setIsInEditMode(!isInEditMode);
   };
 
   return (
     <Card>
       <CardHeader
         avatar={
-          <Avatar aria-label="recipe" className={classes.avatar}>
+          <Avatar aria-label="week" className={classes.avatar}>
             R
           </Avatar>
         }
@@ -85,9 +109,17 @@ const WeekInfoCard = ({ week }) => {
             >
               <DeleteIcon />
             </IconButton>
-            <IconButton aria-label="settings">
-              <EditIcon />
-            </IconButton>
+
+            {isInEditMode ? (
+              <IconButton onClick={handleToggleEditMode}>
+                <DoneIcon />
+              </IconButton>
+            ) : (
+              <IconButton onClick={handleToggleEditMode}>
+                <EditIcon />
+              </IconButton>
+            )}
+
             <IconButton
               aria-label="settings"
               onClick={() => handleSetCurrentWeek(week?._id)}
@@ -100,9 +132,47 @@ const WeekInfoCard = ({ week }) => {
         subheader="created at 10/4/2021"
       />
       <CardContent>
-        <Typography>Name: {week?.weekName} </Typography>
-        <Typography>Diet: {week?.weekDiet}</Typography>
-        <Typography>Tags: {week?.weekTags}</Typography>
+        {!isInEditMode && (
+          <div variant="body2" color="text.secondary">
+            <div>Description: {week?.weekDescription}</div>
+            <div>Diet: {week?.weekDiet}</div>
+            <div>Tags: {week?.weekTags}</div>
+          </div>
+        )}
+
+        {isInEditMode && (
+          <form className={classes.form} onSubmit={handleSubmit}>
+            <Grid container spacing={2}>
+              <Input
+                name="weekDescription"
+                label="Description"
+                value={weekForm?.weekDescription}
+                handleChange={handleChange}
+              />
+              <Input
+                name="weekTags"
+                label="Week Tags (Separated by comma)"
+                value={weekForm?.weekTags}
+                handleChange={handleChange}
+              />
+              <Input
+                name="weekDiet"
+                label="Servings"
+                value={weekForm?.weekDiet}
+                handleChange={handleChange}
+              />
+            </Grid>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              Submit
+            </Button>
+          </form>
+        )}
       </CardContent>
       <CardActions className={classes.cardActions}>
         <Button size="small" color="primary">

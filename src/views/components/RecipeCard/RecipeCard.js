@@ -11,21 +11,13 @@ import CardActions from '@mui/material/CardActions';
 import Collapse from '@mui/material/Collapse';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import {
-  CardActionArea,
-  TextField,
-  InputAdornment,
-  Button,
-} from '@mui/material';
+import { Button } from '@material-ui/core/';
 import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EditIcon from '@mui/icons-material/Edit';
 import DoneIcon from '@mui/icons-material/Done';
-import DescriptionIcon from '@mui/icons-material/Description';
-import CloseIcon from '@mui/icons-material/Close';
 import FileInputComponent from 'react-file-input-previews-base64';
 import Input from '../../common/Input/Input';
 import { updateRecipe } from '../../../redux/actions/recipeActions';
@@ -48,6 +40,8 @@ const RecipeCard = ({ recipe }) => {
   const dispatch = useDispatch();
   const [expanded, setExpanded] = useState(false);
   const [isInEditMode, setIsInEditMode] = useState(false);
+  const [recipeForm, setRecipeForm] = useState(recipe);
+
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
@@ -59,8 +53,6 @@ const RecipeCard = ({ recipe }) => {
   const handleSelectFile = (file) => {
     setRecipeForm({ ...recipeForm, recipeImage: file.base64 });
   };
-
-  const [recipeForm, setRecipeForm] = useState(recipe);
 
   const handleChange = (e) => {
     setRecipeForm({ ...recipeForm, [e.target.name]: e.target.value });
@@ -125,6 +117,22 @@ const RecipeCard = ({ recipe }) => {
         )}
         {isInEditMode && (
           <form className={classes.form} onSubmit={handleSubmit}>
+            <FileInputComponent
+              labelText=""
+              labelStyle={{ display: 'none' }}
+              multiple={false}
+              callbackFunction={(file) => {
+                handleSelectFile(file);
+              }}
+              imagePreview={false}
+              buttonComponent={
+                <Button variant="outlined" color="primary">
+                  Upload
+                </Button>
+              }
+              accept="image/*"
+              parentStyle={{ textAlign: 'center', margin: '10px' }}
+            />
             <Grid container spacing={2}>
               <Input
                 name="recipeDescription"
@@ -157,17 +165,6 @@ const RecipeCard = ({ recipe }) => {
                 handleChange={handleChange}
               />
             </Grid>
-            <FileInputComponent
-              labelText=""
-              labelStyle={{ display: 'none' }}
-              multiple={false}
-              callbackFunction={(file) => {
-                handleSelectFile(file);
-              }}
-              imagePreview={false}
-              buttonComponent={<Button variant="outlined">Upload</Button>}
-              accept="image/*"
-            />
             <Button
               type="submit"
               fullWidth

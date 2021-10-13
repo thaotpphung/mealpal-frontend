@@ -50,6 +50,7 @@ Input.propTypes = {
   autoFocus: PropTypes.bool,
   type: PropTypes.string,
   handleShowPassword: PropTypes.func,
+  value: PropTypes.string,
 };
 
 export default Input;
