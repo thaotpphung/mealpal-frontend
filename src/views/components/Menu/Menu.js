@@ -8,7 +8,6 @@ import RestaurantMenuIcon from '@material-ui/icons/RestaurantMenu';
 import { getDayListByWeekId } from '../../../redux/actions/dayActions';
 
 const Menu = () => {
-  const history = useHistory();
   const dispatch = useDispatch();
   const classes = useStyles();
   const { selectedWeek } = useSelector((state) => state.select);
@@ -42,7 +41,7 @@ const Menu = () => {
                         return (
                           <li key={`dish-in-meal-${recipeIdx}`}>
                             <RestaurantMenuIcon />
-                            <span>{recipe}</span>
+                            <span>{recipe.recipeName}</span>
                           </li>
                         );
                       })}

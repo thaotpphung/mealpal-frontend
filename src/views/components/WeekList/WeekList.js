@@ -1,43 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useStyles from './styles';
-import { Paper, IconButton, TextField, Button } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
+import { Paper, IconButton } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import {
-  getWeekListByPlanId,
-  createWeek,
-  deleteWeek,
-} from '../../../redux/actions/weekActions';
+import StarOutlineIcon from '@mui/icons-material/StarOutline';
+import { getAllWeeks } from '../../../redux/actions/weekActions';
 import { setSelectedWeek } from '../../../redux/actions/selectActions';
+import routes from '../../../constants/routes';
 
 const WeekList = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const classes = useStyles();
-  const { selectedPlan, selectedWeek } = useSelector((state) => state.select);
+  const { selectedWeek } = useSelector((state) => state.select);
   const { weeks } = useSelector((state) => state.weekList);
-  const [newWeekName, setNewWeekName] = useState('');
 
   useEffect(() => {
-    dispatch(getWeekListByPlanId(selectedPlan.id));
-  }, [selectedPlan.id]);
-
-  const handleChangeNewWeekName = (event) => {
-    setNewWeekName(event.target.value);
-  };
-
-  const handleSubmitCreateWeek = () => {
-    dispatch(createWeek({ weekName: newWeekName, planId: selectedPlan.id }));
-  };
-
-  const handleDeleteWeek = (weekId) => {
-    dispatch(deleteWeek(weekId));
-  };
-
-  const handleEditWeek = (weekId) => {
-    dispatch(deleteWeek(weekId));
-  };
+    dispatch(getAllWeeks());
+  }, []);
 
   const handleSelectWeek = (week) => {
     dispatch(setSelectedWeek(week));
@@ -48,7 +29,7 @@ const WeekList = () => {
       <div className={classes.header}>
         <div>Week List</div>
         <div className={classes.action}>
-          <IconButton onClick={() => history.push('/weeks/new')}>
+          <IconButton onClick={() => history.push(routes.NEW_WEEK_PAGE)}>
             <AddIcon />
           </IconButton>
         </div>
@@ -63,38 +44,14 @@ const WeekList = () => {
               }`}
               onClick={() => handleSelectWeek(week)}
             >
-              <div className={classes.itemIcon}>icon</div>
-              <div className={classes.itemContent}>{week.weekName}</div>
-              <div className={classes.itemAction}>
-                <IconButton onClick={() => handleEditWeek(week._id)}>
-                  <EditIcon />
-                </IconButton>
-                <IconButton onClick={() => handleDeleteWeek(week._id)}>
-                  <DeleteIcon />
-                </IconButton>
+              <div className={classes.itemIcon}>
+                <StarOutlineIcon className={classes.deleteIcon} />
               </div>
+              <div className={classes.itemContent}>{week.weekName}</div>
             </li>
           ))}
         </ul>
       </div>
-
-      {selectedPlan && (
-        <Paper>
-          <TextField
-            variant="outlined"
-            value={newWeekName}
-            onChange={handleChangeNewWeekName}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            onClick={handleSubmitCreateWeek}
-          >
-            Add Week
-          </Button>
-        </Paper>
-      )}
     </Paper>
   );
 };

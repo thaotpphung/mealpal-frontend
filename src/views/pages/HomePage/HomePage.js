@@ -1,26 +1,34 @@
-import React from 'react';
-// import { useSelector } from 'react-redux';
-// import useStyles from './styles';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Grid } from '@material-ui/core';
-// import MoreVertIcon from '@material-ui/icons/MoreVert';
-// import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import PlanPosts from '../../components/PlanPosts/PlanPosts';
-import FriendList from '../../components/FriendList/FriendList';
+import useStyles from './styles';
+import WeekList from '../../components/WeekList/WeekList';
+import Menu from '../../components/Menu/Menu';
+import WeekInfoCard from '../../components/WeekInfoCard/WeekInfoCard';
+import { setSelectedWeek } from '../../../redux/actions/selectActions';
 
-const Home = () => {
-  // const classes = useStyles();
-  // const user = useSelector((state) => state.user);
-  // const { success } = user;
+const HomePage = () => {
+  const classes = useStyles();
+  const dispatch = useDispatch();
+  const { selectedWeek } = useSelector((state) => state.select);
+  const { weeks } = useSelector((state) => state.weekList);
+  const { currentUser } = useSelector((state) => state.user);
+
+  useEffect(() => dispatch(setSelectedWeek(currentUser.currentWeek)), []);
+
   return (
-    <Grid container justify="space-between" alignItems="stretch" spacing={3}>
-      <Grid item xs={12} sm={8}>
-        <PlanPosts />
+    <div>
+      <Grid container justify="space-between" alignItems="stretch" spacing={7}>
+        <Grid item xs={12} sm={4} className={classes.leftColumn}>
+          <WeekInfoCard week={weeks[selectedWeek.id]} />
+          <WeekList />
+        </Grid>
+        <Grid item xs={12} sm={8}>
+          <Menu />
+        </Grid>
       </Grid>
-      <Grid item xs={12} sm={4}>
-        <FriendList />
-      </Grid>
-    </Grid>
+    </div>
   );
 };
 
-export default Home;
+export default HomePage;

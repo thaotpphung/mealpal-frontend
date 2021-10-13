@@ -6,11 +6,16 @@ import { CssBaseline } from '@material-ui/core';
 import { theme } from './theme';
 import { ThemeProvider } from '@material-ui/core/styles';
 import Navbar from '../views/common/Navbar/Navbar';
-import PlanPage from '../views/pages/PlanPage/PlanPage';
-import NewPlanPage from '../views/pages/NewPlanPage/NewPlanPage';
-import EditDayPage from '../views/pages/EditDayPage/EditDayPage';
+
 import HomePage from '../views/pages/HomePage/HomePage';
+import ExplorePage from '../views/pages/ExplorePage/ExplorePage';
+import NewWeekPage from '../views/pages/NewWeekPage/NewWeekPage';
+import EditDayPage from '../views/pages/EditDayPage/EditDayPage';
 import AuthPage from '../views/pages/AuthPage/AuthPage';
+import RecipePage from '../views/pages/RecipePage/RecipePage';
+import RecipeDetailsPage from '../views/pages/RecipeDetailsPage/RecipeDetailsPage';
+
+import routes from '../constants/routes';
 
 function App() {
   const classes = useStyles();
@@ -21,11 +26,17 @@ function App() {
       <Navbar />
       <div className={classes.root}>
         <Switch>
-          <Route path="/" exact component={HomePage} />
-          <Route path="/plans/" exact component={PlanPage} />
-          <Route path="/plans/new" exact component={NewPlanPage} />
-          <Route path="/days/:dayId/edit" exact component={EditDayPage} />
-          <Route path="/auth" exact component={AuthPage} />
+          <Route path={routes.HOME_PAGE} exact component={HomePage} />
+          <Route path={routes.EXPLORE_PAGE} exact component={ExplorePage} />
+          <Route path={routes.NEW_WEEK_PAGE} exact component={NewWeekPage} />
+          <Route path={routes.EDIT_DAY_PAGE} exact component={EditDayPage} />
+          <Route path={routes.RECIPE_PAGE} exact component={RecipePage} />
+          <Route
+            path={routes.RECIPE_DETAILS_PAGE}
+            exact
+            component={RecipeDetailsPage}
+          />
+          <Route path={routes.AUTH_PAGE} exact component={AuthPage} />
         </Switch>
       </div>
     </ThemeProvider>

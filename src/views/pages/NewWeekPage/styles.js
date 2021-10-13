@@ -1,10 +1,20 @@
 import { makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles((theme) => ({
+  formRow: {
+    display: 'grid',
+    gridTemplateColumns: '1fr 5fr',
+    margin: theme.spacing(3, 0),
+    alignItems: 'center',
+  },
+  fieldsContainer: {
+    '& > button': {
+      marginLeft: theme.spacing(7),
+    },
+    verticalAlign: 'middle',
+  },
   root: {
     marginBottom: theme.spacing(3),
-    width: '50%',
-    margin: 'auto',
   },
   header: {
     padding: theme.spacing(0, 2),
@@ -17,17 +27,19 @@ export default makeStyles((theme) => ({
   list: {
     listStyle: 'none',
   },
-  item: {
+  menuMeal: {
     display: 'grid',
-    gridTemplateColumns: '2fr 6fr 2fr',
+    gridTemplateColumns: '2fr 6fr',
     columnGap: theme.spacing(2),
-    margin: theme.spacing(2),
+    '& div': {
+      padding: theme.spacing(2),
+    },
   },
-  itemIcon: {
+  menuMealTitle: {
     flex: '0 0 auto',
     marginRight: theme.spacing(3),
   },
-  itemContent: {
+  menuMealContent: {
     flex: '1 1 auto',
   },
   menu: {
@@ -36,9 +48,9 @@ export default makeStyles((theme) => ({
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
+      '& span': {
+        marginLeft: theme.spacing(2),
+      },
     },
-  },
-  deleteIcon: {
-    color: theme.palette.error.main,
   },
 }));

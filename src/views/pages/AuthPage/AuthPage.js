@@ -13,8 +13,7 @@ import {
 } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-// import Icon from './icon';
-import Input from './Input';
+import Input from '../../common/Input/Input';
 import Spinner from '../../common/Spinner/Spinner';
 import { signin, register } from '../../../redux/actions/userActions';
 
@@ -62,7 +61,7 @@ const AuthPage = () => {
   //   const result = res?.profileObj;
   //   const token = res?.tokenId;
   //   try {
-  //     // TODO dispatch sign in with Google
+  //     TODO dispatch sign in with Google
   //   } catch (error) {
   //     console.log(error);
   //   }
