@@ -21,7 +21,10 @@ import DoneIcon from '@mui/icons-material/Done';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FileInputComponent from 'react-file-input-previews-base64';
 import Input from '../../common/Input/Input';
-import { updateRecipe } from '../../../redux/actions/recipeActions';
+import {
+  updateRecipe,
+  deleteRecipe,
+} from '../../../redux/actions/recipeActions';
 
 import useStyles from './styles';
 
@@ -62,6 +65,10 @@ const RecipeCard = ({ recipe }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(updateRecipe(recipe._id, recipeForm));
+  };
+
+  const handleDeleteRecipe = (recipeId) => {
+    dispatch(deleteRecipe(recipeId));
   };
 
   return (

@@ -9,7 +9,7 @@ import { getAllWeeks } from '../../../redux/actions/weekActions';
 import { setSelectedWeek } from '../../../redux/actions/selectActions';
 import routes from '../../../constants/routes';
 
-const WeekList = () => {
+const WeekList = ({ toggleOpen }) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const classes = useStyles();
@@ -30,7 +30,7 @@ const WeekList = () => {
       <div className={classes.header}>
         <div>Week List</div>
         <div className={classes.action}>
-          <IconButton onClick={() => history.push(routes.NEW_WEEK_PAGE)}>
+          <IconButton onClick={() => toggleOpen(true)}>
             <AddIcon />
           </IconButton>
         </div>
