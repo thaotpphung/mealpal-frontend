@@ -18,6 +18,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EditIcon from '@mui/icons-material/Edit';
 import DoneIcon from '@mui/icons-material/Done';
+import DeleteIcon from '@mui/icons-material/Delete';
 import FileInputComponent from 'react-file-input-previews-base64';
 import Input from '../../common/Input/Input';
 import { updateRecipe } from '../../../redux/actions/recipeActions';
@@ -72,15 +73,23 @@ const RecipeCard = ({ recipe }) => {
           </Avatar>
         }
         action={
-          isInEditMode ? (
-            <IconButton onClick={handleToggleEditMode}>
-              <DoneIcon />
+          <>
+            <IconButton
+              aria-label="settings"
+              onClick={() => handleDeleteRecipe(recipe._id)}
+            >
+              <DeleteIcon />
             </IconButton>
-          ) : (
-            <IconButton onClick={handleToggleEditMode}>
-              <EditIcon />
-            </IconButton>
-          )
+            {isInEditMode ? (
+              <IconButton onClick={handleToggleEditMode}>
+                <DoneIcon />
+              </IconButton>
+            ) : (
+              <IconButton onClick={handleToggleEditMode}>
+                <EditIcon />
+              </IconButton>
+            )}
+          </>
         }
         title={
           <Link to={{ pathname: `/recipes/${recipe._id}` }}>

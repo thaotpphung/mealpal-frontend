@@ -58,7 +58,7 @@ const WeekInfoCard = ({ week }) => {
 
   useEffect(() => {
     setWeekForm(week);
-  }, [selectedWeek.id]);
+  }, [isInEditMode]);
 
   const handleChange = (e) => {
     setWeekForm({ ...weekForm, [e.target.name]: e.target.value });
@@ -109,7 +109,6 @@ const WeekInfoCard = ({ week }) => {
             >
               <DeleteIcon />
             </IconButton>
-
             {isInEditMode ? (
               <IconButton onClick={handleToggleEditMode}>
                 <DoneIcon />
@@ -119,7 +118,6 @@ const WeekInfoCard = ({ week }) => {
                 <EditIcon />
               </IconButton>
             )}
-
             <IconButton
               aria-label="settings"
               onClick={() => handleSetCurrentWeek(week?._id)}

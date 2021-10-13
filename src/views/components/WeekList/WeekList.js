@@ -15,6 +15,7 @@ const WeekList = () => {
   const classes = useStyles();
   const { selectedWeek } = useSelector((state) => state.select);
   const { weeks } = useSelector((state) => state.weekList);
+  const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
     dispatch(getAllWeeks());
@@ -44,10 +45,13 @@ const WeekList = () => {
               }`}
               onClick={() => handleSelectWeek(week)}
             >
-              <div className={classes.itemIcon}>
-                <StarOutlineIcon className={classes.deleteIcon} />
-              </div>
+              <div className={classes.itemIcon}></div>
               <div className={classes.itemContent}>{week.weekName}</div>
+              <div className={classes.itemAction}>
+                {currentUser.currentWeek._id === week._id && (
+                  <StarOutlineIcon />
+                )}
+              </div>
             </li>
           ))}
         </ul>

@@ -25,15 +25,13 @@ const useStyles = makeStyles((theme) => ({
   },
   itemIcon: {
     flex: '0 0 auto',
-    marginRight: theme.spacing(3),
   },
   itemContent: {
     flex: '1 1 auto',
   },
   itemAction: {
     flex: '0 0 auto',
-    marginTop: theme.spacing(-1),
-    marginRight: theme.spacing(-1),
+    marginRight: theme.spacing(2),
   },
   selected: {
     backgroundColor: theme.palette.grey[200],
