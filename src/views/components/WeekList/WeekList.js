@@ -1,25 +1,17 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useStyles from './styles';
-import { useHistory } from 'react-router-dom';
 import { Paper, IconButton } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-import StarOutlineIcon from '@mui/icons-material/StarOutline';
-import { getAllWeeks } from '../../../redux/actions/weekActions';
 import { setSelectedWeek } from '../../../redux/actions/selectActions';
-import routes from '../../../constants/routes';
+import RoundButton from '../../common/Buttons/RoundButton';
+import StarOutlineIcon from '@material-ui/icons/StarOutline';
 
 const WeekList = ({ toggleOpen }) => {
   const dispatch = useDispatch();
-  const history = useHistory();
   const classes = useStyles();
   const { selectedWeek } = useSelector((state) => state.select);
   const { weeks } = useSelector((state) => state.weekList);
   const { currentUser } = useSelector((state) => state.user);
-
-  useEffect(() => {
-    dispatch(getAllWeeks());
-  }, []);
 
   const handleSelectWeek = (week) => {
     dispatch(setSelectedWeek(week));
@@ -30,9 +22,7 @@ const WeekList = ({ toggleOpen }) => {
       <div className={classes.header}>
         <div>Week List</div>
         <div className={classes.action}>
-          <IconButton onClick={() => toggleOpen(true)}>
-            <AddIcon />
-          </IconButton>
+          <RoundButton handleClick={() => toggleOpen(true)} type="add" />
         </div>
       </div>
       <div className={classes.content}>

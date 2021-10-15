@@ -1,92 +1,83 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Grid, IconButton, Paper, TextField, Button } from '@material-ui/core';
-import EditIcon from '@material-ui/icons/Edit';
-import DoneIcon from '@mui/icons-material/Done';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { Paper } from '@material-ui/core';
 import { updateRecipe } from '../../../redux/actions/recipeActions';
 import useStyles from './styles';
+import Input from '../../common/Input/Input';
+import useArray from '../../../utils/hooks/useArray';
+import useToggle from '../../../utils/hooks/useToggle';
+import RoundButton from '../../common/Buttons/RoundButton';
 
 const IngredientsCard = ({ recipe }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const [ingredientFields, setIngredientFields] = useState(
+  const { array, push, remove, update } = useArray(
     recipe.ingredients.length === 0 ? [''] : recipe.ingredients
   );
-  const [isInEditMode, setIsInEditMode] = useState(false);
-
-  const handleToggleEditMode = () => {
-    setIsInEditMode(!isInEditMode);
-  };
-
-  const handleChangeIngredientField = (event, ingredientIdx) => {
-    const fields = [...ingredientFields];
-    fields[ingredientIdx] = event.target.value;
-    setIngredientFields(fields);
-  };
-
-  const handleDeleteIngredientField = (ingredientIdx) => {
-    const fields = [...ingredientFields];
-    fields.splice(ingredientIdx, 1);
-    setIngredientFields(fields);
-  };
-
-  const handleAddIngredientField = () => {
-    const fields = [...ingredientFields];
-    fields.push('');
-    setIngredientFields(fields);
-  };
+  const [isInEditMode, toggleIsInEditMode] = useToggle(false);
 
   const handleSubmitUpdateRecipe = () => {
-    dispatch(updateRecipe(recipe._id, { ingredients: ingredientFields }));
-    handleToggleEditMode();
+    dispatch(updateRecipe(recipe._id, { ingredients: array }));
+    toggleIsInEditMode(false);
   };
 
   return (
-    <div className={classes.root}>
-      Ingredients:
-      {isInEditMode ? (
-        <IconButton onClick={() => handleSubmitUpdateRecipe()}>
-          <DoneIcon />
-        </IconButton>
-      ) : (
-        <IconButton onClick={() => handleToggleEditMode()}>
-          <EditIcon />
-        </IconButton>
-      )}
-      <ul>
-        {ingredientFields.map((ingredient, ingredientIdx) => {
-          return (
-            <>
-              {!isInEditMode ? (
-                <li key={`ingredient-official-${ingredientIdx}`}>
-                  {ingredient}
-                </li>
-              ) : (
-                <li key={`ingredient-field-${ingredientIdx}`}>
-                  <TextField
-                    variant="outlined"
-                    value={ingredient}
-                    onChange={(event) =>
-                      handleChangeIngredientField(event, ingredientIdx)
-                    }
-                  />
-                  <IconButton
-                    onClick={() => handleDeleteIngredientField(ingredientIdx)}
-                  >
-                    <HighlightOffIcon className={classes.deleteIcon} />
-                  </IconButton>
-                  <IconButton onClick={handleAddIngredientField}>
-                    <AddCircleOutlineIcon />
-                  </IconButton>
-                </li>
-              )}
-            </>
-          );
-        })}
-      </ul>
-    </div>
+    <Paper className={classes.root}>
+      <div className={classes.header}>
+        <div>Ingredient List</div>
+        <div className={classes.action}>
+          {isInEditMode ? (
+            <RoundButton
+              type="done"
+              handleClick={() => handleSubmitUpdateRecipe()}
+            />
+          ) : (
+            <RoundButton type="edit" handleClick={() => toggleIsInEditMode()} />
+          )}
+        </div>
+      </div>
+      <div className={classes.content}>
+        <ul className={classes.list}>
+          {array.map((ingredient, ingredientIdx) => {
+            return (
+              <li
+                className={classes.item}
+                key={`ingredient-field-${ingredient}-${ingredientIdx}`}
+              >
+                {!isInEditMode ? (
+                  <>
+                    <div className={classes.itemIcon}>{ingredientIdx + 1}.</div>
+                    <div className={classes.itemContent}> {ingredient}</div>
+                  </>
+                ) : (
+                  <>
+                    <div className={classes.itemIcon}>{ingredientIdx + 1}.</div>
+                    <div className={classes.itemContent}>
+                      <Input
+                        value={ingredient}
+                        handleChange={(event) =>
+                          update(ingredientIdx, event.target.value)
+                        }
+                      />
+                    </div>
+                    <div className={classes.itemAction}>
+                      <RoundButton
+                        type="deleteField"
+                        handleClick={() => remove(ingredientIdx)}
+                      />
+                      <RoundButton
+                        type="addField"
+                        handleClick={() => push('')}
+                      />
+                    </div>
+                  </>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </Paper>
   );
 };
 

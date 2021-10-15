@@ -57,18 +57,6 @@ const AuthPage = () => {
     }
   };
 
-  // const googleSuccess = async (res) => {
-  //   const result = res?.profileObj;
-  //   const token = res?.tokenId;
-  //   try {
-  //     TODO dispatch sign in with Google
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
-  // const googleError = () => {};
-
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -136,24 +124,6 @@ const AuthPage = () => {
           >
             {isRegister ? 'Sign Up' : 'Sign In'}
           </Button>
-          {/* <GoogleLogin
-            clientId="343383256194-un7o7lkllj4dc5q6sogr4l6jk1jak0h2.apps.googleusercontent.com"
-            render={(renderProps) => (
-              <Button
-                className={classes.googleButton}
-                color="primary"
-                fullWidth
-                onClick={renderProps.onClick}
-                startIcon={<Icon />}
-                variant="contained"
-              >
-                Google Sign In
-              </Button>
-            )}
-            onSuccess={googleSuccess}
-            onFailure={googleError}
-            cookiePolicy="single_host_origin"
-          /> */}
           <Grid container justify="flex-end">
             <Grid item>
               <Button onClick={switchMode}>

@@ -24,33 +24,37 @@ const weekListReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     // create week
     case WEEK_CREATE_REQUEST:
-      return { ...state, loading: true };
+      return { ...state, loading: true, error: null };
     case WEEK_CREATE_SUCCESS:
       return {
         ...state,
         loading: false,
-        weeks: { ...state.weeks, [action.payload._id]: action.payload },
+        error: null,
+        weeks: {
+          ...state.weeks,
+          [action.payload._id]: action.payload,
+        },
       };
     case WEEK_CREATE_FAIL:
       return { ...state, loading: false, error: action.payload };
 
     // get all weeks
     case WEEK_LIST_REQUEST: {
-      return { ...state, loading: true };
+      return { ...state, loading: true, error: null };
     }
     case WEEK_LIST_SUCCESS: {
       const weeks = _.mapKeys(action.payload, '_id');
-      return { ...state, loading: false, weeks: weeks };
+      return { ...state, loading: false, weeks: weeks, error: null };
     }
     case WEEK_LIST_FAIL:
       return { ...state, loading: false, error: action.payload };
 
     // delete week
     case WEEK_DELETE_REQUEST:
-      return { ...state, loading: true };
+      return { ...state, loading: true, error: null };
     case WEEK_DELETE_SUCCESS: {
       const updatedWeeks = _.omit(state.weeks, action.payload);
-      return { ...state, loading: false, weeks: updatedWeeks };
+      return { ...state, loading: false, weeks: updatedWeeks, error: null };
     }
     case WEEK_DELETE_FAIL:
       return {
@@ -61,13 +65,13 @@ const weekListReducer = (state = INITIAL_STATE, action) => {
 
     // update week
     case WEEK_UPDATE_REQUEST:
-      return { ...state, loading: true };
+      return { ...state, loading: true, error: null };
     case WEEK_UPDATE_SUCCESS: {
       const updatedWeeks = {
         ...state.weeks,
         [action.payload._id]: action.payload,
       };
-      return { ...state, loading: false, weeks: updatedWeeks };
+      return { ...state, loading: false, weeks: updatedWeeks, error: null };
     }
     case WEEK_UPDATE_FAIL:
       return { ...state, loading: false, error: action.payload };

@@ -7,9 +7,8 @@ import { theme } from './theme';
 import { ThemeProvider } from '@material-ui/core/styles';
 import Navbar from '../views/common/Navbar/Navbar';
 
-import HomePage from '../views/pages/HomePage/HomePage';
+import WeekDetailsPage from '../views/pages/WeekDetailsPage/WeekDetailsPage';
 import ExplorePage from '../views/pages/ExplorePage/ExplorePage';
-import NewWeekPage from '../views/pages/NewWeekPage/NewWeekPage';
 import EditDayPage from '../views/pages/EditDayPage/EditDayPage';
 import AuthPage from '../views/pages/AuthPage/AuthPage';
 import RecipePage from '../views/pages/RecipePage/RecipePage';
@@ -26,9 +25,8 @@ function App() {
       <Navbar />
       <div className={classes.root}>
         <Switch>
-          <Route path={routes.HOME_PAGE} exact component={HomePage} />
+          <Route path={routes.HOME_PAGE} exact component={WeekDetailsPage} />
           <Route path={routes.EXPLORE_PAGE} exact component={ExplorePage} />
-          <Route path={routes.NEW_WEEK_PAGE} exact component={NewWeekPage} />
           <Route path={routes.EDIT_DAY_PAGE} exact component={EditDayPage} />
           <Route path={routes.RECIPE_PAGE} exact component={RecipePage} />
           <Route

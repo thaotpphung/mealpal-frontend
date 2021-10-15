@@ -9,18 +9,21 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import RestaurantMenuIcon from '@material-ui/icons/RestaurantMenu';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import DoneIcon from '@mui/icons-material/Done';
 import {
   createMeal,
   deleteMeal,
   updateMeal,
   setMeals,
+  getMeals,
 } from '../../../redux/actions/mealActions';
 import { createRecipe } from '../../../redux/actions/recipeActions';
+import Input from '../../common/Input/Input';
+import Spinner from '../../common/Spinner/Spinner';
+import useArray from '../../../utils/hooks/useArray';
+import RoundButton from '../../common/Buttons/RoundButton';
+import AutocompleteField from '../../common/AutocompleteField/AutocompleteField';
+
+import { getAllRecipes } from '../../../redux/actions/recipeActions';
 
 const EditDayPage = () => {
   const classes = useStyles();
@@ -29,13 +32,22 @@ const EditDayPage = () => {
   // selectors
   const { days } = useSelector((state) => state.dayList);
   const { recipes } = useSelector((state) => state.recipeList);
-  const { day } = useSelector((state) => state.mealList);
+  const { day, loading, error } = useSelector((state) => state.mealList);
   const { currentUser } = useSelector((state) => state.user);
   const { selectedWeek } = useSelector((state) => state.select);
+  const [isInEditMealMode, setIsInEditMealMode] = useState([]);
 
-  // autocompelte
   const filter = createFilterOptions();
   const [open, toggleOpen] = useState(false);
+
+  useEffect(() => {
+    console.log(days[dayId]);
+    dispatch(getMeals(dayId));
+  }, []);
+
+  useEffect(() => {
+    dispatch(getAllRecipes());
+  }, []);
 
   // dialog
   const handleClose = () => {
@@ -48,23 +60,12 @@ const EditDayPage = () => {
     recipeName: '',
   });
 
-  // states
   const [foodFieldsForm, setFoodFieldsForm] = useState([]);
-  const dayLength = Object.keys(days).length;
-  const [isInEditMealMode, setIsInEditMealMode] = useState(
-    new Array(dayLength).fill(false)
-  );
+
   const [newMealName, setNewMealName] = useState('');
 
-  // life cycles
-  useEffect(() => {
-    dispatch(setMeals(days[dayId]));
-  }, []);
-
-  // methods
   const handleSubmit = (event) => {
     event.preventDefault();
-    // create new recipe
     dispatch(
       createRecipe({
         recipeName: dialogValue.recipeName,
@@ -74,7 +75,6 @@ const EditDayPage = () => {
     handleClose();
   };
 
-  // crud meals
   const handleDeleteMeal = (mealId) => {
     dispatch(deleteMeal(mealId));
   };
@@ -90,7 +90,7 @@ const EditDayPage = () => {
   };
 
   const handleSubmitUpdateMeal = (mealId, mealIdx) => {
-    const edits = new Array(dayLength).fill(false);
+    const edits = new Array(day.meals.length).fill(false);
     setIsInEditMealMode(edits);
     dispatch(updateMeal(mealId, foodFieldsForm, mealIdx));
   };
@@ -101,7 +101,7 @@ const EditDayPage = () => {
   };
 
   const handleEnableEditMealMode = (mealIdx) => {
-    const edits = new Array(dayLength).fill(false);
+    const edits = new Array(day.meals.length).fill(false);
     edits[mealIdx] = true;
     setIsInEditMealMode(edits);
     if (day.meals[mealIdx].food.length === 0) {
@@ -150,7 +150,13 @@ const EditDayPage = () => {
     setFoodFieldsForm(fields);
   };
 
-  return (
+  const handleChangeDialogValue = (event) => {
+    setDialogValue({
+      recipeName: event.target.value,
+    });
+  };
+
+  const Component = (
     <>
       <Paper className={classes.root}>
         <div className={classes.header}>
@@ -184,6 +190,8 @@ const EditDayPage = () => {
                           {foodFieldsForm.map((recipe, recipeIdx) => (
                             <li key={`food-field-${recipe._id}-${recipeIdx}`}>
                               <RestaurantMenuIcon />
+
+                              <AutocompleteField />
                               <Autocomplete
                                 value={foodFieldsForm[recipeIdx]}
                                 onChange={(event, newValue) => {
@@ -244,18 +252,16 @@ const EditDayPage = () => {
                                   <TextField {...params} label="" />
                                 )}
                               />
-                              <IconButton
-                                onClick={() =>
+                              <RoundButton
+                                type="deleteField"
+                                handleClick={() =>
                                   handleDeleteFoodFieldForm(recipeIdx)
                                 }
-                              >
-                                <HighlightOffIcon
-                                  className={classes.deleteIcon}
-                                />
-                              </IconButton>
-                              <IconButton onClick={handleAddFoodFieldForm}>
-                                <AddCircleOutlineIcon />
-                              </IconButton>
+                              />
+                              <RoundButton
+                                type="addField"
+                                handleClick={handleAddFoodFieldForm}
+                              />
                             </li>
                           ))}
                         </>
@@ -264,23 +270,22 @@ const EditDayPage = () => {
                   </div>
                   <div className={classes.itemAction}>
                     {isInEditMealMode[mealIdx] ? (
-                      <IconButton
-                        onClick={() =>
+                      <RoundButton
+                        type="done"
+                        handleClick={() =>
                           handleSubmitUpdateMeal(meal._id, mealIdx)
                         }
-                      >
-                        <DoneIcon />
-                      </IconButton>
+                      />
                     ) : (
-                      <IconButton
-                        onClick={() => handleEnableEditMealMode(mealIdx)}
-                      >
-                        <EditIcon />
-                      </IconButton>
+                      <RoundButton
+                        type="edit"
+                        handleClick={() => handleEnableEditMealMode(mealIdx)}
+                      />
                     )}
-                    <IconButton onClick={() => handleDeleteMeal(meal._id)}>
-                      <DeleteIcon />
-                    </IconButton>
+                    <RoundButton
+                      type="delete"
+                      handleClick={() => handleDeleteMeal(meal._id)}
+                    />
                   </div>
                 </div>
               );
@@ -307,18 +312,11 @@ const EditDayPage = () => {
         <form onSubmit={handleSubmit}>
           <DialogTitle>Add a new recipe</DialogTitle>
           <DialogContent>
-            <TextField
-              autoFocus
-              margin="dense"
-              value={dialogValue.recipeName}
-              onChange={(event) =>
-                setDialogValue({
-                  recipeName: event.target.value,
-                })
-              }
+            <Input
+              name="recipeName"
               label="Recipe Name"
-              type="text"
-              variant="standard"
+              handleChange={handleChangeDialogValue}
+              value={dialogValue.recipeName}
             />
           </DialogContent>
           <DialogActions>
@@ -329,6 +327,13 @@ const EditDayPage = () => {
       </Dialog>
     </>
   );
+
+  if (!loading && Object.keys(day).length > 0) {
+    return Component;
+  } else if (error) {
+    return <div>{error}</div>;
+  }
+  return <Spinner />;
 };
 
 export default EditDayPage;

@@ -1,10 +1,6 @@
 import { SET_SELECTED_WEEK } from '../constants/selectConstants';
 
 const INITIAL_STATE = {
-  selectedPlan: {
-    id: null,
-    name: null,
-  },
   selectedWeek: {
     id: null,
     name: null,

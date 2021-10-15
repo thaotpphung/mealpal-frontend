@@ -13,14 +13,11 @@ import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import { Button } from '@material-ui/core/';
 import { red } from '@mui/material/colors';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import EditIcon from '@mui/icons-material/Edit';
-import DoneIcon from '@mui/icons-material/Done';
-import DeleteIcon from '@mui/icons-material/Delete';
 import FileInputComponent from 'react-file-input-previews-base64';
 import Input from '../../common/Input/Input';
+import RoundButton from '../../common/Buttons/RoundButton';
+
 import {
   updateRecipe,
   deleteRecipe,
@@ -81,20 +78,14 @@ const RecipeCard = ({ recipe }) => {
         }
         action={
           <>
-            <IconButton
-              aria-label="settings"
-              onClick={() => handleDeleteRecipe(recipe._id)}
-            >
-              <DeleteIcon />
-            </IconButton>
+            <RoundButton
+              type="delete"
+              handleClick={() => handleDeleteRecipe(recipe._id)}
+            />
             {isInEditMode ? (
-              <IconButton onClick={handleToggleEditMode}>
-                <DoneIcon />
-              </IconButton>
+              <RoundButton type="done" handleClick={handleToggleEditMode} />
             ) : (
-              <IconButton onClick={handleToggleEditMode}>
-                <EditIcon />
-              </IconButton>
+              <RoundButton type="edit" handleClick={handleToggleEditMode} />
             )}
           </>
         }
@@ -195,12 +186,7 @@ const RecipeCard = ({ recipe }) => {
       </CardContent>
 
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
-        </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon />
-        </IconButton>
+        <RoundButton type="like" />
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}

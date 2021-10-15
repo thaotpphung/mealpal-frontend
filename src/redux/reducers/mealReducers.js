@@ -3,6 +3,9 @@ import {
   MEAL_CREATE_REQUEST,
   MEAL_CREATE_SUCCESS,
   MEAL_CREATE_FAIL,
+  MEAL_LIST_REQUEST,
+  MEAL_LIST_SUCCESS,
+  MEAL_LIST_FAIL,
   MEAL_DELETE_REQUEST,
   MEAL_DELETE_SUCCESS,
   MEAL_DELETE_FAIL,
@@ -27,36 +30,49 @@ const mealListReducer = (state = INITIAL_STATE, action) => {
 
     // create meal
     case MEAL_CREATE_REQUEST:
-      return { ...state, loading: true };
+      return { ...state, loading: true, error: null };
     case MEAL_CREATE_SUCCESS: {
       const updatedDay = _.cloneDeep(state.day);
       updatedDay.meals.push(action.payload);
-      return { ...state, loading: false, day: updatedDay };
+      return { ...state, loading: false, day: updatedDay, error: null };
     }
     case MEAL_CREATE_FAIL:
       return { ...state, loading: false, error: action.payload };
 
+    // get meals
+    case MEAL_LIST_REQUEST:
+      return { ...state, loading: true, error: null };
+    case MEAL_LIST_SUCCESS: {
+      return { ...state, loading: false, day: action.payload, error: null };
+    }
+    case MEAL_LIST_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+
     // delete meal
     case MEAL_DELETE_REQUEST:
-      return { ...state, loading: true };
+      return { ...state, loading: true, error: null };
     case MEAL_DELETE_SUCCESS: {
       const updatedDay = _.cloneDeep(state.day);
       const updatedMeals = updatedDay.meals.filter(
         (meal) => meal._id !== action.payload.mealId
       );
       updatedDay.meals = updatedMeals;
-      return { ...state, loading: false, day: updatedDay };
+      return { ...state, loading: false, day: updatedDay, error: null };
     }
     case MEAL_DELETE_FAIL:
       return { ...state, loading: false, error: action.payload };
 
     // update meal
     case MEAL_UPDATE_REQUEST:
-      return { ...state, loading: true };
+      return { ...state, loading: true, error: null };
     case MEAL_UPDATE_SUCCESS: {
       const updatedDay = _.cloneDeep(state.day);
       updatedDay.meals[action.payload.mealIdx].food = action.payload.food;
-      return { ...state, loading: false, day: updatedDay };
+      return { ...state, loading: false, day: updatedDay, error: null };
     }
     case MEAL_UPDATE_FAIL:
       return { ...state, loading: false, error: action.payload };

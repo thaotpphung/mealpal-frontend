@@ -12,9 +12,6 @@ export default makeStyles((theme) => ({
     justifyContent: 'space-between',
     backgroundColor: theme.palette.primary.light,
   },
-  list: {
-    listStyle: 'none',
-  },
   item: {
     display: 'grid',
     gridTemplateColumns: '2fr 6fr 1fr',

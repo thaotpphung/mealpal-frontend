@@ -6,7 +6,6 @@ import {
   CardActions,
   CardContent,
   Button,
-  Typography,
   Grid,
   Avatar,
   IconButton,
@@ -14,25 +13,11 @@ import {
 } from '@material-ui/core/';
 import { styled } from '@mui/material/styles';
 import useStyles from './styles';
-import EditIcon from '@material-ui/icons/Edit';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import DeleteIcon from '@material-ui/icons/Delete';
-import StarIcon from '@material-ui/icons/Star';
-import ShareIcon from '@material-ui/icons/Share';
-import DoneIcon from '@material-ui/icons/Done';
-import ThumbUpAltOutlined from '@material-ui/icons/ThumbUpAltOutlined';
 import { deleteWeek, updateWeek } from '../../../redux/actions/weekActions';
 import { setCurrentWeek } from '../../../redux/actions/userActions';
 import Input from '../../common/Input/Input';
-
-const Likes = () => {
-  return (
-    <>
-      <ThumbUpAltOutlined fontSize="small" />
-      &nbsp;Like
-    </>
-  );
-};
+import RoundButton from '../../common/Buttons/RoundButton';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -51,9 +36,7 @@ const WeekInfoCard = ({ week }) => {
   const [expanded, setExpanded] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const { selectedWeek } = useSelector((state) => state.select);
-
   const [isInEditMode, setIsInEditMode] = useState(false);
-
   const [weekForm, setWeekForm] = useState({});
 
   useEffect(() => {
@@ -74,8 +57,12 @@ const WeekInfoCard = ({ week }) => {
   };
 
   const handleDeleteWeek = (weekId) => {
-    if (weekId !== undefined) {
+    if (weekId !== undefined && weekId !== currentUser.currentWeek._id) {
       dispatch(deleteWeek(weekId));
+    } else {
+      console.log(
+        'Please select another week as your current week before deleting'
+      );
     }
     // TODO
     // else display error
@@ -103,27 +90,18 @@ const WeekInfoCard = ({ week }) => {
         }
         action={
           <>
-            <IconButton
-              aria-label="settings"
-              onClick={() => handleDeleteWeek(week?._id)}
-            >
-              <DeleteIcon />
-            </IconButton>
-            {isInEditMode ? (
-              <IconButton onClick={handleToggleEditMode}>
-                <DoneIcon />
-              </IconButton>
-            ) : (
-              <IconButton onClick={handleToggleEditMode}>
-                <EditIcon />
-              </IconButton>
-            )}
-            <IconButton
-              aria-label="settings"
-              onClick={() => handleSetCurrentWeek(week?._id)}
-            >
-              <StarIcon />
-            </IconButton>
+            <RoundButton
+              type="delete"
+              handleClick={() => handleDeleteWeek(week?._id)}
+            />
+            <RoundButton
+              type={isInEditMode ? 'done' : 'edit'}
+              handleClick={handleToggleEditMode}
+            />
+            <RoundButton
+              type="setDefault"
+              handleClick={() => handleSetCurrentWeek(week?._id)}
+            />
           </>
         }
         title="thao phung"
@@ -155,7 +133,7 @@ const WeekInfoCard = ({ week }) => {
               />
               <Input
                 name="weekDiet"
-                label="Servings"
+                label="Diet"
                 value={weekForm?.weekDiet}
                 handleChange={handleChange}
               />
@@ -173,12 +151,7 @@ const WeekInfoCard = ({ week }) => {
         )}
       </CardContent>
       <CardActions className={classes.cardActions}>
-        <Button size="small" color="primary">
-          <Likes />
-        </Button>
-        <IconButton aria-label="share" color="primary">
-          <ShareIcon />
-        </IconButton>
+        <RoundButton type="like" />
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}

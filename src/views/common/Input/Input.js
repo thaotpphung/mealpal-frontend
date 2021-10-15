@@ -3,48 +3,54 @@ import { TextField, Grid, InputAdornment, IconButton } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import useStyles from './styles';
 
 const Input = ({
   name,
   handleChange,
+  required = false,
   label,
-  half,
-  autoFocus,
-  type,
+  autoFocus = true,
+  type = 'text',
   handleShowPassword,
   value,
-}) => (
-  <Grid item xs={12} sm={half ? 6 : 12}>
-    <TextField
-      name={name}
-      onChange={handleChange}
-      // variant="outlined"
-      // required
-      fullWidth
-      label={label}
-      value={value}
-      autoFocus={autoFocus}
-      type={type}
-      InputProps={
-        name === 'password'
-          ? {
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={handleShowPassword}>
-                    {type === 'password' ? <Visibility /> : <VisibilityOff />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }
-          : null
-      }
-    />
-  </Grid>
-);
+}) => {
+  const classes = useStyles();
+  return (
+    <Grid item xs={12}>
+      <TextField
+        className={classes.inputField}
+        name={name}
+        onChange={handleChange}
+        required={required}
+        margin="dense"
+        fullWidth
+        label={label}
+        value={value}
+        autoFocus={autoFocus}
+        type={type}
+        InputProps={
+          name === 'password'
+            ? {
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton onClick={handleShowPassword}>
+                      {type === 'password' ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }
+            : null
+        }
+      />
+    </Grid>
+  );
+};
 
 Input.propTypes = {
-  name: PropTypes.string.isRequired,
+  name: PropTypes.string,
   handleChange: PropTypes.func,
+  required: PropTypes.bool,
   label: PropTypes.string,
   half: PropTypes.bool,
   autoFocus: PropTypes.bool,

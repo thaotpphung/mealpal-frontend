@@ -3,6 +3,9 @@ import {
   MEAL_CREATE_REQUEST,
   MEAL_CREATE_SUCCESS,
   MEAL_CREATE_FAIL,
+  MEAL_LIST_REQUEST,
+  MEAL_LIST_SUCCESS,
+  MEAL_LIST_FAIL,
   MEAL_DELETE_REQUEST,
   MEAL_DELETE_SUCCESS,
   MEAL_DELETE_FAIL,
@@ -12,7 +15,7 @@ import {
 } from '../constants/mealConstants';
 import * as api from '../../api/index';
 
-export { setMeals, createMeal, deleteMeal, updateMeal };
+export { setMeals, createMeal, deleteMeal, updateMeal, getMeals };
 
 const setMeals = (meals) => async (dispatch) => {
   dispatch({ type: MEAL_LIST_SET, payload: meals });
@@ -22,9 +25,19 @@ const createMeal = (meal) => async (dispatch) => {
   try {
     dispatch({ type: MEAL_CREATE_REQUEST });
     const { data } = await api.createMeal(meal);
-    dispatch({ type: MEAL_CREATE_SUCCESS, payload: data });
+    dispatch({ type: MEAL_CREATE_SUCCESS, payload: data.data });
   } catch (error) {
     dispatch({ type: MEAL_CREATE_FAIL, payload: error.response.data.message });
+  }
+};
+
+const getMeals = (dayId) => async (dispatch) => {
+  try {
+    dispatch({ type: MEAL_LIST_REQUEST });
+    const { data } = await api.getDay(dayId);
+    dispatch({ type: MEAL_LIST_SUCCESS, payload: data.data });
+  } catch (error) {
+    dispatch({ type: MEAL_LIST_FAIL, payload: error.response.data.message });
   }
 };
 

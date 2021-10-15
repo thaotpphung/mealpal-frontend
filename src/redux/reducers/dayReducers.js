@@ -15,10 +15,10 @@ const dayListReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     // get all days of a week
     case DAY_LIST_REQUEST:
-      return { ...state, loading: true };
+      return { ...state, loading: true, error: null };
     case DAY_LIST_SUCCESS: {
       const days = _.mapKeys(action.payload, '_id');
-      return { ...state, loading: false, days: days };
+      return { ...state, loading: false, days: days, error: null };
     }
     case DAY_LIST_FAIL:
       return { ...state, loading: false, error: action.payload };

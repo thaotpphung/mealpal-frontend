@@ -11,7 +11,7 @@ const getDayListByWeekId = (weekId) => async (dispatch) => {
   try {
     dispatch({ type: DAY_LIST_REQUEST });
     const { data } = await api.getDayListByWeekId(weekId);
-    dispatch({ type: DAY_LIST_SUCCESS, payload: data });
+    dispatch({ type: DAY_LIST_SUCCESS, payload: data.data });
   } catch (error) {
     dispatch({ type: DAY_LIST_FAIL, payload: error.response.data.message });
   }

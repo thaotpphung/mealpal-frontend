@@ -6,6 +6,7 @@ import Link from '@material-ui/core/Link';
 import { NavLink as RouterLink } from 'react-router-dom';
 import useStyles from './styles';
 import Toolbar from '@material-ui/core/Toolbar';
+
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../../redux/actions/userActions';
@@ -84,16 +85,28 @@ const Navbar = () => {
             </Link>
           </nav>
           {currentUser ? (
-            <Button
-              component={RouterLink}
-              to={routes.AUTH_PAGE}
-              color="primary"
-              variant="outlined"
-              className={classes.link}
-              onClick={handleLogout}
-            >
-              Logout
-            </Button>
+            <>
+              <Link
+                variant="button"
+                component={RouterLink}
+                color="textPrimary"
+                to={routes.CART_PAGE}
+                className={classes.link}
+                activeClassName={classes.activeClassName}
+              >
+                Profile
+              </Link>
+              <Button
+                component={RouterLink}
+                to={routes.AUTH_PAGE}
+                color="primary"
+                variant="outlined"
+                className={classes.link}
+                onClick={handleLogout}
+              >
+                Logout
+              </Button>
+            </>
           ) : (
             <Button
               component={RouterLink}

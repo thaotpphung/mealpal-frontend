@@ -1,12 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid } from '@material-ui/core';
 import useStyles from './styles';
 import WeekInfoCard from '../../components/WeekInfoCard/WeekInfoCard';
+import { getAllWeeks } from '../../../redux/actions/weekActions';
 
 const ExplorePage = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const { weeks } = useSelector((state) => state.weekList);
+
+  useEffect(() => {
+    dispatch(getAllWeeks());
+  }, []);
 
   return (
     <div>

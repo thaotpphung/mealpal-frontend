@@ -1,92 +1,88 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Grid, IconButton, Paper, TextField, Button } from '@material-ui/core';
-import EditIcon from '@material-ui/icons/Edit';
-import DoneIcon from '@mui/icons-material/Done';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { Paper } from '@material-ui/core';
 import { updateRecipe } from '../../../redux/actions/recipeActions';
 import useStyles from './styles';
+import Input from '../../common/Input/Input';
+import useArray from '../../../utils/hooks/useArray';
+import useToggle from '../../../utils/hooks/useToggle';
+
+import RoundButton from '../../common/Buttons/RoundButton';
 
 const InstructionsCard = ({ recipe }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const [instructionFields, setInstructionFields] = useState(
+  const { array, push, remove, update } = useArray(
     recipe.instructions.length === 0 ? [''] : recipe.instructions
   );
-  const [isInEditMode, setIsInEditMode] = useState(false);
-
-  const handleToggleEditMode = () => {
-    setIsInEditMode(!isInEditMode);
-  };
-
-  const handleChangeInstructionField = (event, instructionIdx) => {
-    const fields = [...instructionFields];
-    fields[instructionIdx] = event.target.value;
-    setInstructionFields(fields);
-  };
-
-  const handleDeleteInstructionField = (instructionIdx) => {
-    const fields = [...instructionFields];
-    fields.splice(instructionIdx, 1);
-    setInstructionFields(fields);
-  };
-
-  const handleAddInstructionField = () => {
-    const fields = [...instructionFields];
-    fields.push('');
-    setInstructionFields(fields);
-  };
+  const [isInEditMode, toggleIsInEditMode] = useToggle(false);
 
   const handleSubmitUpdateRecipe = () => {
-    dispatch(updateRecipe(recipe._id, { instructions: instructionFields }));
-    handleToggleEditMode();
+    dispatch(updateRecipe(recipe._id, { instructions: array }));
+    toggleIsInEditMode(false);
   };
 
   return (
-    <div className={classes.root}>
-      Instructions:
-      {isInEditMode ? (
-        <IconButton onClick={() => handleSubmitUpdateRecipe()}>
-          <DoneIcon />
-        </IconButton>
-      ) : (
-        <IconButton onClick={() => handleToggleEditMode()}>
-          <EditIcon />
-        </IconButton>
-      )}
-      <ul>
-        {instructionFields.map((instruction, instructionIdx) => {
-          return (
-            <>
-              {!isInEditMode ? (
-                <li key={`instruction-official-${instructionIdx}`}>
-                  {instruction}
-                </li>
-              ) : (
-                <li key={`instruction-field-${instructionIdx}`}>
-                  <TextField
-                    variant="outlined"
-                    value={instruction}
-                    onChange={(event) =>
-                      handleChangeInstructionField(event, instructionIdx)
-                    }
-                  />
-                  <IconButton
-                    onClick={() => handleDeleteInstructionField(instructionIdx)}
-                  >
-                    <HighlightOffIcon className={classes.deleteIcon} />
-                  </IconButton>
-                  <IconButton onClick={handleAddInstructionField}>
-                    <AddCircleOutlineIcon />
-                  </IconButton>
-                </li>
-              )}
-            </>
-          );
-        })}
-      </ul>
-    </div>
+    <Paper className={classes.root}>
+      <div className={classes.header}>
+        <div>Instruction List</div>
+        <div className={classes.action}>
+          {isInEditMode ? (
+            <RoundButton
+              type="done"
+              handleClick={() => handleSubmitUpdateRecipe()}
+            />
+          ) : (
+            <RoundButton type="edit" handleClick={() => toggleIsInEditMode()} />
+          )}
+        </div>
+      </div>
+      <div className={classes.content}>
+        <ul className={classes.list}>
+          {array.map((instruction, instructionIdx) => {
+            return (
+              <li
+                className={classes.item}
+                key={`instruction-field-${instruction}-${instructionIdx}`}
+              >
+                {!isInEditMode ? (
+                  <>
+                    <div className={classes.itemIcon}>
+                      {instructionIdx + 1}.
+                    </div>
+                    <div className={classes.itemContent}> {instruction}</div>
+                  </>
+                ) : (
+                  <>
+                    <div className={classes.itemIcon}>
+                      {instructionIdx + 1}.
+                    </div>
+                    <div className={classes.itemContent}>
+                      <Input
+                        value={instruction}
+                        handleChange={(event) =>
+                          update(instructionIdx, event.target.value)
+                        }
+                      />
+                    </div>
+                    <div className={classes.itemAction}>
+                      <RoundButton
+                        type="deleteField"
+                        handleClick={() => remove(instructionIdx)}
+                      />
+                      <RoundButton
+                        type="addField"
+                        handleClick={() => push('')}
+                      />
+                    </div>
+                  </>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </Paper>
   );
 };
 

@@ -5,6 +5,9 @@ import {
   RECIPE_LIST_REQUEST,
   RECIPE_LIST_SUCCESS,
   RECIPE_LIST_FAIL,
+  RECIPE_DETAILS_REQUEST,
+  RECIPE_DETAILS_SUCCESS,
+  RECIPE_DETAILS_FAIL,
   RECIPE_DELETE_REQUEST,
   RECIPE_DELETE_SUCCESS,
   RECIPE_DELETE_FAIL,
@@ -14,13 +17,13 @@ import {
 } from '../constants/recipeConstants';
 import * as api from '../../api/index';
 
-export { getAllRecipes, createRecipe, deleteRecipe, updateRecipe };
+export { getAllRecipes, createRecipe, deleteRecipe, updateRecipe, getRecipe };
 
 const createRecipe = (recipe) => async (dispatch) => {
   try {
     dispatch({ type: RECIPE_CREATE_REQUEST, payload: recipe });
     const { data } = await api.createRecipe(recipe);
-    dispatch({ type: RECIPE_CREATE_SUCCESS, payload: data });
+    dispatch({ type: RECIPE_CREATE_SUCCESS, payload: data.data });
   } catch (error) {
     dispatch({
       type: RECIPE_CREATE_FAIL,
@@ -33,9 +36,22 @@ const getAllRecipes = () => async (dispatch) => {
   try {
     dispatch({ type: RECIPE_LIST_REQUEST });
     const { data } = await api.getRecipes();
-    dispatch({ type: RECIPE_LIST_SUCCESS, payload: data });
+    dispatch({ type: RECIPE_LIST_SUCCESS, payload: data.data });
   } catch (error) {
     dispatch({ type: RECIPE_LIST_FAIL, payload: error.response.data.message });
+  }
+};
+
+const getRecipe = (recipeId) => async (dispatch) => {
+  try {
+    dispatch({ type: RECIPE_DETAILS_REQUEST });
+    const { data } = await api.getRecipe(recipeId);
+    dispatch({ type: RECIPE_DETAILS_SUCCESS, payload: data.data });
+  } catch (error) {
+    dispatch({
+      type: RECIPE_DETAILS_FAIL,
+      payload: error.response.data.message,
+    });
   }
 };
 

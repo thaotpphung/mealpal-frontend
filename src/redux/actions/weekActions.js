@@ -22,7 +22,7 @@ const createWeek = (week) => async (dispatch) => {
   try {
     dispatch({ type: WEEK_CREATE_REQUEST, payload: week });
     const { data } = await api.createWeek(week);
-    dispatch({ type: WEEK_CREATE_SUCCESS, payload: data });
+    dispatch({ type: WEEK_CREATE_SUCCESS, payload: data.data });
   } catch (error) {
     dispatch({ type: WEEK_CREATE_FAIL, payload: error.response.data.message });
   }
@@ -32,7 +32,7 @@ const getAllWeeks = () => async (dispatch) => {
   try {
     dispatch({ type: WEEK_LIST_REQUEST });
     const { data } = await api.getWeeks();
-    dispatch({ type: WEEK_LIST_SUCCESS, payload: data });
+    dispatch({ type: WEEK_LIST_SUCCESS, payload: data.data });
   } catch (error) {
     dispatch({ type: WEEK_LIST_FAIL, payload: error.response.data.message });
   }
