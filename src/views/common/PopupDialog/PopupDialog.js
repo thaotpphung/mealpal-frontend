@@ -7,13 +7,15 @@ import DialogActions from '@mui/material/DialogActions';
 
 const PopupDialog = ({ open, content, title, handleClose, handleSubmit }) => {
   return (
-    <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>{title}</DialogTitle>
-      <DialogContent>{content}</DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={handleSubmit}>Add</Button>
-      </DialogActions>
+    <Dialog fullWidth open={open} onClose={handleClose}>
+      <form onSubmit={handleSubmit}>
+        <DialogTitle>{title}</DialogTitle>
+        <DialogContent>{content}</DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleSubmit}>Add</Button>
+        </DialogActions>
+      </form>
     </Dialog>
   );
 };

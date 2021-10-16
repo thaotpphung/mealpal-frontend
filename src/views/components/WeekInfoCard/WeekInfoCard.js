@@ -10,9 +10,10 @@ import {
   Avatar,
   IconButton,
   Collapse,
+  Paper,
 } from '@material-ui/core/';
 import { styled } from '@mui/material/styles';
-import useStyles from './styles';
+import useStyles from '../../../containers/styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { deleteWeek, updateWeek } from '../../../redux/actions/weekActions';
 import { setCurrentWeek } from '../../../redux/actions/userActions';
@@ -35,7 +36,6 @@ const WeekInfoCard = ({ week }) => {
   const dispatch = useDispatch();
   const [expanded, setExpanded] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
-  const { selectedWeek } = useSelector((state) => state.select);
   const [isInEditMode, setIsInEditMode] = useState(false);
   const [weekForm, setWeekForm] = useState({});
 
@@ -115,9 +115,8 @@ const WeekInfoCard = ({ week }) => {
             <div>Tags: {week?.weekTags}</div>
           </div>
         )}
-
         {isInEditMode && (
-          <form className={classes.form} onSubmit={handleSubmit}>
+          <form className={classes.formContainer} onSubmit={handleSubmit}>
             <Grid container spacing={2}>
               <Input
                 name="weekDescription"
@@ -143,7 +142,7 @@ const WeekInfoCard = ({ week }) => {
               fullWidth
               variant="contained"
               color="primary"
-              className={classes.submit}
+              className={classes.formSubmitButton}
             >
               Submit
             </Button>

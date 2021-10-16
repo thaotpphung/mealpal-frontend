@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Grid, Typography, TextField, Button } from '@material-ui/core';
+import { Grid, Typography, TextField } from '@material-ui/core';
 import useStyles from './styles';
 import WeekList from '../../components/WeekList/WeekList';
 import Menu from '../../components/Menu/Menu';
@@ -8,7 +8,10 @@ import WeekInfoCard from '../../components/WeekInfoCard/WeekInfoCard';
 import { setSelectedWeek } from '../../../redux/actions/selectActions';
 import { createWeek } from '../../../redux/actions/weekActions';
 import PopupDialog from '../../common/PopupDialog/PopupDialog';
+import Input from '../../common/Input/Input';
 import useForm from '../../../utils/hooks/useForm';
+import useDialog from '../../../utils/hooks/useDialog';
+
 import { getAllWeeks } from '../../../redux/actions/weekActions';
 
 const WeekDetailsPage = () => {
@@ -24,7 +27,7 @@ const WeekDetailsPage = () => {
     dispatch(getAllWeeks());
   }, []);
 
-  const [open, toggleOpen] = useState(false);
+  const { open, toggleOpen, handleClose } = useDialog(() => reset());
 
   const initialState = {
     weekName: '',
@@ -41,11 +44,6 @@ const WeekDetailsPage = () => {
     }
   );
 
-  const handleClose = () => {
-    reset();
-    toggleOpen();
-  };
-
   return (
     <div>
       <PopupDialog
@@ -55,27 +53,27 @@ const WeekDetailsPage = () => {
         open={open}
         content={
           <>
-            <TextField
+            <Input
               value={values.weekName}
-              onChange={handleChange}
+              handleChange={handleChange}
               name="weekName"
               label="Week Name"
             />
-            <TextField
+            <Input
               value={values.weekDescription}
-              onChange={handleChange}
+              handleChange={handleChange}
               name="weekDescription"
               label="Week Description"
             />
-            <TextField
+            <Input
               value={values.weekTags}
-              onChange={handleChange}
+              handleChange={handleChange}
               name="weekTags"
               label="Week Tags"
             />
-            <TextField
+            <Input
               value={values.weekDiet}
-              onChange={handleChange}
+              handleChange={handleChange}
               name="weekDiet"
               label="Week Diet"
             />

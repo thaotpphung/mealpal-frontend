@@ -1,10 +1,11 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import useStyles from './styles';
-import { Paper, IconButton } from '@material-ui/core';
+import useStyles from '../../../containers/styles';
+import { Paper } from '@material-ui/core';
 import { setSelectedWeek } from '../../../redux/actions/selectActions';
 import RoundButton from '../../common/Buttons/RoundButton';
 import StarOutlineIcon from '@material-ui/icons/StarOutline';
+import CardHeader from '../../common/CardHeader/CardHeader';
 
 const WeekList = ({ toggleOpen }) => {
   const dispatch = useDispatch();
@@ -18,13 +19,11 @@ const WeekList = ({ toggleOpen }) => {
   };
 
   return (
-    <Paper className={classes.root}>
-      <div className={classes.header}>
-        <div>Week List</div>
-        <div className={classes.action}>
-          <RoundButton handleClick={() => toggleOpen(true)} type="add" />
-        </div>
-      </div>
+    <Paper>
+      <CardHeader
+        title="Week List"
+        action={<RoundButton handleClick={() => toggleOpen(true)} type="add" />}
+      />
       <div className={classes.content}>
         <ul className={classes.list}>
           {Object.values(weeks).map((week) => (

@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Grid, Button, TextField, IconButton } from '@material-ui/core';
-import useStyles from './styles';
+import useStyles from '../../../containers/styles';
 import RecipeCard from '../../components/RecipeCard/RecipeCard';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import AddIcon from '@material-ui/icons/Add';
-
-import routes from '../../../constants/routes';
+import Spinner from '../../common/Spinner/Spinner';
+import FormContainer from '../../common/FormContainer/FormContainer';
+import PopupDialog from '../../common/PopupDialog/PopupDialog';
+import Input from '../../common/Input/Input';
+import useDialog from '../../../utils/hooks/useDialog';
+import useForm from '../../../utils/hooks/useForm';
 import {
   createRecipe,
   getAllRecipes,
@@ -18,10 +17,7 @@ import {
 
 const RecipePage = () => {
   const classes = useStyles();
-  const history = useHistory();
   const dispatch = useDispatch();
-  const [recipeName, setRecipeName] = useState('');
-  const [isShowNewRecipeForm, setIsShowNewRecipeForm] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const { recipes } = useSelector((state) => state.recipeList);
 
@@ -29,8 +25,7 @@ const RecipePage = () => {
     dispatch(getAllRecipes());
   }, []);
 
-  // dialog
-  const [open, toggleOpen] = useState(false);
+  const { open, toggleOpen, handleClose } = useDialog(() => reset());
 
   const initialState = {
     recipeName: '',
@@ -40,22 +35,16 @@ const RecipePage = () => {
     cookTime: '',
     prepTime: '',
   };
-  const handleClose = () => {
-    setDialogValue(initialState);
-    toggleOpen(false);
-  };
-  const [dialogValue, setDialogValue] = useState(initialState);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const {
+    values: dialogValue,
+    handleSubmit,
+    handleChange,
+    reset,
+  } = useForm(initialState, () => {
     dispatch(createRecipe({ ...dialogValue, userId: currentUser._id }));
     handleClose();
-  };
-
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setDialogValue({ ...dialogValue, [name]: value });
-  };
+  });
 
   return (
     <div>
@@ -80,79 +69,52 @@ const RecipePage = () => {
         ))}
       </Grid>
 
-      <Dialog className={classes.dialog} open={open} onClose={handleClose}>
-        <form onSubmit={handleSubmit}>
-          <DialogTitle>Add a new recipe</DialogTitle>
-          <DialogContent>
-            <div>
-              <TextField
-                autoFocus
-                margin="dense"
-                value={dialogValue.recipeName}
-                onChange={handleChange}
-                name="recipeName"
-                type="text"
-                label="Recipe Name *"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                margin="dense"
-                value={dialogValue.recipeDescription}
-                onChange={handleChange}
-                name="recipeDescription"
-                type="text"
-                label="Recipe Description"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                margin="dense"
-                value={dialogValue.calories}
-                onChange={handleChange}
-                name="calories"
-                type="text"
-                label="Calories"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                margin="dense"
-                value={dialogValue.servings}
-                onChange={handleChange}
-                name="servings"
-                type="text"
-                label="Servings"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                margin="dense"
-                value={dialogValue.prepTime}
-                onChange={handleChange}
-                name="prepTime"
-                type="text"
-                label="Prep Time"
-                variant="standard"
-              />
-              <TextField
-                autoFocus
-                margin="dense"
-                value={dialogValue.cookTime}
-                onChange={handleChange}
-                name="cookTime"
-                type="text"
-                label="Cook Time"
-                variant="standard"
-              />
-            </div>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button type="submit">Add</Button>
-          </DialogActions>
-        </form>
-      </Dialog>
+      <PopupDialog
+        open={open}
+        title="Add a new recipe..."
+        handleClose={handleClose}
+        handleSubmit={handleSubmit}
+        content={
+          <div className={classes.formContainer}>
+            <Input
+              value={dialogValue.recipeName}
+              handleChange={handleChange}
+              name="recipeName"
+              label="Recipe Name"
+            />
+            <Input
+              value={dialogValue.recipeDescription}
+              handleChange={handleChange}
+              name="recipeDescription"
+              label="Recipe Description"
+            />
+            <Input
+              value={dialogValue.calories}
+              handleChange={handleChange}
+              name="calories"
+              label="Calories"
+            />
+            <Input
+              value={dialogValue.servings}
+              handleChange={handleChange}
+              name="servings"
+              label="Servings"
+            />
+            <Input
+              value={dialogValue.prepTime}
+              handleChange={handleChange}
+              name="prepTime"
+              label="Prep Time"
+            />
+            <Input
+              value={dialogValue.cookTime}
+              handleChange={handleChange}
+              name="cookTime"
+              label="Cook Time"
+            />
+          </div>
+        }
+      />
     </div>
   );
 };

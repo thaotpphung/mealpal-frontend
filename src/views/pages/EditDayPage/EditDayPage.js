@@ -2,27 +2,24 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import useStyles from './styles';
-import { IconButton, Paper, TextField, Button } from '@material-ui/core';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
+import { Paper, Grid } from '@material-ui/core';
 import RestaurantMenuIcon from '@material-ui/icons/RestaurantMenu';
 import {
   createMeal,
   deleteMeal,
   updateMeal,
   setMeals,
-  getMeals,
 } from '../../../redux/actions/mealActions';
 import { createRecipe } from '../../../redux/actions/recipeActions';
 import Input from '../../common/Input/Input';
 import Spinner from '../../common/Spinner/Spinner';
 import useArray from '../../../utils/hooks/useArray';
+import useForm from '../../../utils/hooks/useForm';
+import useDialog from '../../../utils/hooks/useDialog';
 import RoundButton from '../../common/Buttons/RoundButton';
+import CardHeader from '../../common/CardHeader/CardHeader';
 import AutocompleteField from '../../common/AutocompleteField/AutocompleteField';
-
+import PopupDialog from '../../common/PopupDialog/PopupDialog';
 import { getAllRecipes } from '../../../redux/actions/recipeActions';
 
 const EditDayPage = () => {
@@ -37,67 +34,82 @@ const EditDayPage = () => {
   const { selectedWeek } = useSelector((state) => state.select);
   const [isInEditMealMode, setIsInEditMealMode] = useState([]);
 
-  const filter = createFilterOptions();
-  const [open, toggleOpen] = useState(false);
-
   useEffect(() => {
-    console.log(days[dayId]);
-    dispatch(getMeals(dayId));
+    dispatch(setMeals(days[dayId]));
   }, []);
 
   useEffect(() => {
     dispatch(getAllRecipes());
   }, []);
 
-  // dialog
-  const handleClose = () => {
-    setDialogValue({
+  // new recipe dialog form
+  const {
+    open: openNewRecipeDialog,
+    toggleOpen: toggleOpenNewRecipeDialog,
+    handleClose: handleCloseNewRecipeDialog,
+  } = useDialog(() => resetNewRecipeName());
+  const {
+    handleChange: handleChangeRecipeName,
+    handleSubmit: handleSubmitCreateRecipe,
+    values: newRecipeName,
+    setValue: setNewRecipeName,
+    reset: resetNewRecipeName,
+  } = useForm(
+    {
       recipeName: '',
-    });
-    toggleOpen(false);
-  };
-  const [dialogValue, setDialogValue] = useState({
-    recipeName: '',
-  });
+    },
+    () => {
+      dispatch(
+        createRecipe({
+          ...newRecipeName,
+          userId: currentUser._id,
+        })
+      );
+      handleCloseNewRecipeDialog();
+    }
+  );
 
-  const [foodFieldsForm, setFoodFieldsForm] = useState([]);
-
-  const [newMealName, setNewMealName] = useState('');
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    dispatch(
-      createRecipe({
-        recipeName: dialogValue.recipeName,
-        userId: currentUser._id,
-      })
-    );
-    handleClose();
-  };
-
-  const handleDeleteMeal = (mealId) => {
-    dispatch(deleteMeal(mealId));
-  };
-
-  const handleSubmitCreateMeal = () => {
+  // new recipe dialog form
+  const {
+    open: openNewMealDialog,
+    toggleOpen: toggleOpenNewMealDialog,
+    handleClose: handleCloseNewMealDialog,
+  } = useDialog(() => resetNewMealName());
+  const {
+    handleChange: handleChangeNewMealName,
+    handleSubmit: handleSubmitCreateMeal,
+    values: newMealName,
+    reset: resetNewMealName,
+  } = useForm({ mealName: '' }, () => {
     dispatch(
       createMeal({
-        mealName: newMealName,
+        ...newMealName,
         dayId: dayId,
         weekId: selectedWeek.id,
       })
     );
+    handleCloseNewMealDialog();
+  });
+
+  // food fields form
+  const {
+    array: foodFieldsForm,
+    update: handleChangeFoodFieldForm,
+    push: handleAddFoodFieldForm,
+    remove: handleDeleteFoodFieldForm,
+    set: setFoodFieldsForm,
+  } = useArray([]);
+
+  // delete meal
+  const handleDeleteMeal = (mealId) => {
+    dispatch(deleteMeal(mealId));
   };
 
+  // update meal
   const handleSubmitUpdateMeal = (mealId, mealIdx) => {
     const edits = new Array(day.meals.length).fill(false);
     setIsInEditMealMode(edits);
     dispatch(updateMeal(mealId, foodFieldsForm, mealIdx));
-  };
-
-  // change form
-  const handleChangeNewMealName = (event) => {
-    setNewMealName(event.target.value);
   };
 
   const handleEnableEditMealMode = (mealIdx) => {
@@ -116,7 +128,7 @@ const EditDayPage = () => {
     }
   };
 
-  // food from recipes
+  // transform recipes for autocomplete
   const extractedFieldsForAutoComplete = Object.values(recipes).map(
     (recipe) => {
       return {
@@ -126,42 +138,49 @@ const EditDayPage = () => {
     }
   );
 
-  // food fields form
-  const handleChangeFoodFieldForm = (value, recipeIdx) => {
-    if (value !== null) {
-      const fields = [...foodFieldsForm];
-      fields[recipeIdx] = { ...recipes[value._id], ...value };
-      setFoodFieldsForm(fields);
-    }
-  };
-
-  const handleDeleteFoodFieldForm = (recipeIdx) => {
-    const fields = [...foodFieldsForm];
-    fields.splice(recipeIdx, 1);
-    setFoodFieldsForm(fields);
-  };
-
-  const handleAddFoodFieldForm = () => {
-    const fields = [...foodFieldsForm];
-    fields.push({
-      recipeName: '',
-      _id: '',
-    });
-    setFoodFieldsForm(fields);
-  };
-
-  const handleChangeDialogValue = (event) => {
-    setDialogValue({
-      recipeName: event.target.value,
-    });
-  };
-
   const Component = (
     <>
+      <PopupDialog
+        title="Add a new recipe"
+        content={
+          <div className={classes.formPaper}>
+            <form className={classes.formContainer}>
+              <Grid spacing={2}>
+                <Input
+                  name="recipeName"
+                  label="Recipe Name"
+                  handleChange={handleChangeRecipeName}
+                  value={newRecipeName.recipeName}
+                />
+              </Grid>
+            </form>
+          </div>
+        }
+        handleSubmit={handleSubmitCreateRecipe}
+        open={openNewRecipeDialog}
+        handleClose={handleCloseNewRecipeDialog}
+      />
+      <PopupDialog
+        title="Add a new meal"
+        content={
+          <Input
+            half
+            name="mealName"
+            value={newMealName.mealName}
+            handleChange={handleChangeNewMealName}
+          />
+        }
+        handleSubmit={handleSubmitCreateMeal}
+        open={openNewMealDialog}
+        handleClose={handleCloseNewMealDialog}
+      />
       <Paper className={classes.root}>
-        <div className={classes.header}>
-          <div>{day.dayName}</div>
-        </div>
+        <CardHeader
+          title={day.dayName}
+          action={
+            <RoundButton type="add" handleClick={toggleOpenNewMealDialog} />
+          }
+        />
         <div className={classes.content}>
           {day.meals !== undefined &&
             day.meals.map((meal, mealIdx) => {
@@ -190,67 +209,16 @@ const EditDayPage = () => {
                           {foodFieldsForm.map((recipe, recipeIdx) => (
                             <li key={`food-field-${recipe._id}-${recipeIdx}`}>
                               <RestaurantMenuIcon />
-
-                              <AutocompleteField />
-                              <Autocomplete
+                              <AutocompleteField
                                 value={foodFieldsForm[recipeIdx]}
-                                onChange={(event, newValue) => {
-                                  if (typeof newValue === 'string') {
-                                    setTimeout(() => {
-                                      toggleOpen(true);
-                                      setDialogValue({
-                                        recipeName: newValue,
-                                      });
-                                    });
-                                  } else if (newValue && newValue.inputValue) {
-                                    toggleOpen(true);
-                                    setDialogValue({
-                                      recipeName: newValue.inputValue,
-                                    });
-                                  } else {
-                                    handleChangeFoodFieldForm(
-                                      newValue,
-                                      recipeIdx
-                                    );
-                                  }
-                                }}
-                                filterOptions={(options, params) => {
-                                  const filtered = filter(options, params);
-                                  if (params.inputValue !== '') {
-                                    filtered.push({
-                                      inputValue: params.inputValue,
-                                      recipeName: `Add "${params.inputValue}"`,
-                                    });
-                                  }
-                                  return filtered;
-                                }}
+                                toggleOpen={toggleOpenNewRecipeDialog}
+                                setDialogValue={setNewRecipeName}
+                                handleChangeAutocompleteField={
+                                  handleChangeFoodFieldForm
+                                }
+                                param="recipeName"
                                 options={extractedFieldsForAutoComplete}
-                                getOptionLabel={(option) => {
-                                  // e.g value selected with enter, right from the input
-                                  if (typeof option === 'string') {
-                                    return option;
-                                  }
-                                  if (option.inputValue) {
-                                    return option.inputValue;
-                                  }
-                                  return option.recipeName;
-                                }}
-                                selectOnFocus
-                                clearOnBlur
-                                handleHomeEndKeys
-                                renderOption={(props, option) => (
-                                  <li
-                                    {...props}
-                                    key={`food-field-item-${option._id}-${recipeIdx}`}
-                                  >
-                                    {option.recipeName}
-                                  </li>
-                                )}
-                                sx={{ width: 300 }}
-                                freeSolo
-                                renderInput={(params) => (
-                                  <TextField {...params} label="" />
-                                )}
+                                changedIndex={recipeIdx}
                               />
                               <RoundButton
                                 type="deleteField"
@@ -260,7 +228,12 @@ const EditDayPage = () => {
                               />
                               <RoundButton
                                 type="addField"
-                                handleClick={handleAddFoodFieldForm}
+                                handleClick={() =>
+                                  handleAddFoodFieldForm({
+                                    recipeName: '',
+                                    _id: '',
+                                  })
+                                }
                               />
                             </li>
                           ))}
@@ -290,41 +263,8 @@ const EditDayPage = () => {
                 </div>
               );
             })}
-          <div>
-            <TextField
-              variant="outlined"
-              value={newMealName}
-              onChange={handleChangeNewMealName}
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={handleSubmitCreateMeal}
-            >
-              + Add Meal
-            </Button>
-          </div>
         </div>
       </Paper>
-
-      <Dialog open={open} onClose={handleClose}>
-        <form onSubmit={handleSubmit}>
-          <DialogTitle>Add a new recipe</DialogTitle>
-          <DialogContent>
-            <Input
-              name="recipeName"
-              label="Recipe Name"
-              handleChange={handleChangeDialogValue}
-              value={dialogValue.recipeName}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button type="submit">Add</Button>
-          </DialogActions>
-        </form>
-      </Dialog>
     </>
   );
 

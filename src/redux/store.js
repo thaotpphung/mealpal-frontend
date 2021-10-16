@@ -22,7 +22,7 @@ const middlewares = applyMiddleware(thunk, logger);
 const rootPersistConfig = {
   key: 'root',
   storage,
-  whitelist: ['user', 'dayList'],
+  whitelist: ['user', 'dayList', 'select'],
 };
 
 const recipePersistConfig = {

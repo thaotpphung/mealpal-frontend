@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import useStyles from './styles';
-// import { GoogleLogin } from 'react-google-login';
+import { styles } from './styles';
+import useStyles from '../../../containers/styles';
+
 import {
   Avatar,
   Button,
@@ -15,6 +16,9 @@ import MuiAlert from '@material-ui/lab/Alert';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Input from '../../common/Input/Input';
 import Spinner from '../../common/Spinner/Spinner';
+import useForm from '../../../utils/hooks/useForm';
+import FlashMessage from '../../common/FlashMessage/FlashMessage';
+
 import { signin, register } from '../../../redux/actions/userActions';
 
 const initialState = {
@@ -26,13 +30,24 @@ const initialState = {
 };
 
 const AuthPage = () => {
-  const [form, setForm] = useState(initialState);
+  const {
+    values: form,
+    handleChange,
+    handleSubmit,
+  } = useForm(initialState, () => {
+    if (isRegister) {
+      dispatch(register(form, history));
+    } else {
+      dispatch(signin(form, history));
+    }
+  });
   const [isRegister, setIsRegister] = useState(false);
   const user = useSelector((state) => state.user);
   const { loading, currentUser, error } = user;
   const dispatch = useDispatch();
   const history = useHistory();
   const classes = useStyles();
+  const localStyles = styles();
   const [showPassword, setShowPassword] = useState(false);
   const handleShowPassword = () => setShowPassword(!showPassword);
 
@@ -48,33 +63,20 @@ const AuthPage = () => {
     setShowPassword(false);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (isRegister) {
-      dispatch(register(form, history));
-    } else {
-      dispatch(signin(form, history));
-    }
-  };
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
   return (
     <Container component="main" maxWidth="xs">
-      <Paper className={classes.paper} elevation={3}>
+      <Paper className={localStyles.paper} elevation={3}>
         <Typography>
           {loading && <Spinner />}
           {error && <MuiAlert severity="error">{error}</MuiAlert>}
         </Typography>
-        <Avatar className={classes.avatar}>
+        <Avatar className={localStyles.avatar}>
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
           {isRegister ? 'Sign up' : 'Sign in'}
         </Typography>
-        <form className={classes.form} onSubmit={handleSubmit}>
+        <form className={localStyles.form} onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             {isRegister && (
               <>
@@ -120,7 +122,7 @@ const AuthPage = () => {
             fullWidth
             variant="contained"
             color="primary"
-            className={classes.submit}
+            className={classes.formSubmitButton}
           >
             {isRegister ? 'Sign Up' : 'Sign In'}
           </Button>

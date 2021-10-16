@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { useDispatch } from 'react-redux';
 import { Paper } from '@material-ui/core';
 import { updateRecipe } from '../../../redux/actions/recipeActions';
-import useStyles from './styles';
+import useStyles from '../../../containers/styles';
 import Input from '../../common/Input/Input';
 import useArray from '../../../utils/hooks/useArray';
 import useToggle from '../../../utils/hooks/useToggle';
-
 import RoundButton from '../../common/Buttons/RoundButton';
+import CardHeader from '../../common/CardHeader/CardHeader';
 
 const InstructionsCard = ({ recipe }) => {
   const classes = useStyles();
@@ -23,26 +23,26 @@ const InstructionsCard = ({ recipe }) => {
   };
 
   return (
-    <Paper className={classes.root}>
-      <div className={classes.header}>
-        <div>Instruction List</div>
-        <div className={classes.action}>
-          {isInEditMode ? (
+    <Paper className={classes.notePaper}>
+      <CardHeader
+        title="Instruction List"
+        action={
+          isInEditMode ? (
             <RoundButton
               type="done"
               handleClick={() => handleSubmitUpdateRecipe()}
             />
           ) : (
             <RoundButton type="edit" handleClick={() => toggleIsInEditMode()} />
-          )}
-        </div>
-      </div>
+          )
+        }
+      />
       <div className={classes.content}>
-        <ul className={classes.list}>
+        <ul>
           {array.map((instruction, instructionIdx) => {
             return (
               <li
-                className={classes.item}
+                className={classes.notePaperItem}
                 key={`instruction-field-${instruction}-${instructionIdx}`}
               >
                 {!isInEditMode ? (

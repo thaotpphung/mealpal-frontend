@@ -10,6 +10,7 @@ const Input = ({
   handleChange,
   required = false,
   label,
+  half,
   autoFocus = true,
   type = 'text',
   handleShowPassword,
@@ -17,8 +18,10 @@ const Input = ({
 }) => {
   const classes = useStyles();
   return (
-    <Grid item xs={12}>
+    <Grid item xs={12} sm={half ? 6 : 12}>
       <TextField
+        variant="standard"
+        // variant="outlined"
         className={classes.inputField}
         name={name}
         onChange={handleChange}

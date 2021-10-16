@@ -1,20 +1,10 @@
 import { makeStyles } from '@material-ui/core/styles';
+import { yellow } from '@material-ui/core/colors';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     minHeight: '420px',
-    backgroundColor: 'yellow',
-  },
-  header: {
-    padding: theme.spacing(0, 2),
-    height: '50px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: theme.palette.primary.light,
-  },
-  list: {
-    listStyle: 'none',
+    backgroundColor: yellow[100],
   },
   item: {
     height: '55px',
@@ -23,9 +13,6 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
     margin: theme.spacing(0, 2),
     cursor: 'pointer',
-    '&hover': {
-      backgroundColor: theme.palette.grey[200],
-    },
     borderBottom: '1px solid black',
   },
   itemIcon: {

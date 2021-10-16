@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 const useForm = (initialState, callback) => {
   const [values, setValues] = useState(initialState);
@@ -10,6 +10,10 @@ const useForm = (initialState, callback) => {
       ...values,
       [name]: formattedValue,
     });
+  };
+
+  const setValue = (name, value) => {
+    setValues({ ...values, [name]: value });
   };
 
   const handleSubmit = (event) => {
@@ -26,6 +30,7 @@ const useForm = (initialState, callback) => {
     handleSubmit,
     values,
     reset,
+    setValue,
   };
 };
 

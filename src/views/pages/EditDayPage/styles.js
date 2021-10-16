@@ -6,14 +6,6 @@ export default makeStyles((theme) => ({
     width: '50%',
     margin: 'auto',
   },
-  header: {
-    padding: theme.spacing(0, 2),
-    height: '50px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: theme.palette.primary.light,
-  },
   list: {
     listStyle: 'none',
   },
@@ -36,9 +28,9 @@ export default makeStyles((theme) => ({
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
+      '& span': {
+        marginLeft: theme.spacing(2),
+      },
     },
-  },
-  deleteIcon: {
-    color: theme.palette.error.main,
   },
 }));

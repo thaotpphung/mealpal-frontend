@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { styled } from '@mui/material/styles';
+import useStyles from '../../../containers/styles';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import CardHeader from '@mui/material/CardHeader';
@@ -17,13 +18,13 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FileInputComponent from 'react-file-input-previews-base64';
 import Input from '../../common/Input/Input';
 import RoundButton from '../../common/Buttons/RoundButton';
+import useToggle from '../../../utils/hooks/useToggle';
+import useForm from '../../../utils/hooks/useForm';
 
 import {
   updateRecipe,
   deleteRecipe,
 } from '../../../redux/actions/recipeActions';
-
-import useStyles from './styles';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -39,29 +40,36 @@ const ExpandMore = styled((props) => {
 const RecipeCard = ({ recipe }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const { recipeId } = useParams();
   const [expanded, setExpanded] = useState(false);
-  const [isInEditMode, setIsInEditMode] = useState(false);
-  const [recipeForm, setRecipeForm] = useState(recipe);
+  const [isInEditMode, toggleIsInEditMode] = useToggle(false);
+  console.log('recipe', recipe);
+
+  const initialForm = {
+    recipeName: recipe.recipeName,
+    recipeDescription: recipe.recipeDescription,
+    calories: recipe.calories,
+    servings: recipe.servings,
+    prepTime: recipe.prepTime,
+    cookTime: recipe.cookTime,
+    recipeImage: recipe.recipeImage,
+  };
+
+  const {
+    values: recipeForm,
+    handleSubmit,
+    handleChange,
+    setValue: setRecipeForm,
+  } = useForm(initialForm, () => {
+    dispatch(updateRecipe(recipe._id, recipeForm));
+  });
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
-  const handleToggleEditMode = () => {
-    setIsInEditMode(!isInEditMode);
-  };
-
   const handleSelectFile = (file) => {
-    setRecipeForm({ ...recipeForm, recipeImage: file.base64 });
-  };
-
-  const handleChange = (e) => {
-    setRecipeForm({ ...recipeForm, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    dispatch(updateRecipe(recipe._id, recipeForm));
+    setRecipeForm('recipeImage', file.base64);
   };
 
   const handleDeleteRecipe = (recipeId) => {
@@ -78,14 +86,18 @@ const RecipeCard = ({ recipe }) => {
         }
         action={
           <>
-            <RoundButton
-              type="delete"
-              handleClick={() => handleDeleteRecipe(recipe._id)}
-            />
-            {isInEditMode ? (
-              <RoundButton type="done" handleClick={handleToggleEditMode} />
-            ) : (
-              <RoundButton type="edit" handleClick={handleToggleEditMode} />
+            {!!recipeId && (
+              <>
+                {' '}
+                <RoundButton
+                  type="delete"
+                  handleClick={() => handleDeleteRecipe(recipe._id)}
+                />
+                <RoundButton
+                  type={isInEditMode ? 'done' : 'edit'}
+                  handleClick={toggleIsInEditMode}
+                />
+              </>
             )}
           </>
         }
@@ -123,7 +135,7 @@ const RecipeCard = ({ recipe }) => {
           </div>
         )}
         {isInEditMode && (
-          <form className={classes.form} onSubmit={handleSubmit}>
+          <form className={classes.formContainer} onSubmit={handleSubmit}>
             <FileInputComponent
               labelText=""
               labelStyle={{ display: 'none' }}
@@ -177,7 +189,7 @@ const RecipeCard = ({ recipe }) => {
               fullWidth
               variant="contained"
               color="primary"
-              className={classes.submit}
+              className={classes.formSubmitButton}
             >
               Submit
             </Button>
