@@ -147,6 +147,7 @@ const EditDayPage = () => {
             <form className={classes.formContainer}>
               <Grid spacing={2}>
                 <Input
+                  required
                   name="recipeName"
                   label="Recipe Name"
                   handleChange={handleChangeRecipeName}
@@ -164,6 +165,7 @@ const EditDayPage = () => {
         title="Add a new meal"
         content={
           <Input
+            required
             half
             name="mealName"
             value={newMealName.mealName}

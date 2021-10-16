@@ -23,7 +23,7 @@ const InstructionsCard = ({ recipe }) => {
   };
 
   return (
-    <Paper className={classes.notePaper}>
+    <div>
       <CardHeader
         title="Instruction List"
         action={
@@ -37,7 +37,7 @@ const InstructionsCard = ({ recipe }) => {
           )
         }
       />
-      <div className={classes.content}>
+      <Paper className={classes.notePaper}>
         <ul>
           {array.map((instruction, instructionIdx) => {
             return (
@@ -81,8 +81,8 @@ const InstructionsCard = ({ recipe }) => {
             );
           })}
         </ul>
-      </div>
-    </Paper>
+      </Paper>
+    </div>
   );
 };
 

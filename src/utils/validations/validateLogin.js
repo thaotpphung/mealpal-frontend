@@ -1,4 +1,7 @@
-export default function validateLogin(values) {
+export default function validate(values) {
+  // type = email -> validate Email
+  // type = password -> validate Password
+  // type = text -> validate text -> > not empty
   let errors = {};
   if (!values.email) {
   } else if (!/\S+@\S+\.\S+/.test(values.email)) {

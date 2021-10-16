@@ -4,7 +4,7 @@ import { Grid, IconButton, TextField } from '@material-ui/core';
 import useStyles from './styles';
 import { useParams, Link } from 'react-router-dom';
 import RecipeCard from '../../components/RecipeCard/RecipeCard';
-import IngredientsCard from '../../components/IngredientsCard/IngredientCards';
+import RecipeDetailsCard from '../../components/RecipeDetailsCard/RecipeDetailsCards';
 import InstructionsCard from '../../components/InstructionsCard/InstructionsCard';
 import { getRecipe } from '../../../redux/actions/recipeActions';
 import Spinner from '../../common/Spinner/Spinner';
@@ -23,14 +23,13 @@ const RecipeDetailsPage = () => {
     return (
       <div className={classes.root}>
         <Grid container justify="space-between">
-          <Grid item xs={12} sm={5} style={{ marginBottom: '50px' }}>
+          <Grid item xs={12} sm={5}>
             <RecipeCard recipe={recipe} />
           </Grid>
-          <Grid item xs={12} sm={7}>
-            <IngredientsCard recipe={recipe} />
+          <Grid item xs={12} sm={7} className={classes.rightColumn}>
+            <RecipeDetailsCard recipe={recipe} />
           </Grid>
         </Grid>
-        <InstructionsCard recipe={recipe} />
       </div>
     );
   } else if (error) {

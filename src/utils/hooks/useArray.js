@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const useArray = (defaultValue) => {
+const useArray = (defaultValue, handleSubmit) => {
   const [array, setArray] = useState(defaultValue);
   const [errors, setErrors] = useState();
 
