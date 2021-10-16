@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function useArray(defaultValue) {
+const useArray = (defaultValue) => {
   const [array, setArray] = useState(defaultValue);
   const [errors, setErrors] = useState();
 
@@ -31,4 +31,6 @@ export default function useArray(defaultValue) {
   function validate() {}
 
   return { array, set: setArray, push, filter, update, remove, clear };
-}
+};
+
+export default useArray;

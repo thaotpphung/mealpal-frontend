@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function useDialog(resetCallback) {
+const useDialog = (resetCallback) => {
   const [open, toggleOpen] = useState(false);
 
   const handleClose = () => {
@@ -9,4 +9,6 @@ export default function useDialog(resetCallback) {
   };
 
   return { handleClose, open, toggleOpen };
-}
+};
+
+export default useDialog;

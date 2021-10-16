@@ -37,6 +37,7 @@ export default makeStyles((theme) => ({
     '& div': {
       padding: theme.spacing(2),
     },
+    marginBottom: theme.spacing(3),
   },
 
   menuContent: {
@@ -51,16 +52,7 @@ export default makeStyles((theme) => ({
     },
   },
 
-  // week list -> need hoverable
-  // auth -> form
-  // experiement
-  // root: {
-  //   '& .MuiTextField-root': {
-  //     margin: theme.spacing(1),
-  //   },
-  // },
-
-  // finalize
+  // form
   formContainer: {
     display: 'flex',
     flexDirection: 'column',
@@ -76,7 +68,7 @@ export default makeStyles((theme) => ({
     alignItems: 'center',
     padding: theme.spacing(2),
     cursor: 'pointer',
-    '&hover': {
+    '&:hover': {
       backgroundColor: theme.palette.grey[200],
     },
   },
@@ -92,7 +84,7 @@ export default makeStyles((theme) => ({
     marginRight: theme.spacing(2),
   },
   selected: {
-    backgroundColor: theme.palette.grey[200],
+    backgroundColor: theme.palette.grey[300],
   },
   chip: {
     margin: theme.spacing(2, 0),
@@ -101,7 +93,7 @@ export default makeStyles((theme) => ({
     },
   },
   hoverable: {
-    '&hover': {
+    '&:hover': {
       backgroundColor: theme.palette.grey[200],
     },
   },
