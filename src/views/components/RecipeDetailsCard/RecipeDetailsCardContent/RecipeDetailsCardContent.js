@@ -11,6 +11,7 @@ const RecipeDetailsCard = ({
   handleDelete,
   handleAdd,
   isInEditMode,
+  errors,
 }) => {
   const classes = useStyles();
 
@@ -38,6 +39,7 @@ const RecipeDetailsCard = ({
                       handleChange={(event) =>
                         handleChange(itemIdx, event.target.value)
                       }
+                      error={errors[itemIdx]}
                     />
                   </div>
                   <div className={classes.itemAction}>

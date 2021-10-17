@@ -28,16 +28,16 @@ const WeekList = ({ toggleOpen }) => {
         <ul className={classes.list}>
           {Object.values(weeks).map((week) => (
             <li
-              key={week._id}
+              key={week?._id}
               className={`${classes.item} ${
                 week._id === selectedWeek.id ? classes.selected : null
               }`}
               onClick={() => handleSelectWeek(week)}
             >
               <div className={classes.itemIcon}></div>
-              <div className={classes.itemContent}>{week.weekName}</div>
+              <div className={classes.itemContent}>{week?.weekName}</div>
               <div className={classes.itemAction}>
-                {currentUser.currentWeek._id === week._id && (
+                {currentUser.currentWeek._id === week?._id && (
                   <StarOutlineIcon />
                 )}
               </div>

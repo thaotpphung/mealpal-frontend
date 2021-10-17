@@ -5,7 +5,6 @@ import { Grid, Button, TextField, IconButton } from '@material-ui/core';
 import useStyles from '../../../containers/styles';
 import RecipeCard from '../../components/RecipeCard/RecipeCard';
 import Spinner from '../../common/Spinner/Spinner';
-import FormContainer from '../../common/FormContainer/FormContainer';
 import PopupDialog from '../../common/PopupDialog/PopupDialog';
 import Input from '../../common/Input/Input';
 import useDialog from '../../../utils/hooks/useDialog';
@@ -81,6 +80,7 @@ const RecipePage = () => {
               handleChange={handleChange}
               name="recipeName"
               label="Recipe Name"
+              required
             />
             <Input
               value={dialogValue.recipeDescription}

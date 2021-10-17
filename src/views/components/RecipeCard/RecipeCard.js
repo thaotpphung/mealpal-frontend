@@ -43,7 +43,6 @@ const RecipeCard = ({ recipe }) => {
   const { recipeId } = useParams();
   const [expanded, setExpanded] = useState(false);
   const [isInEditMode, toggleIsInEditMode] = useToggle(false);
-  console.log('recipe', recipe);
 
   const initialForm = {
     recipeName: recipe.recipeName,

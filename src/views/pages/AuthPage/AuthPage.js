@@ -18,30 +18,45 @@ import Input from '../../common/Input/Input';
 import Spinner from '../../common/Spinner/Spinner';
 import useForm from '../../../utils/hooks/useForm';
 import FlashMessage from '../../common/FlashMessage/FlashMessage';
+import { validateAuth } from '../../../utils/validations/validate';
 
 import { signin, register } from '../../../redux/actions/userActions';
 
 const initialState = {
-  firstName: '',
-  lastName: '',
   email: '',
   password: '',
-  confirmPassword: '',
 };
 
 const AuthPage = () => {
-  const {
-    values: form,
-    handleChange,
-    handleSubmit,
-  } = useForm(initialState, () => {
-    if (isRegister) {
-      dispatch(register(form, history));
-    } else {
-      dispatch(signin(form, history));
-    }
-  });
   const [isRegister, setIsRegister] = useState(false);
+  const [form, setForm] = useState(initialState);
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setForm({
+      ...form,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setErrors(validateAuth(form, isRegister));
+    setIsSubmitting(true);
+  };
+
+  useEffect(() => {
+    if (Object.keys(errors).length === 0 && isSubmitting) {
+      if (isRegister) {
+        dispatch(register(form, history));
+      } else {
+        dispatch(signin(form, history));
+      }
+    }
+  }, [errors]);
+
   const user = useSelector((state) => state.user);
   const { loading, currentUser, error } = user;
   const dispatch = useDispatch();
@@ -84,14 +99,17 @@ const AuthPage = () => {
                   name="firstName"
                   label="First Name"
                   handleChange={handleChange}
-                  autoFocus
                   half
+                  error={errors?.firstName}
+                  required
                 />
                 <Input
                   name="lastName"
                   label="Last Name"
                   handleChange={handleChange}
                   half
+                  error={errors?.lastName}
+                  required
                 />
               </>
             )}
@@ -100,6 +118,8 @@ const AuthPage = () => {
               label="Email Address"
               handleChange={handleChange}
               type="email"
+              error={errors?.email}
+              required
             />
             <Input
               name="password"
@@ -107,6 +127,8 @@ const AuthPage = () => {
               handleChange={handleChange}
               type={showPassword ? 'text' : 'password'}
               handleShowPassword={handleShowPassword}
+              error={errors?.password}
+              required
             />
             {isRegister && (
               <Input
@@ -114,6 +136,8 @@ const AuthPage = () => {
                 label="Repeat Password"
                 handleChange={handleChange}
                 type="password"
+                error={errors?.confirmPassword}
+                required
               />
             )}
           </Grid>

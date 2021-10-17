@@ -83,6 +83,7 @@ export default makeStyles((theme) => ({
   },
   itemIcon: {
     flex: '0 0 auto',
+    marginRight: theme.spacing(2),
   },
 
   itemContent: {

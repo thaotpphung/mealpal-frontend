@@ -15,23 +15,24 @@ const Input = ({
   type = 'text',
   handleShowPassword,
   value,
+  error,
 }) => {
   const classes = useStyles();
   return (
     <Grid item xs={12} sm={half ? 6 : 12}>
       <TextField
         variant="standard"
-        // variant="outlined"
         className={classes.inputField}
         name={name}
         onChange={handleChange}
         required={required}
         margin="dense"
         fullWidth
-        label={label}
+        label={error ? error : label}
         value={value}
         autoFocus={autoFocus}
         type={type}
+        error={!!error}
         InputProps={
           name === 'password'
             ? {
@@ -60,6 +61,7 @@ Input.propTypes = {
   type: PropTypes.string,
   handleShowPassword: PropTypes.func,
   value: PropTypes.string,
+  error: PropTypes.string,
 };
 
 export default Input;

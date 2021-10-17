@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import useStyles from './styles';
+import useStyles from '../../../containers/styles';
+import { styles } from './styles';
 import { Paper, Grid } from '@material-ui/core';
 import RestaurantMenuIcon from '@material-ui/icons/RestaurantMenu';
 import {
@@ -16,16 +17,21 @@ import Spinner from '../../common/Spinner/Spinner';
 import useArray from '../../../utils/hooks/useArray';
 import useForm from '../../../utils/hooks/useForm';
 import useDialog from '../../../utils/hooks/useDialog';
+
 import RoundButton from '../../common/Buttons/RoundButton';
 import CardHeader from '../../common/CardHeader/CardHeader';
 import AutocompleteField from '../../common/AutocompleteField/AutocompleteField';
 import PopupDialog from '../../common/PopupDialog/PopupDialog';
 import { getAllRecipes } from '../../../redux/actions/recipeActions';
+import { FormHelperText } from '@mui/material';
+import { validateArray } from '../../../utils/validations/validateFunctions';
+import { validate } from '../../../utils/validations/validate';
 
 const EditDayPage = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { dayId } = useParams();
+  const localStyles = styles();
   // selectors
   const { days } = useSelector((state) => state.dayList);
   const { recipes } = useSelector((state) => state.recipeList);
@@ -54,6 +60,7 @@ const EditDayPage = () => {
     values: newRecipeName,
     setValue: setNewRecipeName,
     reset: resetNewRecipeName,
+    errors: newRecipeErrors,
   } = useForm(
     {
       recipeName: '',
@@ -66,7 +73,8 @@ const EditDayPage = () => {
         })
       );
       handleCloseNewRecipeDialog();
-    }
+    },
+    validate
   );
 
   // new recipe dialog form
@@ -80,16 +88,21 @@ const EditDayPage = () => {
     handleSubmit: handleSubmitCreateMeal,
     values: newMealName,
     reset: resetNewMealName,
-  } = useForm({ mealName: '' }, () => {
-    dispatch(
-      createMeal({
-        ...newMealName,
-        dayId: dayId,
-        weekId: selectedWeek.id,
-      })
-    );
-    handleCloseNewMealDialog();
-  });
+    errors: newMealErrors,
+  } = useForm(
+    { mealName: '' },
+    () => {
+      dispatch(
+        createMeal({
+          ...newMealName,
+          dayId: dayId,
+          weekId: selectedWeek.id,
+        })
+      ),
+        handleCloseNewMealDialog();
+    },
+    validate
+  );
 
   // food fields form
   const {
@@ -100,22 +113,34 @@ const EditDayPage = () => {
     set: setFoodFieldsForm,
   } = useArray([]);
 
+  const [foodFieldErrors, setFoodFieldErrors] = useState([]);
+
+  // update meal
+  const handleSubmitUpdateMeal = (mealId, mealIdx) => {
+    const errors = {};
+    const recipeNames = foodFieldsForm.map((value) => value.recipeName);
+    setFoodFieldErrors(validateArray('food', recipeNames, errors).food);
+    if (Object.keys(errors.food).length === 0) {
+      const edits = new Array(day.meals.length).fill(false);
+      setIsInEditMealMode(edits);
+      dispatch(updateMeal(mealId, foodFieldsForm, mealIdx));
+    }
+  };
+
   // delete meal
   const handleDeleteMeal = (mealId) => {
     dispatch(deleteMeal(mealId));
   };
 
-  // update meal
-  const handleSubmitUpdateMeal = (mealId, mealIdx) => {
-    const edits = new Array(day.meals.length).fill(false);
-    setIsInEditMealMode(edits);
-    dispatch(updateMeal(mealId, foodFieldsForm, mealIdx));
-  };
+  // useArrayValidattion
+  // errors, setErrors when in submit, validate Array function
+  // take in name
 
   const handleEnableEditMealMode = (mealIdx) => {
     const edits = new Array(day.meals.length).fill(false);
     edits[mealIdx] = true;
     setIsInEditMealMode(edits);
+    setFoodFieldErrors([]);
     if (day.meals[mealIdx].food.length === 0) {
       setFoodFieldsForm([
         {
@@ -147,11 +172,11 @@ const EditDayPage = () => {
             <form className={classes.formContainer}>
               <Grid spacing={2}>
                 <Input
-                  required
                   name="recipeName"
                   label="Recipe Name"
                   handleChange={handleChangeRecipeName}
                   value={newRecipeName.recipeName}
+                  error={newRecipeErrors.recipeName}
                 />
               </Grid>
             </form>
@@ -166,17 +191,17 @@ const EditDayPage = () => {
         content={
           <Input
             required
-            half
             name="mealName"
             value={newMealName.mealName}
             handleChange={handleChangeNewMealName}
+            error={newMealErrors.mealName}
           />
         }
         handleSubmit={handleSubmitCreateMeal}
         open={openNewMealDialog}
         handleClose={handleCloseNewMealDialog}
       />
-      <Paper className={classes.root}>
+      <Paper className={localStyles.root}>
         <CardHeader
           title={day.dayName}
           action={
@@ -189,11 +214,11 @@ const EditDayPage = () => {
               return (
                 <div
                   key={`meal-in-day-card-${mealIdx}`}
-                  className={classes.item}
+                  className={localStyles.menuItem}
                 >
                   <div className={classes.itemIcon}>{meal.mealName}</div>
                   <div className={classes.itemContent}>
-                    <ul className={classes.menu}>
+                    <ul className={classes.menuContent}>
                       {!isInEditMealMode[mealIdx] && (
                         <>
                           {meal.food.map((recipe, recipeIdx) => (
@@ -209,35 +234,40 @@ const EditDayPage = () => {
                       {isInEditMealMode[mealIdx] && (
                         <>
                           {foodFieldsForm.map((recipe, recipeIdx) => (
-                            <li key={`food-field-${recipe._id}-${recipeIdx}`}>
-                              <RestaurantMenuIcon />
-                              <AutocompleteField
-                                value={foodFieldsForm[recipeIdx]}
-                                toggleOpen={toggleOpenNewRecipeDialog}
-                                setDialogValue={setNewRecipeName}
-                                handleChangeAutocompleteField={
-                                  handleChangeFoodFieldForm
-                                }
-                                param="recipeName"
-                                options={extractedFieldsForAutoComplete}
-                                changedIndex={recipeIdx}
-                              />
-                              <RoundButton
-                                type="deleteField"
-                                handleClick={() =>
-                                  handleDeleteFoodFieldForm(recipeIdx)
-                                }
-                              />
-                              <RoundButton
-                                type="addField"
-                                handleClick={() =>
-                                  handleAddFoodFieldForm({
-                                    recipeName: '',
-                                    _id: '',
-                                  })
-                                }
-                              />
-                            </li>
+                            <>
+                              <FormHelperText error={true} required>
+                                {foodFieldErrors[recipeIdx]}
+                              </FormHelperText>
+                              <li key={`food-field-${recipe._id}-${recipeIdx}`}>
+                                <RestaurantMenuIcon />
+                                <AutocompleteField
+                                  value={foodFieldsForm[recipeIdx]}
+                                  toggleOpen={toggleOpenNewRecipeDialog}
+                                  setDialogValue={setNewRecipeName}
+                                  handleChangeAutocompleteField={
+                                    handleChangeFoodFieldForm
+                                  }
+                                  param="recipeName"
+                                  options={extractedFieldsForAutoComplete}
+                                  changedIndex={recipeIdx}
+                                />
+                                <RoundButton
+                                  type="deleteField"
+                                  handleClick={() =>
+                                    handleDeleteFoodFieldForm(recipeIdx)
+                                  }
+                                />
+                                <RoundButton
+                                  type="addField"
+                                  handleClick={() =>
+                                    handleAddFoodFieldForm({
+                                      recipeName: '',
+                                      _id: '',
+                                    })
+                                  }
+                                />
+                              </li>
+                            </>
                           ))}
                         </>
                       )}

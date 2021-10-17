@@ -1,8 +1,7 @@
 import { useState } from 'react';
 
-const useArray = (defaultValue, handleSubmit) => {
+const useArray = (defaultValue) => {
   const [array, setArray] = useState(defaultValue);
-  const [errors, setErrors] = useState();
 
   function push(element) {
     setArray((a) => [...a, element]);
@@ -28,9 +27,15 @@ const useArray = (defaultValue, handleSubmit) => {
     setArray([]);
   }
 
-  function validate() {}
-
-  return { array, set: setArray, push, filter, update, remove, clear };
+  return {
+    array,
+    set: setArray,
+    push,
+    filter,
+    update,
+    remove,
+    clear,
+  };
 };
 
 export default useArray;
