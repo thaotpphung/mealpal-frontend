@@ -5,6 +5,8 @@ import { updateRecipe } from '../../../redux/actions/recipeActions';
 import useStyles from '../../../containers/styles';
 import useArray from '../../../utils/hooks/useArray';
 import useToggle from '../../../utils/hooks/useToggle';
+import useForm from '../../../utils/hooks/useForm';
+
 import { validateArray } from '../../../utils/validations/validateFunctions';
 import RoundButton from '../../common/Buttons/RoundButton';
 import CardHeader from '../../common/CardHeader/CardHeader';
@@ -25,31 +27,19 @@ const RecipeDetailsCard = ({ recipe }) => {
     remove: handleDeleteInstruction,
     update: handleChangeInstruction,
   } = useArray(recipe.instructions.length === 0 ? [''] : recipe.instructions);
+
   const [isInEditMode, toggleIsInEditMode] = useToggle(false);
-  const [ingredientErrors, setIngredientErrors] = useState({});
-  const [instructionErrors, setInstructionErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { handleSubmit, errors } = useForm({}, () => {
+    dispatch(updateRecipe(recipe._id, { ingredients, instructions }));
+    toggleIsInEditMode(false);
+  });
 
-  const handleSubmitUpdateRecipe = () => {
+  const handleSubmitUpdateRecipe = (event) => {
     const errors = {};
-    validateArray('ingredients', ingredients, errors).ingredients;
-    validateArray('instructions', instructions, errors).instructions;
-    setIngredientErrors({ ...errors.ingredients });
-    setInstructionErrors({ ...errors.instructions });
-    setIsSubmitting(true);
+    validateArray('ingredients', ingredients, errors);
+    validateArray('instructions', instructions, errors);
+    handleSubmit(event, errors);
   };
-
-  useEffect(() => {
-    if (
-      Object.keys(ingredientErrors).length === 0 &&
-      Object.keys(instructionErrors).length === 0 &&
-      isSubmitting
-    ) {
-      dispatch(updateRecipe(recipe._id, { ingredients, instructions }));
-      toggleIsInEditMode(false);
-      setIsSubmitting(false);
-    }
-  }, [ingredientErrors, instructionErrors]);
 
   return (
     <Paper className={classes.notePaper}>
@@ -57,14 +47,9 @@ const RecipeDetailsCard = ({ recipe }) => {
         title="Recipe Details"
         action={
           isInEditMode ? (
-            <RoundButton
-              type="done"
-              handleClick={() => {
-                handleSubmitUpdateRecipe();
-              }}
-            />
+            <RoundButton type="done" handleClick={handleSubmitUpdateRecipe} />
           ) : (
-            <RoundButton type="edit" handleClick={() => toggleIsInEditMode()} />
+            <RoundButton type="edit" handleClick={toggleIsInEditMode} />
           )
         }
       />
@@ -75,7 +60,7 @@ const RecipeDetailsCard = ({ recipe }) => {
         handleAdd={handleAddIngredient}
         handleDelete={handleDeleteIngredient}
         isInEditMode={isInEditMode}
-        errors={ingredientErrors}
+        errors={errors?.ingredients}
       />
       <RecipeDetailsCardContent
         title="Instructions"
@@ -84,7 +69,7 @@ const RecipeDetailsCard = ({ recipe }) => {
         handleAdd={handleAddInstruction}
         handleDelete={handleDeleteInstruction}
         isInEditMode={isInEditMode}
-        errors={instructionErrors}
+        errors={errors?.instructions}
       />
     </Paper>
   );

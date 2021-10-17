@@ -39,7 +39,7 @@ const RecipeDetailsCard = ({
                       handleChange={(event) =>
                         handleChange(itemIdx, event.target.value)
                       }
-                      error={errors[itemIdx]}
+                      error={errors && errors[itemIdx]}
                     />
                   </div>
                   <div className={classes.itemAction}>

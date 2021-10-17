@@ -24,9 +24,10 @@ const useForm = (
     setValues({ ...values, [name]: value });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event, arrayErrors = {}) => {
     event.preventDefault();
     setErrors(validate(values));
+    setErrors((prevErrors) => ({ ...prevErrors, ...arrayErrors }));
     setIsSubmitting(true);
   };
 
@@ -47,6 +48,7 @@ const useForm = (
     reset,
     setValue,
     errors,
+    setErrors,
   };
 };
 

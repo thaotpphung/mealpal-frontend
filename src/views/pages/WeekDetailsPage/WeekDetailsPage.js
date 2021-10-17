@@ -13,7 +13,6 @@ import Input from '../../common/Input/Input';
 import useForm from '../../../utils/hooks/useForm';
 import useDialog from '../../../utils/hooks/useDialog';
 import { validate } from '../../../utils/validations/validate';
-
 import { getAllWeeks } from '../../../redux/actions/weekActions';
 
 const WeekDetailsPage = () => {
@@ -47,10 +46,12 @@ const WeekDetailsPage = () => {
     validate
   );
 
+  console.log('errors', errors);
+
   const Component = (
     <div>
       <PopupDialog
-        title="add week"
+        title="Add a new week"
         handleClose={handleClose}
         handleSubmit={handleSubmit}
         open={open}
@@ -75,7 +76,6 @@ const WeekDetailsPage = () => {
               handleChange={handleChange}
               name="weekTags"
               label="Week Tags"
-              error={errors?.weekTags}
             />
             <Input
               value={values.weekDiet}

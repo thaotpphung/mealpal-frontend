@@ -6,12 +6,15 @@ import {
   validateArray,
 } from './validateFunctions';
 
-const validate = (values) => {
+const validate = (values, optional = []) => {
   let errors = {};
+  optional.forEach((key) => delete values[key]);
   for (const [key, value] of Object.entries(values)) {
     if (Array.isArray(value)) {
+      console.log('validate array', key, value);
       validateArray(key, value, errors);
     } else if (typeof value === 'string') {
+      console.log('validate text', key, value);
       validateTextField(key, value, errors);
     }
   }

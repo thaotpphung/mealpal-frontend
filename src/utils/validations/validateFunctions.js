@@ -36,12 +36,14 @@ const validateTextField = (name, value, errors) => {
 
 const validateArray = (name, value, errors) => {
   const currentErrors = {};
+  let hasError = false;
   value.map((item, idx) => {
     if (item.trim() === '') {
       currentErrors[idx] = 'Field cannot be empty';
+      hasError = true;
     }
   });
-  errors[name] = currentErrors;
+  hasError ? (errors[name] = currentErrors) : void 0;
   return errors;
 };
 

@@ -3,16 +3,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import useStyles from '../../../containers/styles';
 import { Paper } from '@material-ui/core';
-import EditIcon from '@material-ui/icons/Edit';
 import RestaurantMenuIcon from '@material-ui/icons/RestaurantMenu';
 import { getDayListByWeekId } from '../../../redux/actions/dayActions';
 import CardHeader from '../../common/CardHeader/CardHeader';
+import RoundButton from '../../common/Buttons/RoundButton';
 
 const Menu = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
-  const { selectedWeek } = useSelector((state) => state.select);
   const { days } = useSelector((state) => state.dayList);
+  const { selectedWeek } = useSelector((state) => state.select);
 
   useEffect(() => {
     dispatch(getDayListByWeekId(selectedWeek.id));
@@ -26,7 +26,7 @@ const Menu = () => {
             title={day.dayName}
             action={
               <Link to={{ pathname: `/days/${day._id}/edit` }}>
-                <EditIcon />
+                <RoundButton type="edit" />
               </Link>
             }
           />
