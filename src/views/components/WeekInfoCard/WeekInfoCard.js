@@ -10,7 +10,6 @@ import {
   Avatar,
   IconButton,
   Collapse,
-  Paper,
 } from '@material-ui/core/';
 import { styled } from '@mui/material/styles';
 import useStyles from '../../../containers/styles';
@@ -18,6 +17,9 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { deleteWeek, updateWeek } from '../../../redux/actions/weekActions';
 import { setCurrentWeek } from '../../../redux/actions/userActions';
 import Input from '../../common/Input/Input';
+import useToggle from '../../../utils/hooks/useToggle';
+import useForm from '../../../utils/hooks/useForm';
+import { validate } from '../../../utils/validations/validate';
 import RoundButton from '../../common/Buttons/RoundButton';
 
 const ExpandMore = styled((props) => {
@@ -36,21 +38,24 @@ const WeekInfoCard = ({ week }) => {
   const dispatch = useDispatch();
   const [expanded, setExpanded] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
-  const [isInEditMode, setIsInEditMode] = useState(false);
-  const [weekForm, setWeekForm] = useState({});
-
-  useEffect(() => {
-    setWeekForm(week);
-  }, [isInEditMode]);
-
-  const handleChange = (e) => {
-    setWeekForm({ ...weekForm, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    dispatch(updateWeek(week._id, weekForm));
-  };
+  const [isInEditMode, toggleIsInEditMode] = useToggle(false);
+  const {
+    values: weekForm,
+    handleSubmit,
+    handleChange,
+    errors,
+  } = useForm(
+    {
+      weekDescription: week.weekDescription,
+      weekDiet: week.weekDiet,
+    },
+    () => {
+      console.log('form submit', weekForm);
+      dispatch(updateWeek(week._id, weekForm));
+    },
+    validate,
+    ['weekDescription']
+  );
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -76,10 +81,6 @@ const WeekInfoCard = ({ week }) => {
     // else display error
   };
 
-  const handleToggleEditMode = () => {
-    setIsInEditMode(!isInEditMode);
-  };
-
   return (
     <Card>
       <CardHeader
@@ -96,7 +97,7 @@ const WeekInfoCard = ({ week }) => {
             />
             <RoundButton
               type={isInEditMode ? 'done' : 'edit'}
-              handleClick={handleToggleEditMode}
+              handleClick={toggleIsInEditMode}
             />
             <RoundButton
               type="setDefault"
@@ -112,7 +113,6 @@ const WeekInfoCard = ({ week }) => {
           <div variant="body2" color="text.secondary">
             <div>Description: {week?.weekDescription}</div>
             <div>Diet: {week?.weekDiet}</div>
-            <div>Tags: {week?.weekTags}</div>
           </div>
         )}
         {isInEditMode && (
@@ -125,16 +125,11 @@ const WeekInfoCard = ({ week }) => {
                 handleChange={handleChange}
               />
               <Input
-                name="weekTags"
-                label="Week Tags (Separated by comma)"
-                value={weekForm?.weekTags}
-                handleChange={handleChange}
-              />
-              <Input
                 name="weekDiet"
                 label="Diet"
                 value={weekForm?.weekDiet}
                 handleChange={handleChange}
+                error={errors.weekDiet}
               />
             </Grid>
             <Button

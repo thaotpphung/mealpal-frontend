@@ -4,7 +4,6 @@ import { useHistory } from 'react-router-dom';
 import { Grid, Button, TextField, IconButton } from '@material-ui/core';
 import useStyles from '../../../containers/styles';
 import RecipeCard from '../../components/RecipeCard/RecipeCard';
-import Spinner from '../../common/Spinner/Spinner';
 import PopupDialog from '../../common/PopupDialog/PopupDialog';
 import Input from '../../common/Input/Input';
 import useDialog from '../../../utils/hooks/useDialog';

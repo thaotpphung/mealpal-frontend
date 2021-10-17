@@ -113,28 +113,24 @@ const EditDayPage = () => {
     set: setFoodFieldsForm,
   } = useArray([]);
 
-  const [foodFieldErrors, setFoodFieldErrors] = useState([]);
-
-  // update meal
-  const handleSubmitUpdateMeal = (mealId, mealIdx) => {
-    const errors = {};
-    const recipeNames = foodFieldsForm.map((value) => value.recipeName);
-    setFoodFieldErrors(validateArray('food', recipeNames, errors).food);
-    if (Object.keys(errors.food).length === 0) {
-      const edits = new Array(day.meals.length).fill(false);
-      setIsInEditMealMode(edits);
-      dispatch(updateMeal(mealId, foodFieldsForm, mealIdx));
-    }
-  };
+  const [foodFieldErrors, setFoodFieldErrors] = useState({});
 
   // delete meal
   const handleDeleteMeal = (mealId) => {
     dispatch(deleteMeal(mealId));
   };
 
-  // useArrayValidattion
-  // errors, setErrors when in submit, validate Array function
-  // take in name
+  // update meal
+  const handleSubmitUpdateMeal = (mealId, mealIdx) => {
+    const errors = { food: {} };
+    const recipeNames = foodFieldsForm.map((value) => value.recipeName);
+    setFoodFieldErrors(validateArray('food', recipeNames, errors)?.food);
+    if (Object.keys(errors?.food).length === 0) {
+      const edits = new Array(day.meals.length).fill(false);
+      setIsInEditMealMode(edits);
+      dispatch(updateMeal(mealId, foodFieldsForm, mealIdx));
+    }
+  };
 
   const handleEnableEditMealMode = (mealIdx) => {
     const edits = new Array(day.meals.length).fill(false);
@@ -236,7 +232,8 @@ const EditDayPage = () => {
                           {foodFieldsForm.map((recipe, recipeIdx) => (
                             <>
                               <FormHelperText error={true} required>
-                                {foodFieldErrors[recipeIdx]}
+                                {foodFieldErrors[recipeIdx] &&
+                                  foodFieldErrors[recipeIdx]}
                               </FormHelperText>
                               <li key={`food-field-${recipe._id}-${recipeIdx}`}>
                                 <RestaurantMenuIcon />

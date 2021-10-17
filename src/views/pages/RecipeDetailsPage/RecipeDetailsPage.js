@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Grid, IconButton, TextField } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import useStyles from './styles';
 import { useParams, Link } from 'react-router-dom';
 import RecipeCard from '../../components/RecipeCard/RecipeCard';
 import RecipeDetailsCard from '../../components/RecipeDetailsCard/RecipeDetailsCards';
-import InstructionsCard from '../../components/InstructionsCard/InstructionsCard';
 import { getRecipe } from '../../../redux/actions/recipeActions';
 import Spinner from '../../common/Spinner/Spinner';
 

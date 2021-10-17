@@ -33,7 +33,6 @@ const WeekDetailsPage = () => {
   const initialState = {
     weekName: '',
     weekDescription: '',
-    weekTags: [],
     weekDiet: '',
   };
 
@@ -43,10 +42,9 @@ const WeekDetailsPage = () => {
       dispatch(createWeek({ ...values, userId: currentUser._id }));
       handleClose();
     },
-    validate
+    validate,
+    ['weekDescription']
   );
-
-  console.log('errors', errors);
 
   const Component = (
     <div>
@@ -70,12 +68,6 @@ const WeekDetailsPage = () => {
               name="weekDescription"
               label="Week Description"
               error={errors?.weekDescription}
-            />
-            <Input
-              value={values.weekTags}
-              handleChange={handleChange}
-              name="weekTags"
-              label="Week Tags"
             />
             <Input
               value={values.weekDiet}

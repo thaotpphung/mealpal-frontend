@@ -17,9 +17,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Input from '../../common/Input/Input';
 import Spinner from '../../common/Spinner/Spinner';
 import useForm from '../../../utils/hooks/useForm';
-import FlashMessage from '../../common/FlashMessage/FlashMessage';
+import useToggle from '../../../utils/hooks/useToggle';
 import { validateAuth } from '../../../utils/validations/validate';
-
 import { signin, register } from '../../../redux/actions/userActions';
 
 const initialState = {
@@ -28,43 +27,32 @@ const initialState = {
 };
 
 const AuthPage = () => {
-  const [isRegister, setIsRegister] = useState(false);
-  const [form, setForm] = useState(initialState);
-  const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setForm({
-      ...form,
-      [name]: value,
-    });
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    setErrors(validateAuth(form, isRegister));
-    setIsSubmitting(true);
-  };
-
-  useEffect(() => {
-    if (Object.keys(errors).length === 0 && isSubmitting) {
-      if (isRegister) {
-        dispatch(register(form, history));
-      } else {
-        dispatch(signin(form, history));
-      }
-    }
-  }, [errors]);
-
   const user = useSelector((state) => state.user);
   const { loading, currentUser, error } = user;
   const dispatch = useDispatch();
   const history = useHistory();
   const classes = useStyles();
   const localStyles = styles();
-  const [showPassword, setShowPassword] = useState(false);
-  const handleShowPassword = () => setShowPassword(!showPassword);
+  const [showPassword, toggleShowPassword] = useToggle(false);
+  const [isRegister, toggleIsRegister] = useToggle(false);
+
+  const {
+    values: form,
+    handleChange,
+    handleSubmit,
+    errors,
+  } = useForm(initialState, () => {
+    if (isRegister) {
+      dispatch(register(form, history));
+    } else {
+      dispatch(signin(form, history));
+    }
+  });
+
+  const handleSubmitAuth = (event) => {
+    const errors = validateAuth(form, isRegister);
+    handleSubmit(event, errors);
+  };
 
   useEffect(() => {
     if (currentUser) {
@@ -74,8 +62,8 @@ const AuthPage = () => {
   }, [currentUser]);
 
   const switchMode = () => {
-    setIsRegister((prevIsRegister) => !prevIsRegister);
-    setShowPassword(false);
+    toggleIsRegister();
+    toggleShowPassword(false);
   };
 
   return (
@@ -91,7 +79,7 @@ const AuthPage = () => {
         <Typography component="h1" variant="h5">
           {isRegister ? 'Sign up' : 'Sign in'}
         </Typography>
-        <form className={localStyles.form} onSubmit={handleSubmit}>
+        <form className={localStyles.form} onSubmit={handleSubmitAuth}>
           <Grid container spacing={2}>
             {isRegister && (
               <>
@@ -101,7 +89,6 @@ const AuthPage = () => {
                   handleChange={handleChange}
                   half
                   error={errors?.firstName}
-                  required
                 />
                 <Input
                   name="lastName"
@@ -109,7 +96,6 @@ const AuthPage = () => {
                   handleChange={handleChange}
                   half
                   error={errors?.lastName}
-                  required
                 />
               </>
             )}
@@ -119,16 +105,14 @@ const AuthPage = () => {
               handleChange={handleChange}
               type="email"
               error={errors?.email}
-              required
             />
             <Input
               name="password"
               label="Password"
               handleChange={handleChange}
               type={showPassword ? 'text' : 'password'}
-              handleShowPassword={handleShowPassword}
+              handleShowPassword={toggleShowPassword}
               error={errors?.password}
-              required
             />
             {isRegister && (
               <Input
@@ -137,7 +121,6 @@ const AuthPage = () => {
                 handleChange={handleChange}
                 type="password"
                 error={errors?.confirmPassword}
-                required
               />
             )}
           </Grid>

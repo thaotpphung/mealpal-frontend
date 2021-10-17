@@ -5,7 +5,8 @@ const useForm = (
   callback,
   validate = () => {
     return {};
-  }
+  },
+  optionalFields = []
 ) => {
   const [values, setValues] = useState(initialState);
   const [errors, setErrors] = useState({});
@@ -13,10 +14,9 @@ const useForm = (
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    let formattedValue = name === 'weekTags' ? value.split(',') : value;
     setValues({
       ...values,
-      [name]: formattedValue,
+      [name]: value,
     });
   };
 
@@ -24,10 +24,10 @@ const useForm = (
     setValues({ ...values, [name]: value });
   };
 
-  const handleSubmit = (event, arrayErrors = {}) => {
+  const handleSubmit = (event, otherErrors = {}) => {
     event.preventDefault();
-    setErrors(validate(values));
-    setErrors((prevErrors) => ({ ...prevErrors, ...arrayErrors }));
+    setErrors(validate(values, optionalFields));
+    setErrors((prevErrors) => ({ ...prevErrors, ...otherErrors }));
     setIsSubmitting(true);
   };
 
@@ -49,6 +49,7 @@ const useForm = (
     setValue,
     errors,
     setErrors,
+    setValues,
   };
 };
 

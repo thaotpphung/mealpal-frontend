@@ -1,8 +1,8 @@
 const validateEmail = (name = 'email', value, errors) => {
   if (!value) {
-    errors[name] = 'Email required';
+    errors[name] = 'Email is required';
   } else if (!/\S+@\S+\.\S+/.test(value)) {
-    errors[name] = 'Email address is invalid';
+    errors[name] = 'Email is invalid';
   }
 };
 
