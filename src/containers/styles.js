@@ -1,5 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 import { yellow } from '@material-ui/core/colors';
+import React from 'react';
 
 export default makeStyles((theme) => ({
   root: {
@@ -46,9 +47,7 @@ export default makeStyles((theme) => ({
     '& div': {
       padding: theme.spacing(2),
     },
-    marginBottom: theme.spacing(3),
   },
-
   menuContent: {
     '& li': {
       marginBottom: theme.spacing(1),
@@ -56,6 +55,9 @@ export default makeStyles((theme) => ({
       flexDirection: 'row',
       alignItems: 'center',
     },
+  },
+  menuContainer: {
+    marginBottom: theme.spacing(3),
   },
 
   // form
@@ -109,4 +111,13 @@ export default makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
   },
+
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
+  utilsBar: {},
 }));

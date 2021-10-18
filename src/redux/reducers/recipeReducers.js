@@ -44,7 +44,7 @@ const recipeListReducer = (state = RECIPE_LIST_INITIAL_STATE, action) => {
       return { ...state, loading: true, error: null };
     }
     case RECIPE_LIST_SUCCESS: {
-      const recipes = _.mapKeys(action.payload, '_id');
+      const recipes = _.mapKeys(action.payload.data, '_id');
       return { ...state, loading: false, recipes: recipes, error: null };
     }
     case RECIPE_LIST_FAIL:

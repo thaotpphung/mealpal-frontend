@@ -43,7 +43,7 @@ const RecipeDetailsCard = ({ recipe }) => {
 
   return (
     <Paper className={classes.notePaper}>
-      <CardHeader
+      {/* <CardHeader
         title="Recipe Details"
         action={
           isInEditMode ? (
@@ -52,7 +52,15 @@ const RecipeDetailsCard = ({ recipe }) => {
             <RoundButton type="edit" handleClick={toggleIsInEditMode} />
           )
         }
-      />
+      /> */}
+      <div style={{ float: 'right' }}>
+        {isInEditMode ? (
+          <RoundButton type="done" handleClick={handleSubmitUpdateRecipe} />
+        ) : (
+          <RoundButton type="edit" handleClick={toggleIsInEditMode} />
+        )}
+      </div>
+
       <RecipeDetailsCardContent
         title="Ingredients"
         array={ingredients}

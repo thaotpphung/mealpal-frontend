@@ -21,7 +21,12 @@ const RecipeDetailsPage = () => {
   if (!loading && Object.keys(recipe).length > 0) {
     return (
       <div className={classes.root}>
-        <Grid container justify="space-between">
+        <Grid
+          container
+          justify="space-between"
+          alignItems="stretch"
+          spacing={7}
+        >
           <Grid item xs={12} sm={5}>
             <RecipeCard recipe={recipe} />
           </Grid>

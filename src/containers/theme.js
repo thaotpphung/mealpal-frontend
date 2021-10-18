@@ -4,7 +4,9 @@ import 'lato-font';
 
 export const theme = createMuiTheme({
   palette: {
-    primary: cyan,
+    primary: {
+      main: cyan[200],
+    },
   },
   typography: {
     fontFamily: [

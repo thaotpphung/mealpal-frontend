@@ -43,8 +43,14 @@ const weekListReducer = (state = INITIAL_STATE, action) => {
       return { ...state, loading: true, error: null };
     }
     case WEEK_LIST_SUCCESS: {
-      const weeks = _.mapKeys(action.payload, '_id');
-      return { ...state, loading: false, weeks: weeks, error: null };
+      const weeks = _.mapKeys(action.payload.data, '_id');
+      return {
+        ...state,
+        loading: false,
+        weeks: weeks,
+        error: null,
+        count: action.payload.count,
+      };
     }
     case WEEK_LIST_FAIL:
       return { ...state, loading: false, error: action.payload };

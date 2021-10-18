@@ -3,7 +3,6 @@ import { persistStore, persistReducer } from 'redux-persist';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 import storage from 'redux-persist/lib/storage';
-
 import { combineReducers } from 'redux';
 import userReducer from './reducers/userReducers';
 import weekListReducer from './reducers/weekReducers';
@@ -25,18 +24,12 @@ const rootPersistConfig = {
   whitelist: ['user', 'dayList', 'select'],
 };
 
-const recipePersistConfig = {
-  key: 'recipeList',
-  storage,
-  blacklist: ['recipeImage'],
-};
-
 const rootReducer = combineReducers({
   user: userReducer,
   weekList: weekListReducer,
   dayList: dayListReducer,
   select: selectReducer,
-  recipeList: persistReducer(recipePersistConfig, recipeListReducer),
+  recipeList: recipeListReducer,
   recipe: recipeDetailsReducer,
   mealList: mealListReducer,
 });

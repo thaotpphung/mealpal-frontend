@@ -23,7 +23,7 @@ export const getUser = () => API.get('api/users/');
 // weeks
 export const getWeek = (weekId) => API.get(`api/weeks/${weekId}`);
 export const createWeek = (newWeek) => API.post('api/weeks', newWeek);
-export const getWeeks = () => API.get(`api/weeks/`);
+export const getWeeks = (query) => API.get(`api/weeks${query}`);
 export const deleteWeek = (weekId) => API.delete(`api/weeks/${weekId}`);
 export const updateWeek = (weekId, updatedWeek) =>
   API.patch(`api/weeks/${weekId}`, updatedWeek);

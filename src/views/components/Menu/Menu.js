@@ -21,7 +21,7 @@ const Menu = () => {
   return (
     <div>
       {Object.values(days).map((day, dayIdx) => (
-        <Paper key={`day-card-${dayIdx}`}>
+        <Paper key={`day-card-${dayIdx}`} className={classes.menuContainer}>
           <CardHeader
             title={day.dayName}
             action={

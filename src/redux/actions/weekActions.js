@@ -28,15 +28,17 @@ const createWeek = (week) => async (dispatch) => {
   }
 };
 
-const getAllWeeks = () => async (dispatch) => {
-  try {
-    dispatch({ type: WEEK_LIST_REQUEST });
-    const { data } = await api.getWeeks();
-    dispatch({ type: WEEK_LIST_SUCCESS, payload: data.data });
-  } catch (error) {
-    dispatch({ type: WEEK_LIST_FAIL, payload: error.response.data.message });
-  }
-};
+const getAllWeeks =
+  (query = '') =>
+  async (dispatch) => {
+    try {
+      dispatch({ type: WEEK_LIST_REQUEST });
+      const { data } = await api.getWeeks(query);
+      dispatch({ type: WEEK_LIST_SUCCESS, payload: data.data });
+    } catch (error) {
+      dispatch({ type: WEEK_LIST_FAIL, payload: error.response.data.message });
+    }
+  };
 
 const deleteWeek = (weekId) => async (dispatch) => {
   try {

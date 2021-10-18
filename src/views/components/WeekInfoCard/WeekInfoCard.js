@@ -110,6 +110,7 @@ const WeekInfoCard = ({ week }) => {
       <CardContent>
         {!isInEditMode && (
           <div variant="body2" color="text.secondary">
+            <div>Name: {week?.weekName}</div>
             <div>Description: {week?.weekDescription}</div>
             <div>Diet: {week?.weekDiet}</div>
           </div>
@@ -117,6 +118,12 @@ const WeekInfoCard = ({ week }) => {
         {isInEditMode && (
           <form className={classes.formContainer} onSubmit={handleSubmit}>
             <Grid container spacing={2}>
+              <Input
+                name="weekName"
+                label="Week Name"
+                value={weekForm?.weekName}
+                handleChange={handleChange}
+              />
               <Input
                 name="weekDescription"
                 label="Description"

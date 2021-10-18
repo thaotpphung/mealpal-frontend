@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { styles } from './styles';
 import useStyles from '../../../containers/styles';
-
 import {
   Avatar,
   Button,
@@ -11,7 +10,10 @@ import {
   Grid,
   Typography,
   Container,
+  IconButton,
 } from '@material-ui/core';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import MuiAlert from '@material-ui/lab/Alert';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Input from '../../common/Input/Input';
@@ -32,7 +34,7 @@ const AuthPage = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const classes = useStyles();
-  const localStyles = styles();
+  const localClasses = styles();
   const [showPassword, toggleShowPassword] = useToggle(false);
   const [isRegister, toggleIsRegister] = useToggle(false);
 
@@ -50,6 +52,7 @@ const AuthPage = () => {
   });
 
   const handleSubmitAuth = (event) => {
+    console.log('form', form);
     const errors = validateAuth(form, isRegister);
     handleSubmit(event, errors);
   };
@@ -68,18 +71,18 @@ const AuthPage = () => {
 
   return (
     <Container component="main" maxWidth="xs">
-      <Paper className={localStyles.paper} elevation={3}>
+      <Paper className={localClasses.paper} elevation={3}>
         <Typography>
           {loading && <Spinner />}
           {error && <MuiAlert severity="error">{error}</MuiAlert>}
         </Typography>
-        <Avatar className={localStyles.avatar}>
+        <Avatar className={localClasses.avatar}>
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
           {isRegister ? 'Sign up' : 'Sign in'}
         </Typography>
-        <form className={localStyles.form} onSubmit={handleSubmitAuth}>
+        <form className={localClasses.form} onSubmit={handleSubmitAuth}>
           <Grid container spacing={2}>
             {isRegister && (
               <>
@@ -111,7 +114,11 @@ const AuthPage = () => {
               label="Password"
               handleChange={handleChange}
               type={showPassword ? 'text' : 'password'}
-              handleShowPassword={toggleShowPassword}
+              endAction={
+                <IconButton onClick={toggleShowPassword}>
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              }
               error={errors?.password}
             />
             {isRegister && (
@@ -119,7 +126,12 @@ const AuthPage = () => {
                 name="confirmPassword"
                 label="Repeat Password"
                 handleChange={handleChange}
-                type="password"
+                type={showPassword ? 'text' : 'password'}
+                endAction={
+                  <IconButton onClick={toggleShowPassword}>
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                }
                 error={errors?.confirmPassword}
               />
             )}

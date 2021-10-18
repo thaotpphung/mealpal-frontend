@@ -20,7 +20,12 @@ const validateAuth = (values, isRegister) => {
   validatePassword('password', values.password, errors);
   validateEmail('email', values.email, errors);
   if (isRegister) {
-    validateConfirmPassword('confirmPassword', values.confirmPassword, errors);
+    validateConfirmPassword(
+      'confirmPassword',
+      values.confirmPassword,
+      errors,
+      values.password
+    );
     validateTextField('firstName', values.firstName, errors);
     validateTextField('lastName', values.lastName, errors);
   }

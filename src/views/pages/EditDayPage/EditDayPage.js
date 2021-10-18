@@ -246,6 +246,7 @@ const EditDayPage = () => {
                                   options={extractedFieldsForAutoComplete}
                                   changedIndex={recipeIdx}
                                 />
+
                                 <RoundButton
                                   type="deleteField"
                                   handleClick={() =>
