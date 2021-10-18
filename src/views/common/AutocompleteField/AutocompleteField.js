@@ -1,5 +1,7 @@
 import React from 'react';
-import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
+import Autocomplete, {
+  createFilterOptions,
+} from '@material-ui/lab/Autocomplete';
 import { TextField } from '@material-ui/core';
 
 // toggleOpen: from a popup dialog -> when autocomplete doesn't have that option then a dialog will popup -> always the case
@@ -19,6 +21,7 @@ const AutocompleteField = ({
   return (
     <Autocomplete
       value={value}
+      fullWidth
       onChange={(event, newValue) => {
         if (typeof newValue === 'string') {
           setTimeout(() => {

@@ -1,20 +1,22 @@
 import React, { useState } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { styled } from '@mui/material/styles';
+import { styled } from '@material-ui/core/styles';
 import useStyles from '../../../containers/styles';
-import Card from '@mui/material/Card';
-import Grid from '@mui/material/Grid';
-import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
-import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
-import Collapse from '@mui/material/Collapse';
-import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
-import { Button } from '@material-ui/core/';
-import { red } from '@mui/material/colors';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import {
+  Card,
+  Grid,
+  CardHeader,
+  CardContent,
+  CardMedia,
+  CardActions,
+  Collapse,
+  Avatar,
+  IconButton,
+  Button,
+} from '@material-ui/core';
+import { red } from '@material-ui/core/colors';
+import ExpandMoreIcon from '@material-ui/icons/AccessAlarm';
 import FileInputComponent from 'react-file-input-previews-base64';
 import Input from '../../common/Input/Input';
 import RoundButton from '../../common/Buttons/RoundButton';

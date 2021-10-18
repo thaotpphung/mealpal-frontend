@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import useStyles from '../../../containers/styles';
 import { styles } from './styles';
-import { Paper, Grid } from '@material-ui/core';
+import { Paper, Grid, FormHelperText } from '@material-ui/core';
 import RestaurantMenuIcon from '@material-ui/icons/RestaurantMenu';
 import {
   createMeal,
@@ -17,13 +17,11 @@ import Spinner from '../../common/Spinner/Spinner';
 import useArray from '../../../utils/hooks/useArray';
 import useForm from '../../../utils/hooks/useForm';
 import useDialog from '../../../utils/hooks/useDialog';
-
 import RoundButton from '../../common/Buttons/RoundButton';
 import CardHeader from '../../common/CardHeader/CardHeader';
 import AutocompleteField from '../../common/AutocompleteField/AutocompleteField';
 import PopupDialog from '../../common/PopupDialog/PopupDialog';
 import { getAllRecipes } from '../../../redux/actions/recipeActions';
-import { FormHelperText } from '@mui/material';
 import { validateArray } from '../../../utils/validations/validateFunctions';
 import { validate } from '../../../utils/validations/validate';
 

@@ -55,9 +55,6 @@ export default makeStyles((theme) => ({
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
-      '& span': {
-        marginLeft: theme.spacing(2),
-      },
     },
   },
 
@@ -106,5 +103,10 @@ export default makeStyles((theme) => ({
     '&:hover': {
       backgroundColor: theme.palette.grey[200],
     },
+  },
+  pagination: {
+    margin: theme.spacing(7),
+    display: 'flex',
+    justifyContent: 'center',
   },
 }));

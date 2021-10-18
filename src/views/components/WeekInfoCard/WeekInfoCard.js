@@ -11,7 +11,7 @@ import {
   IconButton,
   Collapse,
 } from '@material-ui/core/';
-import { styled } from '@mui/material/styles';
+import { styled } from '@material-ui/core/styles';
 import useStyles from '../../../containers/styles';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { deleteWeek, updateWeek } from '../../../redux/actions/weekActions';
@@ -50,7 +50,6 @@ const WeekInfoCard = ({ week }) => {
       weekDiet: week.weekDiet,
     },
     () => {
-      console.log('form submit', weekForm);
       dispatch(updateWeek(week._id, weekForm));
     },
     validate,

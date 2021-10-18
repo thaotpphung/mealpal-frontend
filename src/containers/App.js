@@ -6,7 +6,6 @@ import { CssBaseline } from '@material-ui/core';
 import { theme } from './theme';
 import { ThemeProvider } from '@material-ui/core/styles';
 import Navbar from '../views/common/Navbar/Navbar';
-
 import WeekDetailsPage from '../views/pages/WeekDetailsPage/WeekDetailsPage';
 import ExplorePage from '../views/pages/ExplorePage/ExplorePage';
 import EditDayPage from '../views/pages/EditDayPage/EditDayPage';
