@@ -21,7 +21,7 @@ const WeekList = ({ toggleOpen }) => {
   return (
     <Paper>
       <CardHeader
-        title="Week List"
+        title="Related Weeks"
         action={<RoundButton handleClick={() => toggleOpen(true)} type="add" />}
       />
       <div className={classes.content}>

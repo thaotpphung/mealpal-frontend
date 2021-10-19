@@ -50,6 +50,7 @@ const weekListReducer = (state = INITIAL_STATE, action) => {
         weeks: weeks,
         error: null,
         count: action.payload.count,
+        currentCount: action.payload.currentCount,
       };
     }
     case WEEK_LIST_FAIL:

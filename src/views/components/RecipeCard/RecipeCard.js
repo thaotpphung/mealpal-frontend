@@ -89,7 +89,6 @@ const RecipeCard = ({ recipe }) => {
           <>
             {!!recipeId && (
               <>
-                {' '}
                 <RoundButton
                   type="delete"
                   handleClick={() => handleDeleteRecipe(recipe._id)}

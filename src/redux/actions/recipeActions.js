@@ -32,15 +32,20 @@ const createRecipe = (recipe) => async (dispatch) => {
   }
 };
 
-const getAllRecipes = () => async (dispatch) => {
-  try {
-    dispatch({ type: RECIPE_LIST_REQUEST });
-    const { data } = await api.getRecipes();
-    dispatch({ type: RECIPE_LIST_SUCCESS, payload: data.data });
-  } catch (error) {
-    dispatch({ type: RECIPE_LIST_FAIL, payload: error.response.data.message });
-  }
-};
+const getAllRecipes =
+  (query = '') =>
+  async (dispatch) => {
+    try {
+      dispatch({ type: RECIPE_LIST_REQUEST });
+      const { data } = await api.getRecipes(query);
+      dispatch({ type: RECIPE_LIST_SUCCESS, payload: data.data });
+    } catch (error) {
+      dispatch({
+        type: RECIPE_LIST_FAIL,
+        payload: error.response.data.message,
+      });
+    }
+  };
 
 const getRecipe = (recipeId) => async (dispatch) => {
   try {

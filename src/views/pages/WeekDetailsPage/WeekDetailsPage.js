@@ -14,6 +14,7 @@ import useForm from '../../../utils/hooks/useForm';
 import useDialog from '../../../utils/hooks/useDialog';
 import { validate } from '../../../utils/validations/validate';
 import { getAllWeeks } from '../../../redux/actions/weekActions';
+import { getDayListByWeekId } from '../../../redux/actions/dayActions';
 
 const WeekDetailsPage = () => {
   const classes = useStyles();
@@ -21,8 +22,15 @@ const WeekDetailsPage = () => {
   const { selectedWeek } = useSelector((state) => state.select);
   const { weeks, loading, error } = useSelector((state) => state.weekList);
   const { currentUser } = useSelector((state) => state.user);
+  const { days } = useSelector((state) => state.dayList);
 
-  useEffect(() => dispatch(setSelectedWeek(currentUser?.currentWeek)), []);
+  useEffect(() => {
+    dispatch(getDayListByWeekId(selectedWeek.id));
+  }, [selectedWeek.id]);
+
+  useEffect(() => {
+    dispatch(setSelectedWeek(currentUser?.currentWeek));
+  }, []);
 
   useEffect(() => {
     dispatch(getAllWeeks());
@@ -79,7 +87,6 @@ const WeekDetailsPage = () => {
           </>
         }
       />
-
       <Grid container justify="space-between" alignItems="stretch" spacing={7}>
         <Grid item xs={12} sm={4} className={classes.leftColumn}>
           <WeekInfoCard week={weeks[selectedWeek.id]} />
@@ -89,7 +96,7 @@ const WeekDetailsPage = () => {
           {selectedWeek.id === undefined ? (
             <Typography>Please select a week</Typography>
           ) : (
-            <Menu />
+            <Menu days={days} />
           )}
         </Grid>
       </Grid>

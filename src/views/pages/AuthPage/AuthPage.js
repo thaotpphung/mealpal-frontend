@@ -72,10 +72,10 @@ const AuthPage = () => {
   return (
     <Container component="main" maxWidth="xs">
       <Paper className={localClasses.paper} elevation={3}>
-        <Typography>
+        <div>
           {loading && <Spinner />}
           {error && <MuiAlert severity="error">{error}</MuiAlert>}
-        </Typography>
+        </div>
         <Avatar className={localClasses.avatar}>
           <LockOutlinedIcon />
         </Avatar>

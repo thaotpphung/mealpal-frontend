@@ -9,6 +9,7 @@ import ShareIcon from '@material-ui/icons/Share';
 import DeleteIcon from '@material-ui/icons/Delete';
 import StarIcon from '@material-ui/icons/Star';
 import AddIcon from '@material-ui/icons/Add';
+import CancelIcon from '@material-ui/icons/Cancel';
 
 import useStyles from './styles';
 
@@ -24,6 +25,7 @@ const RoundButton = ({ type, handleClick }) => {
     like: <FavoriteIcon />,
     setDefault: <StarIcon />,
     add: <AddIcon />,
+    cancel: <CancelIcon />,
   };
 
   return (

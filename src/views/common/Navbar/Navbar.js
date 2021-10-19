@@ -100,7 +100,7 @@ const Navbar = () => {
                 variant="button"
                 component={RouterLink}
                 color="textPrimary"
-                to={routes.CART_PAGE}
+                to={routes.PROFILE_PAGE}
                 className={classes.link}
                 activeClassName={classes.activeClassName}
               >

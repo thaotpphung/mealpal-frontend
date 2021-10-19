@@ -1,62 +1,50 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Grid, IconButton, Button } from '@material-ui/core';
+import { Grid, IconButton, Button, FormControl } from '@material-ui/core';
 import useStyles from '../../../containers/styles';
 import { styles } from './styles';
 import WeekInfoCard from '../../components/WeekInfoCard/WeekInfoCard';
 import Pagination from '@material-ui/lab/Pagination';
 import { getAllWeeks } from '../../../redux/actions/weekActions';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
 import FunctionsIcon from '@material-ui/icons/Functions';
 import SearchIcon from '@material-ui/icons/Search';
 import Input from '../../common/Input/Input';
+import usePagination from '../../../utils/hooks/usePagination';
 
 const ExplorePage = () => {
   const classes = useStyles();
   const localClasses = styles();
   const dispatch = useDispatch();
-  const { weeks, count: weekCount } = useSelector((state) => state.weekList);
-  const [limit, setLimit] = useState(9);
-  const [page, setPage] = useState(1);
-  const [count, setCount] = useState(1); // number of total page on load
-  const [currentCount, setCurrentCount] = useState(1); // number of total page on filter
-  const [weekDiet, setWeekDiet] = useState('');
-  const [weekName, setWeekName] = useState('');
-
-  const buildPaginateQuery = (page) => {
-    return `?limit=${limit}&page=${page}`;
-  };
-
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setWeekName(value);
-  };
+  const {
+    weeks,
+    count: weekCount,
+    currentCount,
+  } = useSelector((state) => state.weekList);
 
   useEffect(() => {
-    dispatch(getAllWeeks(buildPaginateQuery()));
+    dispatch(getAllWeeks(buildQuery()));
   }, []);
 
   useEffect(() => {
-    const pageCount = weekCount / limit;
-    setCount(pageCount !== 1 ? Math.floor(pageCount) + 1 : pageCount);
-  }, [weeks, limit]);
+    setPageCount(weekCount);
+  }, [weekCount]);
 
-  const handleChangePage = (event, value) => {
-    dispatch(getAllWeeks(buildPaginateQuery(value)));
-    setPage(value);
+  const initialState = {
+    weekDiet: '',
+    weekName: '',
+    caloGoal: '',
   };
 
-  const handleSubmitFilter = () => {
-    let filterQuery = '?';
-    if (weekName !== '') filterQuery += `&weekName=${weekName}`;
-    if (weekDiet !== '') filterQuery += `&weekDiet=${weekDiet}`;
-    filterQuery = filterQuery !== '?' ? filterQuery : '';
-    console.log('filter', filterQuery);
-    dispatch(getAllWeeks(filterQuery));
-  };
+  // pagination & filtering
+  const {
+    count,
+    page,
+    buildQuery,
+    handleSubmitFilter,
+    handleChangePage,
+    handleChangeQueryField,
+    setPageCount,
+  } = usePagination(initialState, 9, () => dispatch(getAllWeeks(buildQuery())));
 
   return (
     <div>
@@ -65,12 +53,13 @@ const ExplorePage = () => {
           <Input
             name="weekName"
             label="Week Name"
-            handleChange={handleChange}
+            handleChange={handleChangeQueryField}
           />
         </FormControl>
         <FormControl className={localClasses.formControl}>
           <Input
             label="Calories Goal"
+            handleChange={handleChangeQueryField}
             endAction={
               <IconButton>
                 <FunctionsIcon />
@@ -79,24 +68,26 @@ const ExplorePage = () => {
           />
         </FormControl>
         <FormControl className={localClasses.formControl}>
-          <InputLabel id="demo-simple-select-label">Diet</InputLabel>
-          <Select labelId="demo-simple-select-label" value={weekDiet}>
-            <MenuItem value={10}>Vegan</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
-          </Select>
+          <Input
+            name="weekDiet"
+            handleChange={handleChangeQueryField}
+            label="Diet"
+          />
         </FormControl>
-        <Button variant="outlined" color="primary" onClick={handleSubmitFilter}>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={() => handleSubmitFilter(currentCount)}
+        >
           <SearchIcon /> Search
         </Button>
       </div>
 
-      <Grid
-        className={localClasses.container}
-        container
-        alignItems="stretch"
-        spacing={3}
-      >
+      <Button variant="outlined" color="primary">
+        + Week
+      </Button>
+
+      <Grid container alignItems="stretch" spacing={3}>
         {Object.values(weeks).map((week, weekIdx) => (
           <Grid
             key={`{'explore-page-${week._id}-${weekIdx}`}

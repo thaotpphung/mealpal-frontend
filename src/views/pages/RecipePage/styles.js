@@ -1,3 +1,13 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-export default makeStyles(() => ({}));
+const styles = makeStyles((theme) => ({
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
+  container: {
+    minHeight: '20vh',
+  },
+}));
+
+export { styles };

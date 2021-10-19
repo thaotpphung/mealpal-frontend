@@ -43,7 +43,7 @@ export const deleteFood = (mealId, recipeId) =>
 
 // recipes
 export const createRecipe = (newRecipe) => API.post('api/recipes', newRecipe);
-export const getRecipes = () => API.get(`api/recipes/`);
+export const getRecipes = (query) => API.get(`api/recipes/${query}`);
 export const getRecipe = (recipeId) => API.get(`api/recipes/${recipeId}`);
 export const deleteRecipe = (recipeId) => API.delete(`api/recipes/${recipeId}`);
 export const updateRecipe = (recipeId, updatedRecipe) =>

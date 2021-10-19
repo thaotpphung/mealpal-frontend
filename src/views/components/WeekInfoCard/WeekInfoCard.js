@@ -39,15 +39,18 @@ const WeekInfoCard = ({ week }) => {
   const [expanded, setExpanded] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const [isInEditMode, toggleIsInEditMode] = useToggle(false);
+  // take in initial week state, and dispatch call back
   const {
     values: weekForm,
     handleSubmit,
     handleChange,
     errors,
+    reset,
   } = useForm(
     {
-      weekDescription: week.weekDescription,
-      weekDiet: week.weekDiet,
+      weekName: week?.weekName,
+      weekDescription: week?.weekDescription,
+      weekDiet: week?.weekDiet,
     },
     () => {
       dispatch(updateWeek(week._id, weekForm));
@@ -56,13 +59,18 @@ const WeekInfoCard = ({ week }) => {
     ['weekDescription']
   );
 
+  const handleCancelEdit = () => {
+    toggleIsInEditMode();
+    reset();
+  };
+
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
   const handleDeleteWeek = (weekId) => {
     if (weekId !== undefined && weekId !== currentUser.currentWeek._id) {
-      dispatch(deleteWeek(weekId));
+      dispatch(deleteWeek(weekId, currentUser.currentWeek));
     } else {
       console.log(
         'Please select another week as your current week before deleting'
@@ -95,8 +103,8 @@ const WeekInfoCard = ({ week }) => {
               handleClick={() => handleDeleteWeek(week?._id)}
             />
             <RoundButton
-              type={isInEditMode ? 'done' : 'edit'}
-              handleClick={toggleIsInEditMode}
+              type={isInEditMode ? 'cancel' : 'edit'}
+              handleClick={handleCancelEdit}
             />
             <RoundButton
               type="setDefault"
