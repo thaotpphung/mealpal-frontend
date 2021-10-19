@@ -42,6 +42,7 @@ const WeekDetailsPage = () => {
     weekName: '',
     weekDescription: '',
     weekDiet: '',
+    plan: '',
   };
 
   const { handleChange, handleSubmit, values, reset, errors } = useForm(
@@ -51,7 +52,7 @@ const WeekDetailsPage = () => {
       handleClose();
     },
     validate,
-    ['weekDescription']
+    ['weekDescription', 'plan']
   );
 
   const Component = (

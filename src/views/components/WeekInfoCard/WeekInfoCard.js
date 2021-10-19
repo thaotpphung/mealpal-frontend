@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Card,
@@ -112,13 +113,16 @@ const WeekInfoCard = ({ week }) => {
             />
           </>
         }
-        title="thao phung"
+        title={
+          <Link to={{ pathname: `/weeks/${week._id}` }}>
+            Name:{week.weekName}
+          </Link>
+        }
         subheader="created at 10/4/2021"
       />
       <CardContent>
         {!isInEditMode && (
           <div variant="body2" color="text.secondary">
-            <div>Name: {week?.weekName}</div>
             <div>Description: {week?.weekDescription}</div>
             <div>Diet: {week?.weekDiet}</div>
           </div>
