@@ -43,6 +43,20 @@ const recipeListReducer = (state = RECIPE_LIST_INITIAL_STATE, action) => {
     case RECIPE_LIST_FAIL:
       return { ...state, loading: false, error: action.payload };
 
+    case RECIPE_CREATE_REQUEST: {
+      return { ...state, loading: true, error: null };
+    }
+    case RECIPE_CREATE_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        recipes: { ...state.recipes, [action.payload._id]: action.payload },
+        error: null,
+      };
+    }
+    case RECIPE_CREATE_FAIL:
+      return { ...state, loading: false, error: action.payload };
+
     default:
       return state;
   }
@@ -58,16 +72,13 @@ const recipeDetailsReducer = (state = RECIPE_DETAILS_INITIAL_STATE, action) => {
   switch (action.type) {
     case RECIPE_DETAILS_REQUEST:
     case RECIPE_UPDATE_REQUEST:
-    case RECIPE_CREATE_REQUEST:
       return { ...state, loading: true, error: null };
     case RECIPE_DETAILS_SUCCESS:
-    case RECIPE_UPDATE_SUCCESS:
-    case RECIPE_CREATE_SUCCESS: {
+    case RECIPE_UPDATE_SUCCESS: {
       return { ...state, loading: false, recipe: action.payload, error: null };
     }
     case RECIPE_DETAILS_FAIL:
     case RECIPE_UPDATE_FAIL:
-    case RECIPE_CREATE_FAIL:
       return { ...state, loading: false, error: action.payload };
 
     //delete recipe

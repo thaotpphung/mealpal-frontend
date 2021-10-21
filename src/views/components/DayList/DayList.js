@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import useStyles from '../../../containers/styles';
 import { styles } from './styles';
-import { Paper, Grid, TextField } from '@material-ui/core';
+import { Paper, Grid, TextField, FormHelperText } from '@material-ui/core';
 import RestaurantMenuIcon from '@material-ui/icons/RestaurantMenu';
 import CardHeader from '../../common/CardHeader/CardHeader';
 import RoundButton from '../../common/Buttons/RoundButton';
@@ -75,6 +75,12 @@ const DayList = ({ days, recipes }) => {
     const modes = [...defaultEditDayMode];
     modes[dayIdx] = true;
     const day = { ...days[dayIdx] };
+    if (day.meals.length === 0) {
+      day.meals[0] = {
+        mealName: '[PlaceHolder]',
+        food: [{ recipeName: '', _id: '' }],
+      };
+    }
     day.meals.forEach((meal) => {
       if (meal.food.length === 0) meal.food = [{ recipeName: '', _id: '' }];
     });
@@ -88,16 +94,32 @@ const DayList = ({ days, recipes }) => {
     setIsInEditDayMode(modes);
   };
 
+  // validation
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [dayIdx, setDayIdx] = useState('');
   const handleSubmitUpdateDay = (dayIdx) => {
-    dayForm.meals.forEach((meal) => {
-      if (meal.food.length === 1 && meal.food[0].recipeName === '') {
-        meal.food = [];
-      }
+    let currentErrors = {};
+    dayForm.meals.forEach((meal, mealIdx) => {
+      if (meal.mealName.trim() === '')
+        currentErrors[`meal${mealIdx}`] = 'Field cannot be empty';
+      meal.food.forEach((recipe, recipeIdx) => {
+        if (recipe.recipeName.trim() === '')
+          currentErrors[`meal${mealIdx}food${recipeIdx}`] =
+            'Field cannot be empty';
+      });
     });
-    dispatch(updateWeekByDay(weekId, dayIdx, dayForm));
+    setErrors(currentErrors);
+    setIsSubmitting(true);
+    setDayIdx(dayIdx);
   };
 
-  // day form
+  useEffect(() => {
+    if (Object.keys(errors).length === 0 && isSubmitting) {
+      dispatch(updateWeekByDay(weekId, dayIdx, dayForm));
+    }
+  }, [errors]);
+
   // meal
   const handleDeleteMeal = (mealIdx) => {
     const updatedDays = cloneDeep(dayForm);
@@ -232,6 +254,7 @@ const DayList = ({ days, recipes }) => {
                       <Input
                         value={meal.mealName}
                         handleChange={(e) => handleChangeMeal(e, mealIdx)}
+                        error={errors[`meal${mealIdx}`]}
                       />
                     </div>
                     <div className={classes.itemContent}>
@@ -290,7 +313,17 @@ const DayList = ({ days, recipes }) => {
                               style={{ width: 300 }}
                               freeSolo
                               renderInput={(params) => (
-                                <TextField {...params} />
+                                <TextField
+                                  {...params}
+                                  error={
+                                    errors[`meal${mealIdx}food${recipeIdx}`]
+                                      ? true
+                                      : false
+                                  }
+                                  label={
+                                    errors[`meal${mealIdx}food${recipeIdx}`]
+                                  }
+                                />
                               )}
                             />
                             <RoundButton
