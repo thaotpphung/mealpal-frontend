@@ -76,9 +76,10 @@ const deleteWeek = (weekId, currentWeek) => async (dispatch) => {
 
 const updateWeek = (weekId, week) => async (dispatch) => {
   try {
+    console.log('update', week);
     dispatch({ type: WEEK_UPDATE_REQUEST });
     const { data } = await api.updateWeek(weekId, week);
-    dispatch({ type: WEEK_UPDATE_SUCCESS, payload: data.data });
+    dispatch({ type: WEEK_UPDATE_SUCCESS, payload: week });
   } catch (error) {
     dispatch({
       type: WEEK_UPDATE_FAIL,

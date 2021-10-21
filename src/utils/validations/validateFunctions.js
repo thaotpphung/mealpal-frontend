@@ -28,7 +28,6 @@ const validateConfirmPassword = (
 };
 
 const validateTextField = (name, value, errors) => {
-  console.log(name, value);
   if (!value || value.trim() === '') {
     errors[name] = 'Field can not be empty';
   }

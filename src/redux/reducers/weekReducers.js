@@ -110,15 +110,25 @@ function weekDetailsReducer(
     case WEEK_DETAILS_FAIL:
       return { ...state, loading: false, error: action.payload };
 
+    case WEEK_UPDATE_REQUEST:
+      return { ...state, loading: true, error: null };
+    case WEEK_UPDATE_SUCCESS: {
+      const updatedWeek = { ...state.week, ...action.payload };
+      return {
+        loading: false,
+        error: null,
+        week: updatedWeek,
+      };
+    }
+    case WEEK_UPDATE_FAIL:
+      return { ...state, loading: false, error: action.payload };
+
     case WEEK_UPDATE_BY_DAY_REQUEST:
       return { ...state, loading: true, error: null };
     case WEEK_UPDATE_BY_DAY_SUCCESS: {
       const { dayIdx, day } = action.payload;
       let updatedWeek = _.cloneDeep(state.week);
-      console.log('day in update', day);
-      console.log('updated week b4', updatedWeek);
       updatedWeek.days[dayIdx] = day;
-      console.log('updated week', updatedWeek);
       return {
         loading: false,
         error: null,

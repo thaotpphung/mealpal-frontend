@@ -34,8 +34,7 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-const WeekInfoCard = ({ week = {} }) => {
-  console.log('in weekinfo', week);
+const WeekInfoCard = ({ week }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [expanded, setExpanded] = useState(false);
@@ -56,12 +55,11 @@ const WeekInfoCard = ({ week = {} }) => {
     },
     () => {
       dispatch(updateWeek(week._id, weekForm));
+      toggleIsInEditMode(false);
     },
     validate,
     ['weekDescription']
   );
-
-  console.log(weekForm);
 
   const handleCancelEdit = () => {
     toggleIsInEditMode(false);
@@ -106,26 +104,27 @@ const WeekInfoCard = ({ week = {} }) => {
               type="delete"
               handleClick={() => handleDeleteWeek(week?._id)}
             />
-            <RoundButton
-              type={isInEditMode ? 'cancel' : 'edit'}
-              handleClick={handleCancelEdit}
-            />
+            {isInEditMode ? (
+              <>
+                <RoundButton type={'cancel'} handleClick={handleCancelEdit} />
+              </>
+            ) : (
+              <RoundButton type={'edit'} handleClick={toggleIsInEditMode} />
+            )}
             <RoundButton
               type="setDefault"
               handleClick={() => handleSetCurrentWeek(week?._id)}
             />
           </>
         }
-        title={
-          <Link to={{ pathname: `/weeks/${week._id}` }}>
-            Name:{week.weekName}
-          </Link>
-        }
+        title="Thao Phung"
         subheader="created at 10/4/2021"
       />
       <CardContent>
         {!isInEditMode && (
           <div variant="body2" color="text.secondary">
+            Name:
+            <Link to={{ pathname: `/weeks/${week._id}` }}>{week.weekName}</Link>
             <div>Description: {week?.weekDescription}</div>
             <div>Diet: {week?.weekDiet}</div>
           </div>
@@ -138,6 +137,7 @@ const WeekInfoCard = ({ week = {} }) => {
                 label="Week Name"
                 value={weekForm?.weekName}
                 handleChange={handleChange}
+                error={errors?.weekName}
               />
               <Input
                 name="weekDescription"
@@ -150,7 +150,7 @@ const WeekInfoCard = ({ week = {} }) => {
                 label="Diet"
                 value={weekForm?.weekDiet}
                 handleChange={handleChange}
-                error={errors.weekDiet}
+                error={errors?.weekDiet}
               />
             </Grid>
             <Button
@@ -159,6 +159,7 @@ const WeekInfoCard = ({ week = {} }) => {
               variant="contained"
               color="primary"
               className={classes.formSubmitButton}
+              onClick={handleSubmit}
             >
               Submit
             </Button>
