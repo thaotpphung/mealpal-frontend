@@ -11,8 +11,14 @@ import {
   WEEK_UPDATE_REQUEST,
   WEEK_UPDATE_SUCCESS,
   WEEK_UPDATE_FAIL,
+  WEEK_DETAILS_REQUEST,
+  WEEK_DETAILS_SUCCESS,
+  WEEK_DETAILS_FAIL,
+  WEEK_UPDATE_BY_DAY_REQUEST,
+  WEEK_UPDATE_BY_DAY_SUCCESS,
+  WEEK_UPDATE_BY_DAY_FAIL,
 } from '../constants/weekConstants';
-import _ from 'lodash';
+import _, { update } from 'lodash';
 
 const INITIAL_STATE = {
   weeks: {},
@@ -20,7 +26,7 @@ const INITIAL_STATE = {
   error: null,
 };
 
-const weekListReducer = (state = INITIAL_STATE, action) => {
+function weekListReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     // create week
     case WEEK_CREATE_REQUEST:
@@ -86,6 +92,45 @@ const weekListReducer = (state = INITIAL_STATE, action) => {
     default:
       return state;
   }
-};
+}
 
-export default weekListReducer;
+function weekDetailsReducer(
+  state = { week: { days: [] }, loading: false, error: null },
+  action
+) {
+  switch (action.type) {
+    case WEEK_DETAILS_REQUEST:
+      return { ...state, loading: true, error: null };
+    case WEEK_DETAILS_SUCCESS:
+      return {
+        loading: false,
+        error: null,
+        week: action.payload,
+      };
+    case WEEK_DETAILS_FAIL:
+      return { ...state, loading: false, error: action.payload };
+
+    case WEEK_UPDATE_BY_DAY_REQUEST:
+      return { ...state, loading: true, error: null };
+    case WEEK_UPDATE_BY_DAY_SUCCESS: {
+      const { dayIdx, day } = action.payload;
+      let updatedWeek = _.cloneDeep(state.week);
+      console.log('day in update', day);
+      console.log('updated week b4', updatedWeek);
+      updatedWeek.days[dayIdx] = day;
+      console.log('updated week', updatedWeek);
+      return {
+        loading: false,
+        error: null,
+        week: updatedWeek,
+      };
+    }
+    case WEEK_UPDATE_BY_DAY_FAIL:
+      return { ...state, loading: false, error: action.payload };
+
+    default:
+      return state;
+  }
+}
+
+export { weekListReducer, weekDetailsReducer };

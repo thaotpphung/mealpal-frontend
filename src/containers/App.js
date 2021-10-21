@@ -25,6 +25,11 @@ function App() {
       <div className={classes.root}>
         <Switch>
           <Route path={routes.HOME_PAGE} exact component={WeekDetailsPage} />
+          <Route
+            path={routes.WEEK_DETAILS_PAGE}
+            exact
+            component={WeekDetailsPage}
+          />
           <Route path={routes.EXPLORE_PAGE} exact component={ExplorePage} />
           <Route path={routes.EDIT_DAY_PAGE} exact component={EditDayPage} />
           <Route path={routes.RECIPE_PAGE} exact component={RecipePage} />

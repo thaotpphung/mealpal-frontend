@@ -27,6 +27,8 @@ export const getWeeks = (query) => API.get(`api/weeks${query}`);
 export const deleteWeek = (weekId) => API.delete(`api/weeks/${weekId}`);
 export const updateWeek = (weekId, updatedWeek) =>
   API.patch(`api/weeks/${weekId}`, updatedWeek);
+export const updateWeekByDay = (weekId, dayIdx, day) =>
+  API.patch(`api/weeks/${weekId}/days/${dayIdx}`, day);
 
 // days
 export const getDayListByWeekId = (weekId) =>

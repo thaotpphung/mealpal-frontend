@@ -10,6 +10,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import StarIcon from '@material-ui/icons/Star';
 import AddIcon from '@material-ui/icons/Add';
 import CancelIcon from '@material-ui/icons/Cancel';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 import useStyles from './styles';
 
@@ -18,13 +20,13 @@ const RoundButton = ({ type, handleClick }) => {
 
   const roundButtonTypes = {
     delete: <DeleteIcon />,
-    done: <DoneIcon />,
+    done: <CheckCircleIcon />,
     edit: <EditIcon />,
     deleteField: <HighlightOffIcon className={classes.deleteFieldButton} />,
     addField: <AddCircleOutlineIcon />,
     like: <FavoriteIcon />,
     setDefault: <StarIcon />,
-    add: <AddIcon />,
+    add: <AddCircleIcon />,
     cancel: <CancelIcon />,
   };
 

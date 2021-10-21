@@ -75,7 +75,7 @@ const EditDayPage = () => {
     validate
   );
 
-  // new recipe dialog form
+  // new meal dialog form
   const {
     open: openNewMealDialog,
     toggleOpen: toggleOpenNewMealDialog,

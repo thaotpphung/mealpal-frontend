@@ -34,7 +34,10 @@ const recipeListReducer = (state = RECIPE_LIST_INITIAL_STATE, action) => {
         ...state,
         loading: false,
         error: null,
-        recipes: { ...state.recipes, [action.payload._id]: action.payload },
+        recipes: {
+          ...state.recipes,
+          [action.payload.data._id]: action.payload.data,
+        },
       };
     case RECIPE_CREATE_FAIL:
       return { ...state, loading: false, error: action.payload };

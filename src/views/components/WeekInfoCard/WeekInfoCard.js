@@ -34,13 +34,14 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-const WeekInfoCard = ({ week }) => {
+const WeekInfoCard = ({ week = {} }) => {
+  console.log('in weekinfo', week);
   const classes = useStyles();
   const dispatch = useDispatch();
   const [expanded, setExpanded] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const [isInEditMode, toggleIsInEditMode] = useToggle(false);
-  // take in initial week state, and dispatch call back
+
   const {
     values: weekForm,
     handleSubmit,
@@ -60,8 +61,10 @@ const WeekInfoCard = ({ week }) => {
     ['weekDescription']
   );
 
+  console.log(weekForm);
+
   const handleCancelEdit = () => {
-    toggleIsInEditMode();
+    toggleIsInEditMode(false);
     reset();
   };
 

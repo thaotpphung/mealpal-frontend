@@ -1,6 +1,7 @@
 export default {
   HOME_PAGE: '/',
   EXPLORE_PAGE: '/explore',
+  WEEK_DETAILS_PAGE: '/weeks/:weekId',
   RECIPE_PAGE: '/recipes',
   CART_PAGE: '/carts/:cartId',
   PROFILE_PAGE: '/users/:userId',
