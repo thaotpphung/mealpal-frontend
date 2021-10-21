@@ -19,6 +19,17 @@ const useArray = (defaultValue) => {
     ]);
   }
 
+  function addAt(index, newElement) {
+    const newArray = [...array];
+    newArray.splice(index + 1, 0, newElement);
+    setArray(newArray);
+    // setArray((a) => [
+    //   ...a.slice(0, index + 1),
+    //   newElement,
+    //   ...a.slice(index + 2, a.length),
+    // ]);
+  }
+
   function remove(index) {
     setArray((a) => [...a.slice(0, index), ...a.slice(index + 1, a.length)]);
   }
@@ -35,6 +46,7 @@ const useArray = (defaultValue) => {
     update,
     remove,
     clear,
+    addAt,
   };
 };
 

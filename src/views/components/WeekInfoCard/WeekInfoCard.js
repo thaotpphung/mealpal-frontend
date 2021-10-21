@@ -58,7 +58,7 @@ const WeekInfoCard = ({ week }) => {
       toggleIsInEditMode(false);
     },
     validate,
-    ['weekDescription']
+    ['weekDescription', 'planTag']
   );
 
   const handleCancelEdit = () => {
@@ -127,32 +127,44 @@ const WeekInfoCard = ({ week }) => {
             <Link to={{ pathname: `/weeks/${week._id}` }}>{week.weekName}</Link>
             <div>Description: {week?.weekDescription}</div>
             <div>Diet: {week?.weekDiet}</div>
+            <div>Plan Tag: {week?.planTag}</div>
           </div>
         )}
         {isInEditMode && (
           <form className={classes.formContainer} onSubmit={handleSubmit}>
-            <Grid container spacing={2}>
-              <Input
-                name="weekName"
-                label="Week Name"
-                value={weekForm?.weekName}
-                handleChange={handleChange}
-                error={errors?.weekName}
-              />
-              <Input
-                name="weekDescription"
-                label="Description"
-                value={weekForm?.weekDescription}
-                handleChange={handleChange}
-              />
-              <Input
-                name="weekDiet"
-                label="Diet"
-                value={weekForm?.weekDiet}
-                handleChange={handleChange}
-                error={errors?.weekDiet}
-              />
-            </Grid>
+            <Input
+              name="weekName"
+              label="Week Name"
+              value={weekForm?.weekName}
+              handleChange={handleChange}
+              error={errors?.weekName}
+            />
+            <Input
+              name="weekDescription"
+              label="Description"
+              value={weekForm?.weekDescription}
+              handleChange={handleChange}
+            />
+            <Input
+              name="weekDiet"
+              label="Diet"
+              value={weekForm?.weekDiet}
+              handleChange={handleChange}
+              error={errors?.weekDiet}
+            />
+            <Input
+              name="caloGoal"
+              label="Calories Goal"
+              value={weekForm?.caloGoal}
+              handleChange={handleChange}
+              error={errors?.caloGoal}
+            />
+            <Input
+              name="planTag"
+              label="Plan Tag"
+              value={weekForm?.planTag}
+              handleChange={handleChange}
+            />
             <Button
               type="submit"
               fullWidth

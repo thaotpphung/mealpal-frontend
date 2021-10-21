@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { Paper } from '@material-ui/core';
+import { Paper, TextField } from '@material-ui/core';
 import { updateRecipe } from '../../../redux/actions/recipeActions';
 import useStyles from '../../../containers/styles';
 import useArray from '../../../utils/hooks/useArray';
@@ -17,13 +17,13 @@ const RecipeDetailsCard = ({ recipe }) => {
   const dispatch = useDispatch();
   const {
     array: ingredients,
-    push: handleAddIngredient,
     remove: handleDeleteIngredient,
     update: handleChangeIngredient,
+    addAt: handleAddIngredient,
   } = useArray(recipe.ingredients.length === 0 ? [''] : recipe.ingredients);
   const {
     array: instructions,
-    push: handleAddInstruction,
+    addAt: handleAddInstruction,
     remove: handleDeleteInstruction,
     update: handleChangeInstruction,
   } = useArray(recipe.instructions.length === 0 ? [''] : recipe.instructions);

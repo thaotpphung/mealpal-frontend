@@ -152,38 +152,36 @@ const RecipeCard = ({ recipe }) => {
               accept="image/*"
               parentStyle={{ textAlign: 'center', margin: '10px' }}
             />
-            <Grid container spacing={2}>
-              <Input
-                name="recipeDescription"
-                label="Description"
-                value={recipeForm?.recipeDescription}
-                handleChange={handleChange}
-              />
-              <Input
-                name="calories"
-                label="Calories"
-                value={recipeForm?.calories}
-                handleChange={handleChange}
-              />
-              <Input
-                name="servings"
-                label="Servings"
-                value={recipeForm?.servings}
-                handleChange={handleChange}
-              />
-              <Input
-                name="prepTime"
-                label="Prep Time"
-                value={recipeForm?.prepTime}
-                handleChange={handleChange}
-              />
-              <Input
-                name="cookTime"
-                label="Cook Time"
-                value={recipeForm?.cookTime}
-                handleChange={handleChange}
-              />
-            </Grid>
+            <Input
+              name="recipeDescription"
+              label="Description"
+              value={recipeForm?.recipeDescription}
+              handleChange={handleChange}
+            />
+            <Input
+              name="calories"
+              label="Calories"
+              value={recipeForm?.calories}
+              handleChange={handleChange}
+            />
+            <Input
+              name="servings"
+              label="Servings"
+              value={recipeForm?.servings}
+              handleChange={handleChange}
+            />
+            <Input
+              name="prepTime"
+              label="Prep Time"
+              value={recipeForm?.prepTime}
+              handleChange={handleChange}
+            />
+            <Input
+              name="cookTime"
+              label="Cook Time"
+              value={recipeForm?.cookTime}
+              handleChange={handleChange}
+            />
             <Button
               type="submit"
               fullWidth

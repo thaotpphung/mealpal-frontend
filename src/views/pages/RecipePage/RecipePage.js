@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import { Grid, Button, IconButton, FormControl } from '@material-ui/core';
 import Pagination from '@material-ui/lab/Pagination';
 import SearchIcon from '@material-ui/icons/Search';
@@ -19,6 +20,7 @@ import {
 const RecipePage = () => {
   const classes = useStyles();
   const localClasses = styles();
+  const history = useHistory();
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
   const {
@@ -53,7 +55,9 @@ const RecipePage = () => {
     handleChange,
     reset,
   } = useForm(initialState, () => {
-    dispatch(createRecipe({ ...dialogValue, userId: currentUser._id }));
+    dispatch(
+      createRecipe({ ...dialogValue, userId: currentUser._id }, history)
+    );
     handleClose();
   });
 
@@ -73,38 +77,37 @@ const RecipePage = () => {
   return (
     <div>
       <div className={classes.utilsBar}>
-        <FormControl className={localClasses.formControl}>
+        <div className={classes.utilsFields}>
           <Input
             name="recipeName"
             label="Recipe Name"
             handleChange={handleChangeQueryField}
           />
-        </FormControl>
-        <FormControl className={localClasses.formControl}>
           <Input
             name="calories"
             label="Calories"
             handleChange={handleChangeQueryField}
           />
-        </FormControl>
-
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={() => handleSubmitFilter(currentCount)}
-        >
-          <SearchIcon /> Search
-        </Button>
+        </div>
+        <div className={classes.utilsActions}>
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() => handleSubmitFilter(currentCount)}
+          >
+            <SearchIcon /> Search
+          </Button>
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() => toggleOpen(true)}
+            style={{ float: 'right' }}
+          >
+            + Recipe
+          </Button>
+        </div>
       </div>
 
-      <Button
-        variant="outlined"
-        color="primary"
-        onClick={() => toggleOpen(true)}
-        style={{ float: 'right' }}
-      >
-        + Recipe
-      </Button>
       <Grid
         className={classes.container}
         container
@@ -126,7 +129,6 @@ const RecipePage = () => {
         showLastButton
         showFirstButton
       />
-
       <PopupDialog
         open={open}
         title="Add a new recipe..."

@@ -6,17 +6,6 @@ import Link from '@material-ui/core/Link';
 import { NavLink as RouterLink } from 'react-router-dom';
 import useStyles from './styles';
 import Toolbar from '@material-ui/core/Toolbar';
-import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import MoreIcon from '@material-ui/icons/MoreVert';
-import HomeIcon from '@material-ui/icons/Home';
-import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
-import MenuBookIcon from '@material-ui/icons/MenuBook';
-import ExploreIcon from '@material-ui/icons/Explore';
-
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../../redux/actions/userActions';

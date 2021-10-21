@@ -19,11 +19,12 @@ import * as api from '../../api/index';
 
 export { getAllRecipes, createRecipe, deleteRecipe, updateRecipe, getRecipe };
 
-const createRecipe = (recipe) => async (dispatch) => {
+const createRecipe = (recipe, router) => async (dispatch) => {
   try {
     dispatch({ type: RECIPE_CREATE_REQUEST, payload: recipe });
     const { data } = await api.createRecipe(recipe);
     dispatch({ type: RECIPE_CREATE_SUCCESS, payload: data.data });
+    router.push(`/recipes/${data.data._id}`);
   } catch (error) {
     dispatch({
       type: RECIPE_CREATE_FAIL,

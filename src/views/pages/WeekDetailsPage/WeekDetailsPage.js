@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { Link, useHistory, useParams, useLocation } from 'react-router-dom';
 import { Grid, Typography } from '@material-ui/core';
 import useStyles from './styles';
 import DayList from '../../components/DayList/DayList';
@@ -12,13 +12,15 @@ import { getAllRecipes } from '../../../redux/actions/recipeActions';
 const WeekDetailsPage = () => {
   const { weekId } = useParams();
   const classes = useStyles();
+  const location = useLocation();
   const dispatch = useDispatch();
   const { week, loading, error } = useSelector((state) => state.weekDetails);
-  // get recipe list for autocomplete
   const { recipes } = useSelector((state) => state.recipeList);
 
   useEffect(() => {
-    dispatch(getWeek(weekId));
+    if (!location.isRedirect) {
+      dispatch(getWeek(weekId));
+    }
     dispatch(getAllRecipes());
   }, []);
 

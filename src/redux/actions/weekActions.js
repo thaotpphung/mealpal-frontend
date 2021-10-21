@@ -31,11 +31,16 @@ export {
   updateWeekByDay,
 };
 
-const createWeek = (week) => async (dispatch) => {
+const createWeek = (week, router) => async (dispatch) => {
   try {
     dispatch({ type: WEEK_CREATE_REQUEST, payload: week });
     const { data } = await api.createWeek(week);
     dispatch({ type: WEEK_CREATE_SUCCESS, payload: data.data });
+    router.push({
+      pathname: `/weeks/${data.data._id}`,
+      isRedirect: true,
+      data: data.data,
+    });
   } catch (error) {
     dispatch({ type: WEEK_CREATE_FAIL, payload: error.response.data.message });
   }
@@ -53,10 +58,10 @@ const getAllWeeks =
     }
   };
 
-const getWeek = (id) => async (dispatch) => {
+const getWeek = (weekId) => async (dispatch) => {
   try {
     dispatch({ type: WEEK_DETAILS_REQUEST });
-    const { data } = await api.getWeek(id);
+    const { data } = await api.getWeek(weekId);
     dispatch({ type: WEEK_DETAILS_SUCCESS, payload: data.data });
   } catch (error) {
     dispatch({ type: WEEK_DETAILS_FAIL, payload: error.response.data.message });
@@ -76,7 +81,6 @@ const deleteWeek = (weekId, currentWeek) => async (dispatch) => {
 
 const updateWeek = (weekId, week) => async (dispatch) => {
   try {
-    console.log('update', week);
     dispatch({ type: WEEK_UPDATE_REQUEST });
     const { data } = await api.updateWeek(weekId, week);
     dispatch({ type: WEEK_UPDATE_SUCCESS, payload: week });

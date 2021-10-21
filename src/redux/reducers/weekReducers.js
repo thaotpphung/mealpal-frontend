@@ -28,22 +28,6 @@ const INITIAL_STATE = {
 
 function weekListReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
-    // create week
-    case WEEK_CREATE_REQUEST:
-      return { ...state, loading: true, error: null };
-    case WEEK_CREATE_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        error: null,
-        weeks: {
-          ...state.weeks,
-          [action.payload._id]: action.payload,
-        },
-      };
-    case WEEK_CREATE_FAIL:
-      return { ...state, loading: false, error: action.payload };
-
     // get all weeks
     case WEEK_LIST_REQUEST: {
       return { ...state, loading: true, error: null };
@@ -99,6 +83,19 @@ function weekDetailsReducer(
   action
 ) {
   switch (action.type) {
+    // create week
+    case WEEK_CREATE_REQUEST:
+      return { ...state, loading: true, error: null };
+    case WEEK_CREATE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        week: action.payload,
+      };
+    case WEEK_CREATE_FAIL:
+      return { ...state, loading: false, error: action.payload };
+
     case WEEK_DETAILS_REQUEST:
       return { ...state, loading: true, error: null };
     case WEEK_DETAILS_SUCCESS:

@@ -44,12 +44,12 @@ const RecipeDetailsCard = ({
                   </div>
                   <div className={classes.itemAction}>
                     <RoundButton
-                      type="deleteField"
-                      handleClick={() => handleDelete(itemIdx)}
+                      type="addField"
+                      handleClick={() => handleAdd(itemIdx, '')}
                     />
                     <RoundButton
-                      type="addField"
-                      handleClick={() => handleAdd('')}
+                      type="deleteField"
+                      handleClick={() => handleDelete(itemIdx)}
                     />
                   </div>
                 </>

@@ -118,5 +118,23 @@ export default makeStyles((theme) => ({
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
-  utilsBar: {},
+  utilsBar: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginBottom: theme.spacing(3),
+  },
+  utilsFields: {
+    flex: '1 1 auto',
+    display: 'flex',
+    flexDirection: 'row',
+    '& > div': {
+      margin: theme.spacing(0, 3),
+    },
+  },
+  utilsActions: {
+    flex: '0 0 auto',
+    '& > button': {
+      margin: theme.spacing(1),
+    },
+  },
 }));
