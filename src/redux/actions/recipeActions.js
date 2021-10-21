@@ -61,11 +61,12 @@ const getRecipe = (recipeId) => async (dispatch) => {
   }
 };
 
-const deleteRecipe = (recipeId) => async (dispatch) => {
+const deleteRecipe = (recipeId, router) => async (dispatch) => {
   try {
     dispatch({ type: RECIPE_DELETE_REQUEST });
     await api.deleteRecipe(recipeId);
     dispatch({ type: RECIPE_DELETE_SUCCESS, payload: recipeId });
+    router.push('/recipes');
   } catch (error) {
     dispatch({
       type: RECIPE_DELETE_FAIL,

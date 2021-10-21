@@ -26,23 +26,6 @@ const RECIPE_LIST_INITIAL_STATE = {
 
 const recipeListReducer = (state = RECIPE_LIST_INITIAL_STATE, action) => {
   switch (action.type) {
-    // create recipe
-    case RECIPE_CREATE_REQUEST:
-      return { ...state, loading: true, error: null };
-    case RECIPE_CREATE_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        error: null,
-        recipes: {
-          ...state.recipes,
-          [action.payload.data._id]: action.payload.data,
-        },
-      };
-    case RECIPE_CREATE_FAIL:
-      return { ...state, loading: false, error: action.payload };
-
-    // get all recipes
     case RECIPE_LIST_REQUEST: {
       return { ...state, loading: true, error: null };
     }
@@ -75,13 +58,16 @@ const recipeDetailsReducer = (state = RECIPE_DETAILS_INITIAL_STATE, action) => {
   switch (action.type) {
     case RECIPE_DETAILS_REQUEST:
     case RECIPE_UPDATE_REQUEST:
+    case RECIPE_CREATE_REQUEST:
       return { ...state, loading: true, error: null };
     case RECIPE_DETAILS_SUCCESS:
-    case RECIPE_UPDATE_SUCCESS: {
+    case RECIPE_UPDATE_SUCCESS:
+    case RECIPE_CREATE_SUCCESS: {
       return { ...state, loading: false, recipe: action.payload, error: null };
     }
     case RECIPE_DETAILS_FAIL:
     case RECIPE_UPDATE_FAIL:
+    case RECIPE_CREATE_FAIL:
       return { ...state, loading: false, error: action.payload };
 
     //delete recipe

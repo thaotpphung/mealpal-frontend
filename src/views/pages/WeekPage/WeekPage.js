@@ -4,7 +4,7 @@ import { Grid, IconButton, Button, FormControl } from '@material-ui/core';
 import useStyles from '../../../containers/styles';
 import { useHistory } from 'react-router-dom';
 import { styles } from './styles';
-import WeekInfoCard from '../../components/WeekInfoCard/WeekInfoCard';
+import WeekCard from '../../components/WeekCard/WeekCard';
 import Pagination from '@material-ui/lab/Pagination';
 import { getAllWeeks, createWeek } from '../../../redux/actions/weekActions';
 import FunctionsIcon from '@material-ui/icons/Functions';
@@ -16,17 +16,17 @@ import useDialog from '../../../utils/hooks/useDialog';
 import useForm from '../../../utils/hooks/useForm';
 import { validate } from '../../../utils/validations/validate';
 
-const ExplorePage = () => {
+const WeekPage = () => {
   const classes = useStyles();
   const localClasses = styles();
   const dispatch = useDispatch();
   const history = useHistory();
+  const { currentUser } = useSelector((state) => state.user);
   const {
     weeks,
     count: weekCount,
     currentCount,
   } = useSelector((state) => state.weekList);
-  const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
     dispatch(getAllWeeks(buildQuery()));
@@ -44,7 +44,7 @@ const ExplorePage = () => {
     planTag: '',
   };
 
-  // create recipe dialog
+  // create week dialog
   const { open, toggleOpen, handleClose } = useDialog(() => reset());
   const {
     values: dialogValue,
@@ -130,7 +130,7 @@ const ExplorePage = () => {
             sm={4}
             md={4}
           >
-            <WeekInfoCard week={week} />
+            <WeekCard week={week} />
           </Grid>
         ))}
       </Grid>
@@ -194,4 +194,4 @@ const ExplorePage = () => {
   );
 };
 
-export default ExplorePage;
+export default WeekPage;

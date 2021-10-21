@@ -22,8 +22,6 @@ export default makeStyles((theme) => ({
     height: '55px',
     display: 'flex',
     alignItems: 'center',
-    padding: theme.spacing(2),
-    margin: theme.spacing(0, 2),
     cursor: 'pointer',
     borderBottom: '1px solid black',
   },

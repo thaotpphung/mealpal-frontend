@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
-const useArray = (defaultValue) => {
-  const [array, setArray] = useState(defaultValue);
+const useArray = (initialState) => {
+  const [array, setArray] = useState(initialState);
 
   function push(element) {
     setArray((a) => [...a, element]);
@@ -38,6 +38,10 @@ const useArray = (defaultValue) => {
     setArray([]);
   }
 
+  function reset() {
+    setArray(initialState);
+  }
+
   return {
     array,
     set: setArray,
@@ -47,6 +51,7 @@ const useArray = (defaultValue) => {
     remove,
     clear,
     addAt,
+    reset,
   };
 };
 

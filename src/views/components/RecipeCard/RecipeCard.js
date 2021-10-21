@@ -22,6 +22,7 @@ import Input from '../../common/Input/Input';
 import RoundButton from '../../common/Buttons/RoundButton';
 import useToggle from '../../../utils/hooks/useToggle';
 import useForm from '../../../utils/hooks/useForm';
+import { validate } from '../../../utils/validations/validate';
 
 import {
   updateRecipe,
@@ -43,9 +44,9 @@ const RecipeCard = ({ recipe }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { recipeId } = useParams();
+  const history = useHistory();
   const [expanded, setExpanded] = useState(false);
   const [isInEditMode, toggleIsInEditMode] = useToggle(false);
-
   const initialForm = {
     recipeName: recipe.recipeName,
     recipeDescription: recipe.recipeDescription,
@@ -55,15 +56,27 @@ const RecipeCard = ({ recipe }) => {
     cookTime: recipe.cookTime,
     recipeImage: recipe.recipeImage,
   };
-
   const {
     values: recipeForm,
     handleSubmit,
     handleChange,
     setValue: setRecipeForm,
-  } = useForm(initialForm, () => {
-    dispatch(updateRecipe(recipe._id, recipeForm));
-  });
+    errors,
+    reset,
+  } = useForm(
+    initialForm,
+    () => {
+      dispatch(updateRecipe(recipe._id, recipeForm));
+      toggleIsInEditMode(false);
+    },
+    validate,
+    ['recipeDescription', 'recipeImage']
+  );
+
+  const handleCancelEdit = () => {
+    toggleIsInEditMode(false);
+    reset();
+  };
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -74,7 +87,7 @@ const RecipeCard = ({ recipe }) => {
   };
 
   const handleDeleteRecipe = (recipeId) => {
-    dispatch(deleteRecipe(recipeId));
+    dispatch(deleteRecipe(recipeId, history));
   };
 
   return (
@@ -93,10 +106,11 @@ const RecipeCard = ({ recipe }) => {
                   type="delete"
                   handleClick={() => handleDeleteRecipe(recipe._id)}
                 />
-                <RoundButton
-                  type={isInEditMode ? 'done' : 'edit'}
-                  handleClick={toggleIsInEditMode}
-                />
+                {isInEditMode ? (
+                  <RoundButton type={'cancel'} handleClick={handleCancelEdit} />
+                ) : (
+                  <RoundButton type={'edit'} handleClick={toggleIsInEditMode} />
+                )}
               </>
             )}
           </>
@@ -107,7 +121,6 @@ const RecipeCard = ({ recipe }) => {
           </Link>
         }
       />
-
       <CardMedia
         component="img"
         height="194"
@@ -157,30 +170,39 @@ const RecipeCard = ({ recipe }) => {
               label="Description"
               value={recipeForm?.recipeDescription}
               handleChange={handleChange}
+              error={errors?.recipeDescription}
             />
             <Input
               name="calories"
               label="Calories"
+              type="number"
               value={recipeForm?.calories}
               handleChange={handleChange}
+              error={errors?.calories}
             />
             <Input
               name="servings"
               label="Servings"
+              type="number"
               value={recipeForm?.servings}
               handleChange={handleChange}
+              error={errors?.servings}
             />
             <Input
               name="prepTime"
               label="Prep Time"
+              type="number"
               value={recipeForm?.prepTime}
               handleChange={handleChange}
+              error={errors?.prepTime}
             />
             <Input
               name="cookTime"
               label="Cook Time"
+              type="number"
               value={recipeForm?.cookTime}
               handleChange={handleChange}
+              error={errors?.cookTime}
             />
             <Button
               type="submit"
@@ -194,7 +216,6 @@ const RecipeCard = ({ recipe }) => {
           </form>
         )}
       </CardContent>
-
       <CardActions disableSpacing>
         <RoundButton type="like" />
         <ExpandMore

@@ -4,7 +4,7 @@ import { Link, useHistory, useParams, useLocation } from 'react-router-dom';
 import { Grid, Typography } from '@material-ui/core';
 import useStyles from './styles';
 import DayList from '../../components/DayList/DayList';
-import WeekInfoCard from '../../components/WeekInfoCard/WeekInfoCard';
+import WeekInfoCard from '../../components/WeekCard/WeekCard';
 import Spinner from '../../common/Spinner/Spinner';
 import { getWeek } from '../../../redux/actions/weekActions';
 import { getAllRecipes } from '../../../redux/actions/recipeActions';

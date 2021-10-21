@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -7,7 +7,6 @@ import {
   CardActions,
   CardContent,
   Button,
-  Grid,
   Avatar,
   IconButton,
   Collapse,
@@ -34,13 +33,14 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-const WeekInfoCard = ({ week }) => {
+const WeekCard = ({ week }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const history = useHistory();
+  const { weekId } = useParams();
   const [expanded, setExpanded] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const [isInEditMode, toggleIsInEditMode] = useToggle(false);
-
   const {
     values: weekForm,
     handleSubmit,
@@ -52,6 +52,8 @@ const WeekInfoCard = ({ week }) => {
       weekName: week?.weekName,
       weekDescription: week?.weekDescription,
       weekDiet: week?.weekDiet,
+      caloGoal: week?.caloGoal,
+      planTag: week?.planTag,
     },
     () => {
       dispatch(updateWeek(week._id, weekForm));
@@ -71,8 +73,8 @@ const WeekInfoCard = ({ week }) => {
   };
 
   const handleDeleteWeek = (weekId) => {
-    if (weekId !== undefined && weekId !== currentUser.currentWeek._id) {
-      dispatch(deleteWeek(weekId, currentUser.currentWeek));
+    if (weekId !== undefined && weekId !== currentUser.currentWeek?._id) {
+      dispatch(deleteWeek(weekId, currentUser.currentWeek, history));
     } else {
       console.log(
         'Please select another week as your current week before deleting'
@@ -100,21 +102,23 @@ const WeekInfoCard = ({ week }) => {
         }
         action={
           <>
-            <RoundButton
-              type="delete"
-              handleClick={() => handleDeleteWeek(week?._id)}
-            />
-            {isInEditMode ? (
+            {!!weekId && (
               <>
-                <RoundButton type={'cancel'} handleClick={handleCancelEdit} />
+                <RoundButton
+                  type="delete"
+                  handleClick={() => handleDeleteWeek(week?._id)}
+                />
+                {isInEditMode ? (
+                  <RoundButton type={'cancel'} handleClick={handleCancelEdit} />
+                ) : (
+                  <RoundButton type={'edit'} handleClick={toggleIsInEditMode} />
+                )}
+                <RoundButton
+                  type="setDefault"
+                  handleClick={() => handleSetCurrentWeek(week?._id)}
+                />
               </>
-            ) : (
-              <RoundButton type={'edit'} handleClick={toggleIsInEditMode} />
             )}
-            <RoundButton
-              type="setDefault"
-              handleClick={() => handleSetCurrentWeek(week?._id)}
-            />
           </>
         }
         title="Thao Phung"
@@ -127,6 +131,7 @@ const WeekInfoCard = ({ week }) => {
             <Link to={{ pathname: `/weeks/${week._id}` }}>{week.weekName}</Link>
             <div>Description: {week?.weekDescription}</div>
             <div>Diet: {week?.weekDiet}</div>
+            <div>Calo Goal: {week?.caloGoal}</div>
             <div>Plan Tag: {week?.planTag}</div>
           </div>
         )}
@@ -155,6 +160,7 @@ const WeekInfoCard = ({ week }) => {
             <Input
               name="caloGoal"
               label="Calories Goal"
+              type="number"
               value={weekForm?.caloGoal}
               handleChange={handleChange}
               error={errors?.caloGoal}
@@ -196,4 +202,4 @@ const WeekInfoCard = ({ week }) => {
   );
 };
 
-export default WeekInfoCard;
+export default WeekCard;

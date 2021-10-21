@@ -28,12 +28,16 @@ const validateConfirmPassword = (
 };
 
 const validateTextField = (name, value, errors) => {
+  console.log('validate', name, value);
   if (!value || value.trim() === '') {
     errors[name] = 'Field can not be empty';
   }
 };
 
 const validateArray = (name, value, errors) => {
+  if (value.length === 1 && value[0] === '') {
+    return errors;
+  }
   const currentErrors = {};
   let hasError = false;
   value.map((item, idx) => {

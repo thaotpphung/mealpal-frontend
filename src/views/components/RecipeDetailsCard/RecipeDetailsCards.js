@@ -20,12 +20,14 @@ const RecipeDetailsCard = ({ recipe }) => {
     remove: handleDeleteIngredient,
     update: handleChangeIngredient,
     addAt: handleAddIngredient,
+    reset: resetIngredients,
   } = useArray(recipe.ingredients.length === 0 ? [''] : recipe.ingredients);
   const {
     array: instructions,
     addAt: handleAddInstruction,
     remove: handleDeleteInstruction,
     update: handleChangeInstruction,
+    reset: resetInstructions,
   } = useArray(recipe.instructions.length === 0 ? [''] : recipe.instructions);
 
   const [isInEditMode, toggleIsInEditMode] = useToggle(false);
@@ -41,21 +43,20 @@ const RecipeDetailsCard = ({ recipe }) => {
     handleSubmit(event, errors);
   };
 
+  const handleCancelEdit = () => {
+    resetInstructions();
+    resetIngredients();
+    toggleIsInEditMode(false);
+  };
+
   return (
     <Paper className={classes.notePaper}>
-      {/* <CardHeader
-        title="Recipe Details"
-        action={
-          isInEditMode ? (
-            <RoundButton type="done" handleClick={handleSubmitUpdateRecipe} />
-          ) : (
-            <RoundButton type="edit" handleClick={toggleIsInEditMode} />
-          )
-        }
-      /> */}
       <div style={{ float: 'right' }}>
         {isInEditMode ? (
-          <RoundButton type="done" handleClick={handleSubmitUpdateRecipe} />
+          <>
+            <RoundButton type="cancel" handleClick={handleCancelEdit} />
+            <RoundButton type="done" handleClick={handleSubmitUpdateRecipe} />
+          </>
         ) : (
           <RoundButton type="edit" handleClick={toggleIsInEditMode} />
         )}

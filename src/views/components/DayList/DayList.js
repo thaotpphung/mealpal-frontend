@@ -34,7 +34,6 @@ const DayList = ({ days, recipes }) => {
   const [isInEditDayMode, setIsInEditDayMode] = useState([]);
   const defaultEditDayMode = new Array(days.length).fill(false);
   const [dayForm, setDayForm] = useState({});
-
   const extractedFieldsForAutoComplete = Object.values(recipes).map(
     (recipe) => {
       return {
@@ -43,7 +42,6 @@ const DayList = ({ days, recipes }) => {
       };
     }
   );
-
   // new recipe dialog form
   const {
     open: openNewRecipeDialog,
@@ -90,7 +88,6 @@ const DayList = ({ days, recipes }) => {
     setIsInEditDayMode(modes);
   };
 
-  // submit form update day
   const handleSubmitUpdateDay = (dayIdx) => {
     dayForm.meals.forEach((meal) => {
       if (meal.food.length === 1 && meal.food[0].recipeName === '') {

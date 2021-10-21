@@ -56,11 +56,11 @@ const Navbar = () => {
               variant="button"
               component={RouterLink}
               color="textPrimary"
-              to={routes.EXPLORE_PAGE}
+              to={routes.WEEK_PAGE}
               className={classes.link}
               activeClassName={classes.activeClassName}
             >
-              Explore
+              MealPlans
             </Link>
             <Link
               variant="button"

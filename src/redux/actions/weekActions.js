@@ -68,12 +68,12 @@ const getWeek = (weekId) => async (dispatch) => {
   }
 };
 
-const deleteWeek = (weekId, currentWeek) => async (dispatch) => {
+const deleteWeek = (weekId, currentWeek, router) => async (dispatch) => {
   try {
     dispatch({ type: WEEK_DELETE_REQUEST });
     await api.deleteWeek(weekId);
     dispatch({ type: WEEK_DELETE_SUCCESS, payload: weekId });
-    dispatch({ type: SET_SELECTED_WEEK, payload: currentWeek });
+    router.push('/weeks');
   } catch (error) {
     dispatch({ type: WEEK_DELETE_FAIL, payload: error.response.data.message });
   }

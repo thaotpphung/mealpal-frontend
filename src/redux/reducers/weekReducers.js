@@ -18,7 +18,7 @@ import {
   WEEK_UPDATE_BY_DAY_SUCCESS,
   WEEK_UPDATE_BY_DAY_FAIL,
 } from '../constants/weekConstants';
-import _, { update } from 'lodash';
+import _ from 'lodash';
 
 const INITIAL_STATE = {
   weeks: {},
@@ -45,34 +45,6 @@ function weekListReducer(state = INITIAL_STATE, action) {
     }
     case WEEK_LIST_FAIL:
       return { ...state, loading: false, error: action.payload };
-
-    // delete week
-    case WEEK_DELETE_REQUEST:
-      return { ...state, loading: true, error: null };
-    case WEEK_DELETE_SUCCESS: {
-      const updatedWeeks = _.omit(state.weeks, action.payload);
-      return { ...state, loading: false, weeks: updatedWeeks, error: null };
-    }
-    case WEEK_DELETE_FAIL:
-      return {
-        ...state,
-        loading: false,
-        error: action.payload,
-      };
-
-    // update week
-    case WEEK_UPDATE_REQUEST:
-      return { ...state, loading: true, error: null };
-    case WEEK_UPDATE_SUCCESS: {
-      const updatedWeeks = {
-        ...state.weeks,
-        [action.payload._id]: action.payload,
-      };
-      return { ...state, loading: false, weeks: updatedWeeks, error: null };
-    }
-    case WEEK_UPDATE_FAIL:
-      return { ...state, loading: false, error: action.payload };
-
     default:
       return state;
   }
@@ -83,10 +55,11 @@ function weekDetailsReducer(
   action
 ) {
   switch (action.type) {
-    // create week
     case WEEK_CREATE_REQUEST:
+    case WEEK_DETAILS_REQUEST:
       return { ...state, loading: true, error: null };
     case WEEK_CREATE_SUCCESS:
+    case WEEK_DETAILS_SUCCESS:
       return {
         ...state,
         loading: false,
@@ -94,19 +67,9 @@ function weekDetailsReducer(
         week: action.payload,
       };
     case WEEK_CREATE_FAIL:
-      return { ...state, loading: false, error: action.payload };
-
-    case WEEK_DETAILS_REQUEST:
-      return { ...state, loading: true, error: null };
-    case WEEK_DETAILS_SUCCESS:
-      return {
-        loading: false,
-        error: null,
-        week: action.payload,
-      };
     case WEEK_DETAILS_FAIL:
       return { ...state, loading: false, error: action.payload };
-
+    // update week info
     case WEEK_UPDATE_REQUEST:
       return { ...state, loading: true, error: null };
     case WEEK_UPDATE_SUCCESS: {
@@ -119,7 +82,7 @@ function weekDetailsReducer(
     }
     case WEEK_UPDATE_FAIL:
       return { ...state, loading: false, error: action.payload };
-
+    // update week by day
     case WEEK_UPDATE_BY_DAY_REQUEST:
       return { ...state, loading: true, error: null };
     case WEEK_UPDATE_BY_DAY_SUCCESS: {
@@ -134,6 +97,18 @@ function weekDetailsReducer(
     }
     case WEEK_UPDATE_BY_DAY_FAIL:
       return { ...state, loading: false, error: action.payload };
+    // delete week
+    case WEEK_DELETE_REQUEST:
+      return { ...state, loading: true, error: null };
+    case WEEK_DELETE_SUCCESS: {
+      return { ...state, loading: false, error: null };
+    }
+    case WEEK_DELETE_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
 
     default:
       return state;
