@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Switch, Route } from 'react-router-dom';
 import useStyles from './styles';
 import './App.css';
@@ -16,6 +17,7 @@ import routes from '../constants/routes';
 
 function App() {
   const classes = useStyles();
+  const { currentUser } = useSelector((state) => state.user);
 
   return (
     <ThemeProvider theme={theme}>

@@ -13,8 +13,7 @@ import routes from '../../../constants/routes';
 
 const Navbar = () => {
   const classes = useStyles();
-  const user = useSelector((state) => state.user);
-  const { currentUser } = user;
+  const { currentUser } = useSelector((state) => state.user);
   const history = useHistory();
   const dispatch = useDispatch();
 

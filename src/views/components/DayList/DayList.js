@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import useStyles from '../../../containers/styles';
 import { styles } from './styles';
-import { Paper, Grid, TextField, FormHelperText } from '@material-ui/core';
+import { Paper, TextField, FormHelperText } from '@material-ui/core';
 import RestaurantMenuIcon from '@material-ui/icons/RestaurantMenu';
 import CardHeader from '../../common/CardHeader/CardHeader';
 import RoundButton from '../../common/Buttons/RoundButton';
@@ -12,15 +12,11 @@ import Autocomplete, {
   createFilterOptions,
 } from '@material-ui/lab/Autocomplete';
 const filter = createFilterOptions();
-
-import useArray from '../../../utils/hooks/useArray';
 import useForm from '../../../utils/hooks/useForm';
 import useDialog from '../../../utils/hooks/useDialog';
 import AutocompleteField from '../../common/AutocompleteField/AutocompleteField';
 import PopupDialog from '../../common/PopupDialog/PopupDialog';
 import Input from '../../common/Input/Input';
-import { getAllRecipes } from '../../../redux/actions/recipeActions';
-import { validateArray } from '../../../utils/validations/validateFunctions';
 import { validate } from '../../../utils/validations/validate';
 import { createRecipe } from '../../../redux/actions/recipeActions';
 import { updateWeekByDay } from '../../../redux/actions/weekActions';
@@ -69,7 +65,6 @@ const DayList = ({ days, recipes }) => {
     },
     validate
   );
-
   // edit day mode
   const handleEnableEditDayMode = (dayIdx) => {
     const modes = [...defaultEditDayMode];
@@ -87,13 +82,11 @@ const DayList = ({ days, recipes }) => {
     setDayForm(day);
     setIsInEditDayMode(modes);
   };
-
   const handleCancelEditDayMode = (dayIdx) => {
     const modes = [...defaultEditDayMode];
     setDayForm(days[dayIdx]);
     setIsInEditDayMode(modes);
   };
-
   // validation
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -113,13 +106,11 @@ const DayList = ({ days, recipes }) => {
     setIsSubmitting(true);
     setDayIdx(dayIdx);
   };
-
   useEffect(() => {
     if (Object.keys(errors).length === 0 && isSubmitting) {
       dispatch(updateWeekByDay(weekId, dayIdx, dayForm));
     }
   }, [errors]);
-
   // meal
   const handleDeleteMeal = (mealIdx) => {
     const updatedDays = cloneDeep(dayForm);
@@ -146,20 +137,17 @@ const DayList = ({ days, recipes }) => {
     updatedDays.meals[mealIdx].mealName = event.target.value;
     setDayForm(updatedDays);
   };
-
   // food
   const handleChangeFood = (mealIdx, recipeIdx, newValue) => {
     const updatedDays = cloneDeep(dayForm);
     updatedDays.meals[mealIdx].food[recipeIdx] = newValue;
     setDayForm(updatedDays);
   };
-
   const handleDeleteFood = (mealIdx, recipeIdx) => {
     const updatedDays = cloneDeep(dayForm);
     updatedDays.meals[mealIdx].food.splice(recipeIdx, 1);
     setDayForm(updatedDays);
   };
-
   const handleAddFood = (mealIdx, recipeIdx) => {
     const updatedDays = cloneDeep(dayForm);
     updatedDays.meals[mealIdx].food.splice(recipeIdx + 1, 0, {
@@ -214,7 +202,7 @@ const DayList = ({ days, recipes }) => {
           />
           <div className={localClasses.content}>
             {!isInEditDayMode[dayIdx] &&
-              day.meals.map((meal, mealIdx) => {
+              day.meals.map((meal) => {
                 return (
                   <div
                     key={`meal-in-day-card-${meal._id}}`}

@@ -81,7 +81,6 @@ export default makeStyles((theme) => ({
     flex: '0 0 auto',
     marginRight: theme.spacing(2),
   },
-
   itemContent: {
     flex: '1 1 auto',
   },

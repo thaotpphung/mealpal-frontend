@@ -1,9 +1,4 @@
-import {
-  validatePassword,
-  validateEmail,
-  validateTextField,
-  validateConfirmPassword,
-} from './validateFunctions';
+import { validateTextField, validateField } from './validateFunctions';
 
 const validate = (values, optionalFields = []) => {
   let errors = {};
@@ -17,10 +12,11 @@ const validate = (values, optionalFields = []) => {
 
 const validateAuth = (values, isRegister) => {
   let errors = {};
-  validatePassword('password', values.password, errors);
-  validateEmail('email', values.email, errors);
+  validateField('password', values.password, errors);
+  validateField('username', values.username, errors);
   if (isRegister) {
-    validateConfirmPassword(
+    validateField('email', values.email, errors);
+    validateField(
       'confirmPassword',
       values.confirmPassword,
       errors,

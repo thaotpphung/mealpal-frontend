@@ -1,34 +1,34 @@
-const validateEmail = (name = 'email', value, errors) => {
+const validateField = (name, value, errors, password = null) => {
   if (!value) {
-    errors[name] = 'Email is required';
-  } else if (!/\S+@\S+\.\S+/.test(value)) {
-    errors[name] = 'Email is invalid';
+    errors[name] = 'This field is required';
   }
-};
-
-const validatePassword = (name = 'password', value, errors) => {
-  if (!value) {
-    errors[name] = 'Password is required';
-  } else if (value.length < 6) {
-    errors['password'] = 'Password needs to be 6 characters or more';
+  switch (name) {
+    case 'email': {
+      if (!/\S+@\S+\.\S+/.test(value)) {
+        errors[name] = 'Email is invalid';
+      }
+      break;
+    }
+    case 'password': {
+      if (value.length < 6) {
+        errors[name] = 'Password needs to be 6 characters or more';
+      }
+      break;
+    }
+    case 'confirmPassword': {
+      if (value !== password) {
+        errors[name] = 'Password does not match';
+      }
+      break;
+    }
+    default:
+      break;
   }
-};
-
-const validateConfirmPassword = (
-  name = 'confirmPassword',
-  value,
-  errors,
-  password
-) => {
-  if (!value) {
-    errors[name] = 'Password is required';
-  } else if (value !== password) {
-    errors[name] = 'Password does not match';
-  }
+  return errors;
 };
 
 const validateTextField = (name, value, errors) => {
-  console.log('validate', name, value);
+  console.log(name, value);
   if (!value || value.trim() === '') {
     errors[name] = 'Field can not be empty';
   }
@@ -50,10 +50,4 @@ const validateArray = (name, value, errors) => {
   return errors;
 };
 
-export {
-  validateEmail,
-  validatePassword,
-  validateTextField,
-  validateConfirmPassword,
-  validateArray,
-};
+export { validateTextField, validateArray, validateField };

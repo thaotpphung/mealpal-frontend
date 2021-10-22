@@ -23,11 +23,6 @@ import useToggle from '../../../utils/hooks/useToggle';
 import { validateAuth } from '../../../utils/validations/validate';
 import { signin, register } from '../../../redux/actions/userActions';
 
-const initialState = {
-  username: '',
-  password: '',
-};
-
 const AuthPage = () => {
   const user = useSelector((state) => state.user);
   const { loading, currentUser, error } = user;
@@ -35,28 +30,6 @@ const AuthPage = () => {
   const history = useHistory();
   const classes = useStyles();
   const localClasses = styles();
-  const [showPassword, toggleShowPassword] = useToggle(false);
-  const [isRegister, toggleIsRegister] = useToggle(false);
-
-  const {
-    values: form,
-    handleChange,
-    handleSubmit,
-    errors,
-  } = useForm(initialState, () => {
-    if (isRegister) {
-      dispatch(register(form, history));
-    } else {
-      dispatch(signin(form, history));
-    }
-  });
-
-  const handleSubmitAuth = (event) => {
-    console.log('form', form);
-    const errors = validateAuth(form, isRegister);
-    handleSubmit(event, errors);
-  };
-
   useEffect(() => {
     if (currentUser) {
       history.push('/');
@@ -64,24 +37,9 @@ const AuthPage = () => {
     return () => {};
   }, [currentUser]);
 
-  const switchMode = () => {
-    toggleIsRegister();
-    toggleShowPassword(false);
-  };
-
   return (
     <Container component="main" maxWidth="xs">
       <Paper className={localClasses.paper} elevation={3}>
-        <div>
-          {loading && <Spinner />}
-          {error && <MuiAlert severity="error">{error}</MuiAlert>}
-        </div>
-        <Avatar className={localClasses.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          {isRegister ? 'Sign up' : 'Sign in'}
-        </Typography>
         <form className={localClasses.form} onSubmit={handleSubmitAuth}>
           <Grid container spacing={2}>
             {isRegister && (
@@ -100,20 +58,14 @@ const AuthPage = () => {
                   half
                   error={errors?.lastName}
                 />
-                <Input
-                  name="email"
-                  label="Email Address"
-                  handleChange={handleChange}
-                  type="email"
-                  error={errors?.email}
-                />
               </>
             )}
             <Input
-              name="username"
-              label="Username"
+              name="email"
+              label="Email Address"
               handleChange={handleChange}
-              error={errors?.username}
+              type="email"
+              error={errors?.email}
             />
             <Input
               name="password"

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { styled } from '@material-ui/core/styles';
 import useStyles from '../../../containers/styles';
 import {
@@ -9,36 +9,20 @@ import {
   CardHeader,
   CardContent,
   CardMedia,
-  CardActions,
-  Collapse,
   Avatar,
-  IconButton,
   Button,
 } from '@material-ui/core';
 import { red } from '@material-ui/core/colors';
-import ExpandMoreIcon from '@material-ui/icons/AccessAlarm';
 import FileInputComponent from 'react-file-input-previews-base64';
 import Input from '../../common/Input/Input';
 import RoundButton from '../../common/Buttons/RoundButton';
 import useToggle from '../../../utils/hooks/useToggle';
 import useForm from '../../../utils/hooks/useForm';
 import { validate } from '../../../utils/validations/validate';
-
 import {
   updateRecipe,
   deleteRecipe,
 } from '../../../redux/actions/recipeActions';
-
-const ExpandMore = styled((props) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-  marginLeft: 'auto',
-  transition: theme.transitions.create('transform', {
-    duration: theme.transitions.duration.shortest,
-  }),
-}));
 
 const RecipeCard = ({ recipe }) => {
   const classes = useStyles();
@@ -76,10 +60,6 @@ const RecipeCard = ({ recipe }) => {
   const handleCancelEdit = () => {
     toggleIsInEditMode(false);
     reset();
-  };
-
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
   };
 
   const handleSelectFile = (file) => {
@@ -216,20 +196,6 @@ const RecipeCard = ({ recipe }) => {
           </form>
         )}
       </CardContent>
-      <CardActions disableSpacing>
-        <RoundButton type="like" />
-        <ExpandMore
-          expand={expanded}
-          onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label="show more"
-        >
-          <ExpandMoreIcon />
-        </ExpandMore>
-      </CardActions>
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        Comment section
-      </Collapse>
     </Card>
   );
 };

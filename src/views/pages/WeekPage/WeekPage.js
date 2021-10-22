@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Grid, IconButton, Button, FormControl } from '@material-ui/core';
+import { Grid, Button } from '@material-ui/core';
 import useStyles from '../../../containers/styles';
 import { useHistory } from 'react-router-dom';
 import { styles } from './styles';
 import WeekCard from '../../components/WeekCard/WeekCard';
 import Pagination from '@material-ui/lab/Pagination';
 import { getAllWeeks, createWeek } from '../../../redux/actions/weekActions';
-import FunctionsIcon from '@material-ui/icons/Functions';
 import SearchIcon from '@material-ui/icons/Search';
 import Input from '../../common/Input/Input';
 import PopupDialog from '../../common/PopupDialog/PopupDialog';
@@ -90,11 +89,6 @@ const WeekPage = () => {
             label="Calories Goal"
             type="number"
             handleChange={handleChangeQueryField}
-            endAction={
-              <IconButton>
-                <FunctionsIcon />
-              </IconButton>
-            }
           />
           <Input
             name="weekDiet"
@@ -127,8 +121,8 @@ const WeekPage = () => {
             key={`{'explore-page-${week._id}-${weekIdx}`}
             item
             xs={12}
-            sm={4}
-            md={4}
+            sm={3}
+            md={3}
           >
             <WeekCard week={week} />
           </Grid>
