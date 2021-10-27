@@ -26,6 +26,9 @@ import { signin, register } from '../../../redux/actions/userActions';
 const initialState = {
   username: '',
   password: '',
+  firstName: '',
+  lastName: '',
+  email: '',
 };
 
 const AuthPage = () => {

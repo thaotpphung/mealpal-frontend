@@ -1,7 +1,8 @@
 const validateField = (name, value, errors, password = null) => {
-  if (!value) {
+  if (!value || value.trim() === '') {
     errors[name] = 'This field is required';
   }
+  console.log('name', name, 'value', value, 'password', password);
   switch (name) {
     case 'email': {
       if (!/\S+@\S+\.\S+/.test(value)) {
@@ -27,13 +28,6 @@ const validateField = (name, value, errors, password = null) => {
   return errors;
 };
 
-const validateTextField = (name, value, errors) => {
-  console.log(name, value);
-  if (!value || value.trim() === '') {
-    errors[name] = 'Field can not be empty';
-  }
-};
-
 const validateArray = (name, value, errors) => {
   if (value.length === 1 && value[0] === '') {
     return errors;
@@ -50,4 +44,4 @@ const validateArray = (name, value, errors) => {
   return errors;
 };
 
-export { validateTextField, validateArray, validateField };
+export { validateArray, validateField };

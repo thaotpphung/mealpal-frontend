@@ -9,10 +9,13 @@ import {
   USER_UPDATE_REQUEST,
   USER_UPDATE_SUCCESS,
   USER_UPDATE_FAIL,
+  USER_UPDATE_PASSWORD_REQUEST,
+  USER_UPDATE_PASSWORD_SUCCESS,
+  USER_UPDATE_PASSWORD_FAIL,
 } from '../constants/userConstants';
 import * as api from '../../api/index';
 
-export { signin, register, logout, updateUser };
+export { signin, register, logout, updateUser, updatePassword };
 
 const signin = (formData) => async (dispatch) => {
   dispatch({ type: USER_SIGNIN_REQUEST, payload: formData });
@@ -52,6 +55,19 @@ const updateUser = (userId, formData) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: USER_UPDATE_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
+
+const updatePassword = (userId, formData) => async (dispatch) => {
+  dispatch({ type: USER_UPDATE_PASSWORD_REQUEST });
+  try {
+    const { data } = await api.updatePassword(userId, formData);
+    dispatch({ type: USER_UPDATE_PASSWORD_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: USER_UPDATE_PASSWORD_FAIL,
       payload: error.response.data.message,
     });
   }

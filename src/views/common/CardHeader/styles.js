@@ -7,7 +7,10 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: theme.palette.primary.light,
+    backgroundColor: theme.palette.primary.main,
+  },
+  headerTitle: {
+    color: theme.palette.primary.contrastText,
   },
 }));
 

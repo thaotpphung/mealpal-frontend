@@ -5,11 +5,6 @@ const styles = makeStyles((theme) => ({
     width: '70%',
     margin: '0 auto',
   },
-  rightColumn: {
-    '& > div': {
-      marginBottom: theme.spacing(3),
-    },
-  },
   avatar: {
     width: theme.spacing(30),
     height: theme.spacing(30),
@@ -22,8 +17,8 @@ const styles = makeStyles((theme) => ({
     },
   },
   form: {
-    minHeight: '400px',
-    padding: theme.spacing(3),
+    minHeight: '350px',
+    padding: theme.spacing(5),
   },
 }));
 

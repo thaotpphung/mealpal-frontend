@@ -9,6 +9,9 @@ import {
   USER_UPDATE_REQUEST,
   USER_UPDATE_SUCCESS,
   USER_UPDATE_FAIL,
+  USER_UPDATE_PASSWORD_REQUEST,
+  USER_UPDATE_PASSWORD_SUCCESS,
+  USER_UPDATE_PASSWORD_FAIL,
 } from '../constants/userConstants';
 
 const INITIAL_STATE = {
@@ -56,6 +59,18 @@ const userReducer = (state = INITIAL_STATE, action) => {
         error: null,
       };
     case USER_UPDATE_FAIL:
+      return { ...state, loading: false, error: action.payload };
+
+    case USER_UPDATE_PASSWORD_REQUEST:
+      return { ...state, loading: true, error: null };
+    case USER_UPDATE_PASSWORD_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        successMessage: action.payload.message,
+      };
+    case USER_UPDATE_PASSWORD_FAIL:
       return { ...state, loading: false, error: action.payload };
 
     default:

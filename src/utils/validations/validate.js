@@ -1,29 +1,28 @@
-import { validateTextField, validateField } from './validateFunctions';
+import { validateField } from './validateFunctions';
 
 const validate = (values, optionalFields = []) => {
   let errors = {};
   let requiredFields = { ...values };
   optionalFields.forEach((key) => delete requiredFields[key]);
   for (const [key, value] of Object.entries(requiredFields)) {
-    validateTextField(key, value, errors);
+    if (key === 'confirmPassword')
+      validateField(key, value, errors, values.password);
+    else validateField(key, value, errors);
   }
   return errors;
 };
 
-const validateAuth = (values, isRegister) => {
+const validateAuth = (values, isRegister = false) => {
   let errors = {};
-  validateField('password', values.password, errors);
-  validateField('username', values.username, errors);
-  if (isRegister) {
-    validateField('email', values.email, errors);
-    validateField(
+  if (!isRegister) {
+    errors = validate(values, [
+      'email',
+      'firstName',
+      'lastName',
       'confirmPassword',
-      values.confirmPassword,
-      errors,
-      values.password
-    );
-    validateTextField('firstName', values.firstName, errors);
-    validateTextField('lastName', values.lastName, errors);
+    ]);
+  } else {
+    errors = validate(values);
   }
   return errors;
 };

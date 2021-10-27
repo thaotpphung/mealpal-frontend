@@ -16,13 +16,16 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@material-ui/core';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import LockIcon from '@material-ui/icons/Lock';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import useToggle from '../../../utils/hooks/useToggle';
 import useForm from '../../../utils/hooks/useForm';
+import useToggle from '../../../utils/hooks/useToggle';
 import Input from '../../common/Input/Input';
 import { validate } from '../../../utils/validations/validate';
-import { updateUser } from '../../../redux/actions/userActions';
+import { updateUser, updatePassword } from '../../../redux/actions/userActions';
+import CardHeader from '../../common/CardHeader/CardHeader';
 
 const ProfilePage = () => {
   const { loading, currentUser, error } = useSelector((state) => state.user);
@@ -30,8 +33,8 @@ const ProfilePage = () => {
   const history = useHistory();
   const classes = useStyles();
   const localClasses = styles();
-  const [isInEditMode, toggleIsInEditMode] = useToggle(false);
-  const [isShowComponent, setIsShowComponent] = useState({});
+  const [isShowComponent, setIsShowComponent] = useState({ Profile: true });
+  const [showPassword, toggleShowPassword] = useToggle(false);
 
   const {
     handleChange,
@@ -51,6 +54,27 @@ const ProfilePage = () => {
     ['bio']
   );
 
+  const {
+    handleChange: handleChangePassword,
+    handleSubmit: handleSubmitChangePassword,
+    values: passwordForm,
+    errors: passwordErrors,
+  } = useForm(
+    {
+      oldPassword: '',
+      password: '',
+      confirmPassword: '',
+    },
+    () => {
+      dispatch(updatePassword(currentUser._id, passwordForm));
+    },
+    validate
+  );
+
+  const handleClickListItem = (param) => {
+    setIsShowComponent({ [param]: true });
+  };
+
   return (
     <div className={localClasses.root}>
       <Grid
@@ -67,13 +91,21 @@ const ProfilePage = () => {
           />
           <Paper className={localClasses.paper}>
             <List component="nav">
-              <ListItem button>
+              <ListItem
+                button
+                onClick={() => handleClickListItem('Profile')}
+                selected={isShowComponent.Profile}
+              >
                 <ListItemIcon>
                   <AccountCircleIcon />
                 </ListItemIcon>
                 <ListItemText primary="Profile" />
               </ListItem>
-              <ListItem button>
+              <ListItem
+                button
+                onClick={() => handleClickListItem('Security')}
+                selected={isShowComponent.Security}
+              >
                 <ListItemIcon>
                   <LockIcon />
                 </ListItemIcon>
@@ -83,46 +115,112 @@ const ProfilePage = () => {
           </Paper>
         </Grid>
         <Grid item xs={12} sm={8} className={localClasses.rightColumn}>
+          <CardHeader title={Object.keys(isShowComponent)[0]} />
           <Paper className={localClasses.form}>
-            <form className={classes.formContainer} onSubmit={handleSubmit}>
-              <Typography variant="h4" style={{ marginBottom: '10px' }}>
-                {currentUser.username}
-              </Typography>
-              <Grid container spacing={2}>
-                <Input
-                  name="firstName"
-                  label="First Name"
-                  half
-                  value={userForm.firstName}
-                  handleChange={handleChange}
-                  errors={errors?.firstName}
-                />
-                <Input
-                  name="lastName"
-                  label="Last Name"
-                  half
-                  value={userForm.lastName}
-                  handleChange={handleChange}
-                  errors={errors?.lastName}
-                />
-                <Input
-                  name="bio"
-                  label="Bio"
-                  value={userForm.bio}
-                  handleChange={handleChange}
-                  errors={errors?.bio}
-                />
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-                  className={classes.formSubmitButton}
-                >
-                  Submit
-                </Button>
-              </Grid>
-            </form>
+            {isShowComponent.Profile && (
+              <form className={classes.formContainer} onSubmit={handleSubmit}>
+                <Grid container spacing={2}>
+                  <Input label="Email" value={currentUser.email} disabled />
+                  <Input
+                    name="username"
+                    label="Username"
+                    value={currentUser.username}
+                    disabled
+                  />
+                  <Input
+                    name="firstName"
+                    label="First Name"
+                    half
+                    value={userForm.firstName}
+                    handleChange={handleChange}
+                    errors={errors?.firstName}
+                  />
+                  <Input
+                    name="lastName"
+                    label="Last Name"
+                    half
+                    value={userForm.lastName}
+                    handleChange={handleChange}
+                    errors={errors?.lastName}
+                  />
+                  <Input
+                    name="bio"
+                    label="Bio"
+                    value={userForm.bio}
+                    multiline
+                    rows={4}
+                    handleChange={handleChange}
+                    errors={errors?.bio}
+                  />
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    className={classes.formSubmitButton}
+                  >
+                    Submit
+                  </Button>
+                </Grid>
+              </form>
+            )}
+            {isShowComponent.Security && (
+              <form
+                className={classes.formContainer}
+                onSubmit={handleSubmitChangePassword}
+              >
+                <Grid container spacing={2}>
+                  <Input
+                    name="oldPassword"
+                    label="Old Password"
+                    value={passwordForm.oldPassword}
+                    handleChange={handleChangePassword}
+                    type={showPassword ? 'text' : 'password'}
+                    error={passwordErrors?.oldPassword}
+                    endAction={
+                      <IconButton onClick={toggleShowPassword}>
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    }
+                  />
+                  <Input
+                    name="password"
+                    label="New Password"
+                    value={passwordForm.password}
+                    handleChange={handleChangePassword}
+                    error={passwordErrors?.password}
+                    type={showPassword ? 'text' : 'password'}
+                    endAction={
+                      <IconButton onClick={toggleShowPassword}>
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    }
+                  />
+                  <Input
+                    name="confirmPassword"
+                    label="Confirm New Password"
+                    value={passwordForm.confirmPassword}
+                    handleChange={handleChangePassword}
+                    error={passwordErrors?.confirmPassword}
+                    type={showPassword ? 'text' : 'password'}
+                    endAction={
+                      <IconButton onClick={toggleShowPassword}>
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    }
+                  />
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    className={classes.formSubmitButton}
+                  >
+                    Submit
+                  </Button>
+                </Grid>
+              </form>
+            )}
           </Paper>
         </Grid>
       </Grid>

@@ -16,6 +16,8 @@ export const signin = (formData) => API.post('api/users/signin', formData);
 export const register = (formData) => API.post('api/users/register', formData);
 export const updateUser = (userId, formData) =>
   API.patch(`api/users/${userId}`, formData);
+export const updatePassword = (userId, formData) =>
+  API.patch(`api/users/changepassword`, formData);
 
 // users
 export const setCurrentWeek = (weekId) =>
