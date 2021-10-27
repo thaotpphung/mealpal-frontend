@@ -1,6 +1,4 @@
 import { makeStyles } from '@material-ui/core/styles';
-import { yellow } from '@material-ui/core/colors';
-
 export default makeStyles((theme) => ({
   root: {
     padding: theme.spacing(5, 10),
@@ -12,32 +10,10 @@ export default makeStyles((theme) => ({
       listStyle: 'none',
     },
   },
-  // for yellow paper
-  notePaper: {
-    minHeight: '420px',
-    backgroundColor: `${yellow[100]} !important`,
-    paddingBottom: theme.spacing(6),
-  },
-  notePaperItem: {
-    height: '55px',
-    display: 'flex',
-    alignItems: 'center',
-    padding: theme.spacing(2),
-    margin: theme.spacing(0, 2),
-    cursor: 'pointer',
-    borderBottom: '1px solid black',
-  },
-  recipeDetailsHeader: {
-    textAlign: 'center',
-    fontStyle: 'italic',
-    textDecoration: 'underline',
-    fontSize: theme.typography.fontSize + 5,
-    marginBottom: theme.spacing(3),
-  },
-  recipeDetailsCardContent: {
-    padding: theme.spacing(3),
-  },
 
+  // field
+  fieldValue: {},
+  fieldTitle: {},
   // menu, edit day
   menuItem: {
     display: 'grid',
@@ -83,7 +59,6 @@ export default makeStyles((theme) => ({
     flex: '0 0 auto',
     marginRight: theme.spacing(2),
   },
-
   itemContent: {
     flex: '1 1 auto',
   },
@@ -118,5 +93,23 @@ export default makeStyles((theme) => ({
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
-  utilsBar: {},
+  utilsBar: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginBottom: theme.spacing(3),
+  },
+  utilsFields: {
+    flex: '1 1 auto',
+    display: 'flex',
+    flexDirection: 'row',
+    '& > div': {
+      margin: theme.spacing(0, 3),
+    },
+  },
+  utilsActions: {
+    flex: '0 0 auto',
+    '& > button': {
+      margin: theme.spacing(1),
+    },
+  },
 }));

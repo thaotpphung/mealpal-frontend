@@ -6,9 +6,12 @@ import {
   USER_REGISTER_SUCCESS,
   USER_REGISTER_FAIL,
   USER_LOGOUT,
-  USER_SET_CURRENT_WEEK_REQUEST,
-  USER_SET_CURRENT_WEEK_SUCCESS,
-  USER_SET_CURRENT_WEEK_FAIL,
+  USER_UPDATE_REQUEST,
+  USER_UPDATE_SUCCESS,
+  USER_UPDATE_FAIL,
+  USER_UPDATE_PASSWORD_REQUEST,
+  USER_UPDATE_PASSWORD_SUCCESS,
+  USER_UPDATE_PASSWORD_FAIL,
 } from '../constants/userConstants';
 
 const INITIAL_STATE = {
@@ -46,16 +49,28 @@ const userReducer = (state = INITIAL_STATE, action) => {
     case USER_REGISTER_FAIL:
       return { ...state, loading: false, error: action.payload };
 
-    case USER_SET_CURRENT_WEEK_REQUEST:
+    case USER_UPDATE_REQUEST:
       return { ...state, loading: true, error: null };
-    case USER_SET_CURRENT_WEEK_SUCCESS:
+    case USER_UPDATE_SUCCESS:
       return {
         ...state,
         loading: false,
-        currentUser: action.payload,
+        currentUser: { ...state.currentUser, ...action.payload },
         error: null,
       };
-    case USER_SET_CURRENT_WEEK_FAIL:
+    case USER_UPDATE_FAIL:
+      return { ...state, loading: false, error: action.payload };
+
+    case USER_UPDATE_PASSWORD_REQUEST:
+      return { ...state, loading: true, error: null };
+    case USER_UPDATE_PASSWORD_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        successMessage: action.payload.message,
+      };
+    case USER_UPDATE_PASSWORD_FAIL:
       return { ...state, loading: false, error: action.payload };
 
     default:

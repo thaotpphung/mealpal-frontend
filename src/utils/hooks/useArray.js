@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
-const useArray = (defaultValue) => {
-  const [array, setArray] = useState(defaultValue);
+const useArray = (initialState) => {
+  const [array, setArray] = useState(initialState);
 
   function push(element) {
     setArray((a) => [...a, element]);
@@ -19,12 +19,22 @@ const useArray = (defaultValue) => {
     ]);
   }
 
+  function addAt(index, newElement) {
+    const newArray = [...array];
+    newArray.splice(index + 1, 0, newElement);
+    setArray(newArray);
+  }
+
   function remove(index) {
     setArray((a) => [...a.slice(0, index), ...a.slice(index + 1, a.length)]);
   }
 
   function clear() {
     setArray([]);
+  }
+
+  function reset() {
+    setArray(initialState);
   }
 
   return {
@@ -35,6 +45,8 @@ const useArray = (defaultValue) => {
     update,
     remove,
     clear,
+    addAt,
+    reset,
   };
 };
 

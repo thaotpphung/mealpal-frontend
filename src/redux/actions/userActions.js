@@ -6,13 +6,16 @@ import {
   USER_REGISTER_SUCCESS,
   USER_REGISTER_FAIL,
   USER_LOGOUT,
-  USER_SET_CURRENT_WEEK_REQUEST,
-  USER_SET_CURRENT_WEEK_SUCCESS,
-  USER_SET_CURRENT_WEEK_FAIL,
+  USER_UPDATE_REQUEST,
+  USER_UPDATE_SUCCESS,
+  USER_UPDATE_FAIL,
+  USER_UPDATE_PASSWORD_REQUEST,
+  USER_UPDATE_PASSWORD_SUCCESS,
+  USER_UPDATE_PASSWORD_FAIL,
 } from '../constants/userConstants';
 import * as api from '../../api/index';
 
-export { signin, register, logout, setCurrentWeek };
+export { signin, register, logout, updateUser, updatePassword };
 
 const signin = (formData) => async (dispatch) => {
   dispatch({ type: USER_SIGNIN_REQUEST, payload: formData });
@@ -44,14 +47,27 @@ const logout = () => (dispatch) => {
   dispatch({ type: USER_LOGOUT, payload: 'Successfully logged out!' });
 };
 
-const setCurrentWeek = (weekId) => async (dispatch) => {
-  dispatch({ type: USER_SET_CURRENT_WEEK_REQUEST });
+const updateUser = (userId, formData) => async (dispatch) => {
+  dispatch({ type: USER_UPDATE_REQUEST });
   try {
-    const { data } = await api.setCurrentWeek(weekId);
-    dispatch({ type: USER_SET_CURRENT_WEEK_SUCCESS, payload: data.data });
+    await api.updateUser(userId, formData);
+    dispatch({ type: USER_UPDATE_SUCCESS, payload: formData });
   } catch (error) {
     dispatch({
-      type: USER_SET_CURRENT_WEEK_FAIL,
+      type: USER_UPDATE_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
+
+const updatePassword = (userId, formData) => async (dispatch) => {
+  dispatch({ type: USER_UPDATE_PASSWORD_REQUEST });
+  try {
+    const { data } = await api.updatePassword(userId, formData);
+    dispatch({ type: USER_UPDATE_PASSWORD_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: USER_UPDATE_PASSWORD_FAIL,
       payload: error.response.data.message,
     });
   }

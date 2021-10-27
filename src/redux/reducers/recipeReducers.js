@@ -26,20 +26,6 @@ const RECIPE_LIST_INITIAL_STATE = {
 
 const recipeListReducer = (state = RECIPE_LIST_INITIAL_STATE, action) => {
   switch (action.type) {
-    // create recipe
-    case RECIPE_CREATE_REQUEST:
-      return { ...state, loading: true, error: null };
-    case RECIPE_CREATE_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        error: null,
-        recipes: { ...state.recipes, [action.payload._id]: action.payload },
-      };
-    case RECIPE_CREATE_FAIL:
-      return { ...state, loading: false, error: action.payload };
-
-    // get all recipes
     case RECIPE_LIST_REQUEST: {
       return { ...state, loading: true, error: null };
     }
@@ -55,6 +41,20 @@ const recipeListReducer = (state = RECIPE_LIST_INITIAL_STATE, action) => {
       };
     }
     case RECIPE_LIST_FAIL:
+      return { ...state, loading: false, error: action.payload };
+
+    case RECIPE_CREATE_REQUEST: {
+      return { ...state, loading: true, error: null };
+    }
+    case RECIPE_CREATE_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        recipes: { ...state.recipes, [action.payload._id]: action.payload },
+        error: null,
+      };
+    }
+    case RECIPE_CREATE_FAIL:
       return { ...state, loading: false, error: action.payload };
 
     default:

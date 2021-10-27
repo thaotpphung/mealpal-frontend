@@ -7,11 +7,10 @@ import RoundButton from '../../common/Buttons/RoundButton';
 import StarOutlineIcon from '@material-ui/icons/StarOutline';
 import CardHeader from '../../common/CardHeader/CardHeader';
 
-const WeekList = ({ toggleOpen }) => {
+const WeekList = ({ weeks, toggleOpen }) => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const { selectedWeek } = useSelector((state) => state.select);
-  const { weeks } = useSelector((state) => state.weekList);
   const { currentUser } = useSelector((state) => state.user);
 
   const handleSelectWeek = (week) => {

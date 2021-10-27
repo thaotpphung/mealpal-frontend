@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import { Grid, Button, IconButton, FormControl } from '@material-ui/core';
 import Pagination from '@material-ui/lab/Pagination';
 import SearchIcon from '@material-ui/icons/Search';
@@ -15,10 +16,12 @@ import {
   createRecipe,
   getAllRecipes,
 } from '../../../redux/actions/recipeActions';
+import { validate } from '../../../utils/validations/validate';
 
 const RecipePage = () => {
   const classes = useStyles();
   const localClasses = styles();
+  const history = useHistory();
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
   const {
@@ -52,10 +55,17 @@ const RecipePage = () => {
     handleSubmit,
     handleChange,
     reset,
-  } = useForm(initialState, () => {
-    dispatch(createRecipe({ ...dialogValue, userId: currentUser._id }));
-    handleClose();
-  });
+    errors,
+  } = useForm(
+    initialState,
+    () => {
+      dispatch(
+        createRecipe({ ...dialogValue, userId: currentUser._id }, history)
+      );
+    },
+    validate,
+    ['recipeDescription']
+  );
 
   // pagination & filtering
   const {
@@ -66,45 +76,45 @@ const RecipePage = () => {
     handleChangePage,
     handleChangeQueryField,
     setPageCount,
-  } = usePagination(initialState, 12, () =>
-    dispatch(getAllRecipes(buildQuery()))
+  } = usePagination(initialState, 12, (value) =>
+    dispatch(getAllRecipes(buildQuery(value)))
   );
 
   return (
     <div>
       <div className={classes.utilsBar}>
-        <FormControl className={localClasses.formControl}>
+        <div className={classes.utilsFields}>
           <Input
             name="recipeName"
             label="Recipe Name"
             handleChange={handleChangeQueryField}
           />
-        </FormControl>
-        <FormControl className={localClasses.formControl}>
           <Input
             name="calories"
             label="Calories"
+            type="number"
             handleChange={handleChangeQueryField}
           />
-        </FormControl>
-
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={() => handleSubmitFilter(currentCount)}
-        >
-          <SearchIcon /> Search
-        </Button>
+        </div>
+        <div className={classes.utilsActions}>
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() => handleSubmitFilter(currentCount)}
+          >
+            <SearchIcon /> Search
+          </Button>
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() => toggleOpen(true)}
+            style={{ float: 'right' }}
+          >
+            + Recipe
+          </Button>
+        </div>
       </div>
 
-      <Button
-        variant="outlined"
-        color="primary"
-        onClick={() => toggleOpen(true)}
-        style={{ float: 'right' }}
-      >
-        + Recipe
-      </Button>
       <Grid
         className={classes.container}
         container
@@ -126,10 +136,9 @@ const RecipePage = () => {
         showLastButton
         showFirstButton
       />
-
       <PopupDialog
         open={open}
-        title="Add a new recipe..."
+        title="Add a new recipe"
         handleClose={handleClose}
         handleSubmit={handleSubmit}
         content={
@@ -139,37 +148,46 @@ const RecipePage = () => {
               handleChange={handleChange}
               name="recipeName"
               label="Recipe Name"
-              required
+              error={errors?.recipeName}
             />
             <Input
               value={dialogValue.recipeDescription}
               handleChange={handleChange}
               name="recipeDescription"
               label="Recipe Description"
+              error={errors?.recipeDescription}
             />
             <Input
               value={dialogValue.calories}
               handleChange={handleChange}
               name="calories"
+              type="number"
               label="Calories"
+              error={errors?.calories}
             />
             <Input
               value={dialogValue.servings}
               handleChange={handleChange}
               name="servings"
+              type="number"
               label="Servings"
+              error={errors?.servings}
             />
             <Input
               value={dialogValue.prepTime}
               handleChange={handleChange}
               name="prepTime"
+              type="number"
               label="Prep Time"
+              error={errors?.prepTime}
             />
             <Input
               value={dialogValue.cookTime}
               handleChange={handleChange}
               name="cookTime"
+              type="number"
               label="Cook Time"
+              error={errors?.cookTime}
             />
           </div>
         }

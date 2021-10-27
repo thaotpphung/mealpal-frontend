@@ -1,110 +1,41 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Grid, Typography, TextField } from '@material-ui/core';
+import { Link, useHistory, useParams, useLocation } from 'react-router-dom';
+import { Grid, Typography } from '@material-ui/core';
 import useStyles from './styles';
-import WeekList from '../../components/WeekList/WeekList';
-import Menu from '../../components/Menu/Menu';
-import WeekInfoCard from '../../components/WeekInfoCard/WeekInfoCard';
-import { setSelectedWeek } from '../../../redux/actions/selectActions';
-import { createWeek } from '../../../redux/actions/weekActions';
-import PopupDialog from '../../common/PopupDialog/PopupDialog';
+import DayList from '../../components/DayList/DayList';
+import WeekInfoCard from '../../components/WeekCard/WeekCard';
 import Spinner from '../../common/Spinner/Spinner';
-import Input from '../../common/Input/Input';
-import useForm from '../../../utils/hooks/useForm';
-import useDialog from '../../../utils/hooks/useDialog';
-import { validate } from '../../../utils/validations/validate';
-import { getAllWeeks } from '../../../redux/actions/weekActions';
-import { getDayListByWeekId } from '../../../redux/actions/dayActions';
+import { getWeek } from '../../../redux/actions/weekActions';
+import { getAllRecipes } from '../../../redux/actions/recipeActions';
 
 const WeekDetailsPage = () => {
+  const { weekId } = useParams();
   const classes = useStyles();
+  const location = useLocation();
   const dispatch = useDispatch();
-  const { selectedWeek } = useSelector((state) => state.select);
-  const { weeks, loading, error } = useSelector((state) => state.weekList);
-  const { currentUser } = useSelector((state) => state.user);
-  const { days } = useSelector((state) => state.dayList);
+  const { week, loading, error } = useSelector((state) => state.weekDetails);
+  const { recipes } = useSelector((state) => state.recipeList);
 
   useEffect(() => {
-    dispatch(getDayListByWeekId(selectedWeek.id));
-  }, [selectedWeek.id]);
-
-  useEffect(() => {
-    dispatch(setSelectedWeek(currentUser?.currentWeek));
+    if (!location.isRedirect) {
+      dispatch(getWeek(weekId));
+    }
+    dispatch(getAllRecipes());
   }, []);
-
-  useEffect(() => {
-    dispatch(getAllWeeks());
-  }, []);
-
-  const { open, toggleOpen, handleClose } = useDialog(() => reset());
-
-  const initialState = {
-    weekName: '',
-    weekDescription: '',
-    weekDiet: '',
-    plan: '',
-  };
-
-  const { handleChange, handleSubmit, values, reset, errors } = useForm(
-    initialState,
-    () => {
-      dispatch(createWeek({ ...values, userId: currentUser._id }));
-      handleClose();
-    },
-    validate,
-    ['weekDescription', 'plan']
-  );
 
   const Component = (
-    <div>
-      <PopupDialog
-        title="Add a new week"
-        handleClose={handleClose}
-        handleSubmit={handleSubmit}
-        open={open}
-        content={
-          <>
-            <Input
-              value={values.weekName}
-              handleChange={handleChange}
-              name="weekName"
-              label="Week Name"
-              error={errors?.weekName}
-            />
-            <Input
-              value={values.weekDescription}
-              handleChange={handleChange}
-              name="weekDescription"
-              label="Week Description"
-              error={errors?.weekDescription}
-            />
-            <Input
-              value={values.weekDiet}
-              handleChange={handleChange}
-              name="weekDiet"
-              label="Week Diet"
-              error={errors?.weekDiet}
-            />
-          </>
-        }
-      />
-      <Grid container justify="space-between" alignItems="stretch" spacing={7}>
-        <Grid item xs={12} sm={4} className={classes.leftColumn}>
-          <WeekInfoCard week={weeks[selectedWeek.id]} />
-          <WeekList toggleOpen={toggleOpen} />
-        </Grid>
-        <Grid item xs={12} sm={8}>
-          {selectedWeek.id === undefined ? (
-            <Typography>Please select a week</Typography>
-          ) : (
-            <Menu days={days} />
-          )}
-        </Grid>
+    <Grid container justify="space-between" alignItems="stretch" spacing={7}>
+      <Grid item xs={12} sm={4} className={classes.leftColumn}>
+        <WeekInfoCard week={week} />
       </Grid>
-    </div>
+      <Grid item xs={12} sm={8}>
+        <DayList days={week.days} recipes={recipes} />
+      </Grid>
+    </Grid>
   );
 
-  if (!loading && Object.keys(weeks).length > 0) {
+  if (!loading && week.days.length > 0) {
     return Component;
   } else if (error) {
     return <div>{error}</div>;

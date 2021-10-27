@@ -43,7 +43,6 @@ const AutocompleteField = ({
           }
           return filtered;
         }}
-        id="free-solo-dialog-demo"
         options={options}
         getOptionLabel={(option) => {
           if (typeof option === 'string') {

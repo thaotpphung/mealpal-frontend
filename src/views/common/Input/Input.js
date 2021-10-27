@@ -1,5 +1,11 @@
 import React from 'react';
-import { TextField, Grid, InputAdornment, IconButton } from '@material-ui/core';
+import {
+  TextField,
+  Grid,
+  InputAdornment,
+  IconButton,
+  He,
+} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import useStyles from './styles';
 
@@ -14,32 +20,35 @@ const Input = ({
   endAction,
   value,
   error,
+  disabled = false,
+  readOnly = false,
+  ...rest
 }) => {
   const classes = useStyles();
   return (
     <Grid item xs={12} sm={half ? 6 : 12}>
       <TextField
-        variant="standard"
+        {...rest}
+        variant="outlined"
         className={classes.inputField}
         name={name}
         onChange={handleChange}
         required={required}
         margin="dense"
         fullWidth
-        label={error ? error : label}
+        label={label}
         value={value}
         autoFocus={autoFocus}
         type={type}
+        helperText={error}
         error={!!error}
-        InputProps={
-          endAction
-            ? {
-                endAdornment: (
-                  <InputAdornment position="end">{endAction}</InputAdornment>
-                ),
-              }
-            : null
-        }
+        disabled={disabled}
+        InputProps={{
+          endAdornment: endAction ? (
+            <InputAdornment position="end">{endAction}</InputAdornment>
+          ) : null,
+          readOnly: readOnly,
+        }}
       />
     </Grid>
   );

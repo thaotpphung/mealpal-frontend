@@ -1,6 +1,7 @@
 import React from 'react';
 import { Typography } from '@material-ui/core';
 import useStyles from '../../../../containers/styles';
+import { styles } from '../styles';
 import Input from '../../../common/Input/Input';
 import RoundButton from '../../../common/Buttons/RoundButton';
 
@@ -14,15 +15,18 @@ const RecipeDetailsCard = ({
   errors,
 }) => {
   const classes = useStyles();
+  const localClasses = styles();
 
   return (
-    <div className={classes.recipeDetailsCardContent}>
-      <Typography className={classes.recipeDetailsHeader}>{title}</Typography>
+    <div className={localClasses.recipeDetailsCardContent}>
+      <Typography className={localClasses.recipeDetailsHeader}>
+        {title}
+      </Typography>
       <ul>
         {array.map((item, itemIdx) => {
           return (
             <li
-              className={classes.notePaperItem}
+              className={localClasses.notePaperItem}
               key={`${title}-item-field-${item}-${itemIdx}`}
             >
               {!isInEditMode ? (
@@ -44,12 +48,12 @@ const RecipeDetailsCard = ({
                   </div>
                   <div className={classes.itemAction}>
                     <RoundButton
-                      type="deleteField"
-                      handleClick={() => handleDelete(itemIdx)}
+                      type="addField"
+                      handleClick={() => handleAdd(itemIdx, '')}
                     />
                     <RoundButton
-                      type="addField"
-                      handleClick={() => handleAdd('')}
+                      type="deleteField"
+                      handleClick={() => handleDelete(itemIdx)}
                     />
                   </div>
                 </>

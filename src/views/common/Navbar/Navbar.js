@@ -6,17 +6,6 @@ import Link from '@material-ui/core/Link';
 import { NavLink as RouterLink } from 'react-router-dom';
 import useStyles from './styles';
 import Toolbar from '@material-ui/core/Toolbar';
-import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import MoreIcon from '@material-ui/icons/MoreVert';
-import HomeIcon from '@material-ui/icons/Home';
-import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
-import MenuBookIcon from '@material-ui/icons/MenuBook';
-import ExploreIcon from '@material-ui/icons/Explore';
-
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../../redux/actions/userActions';
@@ -24,8 +13,7 @@ import routes from '../../../constants/routes';
 
 const Navbar = () => {
   const classes = useStyles();
-  const user = useSelector((state) => state.user);
-  const { currentUser } = user;
+  const { currentUser } = useSelector((state) => state.user);
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -67,11 +55,11 @@ const Navbar = () => {
               variant="button"
               component={RouterLink}
               color="textPrimary"
-              to={routes.EXPLORE_PAGE}
+              to={routes.WEEK_PAGE}
               className={classes.link}
               activeClassName={classes.activeClassName}
             >
-              Explore
+              MealPlans
             </Link>
             <Link
               variant="button"
@@ -100,7 +88,7 @@ const Navbar = () => {
                 variant="button"
                 component={RouterLink}
                 color="textPrimary"
-                to={routes.PROFILE_PAGE}
+                to={`/users/${currentUser._id}`}
                 className={classes.link}
                 activeClassName={classes.activeClassName}
               >

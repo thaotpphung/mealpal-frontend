@@ -24,8 +24,11 @@ import { validateAuth } from '../../../utils/validations/validate';
 import { signin, register } from '../../../redux/actions/userActions';
 
 const initialState = {
-  email: '',
+  username: '',
   password: '',
+  firstName: '',
+  lastName: '',
+  email: '',
 };
 
 const AuthPage = () => {
@@ -100,14 +103,20 @@ const AuthPage = () => {
                   half
                   error={errors?.lastName}
                 />
+                <Input
+                  name="email"
+                  label="Email Address"
+                  handleChange={handleChange}
+                  type="email"
+                  error={errors?.email}
+                />
               </>
             )}
             <Input
-              name="email"
-              label="Email Address"
+              name="username"
+              label="Username"
               handleChange={handleChange}
-              type="email"
-              error={errors?.email}
+              error={errors?.username}
             />
             <Input
               name="password"
@@ -145,7 +154,7 @@ const AuthPage = () => {
           >
             {isRegister ? 'Sign Up' : 'Sign In'}
           </Button>
-          <Grid container justify="flex-end">
+          <Grid container justifyContent="flex-end">
             <Grid item>
               <Button onClick={switchMode}>
                 {isRegister

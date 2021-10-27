@@ -19,18 +19,21 @@ import * as api from '../../api/index';
 
 export { getAllRecipes, createRecipe, deleteRecipe, updateRecipe, getRecipe };
 
-const createRecipe = (recipe) => async (dispatch) => {
-  try {
-    dispatch({ type: RECIPE_CREATE_REQUEST, payload: recipe });
-    const { data } = await api.createRecipe(recipe);
-    dispatch({ type: RECIPE_CREATE_SUCCESS, payload: data.data });
-  } catch (error) {
-    dispatch({
-      type: RECIPE_CREATE_FAIL,
-      payload: error.response.data.message,
-    });
-  }
-};
+const createRecipe =
+  (recipe, router = null) =>
+  async (dispatch) => {
+    try {
+      dispatch({ type: RECIPE_CREATE_REQUEST, payload: recipe });
+      const { data } = await api.createRecipe(recipe);
+      dispatch({ type: RECIPE_CREATE_SUCCESS, payload: data.data });
+      if (router) router.push(`/recipes/${data.data._id}`);
+    } catch (error) {
+      dispatch({
+        type: RECIPE_CREATE_FAIL,
+        payload: error.response.data.message,
+      });
+    }
+  };
 
 const getAllRecipes =
   (query = '') =>
@@ -60,11 +63,12 @@ const getRecipe = (recipeId) => async (dispatch) => {
   }
 };
 
-const deleteRecipe = (recipeId) => async (dispatch) => {
+const deleteRecipe = (recipeId, router) => async (dispatch) => {
   try {
     dispatch({ type: RECIPE_DELETE_REQUEST });
     await api.deleteRecipe(recipeId);
     dispatch({ type: RECIPE_DELETE_SUCCESS, payload: recipeId });
+    router.push('/recipes');
   } catch (error) {
     dispatch({
       type: RECIPE_DELETE_FAIL,

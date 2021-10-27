@@ -22,7 +22,7 @@ const usePagination = (initialState, initialLimit, callBack) => {
 
   const handleChangePage = (event, value) => {
     setPage(value);
-    callBack();
+    callBack(value);
   };
 
   const handleSubmitFilter = (newCount) => {
