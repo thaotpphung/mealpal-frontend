@@ -11,6 +11,7 @@ import {
   CardMedia,
   Avatar,
   Button,
+  Typography,
 } from '@material-ui/core';
 import { red } from '@material-ui/core/colors';
 import FileInputComponent from 'react-file-input-previews-base64';
@@ -29,7 +30,6 @@ const RecipeCard = ({ recipe }) => {
   const dispatch = useDispatch();
   const { recipeId } = useParams();
   const history = useHistory();
-  const [expanded, setExpanded] = useState(false);
   const [isInEditMode, toggleIsInEditMode] = useToggle(false);
   const initialForm = {
     recipeName: recipe.recipeName,
@@ -114,15 +114,17 @@ const RecipeCard = ({ recipe }) => {
       <CardContent>
         {!isInEditMode && (
           <div variant="body2" color="text.secondary">
-            Description: {recipe?.recipeDescription}
+            <Typography>Description: {recipe?.recipeDescription}</Typography>
             <Grid container>
               <Grid item xs={12} sm={6}>
-                <div>Calories: {recipe?.calories}</div>
-                <div>Servings: {recipe?.servings}</div>
+                <Typography variant="h8">
+                  Calories: {recipe?.calories}
+                </Typography>
+                <Typography>Servings: {recipe?.servings}</Typography>
               </Grid>
               <Grid item xs={12} sm={6}>
-                <div>Prep Time: {recipe?.prepTime}</div>
-                <div>Cook Time: {recipe?.cookTime}</div>
+                <Typography>Prep Time: {recipe?.prepTime}</Typography>
+                <Typography>Cook Time: {recipe?.cookTime}</Typography>
               </Grid>
             </Grid>
           </div>

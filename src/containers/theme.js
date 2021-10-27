@@ -1,11 +1,19 @@
-import { createMuiTheme } from '@material-ui/core/styles';
-import { cyan } from '@material-ui/core/colors';
+import { createTheme } from '@material-ui/core/styles';
+import {
+  cyan,
+  purple,
+  blue,
+  orange,
+  green,
+  amber,
+  deepPurple,
+} from '@material-ui/core/colors';
 import 'lato-font';
 
-export const theme = createMuiTheme({
+export const theme = createTheme({
   palette: {
     primary: {
-      main: cyan[200],
+      main: deepPurple[300],
     },
   },
   typography: {

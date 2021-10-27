@@ -117,7 +117,6 @@ const DayList = ({ days, recipes }) => {
     updatedDays.meals.splice(mealIdx, 1);
     setDayForm(updatedDays);
   };
-
   const handleAddMeal = (mealIdx) => {
     const updatedDays = cloneDeep(dayForm);
     updatedDays.meals.splice(mealIdx + 1, 0, {
@@ -302,6 +301,7 @@ const DayList = ({ days, recipes }) => {
                               freeSolo
                               renderInput={(params) => (
                                 <TextField
+                                  variant="outlined"
                                   {...params}
                                   error={
                                     errors[`meal${mealIdx}food${recipeIdx}`]

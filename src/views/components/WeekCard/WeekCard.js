@@ -11,7 +11,7 @@ import {
 import { styled } from '@material-ui/core/styles';
 import useStyles from '../../../containers/styles';
 import { deleteWeek, updateWeek } from '../../../redux/actions/weekActions';
-import { setCurrentWeek } from '../../../redux/actions/userActions';
+// import { setCurrentWeek } from '../../../redux/actions/userActions';
 import Input from '../../common/Input/Input';
 import useToggle from '../../../utils/hooks/useToggle';
 import useForm from '../../../utils/hooks/useForm';

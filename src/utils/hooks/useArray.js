@@ -23,11 +23,6 @@ const useArray = (initialState) => {
     const newArray = [...array];
     newArray.splice(index + 1, 0, newElement);
     setArray(newArray);
-    // setArray((a) => [
-    //   ...a.slice(0, index + 1),
-    //   newElement,
-    //   ...a.slice(index + 2, a.length),
-    // ]);
   }
 
   function remove(index) {

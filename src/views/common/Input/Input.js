@@ -14,18 +14,20 @@ const Input = ({
   endAction,
   value,
   error,
+  readonly = false,
 }) => {
   const classes = useStyles();
   return (
     <Grid item xs={12} sm={half ? 6 : 12}>
       <TextField
-        variant="standard"
+        variant="outlined"
         className={classes.inputField}
         name={name}
         onChange={handleChange}
         required={required}
         margin="dense"
         fullWidth
+        readonly={readonly}
         label={error ? error : label}
         value={value}
         autoFocus={autoFocus}

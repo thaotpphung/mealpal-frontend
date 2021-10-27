@@ -88,7 +88,7 @@ const Navbar = () => {
                 variant="button"
                 component={RouterLink}
                 color="textPrimary"
-                to={routes.PROFILE_PAGE}
+                to={`/users/${currentUser._id}`}
                 className={classes.link}
                 activeClassName={classes.activeClassName}
               >

@@ -25,16 +25,14 @@ const WeekDetailsPage = () => {
   }, []);
 
   const Component = (
-    <div>
-      <Grid container justify="space-between" alignItems="stretch" spacing={7}>
-        <Grid item xs={12} sm={4} className={classes.leftColumn}>
-          <WeekInfoCard week={week} />
-        </Grid>
-        <Grid item xs={12} sm={8}>
-          <DayList days={week.days} recipes={recipes} />
-        </Grid>
+    <Grid container justify="space-between" alignItems="stretch" spacing={7}>
+      <Grid item xs={12} sm={4} className={classes.leftColumn}>
+        <WeekInfoCard week={week} />
       </Grid>
-    </div>
+      <Grid item xs={12} sm={8}>
+        <DayList days={week.days} recipes={recipes} />
+      </Grid>
+    </Grid>
   );
 
   if (!loading && week.days.length > 0) {

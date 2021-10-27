@@ -3,10 +3,10 @@ import { useDispatch } from 'react-redux';
 import { Paper, TextField } from '@material-ui/core';
 import { updateRecipe } from '../../../redux/actions/recipeActions';
 import useStyles from '../../../containers/styles';
+import { styles } from './styles';
 import useArray from '../../../utils/hooks/useArray';
 import useToggle from '../../../utils/hooks/useToggle';
 import useForm from '../../../utils/hooks/useForm';
-
 import { validateArray } from '../../../utils/validations/validateFunctions';
 import RoundButton from '../../common/Buttons/RoundButton';
 import CardHeader from '../../common/CardHeader/CardHeader';
@@ -14,6 +14,7 @@ import RecipeDetailsCardContent from './RecipeDetailsCardContent/RecipeDetailsCa
 
 const RecipeDetailsCard = ({ recipe }) => {
   const classes = useStyles();
+  const localClasses = styles();
   const dispatch = useDispatch();
   const {
     array: ingredients,
@@ -50,7 +51,7 @@ const RecipeDetailsCard = ({ recipe }) => {
   };
 
   return (
-    <Paper className={classes.notePaper}>
+    <Paper className={localClasses.notePaper}>
       <div style={{ float: 'right' }}>
         {isInEditMode ? (
           <>
@@ -61,7 +62,6 @@ const RecipeDetailsCard = ({ recipe }) => {
           <RoundButton type="edit" handleClick={toggleIsInEditMode} />
         )}
       </div>
-
       <RecipeDetailsCardContent
         title="Ingredients"
         array={ingredients}
