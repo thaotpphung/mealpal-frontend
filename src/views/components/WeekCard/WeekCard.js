@@ -7,14 +7,17 @@ import {
   CardContent,
   Button,
   Avatar,
+  Typography,
+  Grid,
 } from '@material-ui/core/';
 import { styled } from '@material-ui/core/styles';
 import useStyles from '../../../containers/styles';
 import { deleteWeek, updateWeek } from '../../../redux/actions/weekActions';
-// import { setCurrentWeek } from '../../../redux/actions/userActions';
+import { updateUser } from '../../../redux/actions/userActions';
 import Input from '../../common/Input/Input';
 import useToggle from '../../../utils/hooks/useToggle';
 import useForm from '../../../utils/hooks/useForm';
+import { getInitialWeekForm, weekFormFields } from '../../../utils/forms/weeks';
 import { validate } from '../../../utils/validations/validate';
 import RoundButton from '../../common/Buttons/RoundButton';
 
@@ -23,7 +26,6 @@ const WeekCard = ({ week }) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const { weekId } = useParams();
-  const [expanded, setExpanded] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const [isInEditMode, toggleIsInEditMode] = useToggle(false);
   const {
@@ -33,13 +35,7 @@ const WeekCard = ({ week }) => {
     errors,
     reset,
   } = useForm(
-    {
-      weekName: week?.weekName,
-      weekDescription: week?.weekDescription,
-      weekDiet: week?.weekDiet,
-      caloGoal: week?.caloGoal,
-      planTag: week?.planTag,
-    },
+    getInitialWeekForm(true, week),
     () => {
       dispatch(updateWeek(week._id, weekForm));
       toggleIsInEditMode(false);
@@ -47,12 +43,10 @@ const WeekCard = ({ week }) => {
     validate,
     ['weekDescription', 'planTag']
   );
-
   const handleCancelEdit = () => {
     toggleIsInEditMode(false);
     reset();
   };
-
   const handleDeleteWeek = (weekId) => {
     if (weekId !== undefined && weekId !== currentUser.currentWeek?._id) {
       dispatch(deleteWeek(weekId, currentUser.currentWeek, history));
@@ -61,25 +55,21 @@ const WeekCard = ({ week }) => {
         'Please select another week as your current week before deleting'
       );
     }
-    // TODO
-    // else display error
   };
-
   const handleSetCurrentWeek = (weekId) => {
     if (weekId !== undefined) {
-      dispatch(setCurrentWeek(weekId));
+      dispatch(updateUser(currentUser._id, { currentWeek: weekId }));
     }
-    // TODO
-    // else display error
   };
-
   return (
     <Card>
       <CardHeader
         avatar={
-          <Avatar aria-label="week" className={classes.avatar}>
-            R
-          </Avatar>
+          <Avatar
+            aria-label="userAvatar"
+            className={classes.avatar}
+            src={currentUser.avatar}
+          />
         }
         action={
           <>
@@ -94,64 +84,48 @@ const WeekCard = ({ week }) => {
                 ) : (
                   <RoundButton type={'edit'} handleClick={toggleIsInEditMode} />
                 )}
-                <RoundButton
-                  type="setDefault"
-                  handleClick={() => handleSetCurrentWeek(week?._id)}
-                />
               </>
+            )}
+            {week._id === currentUser.currentWeek ? (
+              <RoundButton type="default" />
+            ) : (
+              <RoundButton
+                type="setDefault"
+                handleClick={() => handleSetCurrentWeek(week._id)}
+              />
             )}
           </>
         }
-        title="Thao Phung"
-        subheader="created at 10/4/2021"
+        title={
+          <Link to={{ pathname: `/weeks/${week._id}` }}>
+            <Typography>{week.weekName}</Typography>
+          </Link>
+        }
+        subheader="Updated at 10/4/2021"
       />
       <CardContent>
         {!isInEditMode && (
-          <div variant="body2" color="text.secondary">
-            Name:
-            <Link to={{ pathname: `/weeks/${week._id}` }}>{week.weekName}</Link>
-            <div>Description: {week?.weekDescription}</div>
-            <div>Diet: {week?.weekDiet}</div>
-            <div>Calo Goal: {week?.caloGoal}</div>
-            <div>Plan Tag: {week?.planTag}</div>
+          <div>
+            <Typography>Description: {week?.weekDescription}</Typography>
+            <Typography>Diet: {week?.weekDiet}</Typography>
+            <Typography>Calo Goal: {week?.caloGoal}</Typography>
+            <Typography>Plan Tag: {week?.planTag}</Typography>
           </div>
         )}
         {isInEditMode && (
           <form className={classes.formContainer} onSubmit={handleSubmit}>
-            <Input
-              name="weekName"
-              label="Week Name"
-              value={weekForm?.weekName}
-              handleChange={handleChange}
-              error={errors?.weekName}
-            />
-            <Input
-              name="weekDescription"
-              label="Description"
-              value={weekForm?.weekDescription}
-              handleChange={handleChange}
-            />
-            <Input
-              name="weekDiet"
-              label="Diet"
-              value={weekForm?.weekDiet}
-              handleChange={handleChange}
-              error={errors?.weekDiet}
-            />
-            <Input
-              name="caloGoal"
-              label="Calories Goal"
-              type="number"
-              value={weekForm?.caloGoal}
-              handleChange={handleChange}
-              error={errors?.caloGoal}
-            />
-            <Input
-              name="planTag"
-              label="Plan Tag"
-              value={weekForm?.planTag}
-              handleChange={handleChange}
-            />
+            {weekFormFields.map((field, fieldIdx) => (
+              <Input
+                key={`weekformfield-${field.name}-${fieldIdx}`}
+                name={field.name}
+                type={field.type ? field.type : 'text'}
+                label={field.label}
+                value={weekForm[field.name]}
+                handleChange={handleChange}
+                error={errors[field.name]}
+                required={field.required}
+              />
+            ))}
             <Button
               type="submit"
               fullWidth

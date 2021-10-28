@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { styled } from '@material-ui/core/styles';
+import { useDispatch, useSelector } from 'react-redux';
 import useStyles from '../../../containers/styles';
 import {
   Card,
@@ -19,25 +18,24 @@ import Input from '../../common/Input/Input';
 import RoundButton from '../../common/Buttons/RoundButton';
 import useToggle from '../../../utils/hooks/useToggle';
 import useForm from '../../../utils/hooks/useForm';
-import { validate } from '../../../utils/validations/validate';
 import {
   updateRecipe,
   deleteRecipe,
 } from '../../../redux/actions/recipeActions';
+import {
+  getInitialRecipeForm,
+  recipeFormFields,
+} from '../../../utils/forms/recipes';
 
 const RecipeCard = ({ recipe }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { recipeId } = useParams();
+  const { currentUser } = useSelector((state) => state.user);
   const history = useHistory();
   const [isInEditMode, toggleIsInEditMode] = useToggle(false);
   const initialForm = {
-    recipeName: recipe.recipeName,
-    recipeDescription: recipe.recipeDescription,
-    calories: recipe.calories,
-    servings: recipe.servings,
-    prepTime: recipe.prepTime,
-    cookTime: recipe.cookTime,
+    ...getInitialRecipeForm(true, recipe),
     recipeImage: recipe.recipeImage,
   };
   const {
@@ -47,15 +45,10 @@ const RecipeCard = ({ recipe }) => {
     setValue: setRecipeForm,
     errors,
     reset,
-  } = useForm(
-    initialForm,
-    () => {
-      dispatch(updateRecipe(recipe._id, recipeForm));
-      toggleIsInEditMode(false);
-    },
-    validate,
-    ['recipeDescription', 'recipeImage']
-  );
+  } = useForm(initialForm, () => {
+    dispatch(updateRecipe(recipe._id, recipeForm));
+    toggleIsInEditMode(false);
+  });
 
   const handleCancelEdit = () => {
     toggleIsInEditMode(false);
@@ -74,9 +67,11 @@ const RecipeCard = ({ recipe }) => {
     <Card sx={{ maxWidth: 345 }}>
       <CardHeader
         avatar={
-          <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            R
-          </Avatar>
+          <Avatar
+            aria-label="recipe"
+            className={classes.avatar}
+            src={currentUser.avatar}
+          />
         }
         action={
           <>
@@ -97,7 +92,7 @@ const RecipeCard = ({ recipe }) => {
         }
         title={
           <Link to={{ pathname: `/recipes/${recipe._id}` }}>
-            {recipe.recipeName}
+            <Typography>{recipe.recipeName}</Typography>
           </Link>
         }
       />
@@ -113,18 +108,16 @@ const RecipeCard = ({ recipe }) => {
       />
       <CardContent>
         {!isInEditMode && (
-          <div variant="body2" color="text.secondary">
+          <div>
             <Typography>Description: {recipe?.recipeDescription}</Typography>
             <Grid container>
               <Grid item xs={12} sm={6}>
-                <Typography variant="h8">
-                  Calories: {recipe?.calories}
-                </Typography>
+                <Typography>Calories: {recipe?.calories}</Typography>
                 <Typography>Servings: {recipe?.servings}</Typography>
               </Grid>
               <Grid item xs={12} sm={6}>
-                <Typography>Prep Time: {recipe?.prepTime}</Typography>
-                <Typography>Cook Time: {recipe?.cookTime}</Typography>
+                <Typography>Prep (mins): {recipe?.prepTime}</Typography>
+                <Typography>Cook (mins): {recipe?.cookTime}</Typography>
               </Grid>
             </Grid>
           </div>
@@ -147,45 +140,18 @@ const RecipeCard = ({ recipe }) => {
               accept="image/*"
               parentStyle={{ textAlign: 'center', margin: '10px' }}
             />
-            <Input
-              name="recipeDescription"
-              label="Description"
-              value={recipeForm?.recipeDescription}
-              handleChange={handleChange}
-              error={errors?.recipeDescription}
-            />
-            <Input
-              name="calories"
-              label="Calories"
-              type="number"
-              value={recipeForm?.calories}
-              handleChange={handleChange}
-              error={errors?.calories}
-            />
-            <Input
-              name="servings"
-              label="Servings"
-              type="number"
-              value={recipeForm?.servings}
-              handleChange={handleChange}
-              error={errors?.servings}
-            />
-            <Input
-              name="prepTime"
-              label="Prep Time"
-              type="number"
-              value={recipeForm?.prepTime}
-              handleChange={handleChange}
-              error={errors?.prepTime}
-            />
-            <Input
-              name="cookTime"
-              label="Cook Time"
-              type="number"
-              value={recipeForm?.cookTime}
-              handleChange={handleChange}
-              error={errors?.cookTime}
-            />
+            {recipeFormFields.map((field, fieldIdx) => (
+              <Input
+                key={`recipe-update-form-${field.name}-${fieldIdx}`}
+                name={field.name}
+                label={field.label}
+                value={recipeForm[field.name]}
+                handleChange={handleChange}
+                error={errors[field.name]}
+                type={field.type ? field.type : 'text'}
+                required={field.required}
+              />
+            ))}
             <Button
               type="submit"
               fullWidth

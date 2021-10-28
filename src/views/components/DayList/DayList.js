@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import useStyles from '../../../containers/styles';
 import { styles } from './styles';
-import { Paper, TextField, FormHelperText } from '@material-ui/core';
+import {
+  Paper,
+  TextField,
+  FormHelperText,
+  Typography,
+} from '@material-ui/core';
 import RestaurantMenuIcon from '@material-ui/icons/RestaurantMenu';
 import CardHeader from '../../common/CardHeader/CardHeader';
 import RoundButton from '../../common/Buttons/RoundButton';
@@ -120,7 +124,7 @@ const DayList = ({ days, recipes }) => {
   const handleAddMeal = (mealIdx) => {
     const updatedDays = cloneDeep(dayForm);
     updatedDays.meals.splice(mealIdx + 1, 0, {
-      mealName: '[Place Holder]',
+      mealName: '[Meal Name]',
       food: [
         {
           recipeName: '',
@@ -130,7 +134,6 @@ const DayList = ({ days, recipes }) => {
     });
     setDayForm(updatedDays);
   };
-
   const handleChangeMeal = (event, mealIdx) => {
     const updatedDays = cloneDeep(dayForm);
     updatedDays.meals[mealIdx].mealName = event.target.value;
@@ -168,6 +171,7 @@ const DayList = ({ days, recipes }) => {
               handleChange={handleChangeRecipeName}
               value={newRecipeName.recipeName}
               error={newRecipeErrors.recipeName}
+              required
             />
           </div>
         }
@@ -201,13 +205,15 @@ const DayList = ({ days, recipes }) => {
           />
           <div className={localClasses.content}>
             {!isInEditDayMode[dayIdx] &&
-              day.meals.map((meal) => {
+              day.meals.map((meal, mealIdx) => {
                 return (
                   <div
-                    key={`meal-in-day-card-${meal._id}}`}
+                    key={`meal-in-day-card-${meal._id}-${dayIdx}-${mealIdx}}`}
                     className={localClasses.menuItem}
                   >
-                    <div className={classes.itemIcon}>{meal.mealName}</div>
+                    <div className={classes.itemIcon}>
+                      <Typography>{meal.mealName}</Typography>
+                    </div>
                     <div className={classes.itemContent}>
                       <ul className={localClasses.menuContent}>
                         {!isInEditDayMode[dayIdx] && (
@@ -217,8 +223,14 @@ const DayList = ({ days, recipes }) => {
                                 <li
                                   key={`dish-in-meal-${recipe._id}-${recipeIdx})}`}
                                 >
-                                  <RestaurantMenuIcon />
-                                  <span>{recipe.recipeName}</span>
+                                  <RestaurantMenuIcon
+                                    style={{ marginRight: '8px' }}
+                                  />
+                                  <Link
+                                    to={{ pathname: `/recipes/${recipe._id}` }}
+                                  >
+                                    <Typography>{recipe.recipeName}</Typography>
+                                  </Link>
                                 </li>
                               );
                             })}
@@ -234,7 +246,7 @@ const DayList = ({ days, recipes }) => {
               dayForm.meals.map((meal, mealIdx) => {
                 return (
                   <div
-                    key={`meal-in-field-${meal._id}`}
+                    key={`meal-in-field-${meal._id}-${mealIdx}`}
                     className={localClasses.menuItem}
                   >
                     <div className={classes.itemIcon}>

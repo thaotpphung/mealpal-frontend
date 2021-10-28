@@ -4,7 +4,7 @@ import { yellow } from '@material-ui/core/colors';
 const styles = makeStyles((theme) => ({
   notePaper: {
     minHeight: '420px',
-    backgroundColor: `${yellow[100]} !important`,
+    // backgroundColor: `${yellow[100]} !important`,
     paddingBottom: theme.spacing(6),
   },
   notePaperItem: {

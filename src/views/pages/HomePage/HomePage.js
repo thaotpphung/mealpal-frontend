@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useHistory, useParams, useLocation } from 'react-router-dom';
 import { Grid, Typography } from '@material-ui/core';
 import useStyles from './styles';
 import DayList from '../../components/DayList/DayList';
@@ -9,18 +8,15 @@ import Spinner from '../../common/Spinner/Spinner';
 import { getWeek } from '../../../redux/actions/weekActions';
 import { getAllRecipes } from '../../../redux/actions/recipeActions';
 
-const WeekDetailsPage = () => {
-  const { weekId } = useParams();
+const HomePage = () => {
   const classes = useStyles();
-  const location = useLocation();
   const dispatch = useDispatch();
   const { week, loading, error } = useSelector((state) => state.weekDetails);
+  const { currentUser } = useSelector((state) => state.user);
   const { recipes } = useSelector((state) => state.recipeList);
 
   useEffect(() => {
-    if (!location.isRedirect) {
-      dispatch(getWeek(weekId));
-    }
+    dispatch(getWeek(currentUser.currentWeek));
     dispatch(getAllRecipes());
   }, []);
 
@@ -48,4 +44,4 @@ const WeekDetailsPage = () => {
   return <Spinner />;
 };
 
-export default WeekDetailsPage;
+export default HomePage;

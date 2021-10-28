@@ -12,6 +12,7 @@ import AddIcon from '@material-ui/icons/Add';
 import CancelIcon from '@material-ui/icons/Cancel';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import StarOutlineIcon from '@material-ui/icons/StarOutline';
 
 import useStyles from './styles';
 
@@ -25,7 +26,8 @@ const RoundButton = ({ type, handleClick }) => {
     deleteField: <HighlightOffIcon className={classes.deleteFieldButton} />,
     addField: <AddCircleOutlineIcon />,
     like: <FavoriteIcon />,
-    setDefault: <StarIcon />,
+    setDefault: <StarOutlineIcon />,
+    default: <StarIcon />,
     add: <AddCircleIcon />,
     cancel: <CancelIcon />,
   };

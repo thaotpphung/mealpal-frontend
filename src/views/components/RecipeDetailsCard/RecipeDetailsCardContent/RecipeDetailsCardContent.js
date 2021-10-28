@@ -31,8 +31,12 @@ const RecipeDetailsCard = ({
             >
               {!isInEditMode ? (
                 <>
-                  <div className={classes.itemIcon}>{itemIdx + 1}.</div>
-                  <div className={classes.itemContent}> {item}</div>
+                  <div className={classes.itemIcon}>
+                    <Typography>{itemIdx + 1}.</Typography>
+                  </div>
+                  <div className={classes.itemContent}>
+                    <Typography>{item}</Typography>
+                  </div>
                 </>
               ) : (
                 <>

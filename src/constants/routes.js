@@ -1,6 +1,6 @@
 export default {
   HOME_PAGE: '/',
-  EXPLORE_PAGE: '/explore',
+  EXPLORE_PAGE: '/explore/weeks',
   WEEK_PAGE: '/weeks',
   WEEK_DETAILS_PAGE: '/weeks/:weekId',
   RECIPE_PAGE: '/recipes',
