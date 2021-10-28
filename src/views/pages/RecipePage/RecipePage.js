@@ -17,6 +17,10 @@ import {
   getAllRecipes,
 } from '../../../redux/actions/recipeActions';
 import { validate } from '../../../utils/validations/validate';
+import {
+  getInitialRecipeForm,
+  recipeFormFields,
+} from '../../../utils/forms/recipes';
 
 const RecipePage = () => {
   const classes = useStyles();
@@ -39,15 +43,6 @@ const RecipePage = () => {
     setPageCount(recipeCount);
   }, [recipeCount]);
 
-  const initialState = {
-    recipeName: '',
-    recipeDescription: '',
-    servings: '',
-    calories: '',
-    cookTime: '',
-    prepTime: '',
-  };
-
   // create recipe dialog
   const { open, toggleOpen, handleClose } = useDialog(() => reset());
   const {
@@ -57,14 +52,14 @@ const RecipePage = () => {
     reset,
     errors,
   } = useForm(
-    initialState,
+    getInitialRecipeForm(false),
     () => {
       dispatch(
         createRecipe({ ...dialogValue, userId: currentUser._id }, history)
       );
     },
     validate,
-    ['recipeDescription']
+    ['recipeDescription', 'prepTime', 'cookTime']
   );
 
   // pagination & filtering
@@ -76,7 +71,7 @@ const RecipePage = () => {
     handleChangePage,
     handleChangeQueryField,
     setPageCount,
-  } = usePagination(initialState, 12, (value) =>
+  } = usePagination(getInitialRecipeForm(false), 12, (value) =>
     dispatch(getAllRecipes(buildQuery(value)))
   );
 
@@ -84,17 +79,15 @@ const RecipePage = () => {
     <div>
       <div className={classes.utilsBar}>
         <div className={classes.utilsFields}>
-          <Input
-            name="recipeName"
-            label="Recipe Name"
-            handleChange={handleChangeQueryField}
-          />
-          <Input
-            name="calories"
-            label="Calories"
-            type="number"
-            handleChange={handleChangeQueryField}
-          />
+          {recipeFormFields.map((field, fieldIdx) => (
+            <Input
+              key={`recipe-utils-${field.name}-${fieldIdx}`}
+              name={field.name}
+              label={field.label}
+              handleChange={handleChangeQueryField}
+              type={field.type ? field.type : 'text'}
+            />
+          ))}
         </div>
         <div className={classes.utilsActions}>
           <Button
@@ -143,52 +136,18 @@ const RecipePage = () => {
         handleSubmit={handleSubmit}
         content={
           <div className={classes.formContainer}>
-            <Input
-              value={dialogValue.recipeName}
-              handleChange={handleChange}
-              name="recipeName"
-              label="Recipe Name"
-              error={errors?.recipeName}
-            />
-            <Input
-              value={dialogValue.recipeDescription}
-              handleChange={handleChange}
-              name="recipeDescription"
-              label="Recipe Description"
-              error={errors?.recipeDescription}
-            />
-            <Input
-              value={dialogValue.calories}
-              handleChange={handleChange}
-              name="calories"
-              type="number"
-              label="Calories"
-              error={errors?.calories}
-            />
-            <Input
-              value={dialogValue.servings}
-              handleChange={handleChange}
-              name="servings"
-              type="number"
-              label="Servings"
-              error={errors?.servings}
-            />
-            <Input
-              value={dialogValue.prepTime}
-              handleChange={handleChange}
-              name="prepTime"
-              type="number"
-              label="Prep Time"
-              error={errors?.prepTime}
-            />
-            <Input
-              value={dialogValue.cookTime}
-              handleChange={handleChange}
-              name="cookTime"
-              type="number"
-              label="Cook Time"
-              error={errors?.cookTime}
-            />
+            {recipeFormFields.map((field, fieldIdx) => (
+              <Input
+                key={`new-recipe-form-${field.name}-${fieldIdx}`}
+                value={dialogValue[field.name]}
+                handleChange={handleChange}
+                name={field.name}
+                label={field.label}
+                error={errors[field.name]}
+                type={field.type ? field.type : 'text'}
+                required={field.required}
+              />
+            ))}
           </div>
         }
       />

@@ -9,6 +9,7 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import Navbar from '../views/common/Navbar/Navbar';
 import WeekDetailsPage from '../views/pages/WeekDetailsPage/WeekDetailsPage';
 import WeekPage from '../views/pages/WeekPage/WeekPage';
+import HomePage from '../views/pages/HomePage/HomePage';
 import AuthPage from '../views/pages/AuthPage/AuthPage';
 import ProfilePage from '../views/pages/ProfilePage/ProfilePage';
 import RecipePage from '../views/pages/RecipePage/RecipePage';
@@ -34,7 +35,7 @@ function App() {
       <Navbar />
       <div className={classes.root}>
         <Switch>
-          {/* <Route path={routes.HOME_PAGE} exact component={WeekPage} /> */}
+          <Route path={routes.HOME_PAGE} exact component={HomePage} />
           <Route path={routes.WEEK_PAGE} exact component={WeekPage} />
           <Route
             path={routes.WEEK_DETAILS_PAGE}

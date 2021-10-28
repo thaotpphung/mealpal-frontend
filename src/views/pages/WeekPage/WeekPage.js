@@ -8,16 +8,17 @@ import WeekCard from '../../components/WeekCard/WeekCard';
 import Pagination from '@material-ui/lab/Pagination';
 import { getAllWeeks, createWeek } from '../../../redux/actions/weekActions';
 import SearchIcon from '@material-ui/icons/Search';
+import AddIcon from '@material-ui/icons/Add';
 import Input from '../../common/Input/Input';
 import PopupDialog from '../../common/PopupDialog/PopupDialog';
 import usePagination from '../../../utils/hooks/usePagination';
 import useDialog from '../../../utils/hooks/useDialog';
 import useForm from '../../../utils/hooks/useForm';
 import { validate } from '../../../utils/validations/validate';
+import { getInitialWeekForm, weekFormFields } from '../../../utils/forms/weeks';
 
 const WeekPage = () => {
   const classes = useStyles();
-  const localClasses = styles();
   const dispatch = useDispatch();
   const history = useHistory();
   const { currentUser } = useSelector((state) => state.user);
@@ -35,14 +36,6 @@ const WeekPage = () => {
     setPageCount(weekCount);
   }, [weekCount]);
 
-  const initialState = {
-    weekName: '',
-    weekDiet: '',
-    caloGoal: '',
-    weekDescription: '',
-    planTag: '',
-  };
-
   // create week dialog
   const { open, toggleOpen, handleClose } = useDialog(() => reset());
   const {
@@ -52,7 +45,7 @@ const WeekPage = () => {
     reset,
     errors,
   } = useForm(
-    initialState,
+    getInitialWeekForm(false),
     () => {
       dispatch(
         createWeek({ ...dialogValue, userId: currentUser._id }, history)
@@ -71,7 +64,7 @@ const WeekPage = () => {
     handleChangePage,
     handleChangeQueryField,
     setPageCount,
-  } = usePagination(initialState, 9, (value) =>
+  } = usePagination(getInitialWeekForm(false), 9, (value) =>
     dispatch(getAllWeeks(buildQuery(value)))
   );
 
@@ -79,27 +72,15 @@ const WeekPage = () => {
     <div>
       <div className={classes.utilsBar}>
         <div className={classes.utilsFields}>
-          <Input
-            name="weekName"
-            label="Week Name"
-            handleChange={handleChangeQueryField}
-          />
-          <Input
-            name="caloGoal"
-            label="Calories Goal"
-            type="number"
-            handleChange={handleChangeQueryField}
-          />
-          <Input
-            name="weekDiet"
-            handleChange={handleChangeQueryField}
-            label="Diet"
-          />
-          <Input
-            name="planTag"
-            handleChange={handleChangeQueryField}
-            label="Plan Tag"
-          />
+          {weekFormFields.map((field, fieldIdx) => (
+            <Input
+              key={`weekfieldform-${field.name}-${fieldIdx}`}
+              name={field.name}
+              label={field.label}
+              handleChange={handleChangeQueryField}
+              type={field.type ? field.type : 'text'}
+            />
+          ))}
         </div>
         <div className={classes.utilsActions}>
           <Button
@@ -110,11 +91,10 @@ const WeekPage = () => {
             <SearchIcon /> Search
           </Button>
           <Button variant="outlined" color="primary" onClick={toggleOpen}>
-            + Week
+            <AddIcon /> Week
           </Button>
         </div>
       </div>
-
       <Grid container alignItems="stretch" spacing={3}>
         {Object.values(weeks).map((week, weekIdx) => (
           <Grid
@@ -137,7 +117,6 @@ const WeekPage = () => {
         showLastButton
         showFirstButton
       />
-
       <PopupDialog
         open={open}
         title="Add a new week"
@@ -145,42 +124,18 @@ const WeekPage = () => {
         handleSubmit={handleSubmit}
         content={
           <div className={classes.formContainer}>
-            <Input
-              name="weekName"
-              label="Week Name"
-              value={dialogValue.weekName}
-              handleChange={handleChange}
-              error={errors?.weekName}
-            />
-            <Input
-              name="weekDescription"
-              label="Week Description"
-              value={dialogValue.weekDescription}
-              handleChange={handleChange}
-              error={errors?.weekDescription}
-            />
-            <Input
-              name="caloGoal"
-              label="Calories Goal"
-              type="number"
-              value={dialogValue.caloGoal}
-              handleChange={handleChange}
-              error={errors?.caloGoal}
-            />
-            <Input
-              name="weekDiet"
-              label="Diet"
-              value={dialogValue.weekDiet}
-              handleChange={handleChange}
-              error={errors?.weekDiet}
-            />
-            <Input
-              name="planTag"
-              value={dialogValue.planTag}
-              handleChange={handleChange}
-              label="Plan Tag"
-              error={errors?.planTag}
-            />
+            {weekFormFields.map((field, fieldIdx) => (
+              <Input
+                key={`new-week-form-field-${field.name}-${fieldIdx}`}
+                name={field.name}
+                label={field.label}
+                value={dialogValue[field.name]}
+                handleChange={handleChange}
+                error={errors[field.name]}
+                required={field.required}
+                type={field.type ? field.type : 'text'}
+              />
+            ))}
           </div>
         }
       />

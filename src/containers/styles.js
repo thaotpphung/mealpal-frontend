@@ -10,7 +10,6 @@ export default makeStyles((theme) => ({
       listStyle: 'none',
     },
   },
-
   // field
   fieldValue: {},
   fieldTitle: {},
@@ -34,12 +33,13 @@ export default makeStyles((theme) => ({
   menuContainer: {
     marginBottom: theme.spacing(3),
   },
-
   // form
   formContainer: {
-    display: 'flex',
-    flexDirection: 'column',
     padding: theme.spacing(2),
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
   },
   formSubmitButton: {
     margin: theme.spacing(3, 0, 2),
@@ -85,11 +85,6 @@ export default makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
   },
-
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-  },
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
@@ -97,6 +92,9 @@ export default makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'space-between',
     marginBottom: theme.spacing(3),
+  },
+  avatar: {
+    backgroundColor: 'white',
   },
   utilsFields: {
     flex: '1 1 auto',

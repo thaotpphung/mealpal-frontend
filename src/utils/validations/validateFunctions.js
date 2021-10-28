@@ -1,8 +1,8 @@
 const validateField = (name, value, errors, password = null) => {
-  if (!value || value.trim() === '') {
-    errors[name] = 'This field is required';
-  }
-  console.log('name', name, 'value', value, 'password', password);
+  if (!value) errors[name] = 'This field is required';
+  // if (isNaN(value)) {
+  //   if (value.trim() === '') errors[name] = 'This field is required';
+  // }
   switch (name) {
     case 'email': {
       if (!/\S+@\S+\.\S+/.test(value)) {

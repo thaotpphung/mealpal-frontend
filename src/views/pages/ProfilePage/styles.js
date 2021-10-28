@@ -10,6 +10,7 @@ const styles = makeStyles((theme) => ({
     height: theme.spacing(30),
     margin: 'auto',
     marginBottom: theme.spacing(5),
+    backgroundColor: 'white',
   },
   paper: {
     '& > div': {
