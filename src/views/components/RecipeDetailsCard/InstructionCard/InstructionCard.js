@@ -1,11 +1,12 @@
 import React from 'react';
-import { Typography } from '@material-ui/core';
+import { Typography, TextField, Grid } from '@material-ui/core';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import useStyles from '../../../../containers/styles';
 import { styles } from '../styles';
 import Input from '../../../common/Input/Input';
 import RoundButton from '../../../common/Buttons/RoundButton';
 
-const RecipeDetailsCard = ({
+const InstructionCard = ({
   title,
   array,
   handleChange,
@@ -70,4 +71,4 @@ const RecipeDetailsCard = ({
   );
 };
 
-export default RecipeDetailsCard;
+export default InstructionCard;

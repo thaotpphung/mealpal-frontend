@@ -6,62 +6,70 @@ import Autocomplete, {
 const filter = createFilterOptions();
 
 const AutocompleteField = ({
+  value,
   toggleOpen,
   setDialogValue,
   handleChangeAutocompleteField,
-  changedIndex,
   param,
   options,
-  value,
+  changedIndices,
+  error,
+  ...rest
 }) => {
   return (
-    <React.Fragment>
-      <Autocomplete
-        value={value}
-        onChange={(event, newValue) => {
-          if (typeof newValue === 'string') {
-            setTimeout(() => {
-              toggleOpen(true);
-              setDialogValue(param, newValue);
-            });
-          } else if (newValue && newValue.inputValue) {
+    <Autocomplete
+      {...rest}
+      value={value}
+      onChange={(event, newValue) => {
+        if (typeof newValue === 'string') {
+          setTimeout(() => {
             toggleOpen(true);
-            setDialogValue(param, newValue.inputValue);
-          } else {
-            if (newValue !== null) {
-              handleChangeAutocompleteField(changedIndex, newValue);
-            }
+            setDialogValue(param, newValue);
+          });
+        } else if (newValue && newValue.inputValue) {
+          toggleOpen(true);
+          setDialogValue(param, newValue.inputValue);
+        } else {
+          if (newValue !== null) {
+            handleChangeAutocompleteField(...changedIndices, newValue);
           }
-        }}
-        filterOptions={(options, params) => {
-          const filtered = filter(options, params);
-          if (params.inputValue !== '') {
-            filtered.push({
-              inputValue: params.inputValue,
-              [param]: `Add "${params.inputValue}"`,
-            });
-          }
-          return filtered;
-        }}
-        options={options}
-        getOptionLabel={(option) => {
-          if (typeof option === 'string') {
-            return option;
-          }
-          if (option.inputValue) {
-            return option.inputValue;
-          }
-          return option[param];
-        }}
-        selectOnFocus
-        clearOnBlur
-        handleHomeEndKeys
-        renderOption={(option) => option[param]}
-        style={{ width: 300 }}
-        freeSolo
-        renderInput={(params) => <TextField {...params} />}
-      />
-    </React.Fragment>
+        }
+      }}
+      filterOptions={(options, params) => {
+        const filtered = filter(options, params);
+        if (params.inputValue !== '') {
+          filtered.push({
+            inputValue: params.inputValue,
+            [param]: `Add "${params.inputValue}"`,
+          });
+        }
+        return filtered;
+      }}
+      options={options}
+      getOptionLabel={(option) => {
+        if (typeof option === 'string') {
+          return option;
+        }
+        if (option.inputValue) {
+          return option.inputValue;
+        }
+        return option[param];
+      }}
+      selectOnFocus
+      clearOnBlur
+      handleHomeEndKeys
+      renderOption={(option) => option[param]}
+      freeSolo
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          variant="outlined"
+          size="small"
+          margin="dense"
+          error={error !== undefined ? true : false}
+        />
+      )}
+    />
   );
 };
 

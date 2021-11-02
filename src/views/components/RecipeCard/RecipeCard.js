@@ -70,7 +70,7 @@ const RecipeCard = ({ recipe }) => {
           <Avatar
             aria-label="recipe"
             className={classes.avatar}
-            src={currentUser.avatar}
+            src={recipe.userId.avatar}
           />
         }
         action={

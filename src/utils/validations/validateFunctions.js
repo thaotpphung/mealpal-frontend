@@ -1,8 +1,6 @@
 const validateField = (name, value, errors, password = null) => {
-  if (!value) errors[name] = 'This field is required';
-  // if (isNaN(value)) {
-  //   if (value.trim() === '') errors[name] = 'This field is required';
-  // }
+  value = String(value);
+  if (!value || value.trim() === '') errors[name] = 'This field is required';
   switch (name) {
     case 'email': {
       if (!/\S+@\S+\.\S+/.test(value)) {
@@ -36,7 +34,7 @@ const validateArray = (name, value, errors) => {
   let hasError = false;
   value.map((item, idx) => {
     if (item.trim() === '') {
-      currentErrors[idx] = 'Field cannot be empty';
+      currentErrors[idx] = '';
       hasError = true;
     }
   });

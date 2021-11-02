@@ -68,7 +68,7 @@ const WeekCard = ({ week }) => {
           <Avatar
             aria-label="userAvatar"
             className={classes.avatar}
-            src={currentUser.avatar}
+            src={week.userId.avatar}
           />
         }
         action={

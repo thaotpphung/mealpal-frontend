@@ -233,15 +233,6 @@ const ProfilePage = () => {
                     errors={errors?.lastName}
                   />
                   <Input
-                    name="bio"
-                    label="Bio"
-                    value={userForm.bio}
-                    multiline
-                    rows={4}
-                    handleChange={handleChange}
-                    errors={errors?.bio}
-                  />
-                  <Input
                     name="preferredDiet"
                     label="Preferred Diet"
                     value={userForm.preferredDiet}
@@ -250,10 +241,20 @@ const ProfilePage = () => {
                   />
                   <Input
                     name="caloGoal"
-                    label="Calo Goal"
+                    label="Calories Goal"
+                    type="number"
                     value={userForm.caloGoal}
                     handleChange={handleChange}
                     errors={errors?.caloGoal}
+                  />
+                  <Input
+                    name="bio"
+                    label="Bio"
+                    value={userForm.bio}
+                    multiline
+                    rows={4}
+                    handleChange={handleChange}
+                    errors={errors?.bio}
                   />
                   <Button
                     type="submit"

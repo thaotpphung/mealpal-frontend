@@ -30,6 +30,7 @@ const Input = ({
       <TextField
         {...rest}
         variant="outlined"
+        size="small"
         className={classes.inputField}
         name={name}
         onChange={handleChange}
@@ -41,7 +42,7 @@ const Input = ({
         autoFocus={autoFocus}
         type={type}
         helperText={error}
-        error={!!error}
+        error={error !== undefined}
         disabled={disabled}
         InputProps={{
           endAdornment: endAction ? (

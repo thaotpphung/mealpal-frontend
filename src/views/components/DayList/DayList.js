@@ -12,10 +12,6 @@ import {
 import RestaurantMenuIcon from '@material-ui/icons/RestaurantMenu';
 import CardHeader from '../../common/CardHeader/CardHeader';
 import RoundButton from '../../common/Buttons/RoundButton';
-import Autocomplete, {
-  createFilterOptions,
-} from '@material-ui/lab/Autocomplete';
-const filter = createFilterOptions();
 import useForm from '../../../utils/hooks/useForm';
 import useDialog from '../../../utils/hooks/useDialog';
 import AutocompleteField from '../../common/AutocompleteField/AutocompleteField';
@@ -42,27 +38,34 @@ const DayList = ({ days, recipes }) => {
       };
     }
   );
+
+  const initialRecipe = {
+    recipeName: '',
+    _id: '',
+    calories: 0,
+  };
   // new recipe dialog form
   const {
     open: openNewRecipeDialog,
     toggleOpen: toggleOpenNewRecipeDialog,
     handleClose: handleCloseNewRecipeDialog,
-  } = useDialog(() => resetNewRecipeName());
+  } = useDialog(() => resetNewRecipe());
   const {
-    handleChange: handleChangeRecipeName,
+    handleChange: handleChangeRecipe,
     handleSubmit: handleSubmitCreateRecipe,
-    values: newRecipeName,
-    setValue: setNewRecipeName,
-    reset: resetNewRecipeName,
+    values: newRecipe,
+    setValue: setNewRecipe,
+    reset: resetNewRecipe,
     errors: newRecipeErrors,
   } = useForm(
     {
       recipeName: '',
+      calories: 0,
     },
     () => {
       dispatch(
         createRecipe({
-          ...newRecipeName,
+          ...newRecipe,
         })
       );
       handleCloseNewRecipeDialog();
@@ -77,11 +80,11 @@ const DayList = ({ days, recipes }) => {
     if (day.meals.length === 0) {
       day.meals[0] = {
         mealName: '[PlaceHolder]',
-        food: [{ recipeName: '', _id: '' }],
+        food: [{ ...initialRecipe }],
       };
     }
     day.meals.forEach((meal) => {
-      if (meal.food.length === 0) meal.food = [{ recipeName: '', _id: '' }];
+      if (meal.food.length === 0) meal.food = [{ ...initialRecipe }];
     });
     setDayForm(day);
     setIsInEditDayMode(modes);
@@ -98,12 +101,10 @@ const DayList = ({ days, recipes }) => {
   const handleSubmitUpdateDay = (dayIdx) => {
     let currentErrors = {};
     dayForm.meals.forEach((meal, mealIdx) => {
-      if (meal.mealName.trim() === '')
-        currentErrors[`meal${mealIdx}`] = 'Field cannot be empty';
+      if (meal.mealName.trim() === '') currentErrors[`meal${mealIdx}`] = '';
       meal.food.forEach((recipe, recipeIdx) => {
         if (recipe.recipeName.trim() === '')
-          currentErrors[`meal${mealIdx}food${recipeIdx}`] =
-            'Field cannot be empty';
+          currentErrors[`meal${mealIdx}food${recipeIdx}`] = '';
       });
     });
     setErrors(currentErrors);
@@ -125,12 +126,7 @@ const DayList = ({ days, recipes }) => {
     const updatedDays = cloneDeep(dayForm);
     updatedDays.meals.splice(mealIdx + 1, 0, {
       mealName: '[Meal Name]',
-      food: [
-        {
-          recipeName: '',
-          _id: '',
-        },
-      ],
+      food: [{ ...initialRecipe }],
     });
     setDayForm(updatedDays);
   };
@@ -153,8 +149,7 @@ const DayList = ({ days, recipes }) => {
   const handleAddFood = (mealIdx, recipeIdx) => {
     const updatedDays = cloneDeep(dayForm);
     updatedDays.meals[mealIdx].food.splice(recipeIdx + 1, 0, {
-      recipeName: '',
-      _id: '',
+      ...initialRecipe,
     });
     setDayForm(updatedDays);
   };
@@ -168,9 +163,18 @@ const DayList = ({ days, recipes }) => {
             <Input
               name="recipeName"
               label="Recipe Name"
-              handleChange={handleChangeRecipeName}
-              value={newRecipeName.recipeName}
+              handleChange={handleChangeRecipe}
+              value={newRecipe.recipeName}
               error={newRecipeErrors.recipeName}
+              required
+            />
+            <Input
+              name="calories"
+              label="Calories"
+              type="number"
+              handleChange={handleChangeRecipe}
+              value={newRecipe.calories}
+              error={newRecipeErrors.calories}
               required
             />
           </div>
@@ -261,70 +265,16 @@ const DayList = ({ days, recipes }) => {
                         {meal.food.map((recipe, recipeIdx) => (
                           <li key={`food-field-${recipe._id}-${recipeIdx}`}>
                             <RestaurantMenuIcon />
-                            <Autocomplete
+                            <AutocompleteField
                               value={recipe}
-                              onChange={(event, newValue) => {
-                                if (typeof newValue === 'string') {
-                                  setTimeout(() => {
-                                    toggleOpenNewRecipeDialog(true);
-                                    setNewRecipeName('recipeName', newValue);
-                                  });
-                                } else if (newValue && newValue.inputValue) {
-                                  toggleOpenNewRecipeDialog(true);
-                                  setNewRecipeName(
-                                    'recipeName',
-                                    newValue.inputValue
-                                  );
-                                } else {
-                                  if (newValue !== null) {
-                                    handleChangeFood(
-                                      mealIdx,
-                                      recipeIdx,
-                                      newValue
-                                    );
-                                  }
-                                }
-                              }}
-                              filterOptions={(options, params) => {
-                                const filtered = filter(options, params);
-                                if (params.inputValue !== '') {
-                                  filtered.push({
-                                    inputValue: params.inputValue,
-                                    recipeName: `Add "${params.inputValue}"`,
-                                  });
-                                }
-                                return filtered;
-                              }}
+                              toggleOpen={toggleOpenNewRecipeDialog}
+                              setDialogValue={setNewRecipe}
+                              handleChangeAutocompleteField={handleChangeFood}
+                              param="recipeName"
                               options={extractedFieldsForAutoComplete}
-                              getOptionLabel={(option) => {
-                                if (typeof option === 'string') {
-                                  return option;
-                                }
-                                if (option.inputValue) {
-                                  return option.inputValue;
-                                }
-                                return option.recipeName;
-                              }}
-                              selectOnFocus
-                              clearOnBlur
-                              handleHomeEndKeys
-                              renderOption={(option) => option.recipeName}
-                              style={{ width: 300 }}
-                              freeSolo
-                              renderInput={(params) => (
-                                <TextField
-                                  variant="outlined"
-                                  {...params}
-                                  error={
-                                    errors[`meal${mealIdx}food${recipeIdx}`]
-                                      ? true
-                                      : false
-                                  }
-                                  label={
-                                    errors[`meal${mealIdx}food${recipeIdx}`]
-                                  }
-                                />
-                              )}
+                              changedIndices={[mealIdx, recipeIdx]}
+                              error={errors[`meal${mealIdx}food${recipeIdx}`]}
+                              style={{ minWidth: 300 }}
                             />
                             <RoundButton
                               type="deleteField"

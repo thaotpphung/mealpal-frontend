@@ -12,6 +12,7 @@ const useArray = (initialState) => {
   }
 
   function update(index, newElement) {
+    console.log('index', index, 'new element', newElement);
     setArray((a) => [
       ...a.slice(0, index),
       newElement,

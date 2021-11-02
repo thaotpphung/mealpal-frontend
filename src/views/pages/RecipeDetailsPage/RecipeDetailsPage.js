@@ -23,14 +23,14 @@ const RecipeDetailsPage = () => {
       <div className={classes.root}>
         <Grid
           container
-          justify="space-between"
+          justifyContent="space-between"
           alignItems="stretch"
           spacing={7}
         >
-          <Grid item xs={12} sm={5}>
+          <Grid item xs={12} sm={4}>
             <RecipeCard recipe={recipe} />
           </Grid>
-          <Grid item xs={12} sm={7} className={classes.rightColumn}>
+          <Grid item xs={12} sm={8} className={classes.rightColumn}>
             <RecipeDetailsCard recipe={recipe} />
           </Grid>
         </Grid>

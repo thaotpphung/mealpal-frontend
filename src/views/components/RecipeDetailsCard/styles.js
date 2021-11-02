@@ -4,7 +4,6 @@ import { yellow } from '@material-ui/core/colors';
 const styles = makeStyles((theme) => ({
   notePaper: {
     minHeight: '420px',
-    // backgroundColor: `${yellow[100]} !important`,
     paddingBottom: theme.spacing(6),
   },
   notePaperItem: {
@@ -12,7 +11,6 @@ const styles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     cursor: 'pointer',
-    borderBottom: '1px solid black',
   },
   recipeDetailsHeader: {
     textAlign: 'center',
@@ -23,6 +21,11 @@ const styles = makeStyles((theme) => ({
   },
   recipeDetailsCardContent: {
     padding: theme.spacing(3),
+  },
+  itemContent: {
+    flex: '1 1 auto',
+    display: 'flex',
+    justifyContent: 'space-between',
   },
 }));
 

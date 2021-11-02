@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Button } from '@material-ui/core';
 import useStyles from '../../../containers/styles';
@@ -8,12 +8,12 @@ import WeekCard from '../../components/WeekCard/WeekCard';
 import Pagination from '@material-ui/lab/Pagination';
 import { getAllWeeks, createWeek } from '../../../redux/actions/weekActions';
 import SearchIcon from '@material-ui/icons/Search';
-import AddIcon from '@material-ui/icons/Add';
 import Input from '../../common/Input/Input';
 import PopupDialog from '../../common/PopupDialog/PopupDialog';
 import usePagination from '../../../utils/hooks/usePagination';
 import useDialog from '../../../utils/hooks/useDialog';
 import useForm from '../../../utils/hooks/useForm';
+import useToggle from '../../../utils/hooks/useToggle';
 import { validate } from '../../../utils/validations/validate';
 import { getInitialWeekForm, weekFormFields } from '../../../utils/forms/weeks';
 
@@ -64,9 +64,24 @@ const WeekPage = () => {
     handleChangePage,
     handleChangeQueryField,
     setPageCount,
-  } = usePagination(getInitialWeekForm(false), 9, (value) =>
-    dispatch(getAllWeeks(buildQuery(value)))
+  } = usePagination(
+    getInitialWeekForm(false),
+    9,
+    (value) =>
+      dispatch(
+        getAllWeeks(buildQuery(value, isInExploreMode ? '&all=true' : ''))
+      ),
+    '&fields=userId,weekName,weekDescription,weekDiet,caloGoal,planTag'
   );
+
+  // explore mode
+  const [isInExploreMode, toggleIsInExploreMode] = useToggle(false);
+  const handleChangeMode = () => {
+    dispatch(
+      getAllWeeks(buildQuery(undefined, !isInExploreMode ? '&all=true' : ''))
+    );
+    toggleIsInExploreMode();
+  };
 
   return (
     <div>
@@ -91,7 +106,14 @@ const WeekPage = () => {
             <SearchIcon /> Search
           </Button>
           <Button variant="outlined" color="primary" onClick={toggleOpen}>
-            <AddIcon /> Week
+            + Week
+          </Button>
+          <Button
+            variant={isInExploreMode ? 'contained' : 'outlined'}
+            color="primary"
+            onClick={handleChangeMode}
+          >
+            Explore
           </Button>
         </div>
       </div>

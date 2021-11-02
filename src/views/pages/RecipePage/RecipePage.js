@@ -11,6 +11,7 @@ import PopupDialog from '../../common/PopupDialog/PopupDialog';
 import Input from '../../common/Input/Input';
 import useDialog from '../../../utils/hooks/useDialog';
 import useForm from '../../../utils/hooks/useForm';
+import useToggle from '../../../utils/hooks/useToggle';
 import usePagination from '../../../utils/hooks/usePagination';
 import {
   createRecipe,
@@ -71,9 +72,24 @@ const RecipePage = () => {
     handleChangePage,
     handleChangeQueryField,
     setPageCount,
-  } = usePagination(getInitialRecipeForm(false), 12, (value) =>
-    dispatch(getAllRecipes(buildQuery(value)))
+  } = usePagination(
+    getInitialRecipeForm(false),
+    12,
+    (value) =>
+      dispatch(
+        getAllRecipes(buildQuery(value, isInExploreMode ? '&all=true' : ''))
+      ),
+    '&fields=userId,recipeName,recipeDescription,recipeDiet,calories,servings,prepTime,cookTime,recipeImage'
   );
+
+  // explore mode
+  const [isInExploreMode, toggleIsInExploreMode] = useToggle(false);
+  const handleChangeMode = () => {
+    dispatch(
+      getAllRecipes(buildQuery(undefined, !isInExploreMode ? '&all=true' : ''))
+    );
+    toggleIsInExploreMode();
+  };
 
   return (
     <div>
@@ -101,9 +117,15 @@ const RecipePage = () => {
             variant="outlined"
             color="primary"
             onClick={() => toggleOpen(true)}
-            style={{ float: 'right' }}
           >
             + Recipe
+          </Button>
+          <Button
+            variant={isInExploreMode ? 'contained' : 'outlined'}
+            color="primary"
+            onClick={handleChangeMode}
+          >
+            Explore
           </Button>
         </div>
       </div>
