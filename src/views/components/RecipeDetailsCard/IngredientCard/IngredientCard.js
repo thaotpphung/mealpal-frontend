@@ -1,6 +1,5 @@
 import React from 'react';
-import { Typography, TextField, Grid } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import { Typography, Grid } from '@material-ui/core';
 import useStyles from '../../../../containers/styles';
 import { styles } from '../styles';
 import Input from '../../../common/Input/Input';
@@ -19,6 +18,7 @@ const IngredientCard = ({
   handleAdd,
   isInEditMode,
   errors,
+  initialIngredient,
 }) => {
   const classes = useStyles();
   const localClasses = styles();
@@ -38,7 +38,7 @@ const IngredientCard = ({
   } = useForm(
     { label: '' },
     (unit) => {
-      unitOptions.push({ label: unit });
+      unitOptions.push({ label: unit.toLowerCase() });
       handleCloseDialog();
     },
     validate
@@ -95,7 +95,7 @@ const IngredientCard = ({
                         <Grid item xs={12} sm={2}>
                           <Input
                             type="number"
-                            value={item.amount}
+                            value={item.amount.toString()}
                             handleChange={(event) =>
                               handleChange(
                                 itemIdx,
@@ -104,7 +104,7 @@ const IngredientCard = ({
                                 event.target.value
                               )
                             }
-                            // error={errors && errors[itemIdx]}
+                            error={errors && errors[itemIdx]}
                           />
                         </Grid>
                         <Grid item xs={12} sm={2}>
@@ -116,6 +116,7 @@ const IngredientCard = ({
                             param="label"
                             options={unitOptions}
                             changedIndices={[itemIdx, item, 'unit']}
+                            error={errors && errors[itemIdx]}
                           />
                         </Grid>
                         <Grid item xs={12} sm={8}>
@@ -129,7 +130,7 @@ const IngredientCard = ({
                                 event.target.value
                               )
                             }
-                            // error={errors && errors[itemIdx]}
+                            error={errors && errors[itemIdx]}
                           />
                         </Grid>
                       </Grid>
@@ -143,9 +144,7 @@ const IngredientCard = ({
                     type="addField"
                     handleClick={() =>
                       handleAdd(itemIdx, {
-                        amount: 0,
-                        unit: '',
-                        food: '',
+                        ...initialIngredient,
                       })
                     }
                   />

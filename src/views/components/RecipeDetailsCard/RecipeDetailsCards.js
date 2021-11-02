@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Paper, TextField } from '@material-ui/core';
+import { Paper } from '@material-ui/core';
 import { updateRecipe } from '../../../redux/actions/recipeActions';
 import useStyles from '../../../containers/styles';
 import { styles } from './styles';
@@ -17,6 +17,11 @@ const RecipeDetailsCard = ({ recipe }) => {
   const classes = useStyles();
   const localClasses = styles();
   const dispatch = useDispatch();
+  const initialIngredient = {
+    amount: 0,
+    unit: { label: 'kg' },
+    food: '',
+  };
   const {
     array: ingredients,
     remove: handleDeleteIngredient,
@@ -25,13 +30,7 @@ const RecipeDetailsCard = ({ recipe }) => {
     reset: resetIngredients,
   } = useArray(
     recipe.ingredients.length === 0
-      ? [
-          {
-            amount: 0,
-            unit: { label: '' },
-            food: '',
-          },
-        ]
+      ? [{ ...initialIngredient }]
       : recipe.ingredients
   );
   const {
@@ -50,8 +49,14 @@ const RecipeDetailsCard = ({ recipe }) => {
 
   const handleSubmitUpdateRecipe = (event) => {
     const errors = {};
-    // validateArray('ingredients', ingredients, errors);
-    console.log('ingredients', ingredients);
+    validateArray('ingredients', ingredients, errors, (item) => {
+      return (
+        !String(item.amount) ||
+        !item.unit.label ||
+        !item.food ||
+        item.food.trim() === ''
+      );
+    });
     validateArray('instructions', instructions, errors);
     handleSubmit(event, errors);
   };
@@ -93,6 +98,7 @@ const RecipeDetailsCard = ({ recipe }) => {
         handleDelete={handleDeleteIngredient}
         isInEditMode={isInEditMode}
         errors={errors?.ingredients}
+        initialIngredient={initialIngredient}
       />
       <InstructionCard
         title="Instructions"

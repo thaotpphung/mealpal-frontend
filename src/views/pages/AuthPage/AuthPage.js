@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { styles } from './styles';
@@ -55,7 +55,6 @@ const AuthPage = () => {
   });
 
   const handleSubmitAuth = (event) => {
-    console.log('form', form);
     const errors = validateAuth(form, isRegister);
     handleSubmit(event, errors);
   };

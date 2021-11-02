@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useHistory, useParams, useLocation } from 'react-router-dom';
-import { Grid, Typography } from '@material-ui/core';
+import { useParams, useLocation } from 'react-router-dom';
+import { Grid } from '@material-ui/core';
 import useStyles from './styles';
 import DayList from '../../components/DayList/DayList';
 import WeekInfoCard from '../../components/WeekCard/WeekCard';

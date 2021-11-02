@@ -17,6 +17,7 @@ const Input = ({
   half,
   autoFocus = true,
   type = 'text',
+  style = {},
   endAction,
   value,
   error,
@@ -49,6 +50,7 @@ const Input = ({
             <InputAdornment position="end">{endAction}</InputAdornment>
           ) : null,
           readOnly: readOnly,
+          style: style,
         }}
       />
     </Grid>

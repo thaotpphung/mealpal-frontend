@@ -3,12 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useParams, Link } from 'react-router-dom';
 import useStyles from '../../../containers/styles';
 import { styles } from './styles';
-import {
-  Paper,
-  TextField,
-  FormHelperText,
-  Typography,
-} from '@material-ui/core';
+import { Paper, Typography } from '@material-ui/core';
 import RestaurantMenuIcon from '@material-ui/icons/RestaurantMenu';
 import CardHeader from '../../common/CardHeader/CardHeader';
 import RoundButton from '../../common/Buttons/RoundButton';
@@ -274,7 +269,7 @@ const DayList = ({ days, recipes }) => {
                               options={extractedFieldsForAutoComplete}
                               changedIndices={[mealIdx, recipeIdx]}
                               error={errors[`meal${mealIdx}food${recipeIdx}`]}
-                              style={{ minWidth: 300 }}
+                              style={{ minWidth: '70%' }}
                             />
                             <RoundButton
                               type="deleteField"

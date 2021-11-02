@@ -1,3 +1,5 @@
+import { initial } from 'lodash';
+
 const validateField = (name, value, errors, password = null) => {
   value = String(value);
   if (!value || value.trim() === '') errors[name] = 'This field is required';
@@ -26,14 +28,18 @@ const validateField = (name, value, errors, password = null) => {
   return errors;
 };
 
-const validateArray = (name, value, errors) => {
-  if (value.length === 1 && value[0] === '') {
-    return errors;
+const validateArray = (
+  name,
+  value,
+  errors,
+  condition = (item) => {
+    return item.trim() === '';
   }
+) => {
   const currentErrors = {};
   let hasError = false;
   value.map((item, idx) => {
-    if (item.trim() === '') {
+    if (condition(item)) {
       currentErrors[idx] = '';
       hasError = true;
     }
