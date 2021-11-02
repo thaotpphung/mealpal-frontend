@@ -25,7 +25,7 @@ const WeekList = ({ weeks, toggleOpen }) => {
       />
       <div className={classes.content}>
         <ul className={classes.list}>
-          {Object.values(weeks).map((week) => (
+          {weeks.map((week) => (
             <li
               key={week?._id}
               className={`${classes.item} ${

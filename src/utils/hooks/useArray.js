@@ -3,40 +3,39 @@ import { useState } from 'react';
 const useArray = (initialState) => {
   const [array, setArray] = useState(initialState);
 
-  function push(element) {
+  const push = (element) => {
     setArray((a) => [...a, element]);
-  }
+  };
 
-  function filter(callback) {
+  const filter = (callback) => {
     setArray((a) => a.filter(callback));
-  }
+  };
 
-  function update(index, newElement) {
-    console.log('index', index, 'new element', newElement);
+  const update = (index, newElement) => {
     setArray((a) => [
       ...a.slice(0, index),
       newElement,
       ...a.slice(index + 1, a.length),
     ]);
-  }
+  };
 
-  function addAt(index, newElement) {
+  const addAt = (index, newElement) => {
     const newArray = [...array];
     newArray.splice(index + 1, 0, newElement);
     setArray(newArray);
-  }
+  };
 
-  function remove(index) {
+  const remove = (index) => {
     setArray((a) => [...a.slice(0, index), ...a.slice(index + 1, a.length)]);
-  }
+  };
 
-  function clear() {
+  const clear = () => {
     setArray([]);
-  }
+  };
 
-  function reset() {
+  const reset = () => {
     setArray(initialState);
-  }
+  };
 
   return {
     array,

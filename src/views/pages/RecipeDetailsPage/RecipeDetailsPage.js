@@ -18,26 +18,24 @@ const RecipeDetailsPage = () => {
     dispatch(getRecipe(recipeId));
   }, []);
 
-  const Component = (
-    <div className={classes.root}>
-      <Grid
-        container
-        justifyContent="space-between"
-        alignItems="stretch"
-        spacing={7}
-      >
-        <Grid item xs={12} sm={4}>
-          <RecipeCard recipe={recipe} />
-        </Grid>
-        <Grid item xs={12} sm={8} className={classes.rightColumn}>
-          <RecipeDetailsCard recipe={recipe} />
-        </Grid>
-      </Grid>
-    </div>
-  );
-
   if (!loading && Object.keys(recipe).length > 0) {
-    return Component;
+    return (
+      <div className={classes.root}>
+        <Grid
+          container
+          justifyContent="space-between"
+          alignItems="stretch"
+          spacing={7}
+        >
+          <Grid item xs={12} sm={4}>
+            <RecipeCard recipe={recipe} />
+          </Grid>
+          <Grid item xs={12} sm={8} className={classes.rightColumn}>
+            <RecipeDetailsCard recipe={recipe} />
+          </Grid>
+        </Grid>
+      </div>
+    );
   } else if (error) {
     return <div>{error}</div>;
   }

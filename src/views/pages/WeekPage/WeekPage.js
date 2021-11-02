@@ -9,6 +9,7 @@ import Pagination from '@material-ui/lab/Pagination';
 import { getAllWeeks, createWeek } from '../../../redux/actions/weekActions';
 import SearchIcon from '@material-ui/icons/Search';
 import Input from '../../common/Input/Input';
+import Spinner from '../../common/Spinner/Spinner';
 import PopupDialog from '../../common/PopupDialog/PopupDialog';
 import usePagination from '../../../utils/hooks/usePagination';
 import useDialog from '../../../utils/hooks/useDialog';
@@ -26,6 +27,8 @@ const WeekPage = () => {
     weeks,
     count: weekCount,
     currentCount,
+    loading,
+    error,
   } = useSelector((state) => state.weekList);
 
   useEffect(() => {
@@ -83,86 +86,89 @@ const WeekPage = () => {
     toggleIsInExploreMode();
   };
 
-  return (
-    <div>
-      <div className={classes.utilsBar}>
-        <div className={classes.utilsFields}>
-          {weekFormFields.map((field, fieldIdx) => (
-            <Input
-              key={`weekfieldform-${field.name}-${fieldIdx}`}
-              name={field.name}
-              label={field.label}
-              handleChange={handleChangeQueryField}
-              type={field.type ? field.type : 'text'}
-            />
-          ))}
-        </div>
-        <div className={classes.utilsActions}>
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={() => handleSubmitFilter(currentCount)}
-          >
-            <SearchIcon /> Search
-          </Button>
-          <Button variant="outlined" color="primary" onClick={toggleOpen}>
-            + Week
-          </Button>
-          <Button
-            variant={isInExploreMode ? 'contained' : 'outlined'}
-            color="primary"
-            onClick={handleChangeMode}
-          >
-            Explore
-          </Button>
-        </div>
-      </div>
-      <Grid container alignItems="stretch" spacing={3}>
-        {Object.values(weeks).map((week, weekIdx) => (
-          <Grid
-            key={`{'explore-page-${week._id}-${weekIdx}`}
-            item
-            xs={12}
-            sm={3}
-            md={3}
-          >
-            <WeekCard week={week} />
-          </Grid>
-        ))}
-      </Grid>
-      <Pagination
-        count={count}
-        page={page}
-        boundaryCount={2}
-        onChange={handleChangePage}
-        className={classes.pagination}
-        showLastButton
-        showFirstButton
-      />
-      <PopupDialog
-        open={open}
-        title="Add a new week"
-        handleClose={handleClose}
-        handleSubmit={handleSubmit}
-        content={
-          <div className={classes.formContainer}>
+  if (error) return <div>{error}</div>;
+  if (!loading && weeks.length >= 0)
+    return (
+      <div>
+        <div className={classes.utilsBar}>
+          <div className={classes.utilsFields}>
             {weekFormFields.map((field, fieldIdx) => (
               <Input
-                key={`new-week-form-field-${field.name}-${fieldIdx}`}
+                key={`weekfieldform-${field.name}-${fieldIdx}`}
                 name={field.name}
                 label={field.label}
-                value={dialogValue[field.name]}
-                handleChange={handleChange}
-                error={errors[field.name]}
-                required={field.required}
+                handleChange={handleChangeQueryField}
                 type={field.type ? field.type : 'text'}
               />
             ))}
           </div>
-        }
-      />
-    </div>
-  );
+          <div className={classes.utilsActions}>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={() => handleSubmitFilter(currentCount)}
+            >
+              <SearchIcon /> Search
+            </Button>
+            <Button variant="outlined" color="primary" onClick={toggleOpen}>
+              + Week
+            </Button>
+            <Button
+              variant={isInExploreMode ? 'contained' : 'outlined'}
+              color="primary"
+              onClick={handleChangeMode}
+            >
+              Explore
+            </Button>
+          </div>
+        </div>
+        <Grid container alignItems="stretch" spacing={3}>
+          {weeks.map((week, weekIdx) => (
+            <Grid
+              key={`{'explore-page-${week._id}-${weekIdx}`}
+              item
+              xs={12}
+              sm={3}
+              md={3}
+            >
+              <WeekCard week={week} />
+            </Grid>
+          ))}
+        </Grid>
+        <Pagination
+          count={count}
+          page={page}
+          boundaryCount={2}
+          onChange={handleChangePage}
+          className={classes.pagination}
+          showLastButton
+          showFirstButton
+        />
+        <PopupDialog
+          open={open}
+          title="Add a new week"
+          handleClose={handleClose}
+          handleSubmit={handleSubmit}
+          content={
+            <div className={classes.formContainer}>
+              {weekFormFields.map((field, fieldIdx) => (
+                <Input
+                  key={`new-week-form-field-${field.name}-${fieldIdx}`}
+                  name={field.name}
+                  label={field.label}
+                  value={dialogValue[field.name]}
+                  handleChange={handleChange}
+                  error={errors[field.name]}
+                  required={field.required}
+                  type={field.type ? field.type : 'text'}
+                />
+              ))}
+            </div>
+          }
+        />
+      </div>
+    );
+  return <Spinner />;
 };
 
 export default WeekPage;

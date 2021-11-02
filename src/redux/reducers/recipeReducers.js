@@ -30,11 +30,10 @@ const recipeListReducer = (state = RECIPE_LIST_INITIAL_STATE, action) => {
       return { ...state, loading: true, error: null };
     }
     case RECIPE_LIST_SUCCESS: {
-      const recipes = _.mapKeys(action.payload.data, '_id');
       return {
         ...state,
         loading: false,
-        recipes: recipes,
+        recipes: action.payload.data,
         error: null,
         count: action.payload.count,
         currentCount: action.payload.currentCount,
@@ -50,7 +49,7 @@ const recipeListReducer = (state = RECIPE_LIST_INITIAL_STATE, action) => {
       return {
         ...state,
         loading: false,
-        recipes: { ...state.recipes, [action.payload._id]: action.payload },
+        recipes: [...state.recipes, action.payload],
         error: null,
       };
     }

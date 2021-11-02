@@ -24,27 +24,23 @@ const WeekDetailsPage = () => {
     dispatch(getAllRecipes());
   }, []);
 
-  const Component = (
-    <Grid
-      container
-      justifyContent="space-between"
-      alignItems="stretch"
-      spacing={7}
-    >
-      <Grid item xs={12} sm={4} className={classes.leftColumn}>
-        <WeekInfoCard week={week} />
+  if (error) return <div>{error}</div>;
+  if (!loading && Object.keys(week).length > 0 && recipes.length >= 0)
+    return (
+      <Grid
+        container
+        justifyContent="space-between"
+        alignItems="stretch"
+        spacing={7}
+      >
+        <Grid item xs={12} sm={4} className={classes.leftColumn}>
+          <WeekInfoCard week={week} />
+        </Grid>
+        <Grid item xs={12} sm={8}>
+          <DayList days={week.days} recipes={recipes} />
+        </Grid>
       </Grid>
-      <Grid item xs={12} sm={8}>
-        <DayList days={week.days} recipes={recipes} />
-      </Grid>
-    </Grid>
-  );
-
-  if (!loading && week.days.length > 0) {
-    return Component;
-  } else if (error) {
-    return <div>{error}</div>;
-  }
+    );
   return <Spinner />;
 };
 

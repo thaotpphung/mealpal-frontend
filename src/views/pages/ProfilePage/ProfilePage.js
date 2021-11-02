@@ -34,7 +34,6 @@ import Select from '@material-ui/core/Select';
 const ProfilePage = () => {
   const { loading, currentUser, error } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const history = useHistory();
   const classes = useStyles();
   const localClasses = styles();
   const [isShowComponent, setIsShowComponent] = useState({ Profile: true });

@@ -25,14 +25,12 @@ const DayList = ({ days, recipes }) => {
   const [isInEditDayMode, setIsInEditDayMode] = useState([]);
   const defaultEditDayMode = new Array(days.length).fill(false);
   const [dayForm, setDayForm] = useState({});
-  const extractedFieldsForAutoComplete = Object.values(recipes).map(
-    (recipe) => {
-      return {
-        recipeName: recipe.recipeName,
-        _id: recipe._id,
-      };
-    }
-  );
+  const extractedFieldsForAutoComplete = recipes.map((recipe) => {
+    return {
+      recipeName: recipe.recipeName,
+      _id: recipe._id,
+    };
+  });
 
   const initialRecipe = {
     recipeName: '',
@@ -178,7 +176,7 @@ const DayList = ({ days, recipes }) => {
         open={openNewRecipeDialog}
         handleClose={handleCloseNewRecipeDialog}
       />
-      {Object.values(days).map((day, dayIdx) => (
+      {days.map((day, dayIdx) => (
         <Paper key={`day-card-${day._id}-${dayIdx}`}>
           <CardHeader
             title={day.dayName}
