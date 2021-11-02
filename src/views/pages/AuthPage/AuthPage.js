@@ -17,6 +17,7 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import MuiAlert from '@material-ui/lab/Alert';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Input from '../../common/Input/Input';
+import FlashMessage from '../../common/FlashMessage/FlashMessage';
 import Spinner from '../../common/Spinner/Spinner';
 import useForm from '../../../utils/hooks/useForm';
 import useToggle from '../../../utils/hooks/useToggle';
@@ -29,11 +30,12 @@ const initialState = {
   firstName: '',
   lastName: '',
   email: '',
+  confirmPassword: '',
 };
 
 const AuthPage = () => {
   const user = useSelector((state) => state.user);
-  const { loading, currentUser, error } = user;
+  const { loading, currentUser, status, message } = user;
   const dispatch = useDispatch();
   const history = useHistory();
   const classes = useStyles();
@@ -76,7 +78,9 @@ const AuthPage = () => {
       <Paper className={localClasses.paper} elevation={3}>
         <div>
           {loading && <Spinner />}
-          {error && <MuiAlert severity="error">{error}</MuiAlert>}
+          {status === 'error' && (
+            <FlashMessage status="error" message={message} />
+          )}
         </div>
         <Avatar className={localClasses.avatar}>
           <LockOutlinedIcon />

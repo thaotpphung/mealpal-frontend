@@ -5,6 +5,7 @@ import { Grid } from '@material-ui/core';
 import useStyles from './styles';
 import DayList from '../../components/DayList/DayList';
 import WeekInfoCard from '../../components/WeekCard/WeekCard';
+import FlashMessage from '../../common/FlashMessage/FlashMessage';
 import Spinner from '../../common/Spinner/Spinner';
 import { getWeek } from '../../../redux/actions/weekActions';
 import { getAllRecipes } from '../../../redux/actions/recipeActions';
@@ -24,7 +25,7 @@ const WeekDetailsPage = () => {
     dispatch(getAllRecipes());
   }, []);
 
-  if (error) return <div>{error}</div>;
+  if (error) return <FlashMessage severity="error" title="error" />;
   if (!loading && Object.keys(week).length > 0 && recipes.length >= 0)
     return (
       <Grid

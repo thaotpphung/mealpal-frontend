@@ -17,61 +17,62 @@ import {
 const INITIAL_STATE = {
   currentUser: null,
   loading: false,
-  error: null,
+  status: null,
+  message: null,
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case USER_SIGNIN_REQUEST:
-      return { ...state, loading: true, error: null };
+    case USER_REGISTER_REQUEST:
+    case USER_UPDATE_REQUEST:
+    case USER_UPDATE_PASSWORD_REQUEST:
+      return { ...state, loading: true, status: null, message: null };
+
     case USER_SIGNIN_SUCCESS:
+    case USER_REGISTER_SUCCESS: {
+      const { status, message, data } = action.payload;
       return {
         ...state,
         loading: false,
-        currentUser: action.payload.result,
-        error: null,
+        currentUser: data.result,
+        status,
+        message,
       };
-    case USER_SIGNIN_FAIL:
-      return { ...state, loading: false, error: action.payload };
+    }
 
     case USER_LOGOUT:
       return {};
 
-    case USER_REGISTER_REQUEST:
-      return { ...state, loading: true, error: null };
-    case USER_REGISTER_SUCCESS:
+    case USER_UPDATE_SUCCESS: {
+      const { status, message, data } = action.payload;
       return {
         ...state,
         loading: false,
-        currentUser: action.payload.result,
-        error: null,
+        currentUser: { ...state.currentUser, ...data },
+        status,
+        message,
       };
+    }
+
+    case USER_UPDATE_PASSWORD_SUCCESS: {
+      const { status, message } = action.payload;
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        status,
+        message,
+      };
+    }
+
     case USER_REGISTER_FAIL:
-      return { ...state, loading: false, error: action.payload };
-
-    case USER_UPDATE_REQUEST:
-      return { ...state, loading: true, error: null };
-    case USER_UPDATE_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        currentUser: { ...state.currentUser, ...action.payload },
-        error: null,
-      };
+    case USER_SIGNIN_FAIL:
     case USER_UPDATE_FAIL:
-      return { ...state, loading: false, error: action.payload };
-
-    case USER_UPDATE_PASSWORD_REQUEST:
-      return { ...state, loading: true, error: null };
-    case USER_UPDATE_PASSWORD_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        error: null,
-        successMessage: action.payload.message,
-      };
-    case USER_UPDATE_PASSWORD_FAIL:
-      return { ...state, loading: false, error: action.payload };
+    case USER_UPDATE_PASSWORD_FAIL: {
+      const { status, message } = action.payload;
+      return { ...state, loading: false, status, message };
+    }
 
     default:
       return state;

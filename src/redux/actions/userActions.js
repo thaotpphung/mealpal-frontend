@@ -21,10 +21,10 @@ const signin = (formData) => async (dispatch) => {
   dispatch({ type: USER_SIGNIN_REQUEST, payload: formData });
   try {
     const { data } = await api.signin(formData);
-    dispatch({ type: USER_SIGNIN_SUCCESS, payload: data.data });
+    dispatch({ type: USER_SIGNIN_SUCCESS, payload: data });
     localStorage.setItem('currentUser', JSON.stringify(data.data));
   } catch (error) {
-    dispatch({ type: USER_SIGNIN_FAIL, payload: error.response.data.message });
+    dispatch({ type: USER_SIGNIN_FAIL, payload: error.response.data });
   }
 };
 
@@ -32,12 +32,12 @@ const register = (formData) => async (dispatch) => {
   dispatch({ type: USER_REGISTER_REQUEST, payload: formData });
   try {
     const { data } = await api.register(formData);
-    dispatch({ type: USER_REGISTER_SUCCESS, payload: data.data });
+    dispatch({ type: USER_REGISTER_SUCCESS, payload: data });
     localStorage.setItem('currentUser', JSON.stringify(data.data));
   } catch (error) {
     dispatch({
       type: USER_REGISTER_FAIL,
-      payload: error.response.data.message,
+      payload: error.response.data,
     });
   }
 };
@@ -55,7 +55,7 @@ const updateUser = (userId, formData) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: USER_UPDATE_FAIL,
-      payload: error.response.data.message,
+      payload: error.response.data,
     });
   }
 };
@@ -68,7 +68,7 @@ const updatePassword = (userId, formData) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: USER_UPDATE_PASSWORD_FAIL,
-      payload: error.response.data.message,
+      payload: error.response.data,
     });
   }
 };
