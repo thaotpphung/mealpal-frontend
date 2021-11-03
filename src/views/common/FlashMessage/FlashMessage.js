@@ -1,10 +1,30 @@
-import React from 'react';
-import { Alert, AlertTitle } from '@material-ui/lab';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
-const FlashMessage = ({ status, message }) => (
-  <Alert sx={{ width: '50%', margin: '20px auto' }} severity={status}>
-    {message}
-  </Alert>
-);
+import { Alert } from '@material-ui/lab';
+import { Typography } from '@material-ui/core';
+import useStyles from './styles';
+
+const FlashMessage = () => {
+  const { alerts } = useSelector((state) => state.alert);
+  const classes = useStyles();
+
+  if (!alerts || Object.values(alerts).length === 0) {
+    return null;
+  }
+  return (
+    <>
+      {Object.values(alerts).map((alert, alertIdx) => (
+        <Alert
+          key={`alert-${alert.message}-${alertIdx}`}
+          className={classes.flashMessage}
+          severity={alert.status}
+        >
+          <Typography>{alert.message}</Typography>
+        </Alert>
+      ))}
+    </>
+  );
+};
 
 export default FlashMessage;

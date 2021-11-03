@@ -22,7 +22,8 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import useForm from '../../../utils/hooks/useForm';
 import useToggle from '../../../utils/hooks/useToggle';
 import Input from '../../common/Input/Input';
-import RoundButton from '../../common/Buttons/RoundButton';
+import FlashMessage from '../../common/FlashMessage/FlashMessage';
+import Spinner from '../../common/Spinner/Spinner';
 import { validate } from '../../../utils/validations/validate';
 import { updateUser, updatePassword } from '../../../redux/actions/userActions';
 import CardHeader from '../../common/CardHeader/CardHeader';
@@ -32,7 +33,9 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 
 const ProfilePage = () => {
-  const { loading, currentUser, error } = useSelector((state) => state.user);
+  const { loading, currentUser, status, message } = useSelector(
+    (state) => state.user
+  );
   const dispatch = useDispatch();
   const classes = useStyles();
   const localClasses = styles();
@@ -50,6 +53,8 @@ const ProfilePage = () => {
       lastName: currentUser?.lastName,
       bio: currentUser?.bio,
       avatar: currentUser?.avatar,
+      caloGoal: currentUser?.caloGoal,
+      preferredDiet: currentUser?.preferredDiet,
     },
     () => {
       dispatch(updateUser(currentUser._id, userForm));
@@ -174,200 +179,204 @@ const ProfilePage = () => {
     },
   ];
 
-  return (
-    <div className={localClasses.root}>
-      <Grid
-        container
-        justifyContent="space-between"
-        alignItems="stretch"
-        spacing={7}
-      >
-        <Grid item xs={12} sm={4}>
-          <Avatar className={localClasses.avatar} src={avatarUrl} />
-          <Paper className={localClasses.paper}>
-            <List component="nav">
-              {components.map((component, componentIdx) => (
-                <ListItem
-                  key={`component-${component.name}-${componentIdx}`}
-                  button
-                  onClick={() => handleClickListItem(component.name)}
-                  selected={isShowComponent[component.name]}
-                >
-                  <ListItemIcon>{component.icon}</ListItemIcon>
-                  <ListItemText primary={component.name} />
-                </ListItem>
-              ))}
-            </List>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} sm={8} className={localClasses.rightColumn}>
-          <CardHeader title={Object.keys(isShowComponent)[0]} />
-          <Paper className={localClasses.form}>
-            {isShowComponent.Profile && (
-              <form className={classes.formContainer} onSubmit={handleSubmit}>
-                <Grid container spacing={2}>
-                  <Input label="Email" value={currentUser.email} disabled />
-                  <Input
-                    name="username"
-                    label="Username"
-                    value={currentUser.username}
-                    disabled
-                  />
-                  <Input
-                    name="firstName"
-                    label="First Name"
-                    required
-                    half
-                    value={userForm.firstName}
-                    handleChange={handleChange}
-                    errors={errors?.firstName}
-                  />
-                  <Input
-                    name="lastName"
-                    label="Last Name"
-                    required
-                    half
-                    value={userForm.lastName}
-                    handleChange={handleChange}
-                    errors={errors?.lastName}
-                  />
-                  <Input
-                    name="preferredDiet"
-                    label="Preferred Diet"
-                    value={userForm.preferredDiet}
-                    handleChange={handleChange}
-                    errors={errors?.preferredDiet}
-                  />
-                  <Input
-                    name="caloGoal"
-                    label="Calories Goal"
-                    type="number"
-                    value={userForm.caloGoal}
-                    handleChange={handleChange}
-                    errors={errors?.caloGoal}
-                  />
-                  <Input
-                    name="bio"
-                    label="Bio"
-                    value={userForm.bio}
-                    multiline
-                    rows={4}
-                    handleChange={handleChange}
-                    errors={errors?.bio}
-                  />
-                  <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    className={classes.formSubmitButton}
+  if (status === 'error')
+    return <FlashMessage status="error" message={message} />;
+  if (!loading && Object.keys(currentUser).length > 0)
+    return (
+      <div className={localClasses.root}>
+        <Grid
+          container
+          justifyContent="space-between"
+          alignItems="stretch"
+          spacing={7}
+        >
+          <Grid item xs={12} sm={4}>
+            <Avatar className={localClasses.avatar} src={avatarUrl} />
+            <Paper className={localClasses.paper}>
+              <List component="nav">
+                {components.map((component, componentIdx) => (
+                  <ListItem
+                    key={`component-${component.name}-${componentIdx}`}
+                    button
+                    onClick={() => handleClickListItem(component.name)}
+                    selected={isShowComponent[component.name]}
                   >
-                    Submit
-                  </Button>
-                </Grid>
-              </form>
-            )}
-            {isShowComponent.Security && (
-              <form
-                className={classes.formContainer}
-                onSubmit={handleSubmitChangePassword}
-              >
-                <Grid container spacing={2}>
-                  {passwordFields.map((field, fieldIdx) => (
+                    <ListItemIcon>{component.icon}</ListItemIcon>
+                    <ListItemText primary={component.name} />
+                  </ListItem>
+                ))}
+              </List>
+            </Paper>
+          </Grid>
+          <Grid item xs={12} sm={8} className={localClasses.rightColumn}>
+            <CardHeader title={Object.keys(isShowComponent)[0]} />
+            <Paper className={localClasses.form}>
+              {isShowComponent.Profile && (
+                <form className={classes.formContainer} onSubmit={handleSubmit}>
+                  <Grid container spacing={2}>
+                    <Input label="Email" value={currentUser.email} disabled />
                     <Input
-                      key={`password-field-${field.name}-${fieldIdx}`}
-                      name={field.name}
-                      label={field.label}
-                      value={passwordForm[field.name]}
-                      required
-                      handleChange={handleChangePassword}
-                      error={passwordErrors[field.name]}
-                      type={showPassword ? 'text' : 'password'}
-                      endAction={
-                        <IconButton onClick={toggleShowPassword}>
-                          {showPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                      }
+                      name="username"
+                      label="Username"
+                      value={currentUser.username}
+                      disabled
                     />
-                  ))}
-                  <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    className={classes.formSubmitButton}
-                  >
-                    Submit
-                  </Button>
-                </Grid>
-              </form>
-            )}
-            {isShowComponent.Avatar && (
-              <form
-                className={classes.formContainer}
-                onSubmit={handleSubmitChangeAvatar}
-              >
-                <Grid container spacing={2}>
-                  {Object.entries(avatarOptions).map(([key, value], idx) => (
-                    <Grid
-                      key={`avatar-options-${key}-${idx}`}
-                      item
-                      xs={12}
-                      sm={6}
+                    <Input
+                      name="firstName"
+                      label="First Name"
+                      required
+                      half
+                      value={userForm.firstName}
+                      handleChange={handleChange}
+                      errors={errors?.firstName}
+                    />
+                    <Input
+                      name="lastName"
+                      label="Last Name"
+                      required
+                      half
+                      value={userForm.lastName}
+                      handleChange={handleChange}
+                      errors={errors?.lastName}
+                    />
+                    <Input
+                      name="preferredDiet"
+                      label="Preferred Diet"
+                      value={userForm.preferredDiet}
+                      handleChange={handleChange}
+                      errors={errors?.preferredDiet}
+                    />
+                    <Input
+                      name="caloGoal"
+                      label="Calories Goal"
+                      type="number"
+                      value={userForm.caloGoal}
+                      handleChange={handleChange}
+                      errors={errors?.caloGoal}
+                    />
+                    <Input
+                      name="bio"
+                      label="Bio"
+                      value={userForm.bio}
+                      multiline
+                      rows={4}
+                      handleChange={handleChange}
+                      errors={errors?.bio}
+                    />
+                    <Button
+                      type="submit"
+                      fullWidth
+                      variant="contained"
+                      color="primary"
+                      className={classes.formSubmitButton}
                     >
-                      <FormControl
-                        margin="dense"
-                        variant="outlined"
-                        size="small"
-                        fullWidth
-                        className={classes.formControl}
+                      Submit
+                    </Button>
+                  </Grid>
+                </form>
+              )}
+              {isShowComponent.Security && (
+                <form
+                  className={classes.formContainer}
+                  onSubmit={handleSubmitChangePassword}
+                >
+                  <Grid container spacing={2}>
+                    {passwordFields.map((field, fieldIdx) => (
+                      <Input
+                        key={`password-field-${field.name}-${fieldIdx}`}
+                        name={field.name}
+                        label={field.label}
+                        value={passwordForm[field.name]}
+                        required
+                        handleChange={handleChangePassword}
+                        error={passwordErrors[field.name]}
+                        type={showPassword ? 'text' : 'password'}
+                        endAction={
+                          <IconButton onClick={toggleShowPassword}>
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        }
+                      />
+                    ))}
+                    <Button
+                      type="submit"
+                      fullWidth
+                      variant="contained"
+                      color="primary"
+                      className={classes.formSubmitButton}
+                    >
+                      Submit
+                    </Button>
+                  </Grid>
+                </form>
+              )}
+              {isShowComponent.Avatar && (
+                <form
+                  className={classes.formContainer}
+                  onSubmit={handleSubmitChangeAvatar}
+                >
+                  <Grid container spacing={2}>
+                    {Object.entries(avatarOptions).map(([key, value], idx) => (
+                      <Grid
+                        key={`avatar-options-${key}-${idx}`}
+                        item
+                        xs={12}
+                        sm={6}
                       >
-                        <InputLabel id={`${key}-label`}>{key}</InputLabel>
-                        <Select
-                          defaultValue=""
-                          labelId={`${key}-label`}
-                          value={avatarForm[key]}
-                          onChange={(e) =>
-                            handleChangeAvatar(key, e.target.value)
-                          }
+                        <FormControl
+                          margin="dense"
+                          variant="outlined"
+                          size="small"
+                          fullWidth
+                          className={classes.formControl}
                         >
-                          {value.map((item, itemIdx) => (
-                            <MenuItem
-                              key={`item-${item}-${itemIdx}`}
-                              value={item}
-                            >
-                              {item}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                  ))}
-                  <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    className={classes.formSubmitButton}
-                  >
-                    Submit
-                  </Button>
-                  <Button
-                    fullWidth
-                    variant="contained"
-                    onClick={handleCancelChangeAvatar}
-                    style={{ marginTop: '10px' }}
-                  >
-                    Cancel
-                  </Button>
-                </Grid>
-              </form>
-            )}
-          </Paper>
+                          <InputLabel id={`${key}-label`}>{key}</InputLabel>
+                          <Select
+                            defaultValue=""
+                            labelId={`${key}-label`}
+                            value={avatarForm[key]}
+                            onChange={(e) =>
+                              handleChangeAvatar(key, e.target.value)
+                            }
+                          >
+                            {value.map((item, itemIdx) => (
+                              <MenuItem
+                                key={`item-${item}-${itemIdx}`}
+                                value={item}
+                              >
+                                {item}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                    ))}
+                    <Button
+                      type="submit"
+                      fullWidth
+                      variant="contained"
+                      color="primary"
+                      className={classes.formSubmitButton}
+                    >
+                      Submit
+                    </Button>
+                    <Button
+                      fullWidth
+                      variant="contained"
+                      onClick={handleCancelChangeAvatar}
+                      style={{ marginTop: '10px' }}
+                    >
+                      Cancel
+                    </Button>
+                  </Grid>
+                </form>
+              )}
+            </Paper>
+          </Grid>
         </Grid>
-      </Grid>
-    </div>
-  );
+      </div>
+    );
+  return <Spinner />;
 };
 
 export default ProfilePage;

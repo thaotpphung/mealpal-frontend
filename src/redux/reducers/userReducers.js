@@ -17,8 +17,6 @@ import {
 const INITIAL_STATE = {
   currentUser: null,
   loading: false,
-  status: null,
-  message: null,
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
@@ -27,17 +25,14 @@ const userReducer = (state = INITIAL_STATE, action) => {
     case USER_REGISTER_REQUEST:
     case USER_UPDATE_REQUEST:
     case USER_UPDATE_PASSWORD_REQUEST:
-      return { ...state, loading: true, status: null, message: null };
+      return { ...state, loading: true };
 
     case USER_SIGNIN_SUCCESS:
     case USER_REGISTER_SUCCESS: {
-      const { status, message, data } = action.payload;
       return {
         ...state,
         loading: false,
-        currentUser: data.result,
-        status,
-        message,
+        currentUser: action.payload.data.result,
       };
     }
 
@@ -45,24 +40,17 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {};
 
     case USER_UPDATE_SUCCESS: {
-      const { status, message, data } = action.payload;
       return {
         ...state,
         loading: false,
-        currentUser: { ...state.currentUser, ...data },
-        status,
-        message,
+        currentUser: { ...state.currentUser, ...action.payload.data },
       };
     }
 
     case USER_UPDATE_PASSWORD_SUCCESS: {
-      const { status, message } = action.payload;
       return {
         ...state,
         loading: false,
-        error: null,
-        status,
-        message,
       };
     }
 
@@ -70,8 +58,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
     case USER_SIGNIN_FAIL:
     case USER_UPDATE_FAIL:
     case USER_UPDATE_PASSWORD_FAIL: {
-      const { status, message } = action.payload;
-      return { ...state, loading: false, status, message };
+      return { ...state, loading: false };
     }
 
     default:

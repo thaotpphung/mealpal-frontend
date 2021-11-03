@@ -11,7 +11,7 @@ import { getAllRecipes } from '../../../redux/actions/recipeActions';
 const HomePage = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { week, loading, error } = useSelector((state) => state.weekDetails);
+  const { week, loading, error } = useSelector((state) => state.week);
   const { currentUser } = useSelector((state) => state.user);
   const { recipes } = useSelector((state) => state.recipeList);
 

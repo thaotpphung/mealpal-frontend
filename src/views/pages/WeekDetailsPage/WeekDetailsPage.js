@@ -15,7 +15,7 @@ const WeekDetailsPage = () => {
   const classes = useStyles();
   const location = useLocation();
   const dispatch = useDispatch();
-  const { week, loading, error } = useSelector((state) => state.weekDetails);
+  const { week, loading, error } = useSelector((state) => state.week);
   const { recipes } = useSelector((state) => state.recipeList);
 
   useEffect(() => {

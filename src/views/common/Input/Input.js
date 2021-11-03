@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  TextField,
-  Grid,
-  InputAdornment,
-  IconButton,
-  He,
-} from '@material-ui/core';
+import { TextField, Grid, InputAdornment } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import useStyles from './styles';
 

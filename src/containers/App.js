@@ -7,6 +7,7 @@ import { CssBaseline } from '@material-ui/core';
 import { theme } from './theme';
 import { ThemeProvider } from '@material-ui/core/styles';
 import Navbar from '../views/common/Navbar/Navbar';
+import FlashMessage from '../views/common/FlashMessage/FlashMessage';
 import WeekDetailsPage from '../views/pages/WeekDetailsPage/WeekDetailsPage';
 import WeekPage from '../views/pages/WeekPage/WeekPage';
 import HomePage from '../views/pages/HomePage/HomePage';
@@ -34,6 +35,7 @@ function App() {
       <CssBaseline />
       <Navbar />
       <div className={classes.root}>
+        <FlashMessage />
         <Switch>
           <Route path={routes.HOME_PAGE} exact component={HomePage} />
           <Route path={routes.WEEK_PAGE} exact component={WeekPage} />

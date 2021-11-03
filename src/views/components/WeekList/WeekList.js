@@ -8,14 +8,9 @@ import StarOutlineIcon from '@material-ui/icons/StarOutline';
 import CardHeader from '../../common/CardHeader/CardHeader';
 
 const WeekList = ({ weeks, toggleOpen }) => {
-  const dispatch = useDispatch();
   const classes = useStyles();
-  const { selectedWeek } = useSelector((state) => state.select);
+  const [selectedWeek, setSelectedWeek] = useState(currentUser.currentWeek);
   const { currentUser } = useSelector((state) => state.user);
-
-  const handleSelectWeek = (week) => {
-    dispatch(setSelectedWeek(week));
-  };
 
   return (
     <Paper>
@@ -27,11 +22,11 @@ const WeekList = ({ weeks, toggleOpen }) => {
         <ul className={classes.list}>
           {weeks.map((week) => (
             <li
-              key={week?._id}
+              key={week._id}
               className={`${classes.item} ${
-                week._id === selectedWeek.id ? classes.selected : null
+                week._id === selectedWeek ? classes.selected : null
               }`}
-              onClick={() => handleSelectWeek(week)}
+              onClick={() => setSelectedWeek(week._id)}
             >
               <div className={classes.itemIcon}></div>
               <div className={classes.itemContent}>{week?.weekName}</div>

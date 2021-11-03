@@ -1,1 +1,0 @@
-export const SET_SELECTED_WEEK = 'SET_SELECTED_WEEK';

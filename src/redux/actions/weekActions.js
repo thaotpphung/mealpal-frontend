@@ -18,7 +18,6 @@ import {
   WEEK_UPDATE_BY_DAY_SUCCESS,
   WEEK_UPDATE_BY_DAY_FAIL,
 } from '../constants/weekConstants';
-import { SET_SELECTED_WEEK } from '../constants/selectConstants';
 
 import * as api from '../../api/index';
 

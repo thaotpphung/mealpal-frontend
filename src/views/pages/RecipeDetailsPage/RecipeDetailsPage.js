@@ -18,7 +18,8 @@ const RecipeDetailsPage = () => {
     dispatch(getRecipe(recipeId));
   }, []);
 
-  if (!loading && Object.keys(recipe).length > 0) {
+  if (error) return <div>{error}</div>;
+  if (!loading && Object.keys(recipe).length > 0)
     return (
       <div className={classes.root}>
         <Grid
@@ -36,9 +37,6 @@ const RecipeDetailsPage = () => {
         </Grid>
       </div>
     );
-  } else if (error) {
-    return <div>{error}</div>;
-  }
   return <Spinner />;
 };
 
