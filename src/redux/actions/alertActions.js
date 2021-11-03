@@ -11,6 +11,6 @@ const addAlertWithTimeout = (status, message) => async (dispatch) => {
   dispatch({ type: ALERT_ADD, payload: { status, message, id } });
   setTimeout(() => {
     dispatch({ type: ALERT_REMOVE, payload: { id } });
-    id = nextAlertId--;
+    id = nextAlertId++;
   }, timeout);
 };

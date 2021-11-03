@@ -44,6 +44,7 @@ const InstructionCard = ({
                   <div className={classes.itemIcon}>{itemIdx + 1}.</div>
                   <div className={classes.itemContent}>
                     <Input
+                      label="Step"
                       value={item}
                       handleChange={(event) =>
                         handleChange(itemIdx, event.target.value)

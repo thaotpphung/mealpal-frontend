@@ -94,6 +94,7 @@ const IngredientCard = ({
                       <Grid container spacing={3}>
                         <Grid item xs={12} sm={2}>
                           <Input
+                            label="Amount"
                             type="number"
                             value={item.amount.toString()}
                             handleChange={(event) =>
@@ -109,6 +110,7 @@ const IngredientCard = ({
                         </Grid>
                         <Grid item xs={12} sm={2}>
                           <AutocompleteField
+                            label="Unit"
                             value={item.unit.label}
                             toggleOpen={toggleOpenDialog}
                             setDialogValue={setNewUnit}
@@ -121,6 +123,7 @@ const IngredientCard = ({
                         </Grid>
                         <Grid item xs={12} sm={8}>
                           <Input
+                            label="Food"
                             value={item.food}
                             handleChange={(event) =>
                               handleChange(

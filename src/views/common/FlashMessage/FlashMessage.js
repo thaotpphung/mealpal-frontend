@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 
 import { Alert } from '@material-ui/lab';
@@ -8,7 +8,6 @@ import useStyles from './styles';
 const FlashMessage = () => {
   const { alerts } = useSelector((state) => state.alertList);
   const classes = useStyles();
-
   if (!alerts || Object.values(alerts).length === 0) {
     return null;
   }

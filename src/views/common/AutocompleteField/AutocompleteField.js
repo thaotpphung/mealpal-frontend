@@ -6,6 +6,7 @@ import Autocomplete, {
 const filter = createFilterOptions();
 
 const AutocompleteField = ({
+  label = '',
   value,
   toggleOpen,
   setDialogValue,
@@ -63,6 +64,7 @@ const AutocompleteField = ({
       renderInput={(params) => (
         <TextField
           {...params}
+          label={label}
           variant="outlined"
           size="small"
           margin="dense"
