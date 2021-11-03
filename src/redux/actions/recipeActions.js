@@ -15,10 +15,25 @@ import {
   RECIPE_UPDATE_SUCCESS,
   RECIPE_UPDATE_FAIL,
 } from '../constants/recipeConstants';
+import { addAlertWithTimeout } from '../actions/alertActions';
 import * as api from '../../api/index';
-
 export { getAllRecipes, createRecipe, deleteRecipe, updateRecipe, getRecipe };
 
+// recipe list
+const getAllRecipes =
+  (query = '') =>
+  async (dispatch) => {
+    try {
+      dispatch({ type: RECIPE_LIST_REQUEST });
+      const { data } = await api.getRecipes(query);
+      dispatch({ type: RECIPE_LIST_SUCCESS, payload: data.data });
+    } catch (error) {
+      dispatch({ type: RECIPE_LIST_FAIL });
+      dispatch(addAlertWithTimeout('error', error.response.data.message));
+    }
+  };
+
+// recipe details
 const createRecipe =
   (recipe, router = null) =>
   async (dispatch) => {
@@ -28,25 +43,8 @@ const createRecipe =
       dispatch({ type: RECIPE_CREATE_SUCCESS, payload: data.data });
       if (router) router.push(`/recipes/${data.data._id}`);
     } catch (error) {
-      dispatch({
-        type: RECIPE_CREATE_FAIL,
-        payload: error.response.data.message,
-      });
-    }
-  };
-
-const getAllRecipes =
-  (query = '') =>
-  async (dispatch) => {
-    try {
-      dispatch({ type: RECIPE_LIST_REQUEST });
-      const { data } = await api.getRecipes(query);
-      dispatch({ type: RECIPE_LIST_SUCCESS, payload: data.data });
-    } catch (error) {
-      dispatch({
-        type: RECIPE_LIST_FAIL,
-        payload: error.response.data.message,
-      });
+      dispatch({ type: RECIPE_CREATE_FAIL });
+      dispatch(addAlertWithTimeout('error', error.response.data.message));
     }
   };
 
@@ -56,24 +54,21 @@ const getRecipe = (recipeId) => async (dispatch) => {
     const { data } = await api.getRecipe(recipeId);
     dispatch({ type: RECIPE_DETAILS_SUCCESS, payload: data.data });
   } catch (error) {
-    dispatch({
-      type: RECIPE_DETAILS_FAIL,
-      payload: error.response.data.message,
-    });
+    dispatch({ type: RECIPE_DETAILS_FAIL });
+    dispatch(addAlertWithTimeout('error', error.response.data.message));
   }
 };
 
 const deleteRecipe = (recipeId, router) => async (dispatch) => {
   try {
     dispatch({ type: RECIPE_DELETE_REQUEST });
-    await api.deleteRecipe(recipeId);
+    const { data } = await api.deleteRecipe(recipeId);
     dispatch({ type: RECIPE_DELETE_SUCCESS, payload: recipeId });
     router.push('/recipes');
+    dispatch(addAlertWithTimeout('success', data.message));
   } catch (error) {
-    dispatch({
-      type: RECIPE_DELETE_FAIL,
-      payload: error.response.data.message,
-    });
+    dispatch({ type: RECIPE_DELETE_FAIL });
+    dispatch(addAlertWithTimeout('error', error.response.data.message));
   }
 };
 
@@ -82,10 +77,9 @@ const updateRecipe = (recipeId, recipe) => async (dispatch) => {
     dispatch({ type: RECIPE_UPDATE_REQUEST });
     const { data } = await api.updateRecipe(recipeId, recipe);
     dispatch({ type: RECIPE_UPDATE_SUCCESS, payload: data.data });
+    dispatch(addAlertWithTimeout('success', data.message));
   } catch (error) {
-    dispatch({
-      type: RECIPE_UPDATE_FAIL,
-      payload: error.response.data.message,
-    });
+    dispatch({ type: RECIPE_UPDATE_FAIL });
+    dispatch(addAlertWithTimeout('error', error.response.data.message));
   }
 };

@@ -15,7 +15,7 @@ const WeekDetailsPage = () => {
   const classes = useStyles();
   const location = useLocation();
   const dispatch = useDispatch();
-  const { week, loading, error } = useSelector((state) => state.week);
+  const { week, loading } = useSelector((state) => state.week);
   const { recipes } = useSelector((state) => state.recipeList);
 
   useEffect(() => {
@@ -25,7 +25,6 @@ const WeekDetailsPage = () => {
     dispatch(getAllRecipes());
   }, []);
 
-  if (error) return <FlashMessage severity="error" title="error" />;
   if (!loading && Object.keys(week).length > 0 && recipes.length >= 0)
     return (
       <Grid

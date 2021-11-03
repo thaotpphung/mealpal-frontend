@@ -14,6 +14,7 @@ import { styled } from '@material-ui/core/styles';
 import useStyles from '../../../containers/styles';
 import { deleteWeek, updateWeek } from '../../../redux/actions/weekActions';
 import { updateUser } from '../../../redux/actions/userActions';
+import { addAlertWithTimeout } from '../../../redux/actions/alertActions';
 import Input from '../../common/Input/Input';
 import useToggle from '../../../utils/hooks/useToggle';
 import useForm from '../../../utils/hooks/useForm';
@@ -48,11 +49,14 @@ const WeekCard = ({ week }) => {
     reset();
   };
   const handleDeleteWeek = (weekId) => {
-    if (weekId !== undefined && weekId !== currentUser.currentWeek?._id) {
+    if (weekId !== undefined && weekId !== currentUser.currentWeek) {
       dispatch(deleteWeek(weekId, currentUser.currentWeek, history));
     } else {
-      console.log(
-        'Please select another week as your current week before deleting'
+      dispatch(
+        addAlertWithTimeout(
+          'error',
+          'Please select another week as your current week before deleting'
+        )
       );
     }
   };

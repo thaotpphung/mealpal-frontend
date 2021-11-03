@@ -4,7 +4,7 @@ const ALERT_INITIAL_STATE = {
   alerts: {},
 };
 
-const alertReducer = (state = ALERT_INITIAL_STATE, action) => {
+const alertListReducer = (state = ALERT_INITIAL_STATE, action) => {
   switch (action.type) {
     case ALERT_ADD: {
       return {
@@ -23,4 +23,4 @@ const alertReducer = (state = ALERT_INITIAL_STATE, action) => {
   }
 };
 
-export default alertReducer;
+export default alertListReducer;

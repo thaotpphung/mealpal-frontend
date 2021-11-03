@@ -28,7 +28,6 @@ const WeekPage = () => {
     count: weekCount,
     currentCount,
     loading,
-    error,
   } = useSelector((state) => state.weekList);
 
   useEffect(() => {
@@ -86,7 +85,6 @@ const WeekPage = () => {
     toggleIsInExploreMode();
   };
 
-  if (error) return <div>{error}</div>;
   if (!loading && weeks.length >= 0)
     return (
       <div>

@@ -5,7 +5,7 @@ import logger from 'redux-logger';
 import storage from 'redux-persist/lib/storage';
 import { combineReducers } from 'redux';
 import userReducer from './reducers/userReducers';
-import alertReducer from './reducers/alertReducers';
+import alertListReducer from './reducers/alertReducers';
 import { weekListReducer, weekDetailsReducer } from './reducers/weekReducers';
 import {
   recipeListReducer,
@@ -21,10 +21,10 @@ const rootPersistConfig = {
 const rootReducer = combineReducers({
   user: userReducer,
   weekList: weekListReducer,
-  alert: alertReducer,
   week: weekDetailsReducer,
   recipeList: recipeListReducer,
   recipe: recipeDetailsReducer,
+  alertList: alertListReducer,
 });
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer);
 const store = createStore(persistedReducer, composeEnhancer(middlewares));

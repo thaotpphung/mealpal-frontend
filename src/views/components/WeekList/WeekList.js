@@ -31,9 +31,7 @@ const WeekList = ({ weeks, toggleOpen }) => {
               <div className={classes.itemIcon}></div>
               <div className={classes.itemContent}>{week?.weekName}</div>
               <div className={classes.itemAction}>
-                {currentUser.currentWeek._id === week?._id && (
-                  <StarOutlineIcon />
-                )}
+                {currentUser.currentWeek === week?._id && <StarOutlineIcon />}
               </div>
             </li>
           ))}

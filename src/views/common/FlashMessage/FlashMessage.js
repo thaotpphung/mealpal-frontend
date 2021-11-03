@@ -6,7 +6,7 @@ import { Typography } from '@material-ui/core';
 import useStyles from './styles';
 
 const FlashMessage = () => {
-  const { alerts } = useSelector((state) => state.alert);
+  const { alerts } = useSelector((state) => state.alertList);
   const classes = useStyles();
 
   if (!alerts || Object.values(alerts).length === 0) {

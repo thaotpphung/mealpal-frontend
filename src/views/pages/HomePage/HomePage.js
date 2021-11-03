@@ -11,7 +11,7 @@ import { getAllRecipes } from '../../../redux/actions/recipeActions';
 const HomePage = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { week, loading, error } = useSelector((state) => state.week);
+  const { week, loading } = useSelector((state) => state.week);
   const { currentUser } = useSelector((state) => state.user);
   const { recipes } = useSelector((state) => state.recipeList);
 
@@ -20,7 +20,6 @@ const HomePage = () => {
     dispatch(getAllRecipes());
   }, []);
 
-  if (error) return <div>{error}</div>;
   if (!loading && Object.keys(week).length > 0 && recipes.length >= 0)
     return (
       <Grid
