@@ -12,10 +12,10 @@ import {
   Button,
   Typography,
 } from '@material-ui/core';
-import { red } from '@material-ui/core/colors';
 import FileInputComponent from 'react-file-input-previews-base64';
 import Input from '../../common/Input/Input';
 import RoundButton from '../../common/Buttons/RoundButton';
+import BlockButton from '../../common/Buttons/BlockButton';
 import useToggle from '../../../utils/hooks/useToggle';
 import useForm from '../../../utils/hooks/useForm';
 import {
@@ -31,7 +31,6 @@ const RecipeCard = ({ recipe }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { recipeId } = useParams();
-  const { currentUser } = useSelector((state) => state.user);
   const history = useHistory();
   const [isInEditMode, toggleIsInEditMode] = useToggle(false);
   const initialForm = {
@@ -70,13 +69,14 @@ const RecipeCard = ({ recipe }) => {
           <Avatar
             aria-label="recipe"
             className={classes.avatar}
-            src={recipe.userId.avatar}
+            src={recipe.userId?.avatar}
           />
         }
         action={
           <>
             {!!recipeId && (
               <>
+                <RoundButton type="shoppingCart" />
                 <RoundButton
                   type="delete"
                   handleClick={() => handleDeleteRecipe(recipe._id)}
@@ -152,15 +152,7 @@ const RecipeCard = ({ recipe }) => {
                 required={field.required}
               />
             ))}
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.formSubmitButton}
-            >
-              Submit
-            </Button>
+            <BlockButton type="submit" />
           </form>
         )}
       </CardContent>

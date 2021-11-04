@@ -32,7 +32,6 @@ const RecipePage = () => {
   const { currentUser } = useSelector((state) => state.user);
   const {
     loading,
-    error,
     recipes,
     count: recipeCount,
     currentCount,
@@ -94,7 +93,6 @@ const RecipePage = () => {
     toggleIsInExploreMode();
   };
 
-  if (error) return <div>{error}</div>;
   if (!loading && recipes.length >= 0)
     return (
       <div>
@@ -134,7 +132,6 @@ const RecipePage = () => {
             </Button>
           </div>
         </div>
-
         <Grid
           className={classes.container}
           container
@@ -142,7 +139,7 @@ const RecipePage = () => {
           spacing={3}
         >
           {recipes.map((recipe) => (
-            <Grid key={recipe._id} item xs={12} sm={3} md={3}>
+            <Grid key={recipe._id} item xs={12} sm={4} md={4}>
               <RecipeCard recipe={recipe} />
             </Grid>
           ))}

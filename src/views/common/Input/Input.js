@@ -11,12 +11,13 @@ const Input = ({
   half,
   autoFocus = true,
   type = 'text',
-  style = {},
   endAction,
   value,
   error,
   disabled = false,
-  readOnly = false,
+  min = 0,
+  max = 10000,
+  step = 0.1,
   ...rest
 }) => {
   const classes = useStyles();
@@ -43,8 +44,11 @@ const Input = ({
           endAdornment: endAction ? (
             <InputAdornment position="end">{endAction}</InputAdornment>
           ) : null,
-          readOnly: readOnly,
-          style: style,
+        }}
+        inputProps={{
+          min: min,
+          max: max,
+          step: step,
         }}
       />
     </Grid>

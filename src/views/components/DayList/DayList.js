@@ -16,6 +16,7 @@ import { validate } from '../../../utils/validations/validate';
 import { createRecipe } from '../../../redux/actions/recipeActions';
 import { updateWeekByDay } from '../../../redux/actions/weekActions';
 import cloneDeep from 'lodash/cloneDeep';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 const DayList = ({ days, recipes }) => {
   const classes = useStyles();
@@ -224,7 +225,9 @@ const DayList = ({ days, recipes }) => {
                                     style={{ marginRight: '8px' }}
                                   />
                                   <Link
-                                    to={{ pathname: `/recipes/${recipe._id}` }}
+                                    to={{
+                                      pathname: `/recipes/${recipe._id}`,
+                                    }}
                                   >
                                     <Typography>{recipe.recipeName}</Typography>
                                   </Link>

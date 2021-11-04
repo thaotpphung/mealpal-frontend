@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
 import { styles } from './styles';
 import useStyles from '../../../containers/styles';
 import {
@@ -14,17 +13,19 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@material-ui/core';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import FaceIcon from '@material-ui/icons/Face';
 import LockIcon from '@material-ui/icons/Lock';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import useForm from '../../../utils/hooks/useForm';
 import useToggle from '../../../utils/hooks/useToggle';
 import Input from '../../common/Input/Input';
-import FlashMessage from '../../common/FlashMessage/FlashMessage';
+import RoundButton from '../../common/Buttons/RoundButton';
 import Spinner from '../../common/Spinner/Spinner';
+import BlockButton from '../../common/Buttons/BlockButton';
 import { validate } from '../../../utils/validations/validate';
+import { avatarOptions, initialAvatarForm } from '../../../constants/avatars';
 import { updateUser, updatePassword } from '../../../redux/actions/userActions';
 import CardHeader from '../../common/CardHeader/CardHeader';
 import FormControl from '@material-ui/core/FormControl';
@@ -33,20 +34,20 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 
 const ProfilePage = () => {
-  const { loading, currentUser, status, message } = useSelector(
-    (state) => state.user
-  );
+  const { loading, currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const classes = useStyles();
   const localClasses = styles();
   const [isShowComponent, setIsShowComponent] = useState({ Profile: true });
   const [showPassword, toggleShowPassword] = useToggle(false);
+  const [isInEditMode, toggleIsInEditMode] = useToggle(false);
 
   const {
     handleChange,
     handleSubmit,
     values: userForm,
     errors,
+    reset: resetProfileForm,
   } = useForm(
     {
       firstName: currentUser?.firstName,
@@ -60,6 +61,21 @@ const ProfilePage = () => {
       dispatch(updateUser(currentUser._id, userForm));
     }
   );
+
+  const passwordFields = [
+    {
+      name: 'oldPassword',
+      label: 'Current Password',
+    },
+    {
+      name: 'password',
+      label: 'New Password',
+    },
+    {
+      name: 'confirmPassword',
+      label: 'Confirm New Password',
+    },
+  ];
 
   const {
     handleChange: handleChangePassword,
@@ -78,23 +94,23 @@ const ProfilePage = () => {
     validate
   );
 
+  const components = [
+    {
+      name: 'Profile',
+      icon: <AccountCircleIcon />,
+    },
+    {
+      name: 'Security',
+      icon: <LockIcon />,
+    },
+    {
+      name: 'Avatar',
+      icon: <FaceIcon />,
+    },
+  ];
+
   const handleClickListItem = (param) => {
     setIsShowComponent({ [param]: true });
-  };
-
-  const initialAvatarForm = {
-    gender: 'none',
-    head: 'none',
-    body: 'none',
-    hair: 'none',
-    mouth: 'none',
-    eyes: 'none',
-    skinColor: 'none',
-    hairColor: 'none',
-    bodyColor: 'none',
-    glassesProbability: 'none',
-    mustacheProbability: 'none',
-    blushesProbability: 'none',
   };
 
   const [avatarForm, setAvatarForm] = useState(initialAvatarForm);
@@ -124,63 +140,12 @@ const ProfilePage = () => {
     dispatch(updateUser(currentUser._id, { avatar: avatarUrl }));
   };
 
-  const avatarOptions = {
-    head: ['normal', 'wide', 'thin', 'none'],
-    body: ['tShirt', 'golf', 'none'],
-    hair: [
-      'balndess',
-      'slaughter',
-      'ponyTail',
-      'long',
-      'curly',
-      'stylish',
-      'elvis',
-      'classic02',
-      'classic01',
-      'none',
-    ],
-    mouth: ['default', 'missingTooth', 'none'],
-    eyes: ['normal', 'confident', 'happy', 'none'],
-    skinColor: ['yellow', 'white', 'dark', 'none'],
-    hairColor: ['brown', 'black', 'red', 'none'],
-    bodyColor: ['orange', 'blue', 'pink', 'none'],
-    glassesProbability: [0, 100, 'none'],
-    mustacheProbability: [0, 100, 'none'],
-    blushesProbability: [0, 100, 'none'],
+  const handleCancelEdit = () => {
+    isShowComponent.Profile && resetProfileForm();
+    isShowComponent.Avatar && handleCancelChangeAvatar();
+    toggleIsInEditMode(false);
   };
 
-  const components = [
-    {
-      name: 'Profile',
-      icon: <AccountCircleIcon />,
-    },
-    {
-      name: 'Security',
-      icon: <LockIcon />,
-    },
-    {
-      name: 'Avatar',
-      icon: <FaceIcon />,
-    },
-  ];
-
-  const passwordFields = [
-    {
-      name: 'oldPassword',
-      label: 'Current Password',
-    },
-    {
-      name: 'password',
-      label: 'New Password',
-    },
-    {
-      name: 'confirmPassword',
-      label: 'Confirm New Password',
-    },
-  ];
-
-  if (status === 'error')
-    return <FlashMessage status="error" message={message} />;
   if (!loading && Object.keys(currentUser).length > 0)
     return (
       <div className={localClasses.root}>
@@ -209,7 +174,24 @@ const ProfilePage = () => {
             </Paper>
           </Grid>
           <Grid item xs={12} sm={8} className={localClasses.rightColumn}>
-            <CardHeader title={Object.keys(isShowComponent)[0]} />
+            <CardHeader
+              title={Object.keys(isShowComponent)[0]}
+              action={
+                <>
+                  {isInEditMode ? (
+                    <RoundButton
+                      type={'cancel'}
+                      handleClick={handleCancelEdit}
+                    />
+                  ) : (
+                    <RoundButton
+                      type={'edit'}
+                      handleClick={toggleIsInEditMode}
+                    />
+                  )}
+                </>
+              }
+            />
             <Paper className={localClasses.form}>
               {isShowComponent.Profile && (
                 <form className={classes.formContainer} onSubmit={handleSubmit}>
@@ -229,6 +211,7 @@ const ProfilePage = () => {
                       value={userForm.firstName}
                       handleChange={handleChange}
                       errors={errors?.firstName}
+                      disabled={!isInEditMode}
                     />
                     <Input
                       name="lastName"
@@ -238,6 +221,7 @@ const ProfilePage = () => {
                       value={userForm.lastName}
                       handleChange={handleChange}
                       errors={errors?.lastName}
+                      disabled={!isInEditMode}
                     />
                     <Input
                       name="preferredDiet"
@@ -245,6 +229,7 @@ const ProfilePage = () => {
                       value={userForm.preferredDiet}
                       handleChange={handleChange}
                       errors={errors?.preferredDiet}
+                      disabled={!isInEditMode}
                     />
                     <Input
                       name="caloGoal"
@@ -253,6 +238,7 @@ const ProfilePage = () => {
                       value={userForm.caloGoal}
                       handleChange={handleChange}
                       errors={errors?.caloGoal}
+                      disabled={!isInEditMode}
                     />
                     <Input
                       name="bio"
@@ -262,16 +248,9 @@ const ProfilePage = () => {
                       rows={4}
                       handleChange={handleChange}
                       errors={errors?.bio}
+                      disabled={!isInEditMode}
                     />
-                    <Button
-                      type="submit"
-                      fullWidth
-                      variant="contained"
-                      color="primary"
-                      className={classes.formSubmitButton}
-                    >
-                      Submit
-                    </Button>
+                    <BlockButton type="submit" />
                   </Grid>
                 </form>
               )}
@@ -288,6 +267,7 @@ const ProfilePage = () => {
                         label={field.label}
                         value={passwordForm[field.name]}
                         required
+                        disabled={!isInEditMode}
                         handleChange={handleChangePassword}
                         error={passwordErrors[field.name]}
                         type={showPassword ? 'text' : 'password'}
@@ -298,15 +278,7 @@ const ProfilePage = () => {
                         }
                       />
                     ))}
-                    <Button
-                      type="submit"
-                      fullWidth
-                      variant="contained"
-                      color="primary"
-                      className={classes.formSubmitButton}
-                    >
-                      Submit
-                    </Button>
+                    <BlockButton type="submit" />
                   </Grid>
                 </form>
               )}
@@ -329,6 +301,7 @@ const ProfilePage = () => {
                           size="small"
                           fullWidth
                           className={classes.formControl}
+                          disabled={!isInEditMode}
                         >
                           <InputLabel id={`${key}-label`}>{key}</InputLabel>
                           <Select
@@ -351,23 +324,7 @@ const ProfilePage = () => {
                         </FormControl>
                       </Grid>
                     ))}
-                    <Button
-                      type="submit"
-                      fullWidth
-                      variant="contained"
-                      color="primary"
-                      className={classes.formSubmitButton}
-                    >
-                      Submit
-                    </Button>
-                    <Button
-                      fullWidth
-                      variant="contained"
-                      onClick={handleCancelChangeAvatar}
-                      style={{ marginTop: '10px' }}
-                    >
-                      Cancel
-                    </Button>
+                    <BlockButton type="submit" />
                   </Grid>
                 </form>
               )}

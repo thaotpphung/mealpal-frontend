@@ -12,13 +12,12 @@ const RecipeDetailsPage = () => {
   const classes = useStyles();
   const { recipeId } = useParams();
   const dispatch = useDispatch();
-  const { recipe, loading, error } = useSelector((state) => state.recipe);
+  const { recipe, loading } = useSelector((state) => state.recipe);
 
   useEffect(() => {
     dispatch(getRecipe(recipeId));
   }, []);
 
-  if (error) return <div>{error}</div>;
   if (!loading && Object.keys(recipe).length > 0)
     return (
       <div className={classes.root}>

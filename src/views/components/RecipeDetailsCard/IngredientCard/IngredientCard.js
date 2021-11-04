@@ -9,6 +9,7 @@ import AutocompleteField from '../../../common/AutocompleteField/AutocompleteFie
 import PopupDialog from '../../../common/PopupDialog/PopupDialog';
 import RoundButton from '../../../common/Buttons/RoundButton';
 import { validate } from '../../../../utils/validations/validate';
+import unitOptions from '../../../../constants/units';
 
 const IngredientCard = ({
   title,
@@ -86,22 +87,64 @@ const IngredientCard = ({
                   {!isInEditMode ? (
                     <>
                       <Typography>
-                        {item.amount} {item.unit.label} {item.food}
+                        {item.numer % item.denom === 0 ? (
+                          <>{item.whole + item.numer / item.denom} </>
+                        ) : (
+                          <>
+                            {item.whole !== 0 && item.whole}{' '}
+                            {item.numer !== 0 && item.numer}
+                            {item.denom !== 1 && `/${item.denom}`}
+                          </>
+                        )}
+                        {item.unit.label} <strong>{item.food}</strong>
                       </Typography>
                     </>
                   ) : (
                     <>
-                      <Grid container spacing={3}>
+                      <Grid container spacing={3} alignItems="center">
                         <Grid item xs={12} sm={2}>
                           <Input
-                            label="Amount"
+                            label="Whole"
                             type="number"
-                            value={item.amount.toString()}
+                            step={1}
+                            value={item.whole}
                             handleChange={(event) =>
                               handleChange(
                                 itemIdx,
                                 item,
-                                'amount',
+                                'whole',
+                                event.target.value
+                              )
+                            }
+                            error={errors && errors[itemIdx]}
+                          />
+                        </Grid>
+                        <Grid item xs={12} sm={2}>
+                          <Input
+                            label="Numer"
+                            type="number"
+                            value={item.numer}
+                            handleChange={(event) =>
+                              handleChange(
+                                itemIdx,
+                                item,
+                                'numer',
+                                event.target.value
+                              )
+                            }
+                            error={errors && errors[itemIdx]}
+                          />
+                          <hr />
+                          <Input
+                            label="Denom"
+                            type="number"
+                            step={1}
+                            value={item.denom}
+                            handleChange={(event) =>
+                              handleChange(
+                                itemIdx,
+                                item,
+                                'denom',
                                 event.target.value
                               )
                             }
@@ -121,7 +164,7 @@ const IngredientCard = ({
                             error={errors && errors[itemIdx]}
                           />
                         </Grid>
-                        <Grid item xs={12} sm={8}>
+                        <Grid item xs={12} sm={6}>
                           <Input
                             label="Food"
                             value={item.food}
@@ -164,17 +207,5 @@ const IngredientCard = ({
     </div>
   );
 };
-
-const unitOptions = [
-  {
-    label: 'kg',
-  },
-  {
-    label: 'gr',
-  },
-  {
-    label: 'cup',
-  },
-];
 
 export default IngredientCard;

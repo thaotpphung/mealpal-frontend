@@ -51,13 +51,16 @@ const RecipeDetailsCard = ({ recipe }) => {
     const errors = {};
     validateArray('ingredients', ingredients, errors, (item) => {
       return (
-        !String(item.amount) ||
+        !String(item.whole) ||
+        !String(item.numer) ||
+        !String(item.denom) ||
         !item.unit.label ||
         !item.food ||
         item.food.trim() === ''
       );
     });
     validateArray('instructions', instructions, errors);
+    console.log(errors);
     handleSubmit(event, errors);
   };
 

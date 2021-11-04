@@ -27,7 +27,7 @@ const useForm = (
 
   const handleSubmit = (event, otherErrors = {}, otherParams = []) => {
     event.preventDefault();
-    setErrors(validate(values, optionalFields));
+    validate(values, optionalFields);
     setErrors((prevErrors) => ({ ...prevErrors, ...otherErrors }));
     setCallBackParams(otherParams);
     setIsSubmitting(true);

@@ -41,9 +41,6 @@ export default makeStyles((theme) => ({
     margin: theme.spacing(1),
     minWidth: 120,
   },
-  formSubmitButton: {
-    margin: theme.spacing(3, 0, 2),
-  },
   // card
   item: {
     height: '55px',

@@ -8,9 +8,7 @@ import {
   Button,
   Avatar,
   Typography,
-  Grid,
 } from '@material-ui/core/';
-import { styled } from '@material-ui/core/styles';
 import useStyles from '../../../containers/styles';
 import { deleteWeek, updateWeek } from '../../../redux/actions/weekActions';
 import { updateUser } from '../../../redux/actions/userActions';
@@ -19,8 +17,8 @@ import Input from '../../common/Input/Input';
 import useToggle from '../../../utils/hooks/useToggle';
 import useForm from '../../../utils/hooks/useForm';
 import { getInitialWeekForm, weekFormFields } from '../../../utils/forms/weeks';
-import { validate } from '../../../utils/validations/validate';
 import RoundButton from '../../common/Buttons/RoundButton';
+import BlockButton from '../../common/Buttons/BlockButton';
 
 const WeekCard = ({ week }) => {
   const classes = useStyles();
@@ -35,15 +33,10 @@ const WeekCard = ({ week }) => {
     handleChange,
     errors,
     reset,
-  } = useForm(
-    getInitialWeekForm(true, week),
-    () => {
-      dispatch(updateWeek(week._id, weekForm));
-      toggleIsInEditMode(false);
-    },
-    validate,
-    ['weekDescription', 'planTag']
-  );
+  } = useForm({ ...getInitialWeekForm(true, week) }, () => {
+    dispatch(updateWeek(week._id, weekForm));
+    toggleIsInEditMode(false);
+  });
   const handleCancelEdit = () => {
     toggleIsInEditMode(false);
     reset();
@@ -72,13 +65,23 @@ const WeekCard = ({ week }) => {
           <Avatar
             aria-label="userAvatar"
             className={classes.avatar}
-            src={week.userId.avatar}
+            src={week.userId?.avatar}
           />
         }
         action={
           <>
+            {week._id === currentUser.currentWeek ? (
+              <RoundButton type="default" />
+            ) : (
+              <RoundButton
+                type="setDefault"
+                handleClick={() => handleSetCurrentWeek(week._id)}
+              />
+            )}
             {!!weekId && (
               <>
+                <RoundButton type="shoppingCart" />
+
                 <RoundButton
                   type="delete"
                   handleClick={() => handleDeleteWeek(week?._id)}
@@ -89,14 +92,6 @@ const WeekCard = ({ week }) => {
                   <RoundButton type={'edit'} handleClick={toggleIsInEditMode} />
                 )}
               </>
-            )}
-            {week._id === currentUser.currentWeek ? (
-              <RoundButton type="default" />
-            ) : (
-              <RoundButton
-                type="setDefault"
-                handleClick={() => handleSetCurrentWeek(week._id)}
-              />
             )}
           </>
         }
@@ -130,16 +125,7 @@ const WeekCard = ({ week }) => {
                 required={field.required}
               />
             ))}
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.formSubmitButton}
-              onClick={handleSubmit}
-            >
-              Submit
-            </Button>
+            <BlockButton type="submit" />
           </form>
         )}
       </CardContent>

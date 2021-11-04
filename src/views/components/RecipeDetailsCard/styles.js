@@ -7,7 +7,6 @@ const styles = makeStyles((theme) => ({
     paddingBottom: theme.spacing(6),
   },
   notePaperItem: {
-    height: '55px',
     display: 'flex',
     alignItems: 'center',
     cursor: 'pointer',

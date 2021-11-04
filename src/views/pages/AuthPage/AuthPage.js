@@ -14,11 +14,11 @@ import {
 } from '@material-ui/core';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import MuiAlert from '@material-ui/lab/Alert';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Input from '../../common/Input/Input';
 import FlashMessage from '../../common/FlashMessage/FlashMessage';
 import Spinner from '../../common/Spinner/Spinner';
+import BlockButton from '../../common/Buttons/BlockButton';
 import useForm from '../../../utils/hooks/useForm';
 import useToggle from '../../../utils/hooks/useToggle';
 import { validateAuth } from '../../../utils/validations/validate';
@@ -148,15 +148,10 @@ const AuthPage = () => {
               />
             )}
           </Grid>
-          <Button
+          <BlockButton
             type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.formSubmitButton}
-          >
-            {isRegister ? 'Sign Up' : 'Sign In'}
-          </Button>
+            label={isRegister ? 'Sign Up' : 'Sign In'}
+          />
           <Grid container justifyContent="flex-end">
             <Grid item>
               <Button onClick={switchMode}>

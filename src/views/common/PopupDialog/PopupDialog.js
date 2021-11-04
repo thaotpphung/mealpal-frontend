@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
-  Button,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
 } from '@material-ui/core';
+import BlockButton from '../Buttons/BlockButton';
 
 const PopupDialog = ({ open, content, title, handleClose, handleSubmit }) => {
   return (
@@ -14,8 +14,7 @@ const PopupDialog = ({ open, content, title, handleClose, handleSubmit }) => {
         <DialogTitle>{title}</DialogTitle>
         <DialogContent>{content}</DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleSubmit}>Add</Button>
+          <BlockButton type="submit" />
         </DialogActions>
       </form>
     </Dialog>
