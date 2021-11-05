@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, useHistory } from 'react-router-dom';
 import { Grid } from '@material-ui/core';
 import useStyles from './styles';
 import DayList from '../../components/DayList/DayList';
@@ -10,7 +10,7 @@ import { getWeek } from '../../../redux/actions/weekActions';
 import { getAllRecipes } from '../../../redux/actions/recipeActions';
 
 const WeekDetailsPage = () => {
-  const { weekId } = useParams();
+  const { userId, weekId } = useParams();
   const classes = useStyles();
   const location = useLocation();
   const dispatch = useDispatch();

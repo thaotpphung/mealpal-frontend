@@ -45,7 +45,7 @@ const Navbar = () => {
               component={RouterLink}
               color="textPrimary"
               exact
-              to={routes.HOME_PAGE}
+              to="/"
               className={classes.link}
               activeClassName={classes.activeClassName}
             >
@@ -78,7 +78,7 @@ const Navbar = () => {
                 variant="button"
                 component={RouterLink}
                 color="textPrimary"
-                to={routes.CART_PAGE}
+                to="/cart"
                 className={classes.link}
                 activeClassName={classes.activeClassName}
               >
@@ -92,7 +92,7 @@ const Navbar = () => {
                 variant="button"
                 component={RouterLink}
                 color="textPrimary"
-                to={`/users/${loggedInUser._id}`}
+                to={`/users/${loggedInUser._id}/profile`}
                 className={classes.link}
                 activeClassName={classes.activeClassName}
               >
@@ -100,7 +100,7 @@ const Navbar = () => {
               </Link>
               <Button
                 component={RouterLink}
-                to={routes.AUTH_PAGE}
+                to="/auth"
                 color="primary"
                 variant="outlined"
                 className={classes.link}
@@ -112,7 +112,7 @@ const Navbar = () => {
           ) : (
             <Button
               component={RouterLink}
-              to={routes.AUTH_PAGE}
+              to={'auth'}
               color="primary"
               variant="outlined"
               className={classes.link}

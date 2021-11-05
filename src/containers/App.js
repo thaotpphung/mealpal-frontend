@@ -29,27 +29,28 @@ function App() {
       <div className={classes.root}>
         <FlashMessage />
         <Switch>
-          {loggedInUser && (
-            <Route path={routes.HOME_PAGE} exact component={HomePage} />
-          )}
-          {routes.WEEK_PAGE.map((route) => (
+          {loggedInUser && <Route path="/" exact component={HomePage} />}
+          {['/users/:userId/weeks', '/weeks'].map((route) => (
             <Route key={route} path={route} exact component={WeekPage} />
           ))}
-          <Route
-            path={routes.WEEK_DETAILS_PAGE}
-            exact
-            component={WeekDetailsPage}
-          />
-          {routes.RECIPE_PAGE.map((route) => (
+          {['/users/:userId/weeks/:weekId', '/weeks/:weekId'].map((route) => (
+            <Route key={route} path={route} exact component={WeekDetailsPage} />
+          ))}
+          {['/users/:userId/recipes', '/recipes'].map((route) => (
             <Route key={route} path={route} exact component={RecipePage} />
           ))}
-          <Route
-            path={routes.RECIPE_DETAILS_PAGE}
-            exact
-            component={RecipeDetailsPage}
-          />
-          <Route path={routes.AUTH_PAGE} exact component={AuthPage} />
-          <Route path={routes.PROFILE_PAGE} exact component={ProfilePage} />
+          {['/users/:userId/recipes/:recipeId', '/recipes/:recipeId'].map(
+            (route) => (
+              <Route
+                key={route}
+                path={route}
+                exact
+                component={RecipeDetailsPage}
+              />
+            )
+          )}
+          <Route path="/auth" exact component={AuthPage} />
+          <Route path="/users/:userId/profile" exact component={ProfilePage} />
           <Route path={'/404'} exact component={NotFoundPage} />
           <Route component={NotFoundPage} />
         </Switch>

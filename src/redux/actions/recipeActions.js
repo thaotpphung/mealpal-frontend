@@ -21,7 +21,11 @@ export { getAllRecipes, createRecipe, deleteRecipe, updateRecipe, getRecipe };
 
 // recipe list
 const getAllRecipes =
-  (query = '', isInExploreMode = false, userId) =>
+  (
+    query = '',
+    isInExploreMode = false,
+    userId = JSON.parse(localStorage.getItem('loggedInUser')).result._id
+  ) =>
   async (dispatch) => {
     try {
       dispatch({ type: RECIPE_LIST_REQUEST });

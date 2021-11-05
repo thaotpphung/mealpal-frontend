@@ -17,7 +17,7 @@ const HomePage = () => {
 
   useEffect(() => {
     dispatch(getWeek(loggedInUser.currentWeek));
-    dispatch(getAllRecipes(undefined, false, loggedInUser.userId));
+    dispatch(getAllRecipes());
   }, []);
 
   if (!loading && Object.keys(week).length > 0 && recipes.length >= 0)
