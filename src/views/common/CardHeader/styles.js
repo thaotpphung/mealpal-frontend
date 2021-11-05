@@ -12,6 +12,11 @@ const useStyles = makeStyles((theme) => ({
   headerTitle: {
     color: theme.palette.primary.contrastText,
   },
+  action: {
+    '& button': {
+      color: theme.palette.primary.contrastText,
+    },
+  },
 }));
 
 export default useStyles;

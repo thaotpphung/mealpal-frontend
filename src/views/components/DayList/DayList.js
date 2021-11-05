@@ -182,23 +182,29 @@ const DayList = ({ days, recipes }) => {
           <CardHeader
             title={day.dayName}
             action={
-              isInEditDayMode[dayIdx] ? (
-                <>
-                  <RoundButton
-                    type="cancel"
-                    handleClick={() => handleCancelEditDayMode(dayIdx)}
-                  />
-                  <RoundButton
-                    type="done"
-                    handleClick={() => handleSubmitUpdateDay(dayIdx)}
-                  />
-                </>
-              ) : (
-                <RoundButton
-                  type={isInEditDayMode[dayIdx] ? 'cancel' : 'edit'}
-                  handleClick={() => handleEnableEditDayMode(dayIdx)}
-                />
-              )
+              <>
+                {!!weekId && (
+                  <>
+                    {isInEditDayMode[dayIdx] ? (
+                      <>
+                        <RoundButton
+                          type="cancel"
+                          handleClick={() => handleCancelEditDayMode(dayIdx)}
+                        />
+                        <RoundButton
+                          type="done"
+                          handleClick={() => handleSubmitUpdateDay(dayIdx)}
+                        />
+                      </>
+                    ) : (
+                      <RoundButton
+                        type={isInEditDayMode[dayIdx] ? 'cancel' : 'edit'}
+                        handleClick={() => handleEnableEditDayMode(dayIdx)}
+                      />
+                    )}
+                  </>
+                )}
+              </>
             }
           />
           <div className={localClasses.content}>

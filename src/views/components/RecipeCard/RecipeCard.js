@@ -17,6 +17,7 @@ import Input from '../../common/Input/Input';
 import RoundButton from '../../common/Buttons/RoundButton';
 import BlockButton from '../../common/Buttons/BlockButton';
 import useEditMode from '../../../utils/hooks/useEditMode';
+import { formatTime } from '../../../utils/time/time';
 import useForm from '../../../utils/hooks/useForm';
 import {
   updateRecipe,
@@ -31,6 +32,7 @@ const RecipeCard = ({ recipe }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { recipeId } = useParams();
+  const { currentUser } = useSelector((state) => state.user);
   const history = useHistory();
   const { openEditMode, toggleOpenEditMode, handleCloseEditMode } = useEditMode(
     () => reset()
@@ -71,20 +73,31 @@ const RecipeCard = ({ recipe }) => {
         }
         action={
           <>
-            {!!recipeId && (
+            {recipe.userId._id !== currentUser._id ? (
               <>
-                <RoundButton type="shoppingCart" />
-                <RoundButton
-                  type="delete"
-                  handleClick={() => handleDeleteRecipe(recipe._id)}
-                />
-                {openEditMode ? (
-                  <RoundButton
-                    type={'cancel'}
-                    handleClick={handleCloseEditMode}
-                  />
-                ) : (
-                  <RoundButton type={'edit'} handleClick={toggleOpenEditMode} />
+                <RoundButton type="add" />
+              </>
+            ) : (
+              <>
+                {!!recipeId && (
+                  <>
+                    <RoundButton type="shoppingCart" />
+                    <RoundButton
+                      type="delete"
+                      handleClick={() => handleDeleteRecipe(recipe._id)}
+                    />
+                    {openEditMode ? (
+                      <RoundButton
+                        type={'cancel'}
+                        handleClick={handleCloseEditMode}
+                      />
+                    ) : (
+                      <RoundButton
+                        type={'edit'}
+                        handleClick={toggleOpenEditMode}
+                      />
+                    )}
+                  </>
                 )}
               </>
             )}
@@ -95,6 +108,7 @@ const RecipeCard = ({ recipe }) => {
             <Typography>{recipe.recipeName}</Typography>
           </Link>
         }
+        subheader={`Last Updated ${formatTime(recipe.updatedTime)}`}
       />
       <CardMedia
         component="img"
@@ -109,15 +123,34 @@ const RecipeCard = ({ recipe }) => {
       <CardContent>
         {!openEditMode && (
           <div>
-            <Typography>Description: {recipe?.recipeDescription}</Typography>
+            <Typography>
+              <strong>Description:</strong> {recipe?.recipeDescription}
+            </Typography>
             <Grid container>
               <Grid item xs={12} sm={6}>
-                <Typography>Calories: {recipe?.calories}</Typography>
-                <Typography>Servings: {recipe?.servings}</Typography>
+                <Typography>
+                  <strong>Calories:</strong> {recipe?.calories}
+                </Typography>
+                <Typography>
+                  <strong>Servings:</strong> {recipe?.servings}
+                </Typography>
+                <Typography>
+                  <strong>Diet:</strong> {recipe?.recipeDiet}
+                </Typography>
               </Grid>
               <Grid item xs={12} sm={6}>
-                <Typography>Prep (mins): {recipe?.prepTime}</Typography>
-                <Typography>Cook (mins): {recipe?.cookTime}</Typography>
+                <Typography>
+                  <strong>Time (mins):</strong> {recipe?.time}
+                </Typography>
+                <Typography>
+                  <strong>Serving Size:</strong> {recipe?.servingSize}
+                </Typography>
+                <Typography component="span">
+                  <strong>Creator: </strong>
+                  <Link to={{ pathname: `/users/${recipe.userId._id}` }}>
+                    {recipe.userId.username}
+                  </Link>
+                </Typography>
               </Grid>
             </Grid>
           </div>

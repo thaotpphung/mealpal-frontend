@@ -16,7 +16,7 @@ const middlewares = applyMiddleware(thunk, logger);
 const rootPersistConfig = {
   key: 'root',
   storage,
-  whitelist: ['user', 'select'],
+  whitelist: ['user'],
 };
 const rootReducer = combineReducers({
   user: userReducer,

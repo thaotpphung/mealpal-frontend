@@ -66,10 +66,9 @@ function weekDetailsReducer(
       };
 
     case WEEK_UPDATE_SUCCESS: {
-      const updatedWeek = { ...state.week, ...action.payload };
       return {
         loading: false,
-        week: updatedWeek,
+        week: { ...state.week, ...action.payload },
       };
     }
 

@@ -55,16 +55,11 @@ const RecipePage = () => {
     handleChange,
     reset,
     errors,
-  } = useForm(
-    getInitialRecipeForm(false),
-    () => {
-      dispatch(
-        createRecipe({ ...dialogValue, userId: currentUser._id }, history)
-      );
-    },
-    validate,
-    ['recipeDescription', 'prepTime', 'cookTime']
-  );
+  } = useForm(getInitialRecipeForm(false), () => {
+    dispatch(
+      createRecipe({ ...dialogValue, userId: currentUser._id }, history)
+    );
+  });
 
   // pagination & filtering
   const {
@@ -82,7 +77,7 @@ const RecipePage = () => {
       dispatch(
         getAllRecipes(buildQuery(value, isInExploreMode ? '&all=true' : ''))
       ),
-    '&fields=userId,recipeName,recipeDescription,recipeDiet,calories,servings,prepTime,cookTime,recipeImage'
+    '&fields=userId,recipeName,recipeDescription,recipeDiet,calories,servings,prepTime,cookTime,recipeImage,updatedTime'
   );
 
   // explore mode

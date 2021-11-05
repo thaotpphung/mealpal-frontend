@@ -14,15 +14,13 @@ API.interceptors.request.use((req) => {
 // auth
 export const signin = (formData) => API.post('api/users/signin', formData);
 export const register = (formData) => API.post('api/users/register', formData);
-export const updateUser = (userId, formData) =>
-  API.patch(`api/users/${userId}`, formData);
 export const updatePassword = (userId, formData) =>
   API.patch(`api/users/changepassword`, formData);
 
 // users
-export const setCurrentWeek = (weekId) =>
-  API.patch('api/users/currentweek', { weekId });
-export const getUser = () => API.get('api/users/');
+export const updateUser = (userId, formData) =>
+  API.patch(`api/users/${userId}`, formData);
+export const getUser = (userId) => API.get(`api/users/${userId}`);
 
 // weeks
 export const getWeek = (weekId) => API.get(`api/weeks/${weekId}`);

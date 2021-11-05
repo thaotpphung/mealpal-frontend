@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+  Grid,
   Card,
   CardHeader,
   CardContent,
-  Button,
+  CardActions,
   Avatar,
   Typography,
 } from '@material-ui/core/';
@@ -16,6 +17,7 @@ import { addAlertWithTimeout } from '../../../redux/actions/alertActions';
 import Input from '../../common/Input/Input';
 import useEditMode from '../../../utils/hooks/useEditMode';
 import useForm from '../../../utils/hooks/useForm';
+import { formatTime } from '../../../utils/time/time';
 import { getInitialWeekForm, weekFormFields } from '../../../utils/forms/weeks';
 import RoundButton from '../../common/Buttons/RoundButton';
 import BlockButton from '../../common/Buttons/BlockButton';
@@ -69,29 +71,39 @@ const WeekCard = ({ week }) => {
         }
         action={
           <>
-            {week._id === currentUser.currentWeek ? (
-              <RoundButton type="default" />
-            ) : (
-              <RoundButton
-                type="setDefault"
-                handleClick={() => handleSetCurrentWeek(week._id)}
-              />
-            )}
-            {!!weekId && (
+            {week.userId._id !== currentUser._id ? (
               <>
-                <RoundButton type="shoppingCart" />
-
-                <RoundButton
-                  type="delete"
-                  handleClick={() => handleDeleteWeek(week?._id)}
-                />
-                {openEditMode ? (
-                  <RoundButton
-                    type={'cancel'}
-                    handleClick={handleCloseEditMode}
-                  />
+                <RoundButton type="add" />
+              </>
+            ) : (
+              <>
+                {week._id === currentUser.currentWeek ? (
+                  <RoundButton type="default" />
                 ) : (
-                  <RoundButton type={'edit'} handleClick={toggleOpenEditMode} />
+                  <RoundButton
+                    type="setDefault"
+                    handleClick={() => handleSetCurrentWeek(week._id)}
+                  />
+                )}
+                {!!weekId && (
+                  <>
+                    <RoundButton type="shoppingCart" />
+                    <RoundButton
+                      type="delete"
+                      handleClick={() => handleDeleteWeek(week?._id)}
+                    />
+                    {openEditMode ? (
+                      <RoundButton
+                        type={'cancel'}
+                        handleClick={handleCloseEditMode}
+                      />
+                    ) : (
+                      <RoundButton
+                        type={'edit'}
+                        handleClick={toggleOpenEditMode}
+                      />
+                    )}
+                  </>
                 )}
               </>
             )}
@@ -102,15 +114,39 @@ const WeekCard = ({ week }) => {
             <Typography>{week.weekName}</Typography>
           </Link>
         }
-        subheader="Updated at 10/4/2021"
+        subheader={`Updated ${formatTime(week.updatedTime)}`}
       />
       <CardContent>
         {!openEditMode && (
           <div>
-            <Typography>Description: {week?.weekDescription}</Typography>
-            <Typography>Diet: {week?.weekDiet}</Typography>
-            <Typography>Calo Goal: {week?.caloGoal}</Typography>
-            <Typography>Plan Tag: {week?.planTag}</Typography>
+            <Typography>
+              <strong>Description: </strong>
+              {week.description}
+            </Typography>
+            <Grid container>
+              <Grid item xs={12} sm={6}>
+                <Typography>
+                  <strong>Calo Goal: </strong>
+                  {week.caloGoal}
+                </Typography>
+                <Typography>
+                  <strong>Diet: </strong>
+                  {week.weekDiet}
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Typography>
+                  <strong>Plan Tag: </strong>
+                  {week.planTag}
+                </Typography>
+                <Typography component="span">
+                  <strong>Creator: </strong>
+                  <Link to={{ pathname: `/users/${week.userId._id}` }}>
+                    {week.userId.username}
+                  </Link>
+                </Typography>
+              </Grid>
+            </Grid>
           </div>
         )}
         {openEditMode && (
@@ -131,6 +167,9 @@ const WeekCard = ({ week }) => {
           </form>
         )}
       </CardContent>
+      {/* <CardActions disableSpacing>
+        <RoundButton type="like" />
+      </CardActions> */}
     </Card>
   );
 };

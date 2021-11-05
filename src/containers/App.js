@@ -61,6 +61,7 @@ function App() {
           />
           <Route path={routes.AUTH_PAGE} exact component={AuthPage} />
           <Route path={routes.PROFILE_PAGE} exact component={ProfilePage} />
+          <Route path={'/404'} exact component={NotFoundPage} />
           <Route component={NotFoundPage} />
         </Switch>
       </div>

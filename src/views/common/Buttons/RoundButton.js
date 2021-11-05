@@ -14,6 +14,8 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import StarOutlineIcon from '@material-ui/icons/StarOutline';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import ControlPointDuplicateIcon from '@material-ui/icons/ControlPointDuplicate';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 import useStyles from './styles';
 
@@ -32,10 +34,16 @@ const RoundButton = ({ type, handleClick, ...props }) => {
     add: <AddCircleIcon />,
     cancel: <CancelIcon />,
     shoppingCart: <ShoppingCartIcon />,
+    duplicate: <ControlPointDuplicateIcon />,
+    avatar: <AccountCircleIcon />,
   };
 
   return (
-    <IconButton onClick={handleClick} className={classes.roundButton}>
+    <IconButton
+      onClick={handleClick}
+      className={classes.roundButton}
+      {...props}
+    >
       {roundButtonTypes[type]}
     </IconButton>
   );

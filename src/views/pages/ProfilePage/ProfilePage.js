@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { styles } from './styles';
 import useStyles from '../../../containers/styles';
+import { useParams, useHistory } from 'react-router-dom';
 import {
   Avatar,
   Paper,
@@ -27,14 +28,18 @@ import BlockButton from '../../common/Buttons/BlockButton';
 import { validate } from '../../../utils/validations/validate';
 import { avatarOptions, initialAvatarForm } from '../../../constants/avatars';
 import { updateUser, updatePassword } from '../../../redux/actions/userActions';
+import { addAlertWithTimeout } from '../../../redux/actions/alertActions';
 import CardHeader from '../../common/CardHeader/CardHeader';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
+import { getUser } from '../../../api/index';
 
 const ProfilePage = () => {
   const { loading, currentUser } = useSelector((state) => state.user);
+  const { userId } = useParams();
+  const history = useHistory();
   const dispatch = useDispatch();
   const classes = useStyles();
   const localClasses = styles();
@@ -46,22 +51,43 @@ const ProfilePage = () => {
       isShowComponent.Avatar && handleCancelChangeAvatar();
     }
   );
+  const [loadingOtherUser, setLoadingOtherUser] = useState(false);
+
+  useEffect(() => {
+    if (currentUser._id !== userId) {
+      setLoadingOtherUser(true);
+      getUser(userId)
+        .then(({ data }) => {
+          setAvatarUrl(data.data.avatar);
+          setValues({ ...data.data, userName: data.data.username });
+        })
+        .catch((error) => {
+          history.push('/404');
+          dispatch(addAlertWithTimeout('error', error.response.data.message));
+        })
+        .finally(() => setLoadingOtherUser(false));
+    }
+  }, []);
+
+  const {
+    firstName,
+    lastName,
+    bio,
+    avatar,
+    caloGoal,
+    preferredDiet,
+    username,
+  } = currentUser;
 
   const {
     handleChange,
     handleSubmit,
     values: userForm,
     errors,
+    setValues,
     reset: resetProfileForm,
   } = useForm(
-    {
-      firstName: currentUser?.firstName,
-      lastName: currentUser?.lastName,
-      bio: currentUser?.bio,
-      avatar: currentUser?.avatar,
-      caloGoal: currentUser?.caloGoal,
-      preferredDiet: currentUser?.preferredDiet,
-    },
+    { firstName, lastName, bio, avatar, caloGoal, preferredDiet, username },
     () => {
       dispatch(updateUser(currentUser._id, userForm));
     }
@@ -103,6 +129,7 @@ const ProfilePage = () => {
     {
       name: 'Profile',
       icon: <AccountCircleIcon />,
+      public: true,
     },
     {
       name: 'Security',
@@ -145,7 +172,7 @@ const ProfilePage = () => {
     dispatch(updateUser(currentUser._id, { avatar: avatarUrl }));
   };
 
-  if (!loading && Object.keys(currentUser).length > 0)
+  if (!loadingOtherUser && !loading && Object.keys(currentUser).length > 0)
     return (
       <div className={localClasses.root}>
         <Grid
@@ -156,37 +183,43 @@ const ProfilePage = () => {
         >
           <Grid item xs={12} sm={4}>
             <Avatar className={localClasses.avatar} src={avatarUrl} />
-            <Paper className={localClasses.paper}>
-              <List component="nav">
-                {components.map((component, componentIdx) => (
-                  <ListItem
-                    key={`component-${component.name}-${componentIdx}`}
-                    button
-                    onClick={() => handleClickListItem(component.name)}
-                    selected={isShowComponent[component.name]}
-                  >
-                    <ListItemIcon>{component.icon}</ListItemIcon>
-                    <ListItemText primary={component.name} />
-                  </ListItem>
-                ))}
-              </List>
-            </Paper>
+            {currentUser._id === userId && (
+              <Paper className={localClasses.paper}>
+                <List component="nav">
+                  {components.map((component, componentIdx) => (
+                    <ListItem
+                      key={`component-${component.name}-${componentIdx}`}
+                      button
+                      onClick={() => handleClickListItem(component.name)}
+                      selected={isShowComponent[component.name]}
+                    >
+                      <ListItemIcon>{component.icon}</ListItemIcon>
+                      <ListItemText primary={component.name} />
+                    </ListItem>
+                  ))}
+                </List>
+              </Paper>
+            )}
           </Grid>
           <Grid item xs={12} sm={8} className={localClasses.rightColumn}>
             <CardHeader
               title={Object.keys(isShowComponent)[0]}
               action={
                 <>
-                  {openEditMode ? (
-                    <RoundButton
-                      type={'cancel'}
-                      handleClick={handleCloseEditMode}
-                    />
-                  ) : (
-                    <RoundButton
-                      type={'edit'}
-                      handleClick={toggleOpenEditMode}
-                    />
+                  {userId === currentUser._id && (
+                    <>
+                      {openEditMode ? (
+                        <RoundButton
+                          type={'cancel'}
+                          handleClick={handleCloseEditMode}
+                        />
+                      ) : (
+                        <RoundButton
+                          type={'edit'}
+                          handleClick={toggleOpenEditMode}
+                        />
+                      )}
+                    </>
                   )}
                 </>
               }
@@ -195,11 +228,13 @@ const ProfilePage = () => {
               {isShowComponent.Profile && (
                 <form className={classes.formContainer} onSubmit={handleSubmit}>
                   <Grid container spacing={2}>
-                    <Input label="Email" value={currentUser.email} disabled />
+                    {userId === currentUser._id && (
+                      <Input label="Email" value={currentUser.email} disabled />
+                    )}
                     <Input
                       name="username"
                       label="Username"
-                      value={currentUser.username}
+                      value={userForm.username}
                       disabled
                     />
                     <Input
@@ -249,7 +284,9 @@ const ProfilePage = () => {
                       errors={errors?.bio}
                       disabled={!openEditMode}
                     />
-                    <BlockButton type="submit" />
+                    {userId === currentUser._id && (
+                      <BlockButton type="submit" />
+                    )}
                   </Grid>
                 </form>
               )}

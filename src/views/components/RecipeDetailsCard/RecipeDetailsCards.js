@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Paper } from '@material-ui/core';
 import { updateRecipe } from '../../../redux/actions/recipeActions';
 import useStyles from '../../../containers/styles';
@@ -17,6 +17,7 @@ const RecipeDetailsCard = ({ recipe }) => {
   const classes = useStyles();
   const localClasses = styles();
   const dispatch = useDispatch();
+  const { currentUser } = useSelector((state) => state.user);
   const initialIngredient = {
     amount: 0,
     unit: { label: 'kg' },
@@ -65,7 +66,6 @@ const RecipeDetailsCard = ({ recipe }) => {
       );
     });
     validateArray('instructions', instructions, errors);
-    console.log('error', errors);
     handleSubmit(event, errors);
   };
 
@@ -78,16 +78,23 @@ const RecipeDetailsCard = ({ recipe }) => {
       <CardHeader
         action={
           <div>
-            {openEditMode ? (
+            {recipe.userId._id === currentUser._id && (
               <>
-                <RoundButton type="cancel" handleClick={handleCloseEditMode} />
-                <RoundButton
-                  type="done"
-                  handleClick={handleSubmitUpdateRecipe}
-                />
+                {openEditMode ? (
+                  <>
+                    <RoundButton
+                      type="cancel"
+                      handleClick={handleCloseEditMode}
+                    />
+                    <RoundButton
+                      type="done"
+                      handleClick={handleSubmitUpdateRecipe}
+                    />
+                  </>
+                ) : (
+                  <RoundButton type="edit" handleClick={toggleOpenEditMode} />
+                )}
               </>
-            ) : (
-              <RoundButton type="edit" handleClick={toggleOpenEditMode} />
             )}
           </div>
         }

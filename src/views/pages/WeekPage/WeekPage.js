@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Button } from '@material-ui/core';
 import useStyles from '../../../containers/styles';
 import { useHistory } from 'react-router-dom';
-import { styles } from './styles';
 import WeekCard from '../../components/WeekCard/WeekCard';
 import Pagination from '@material-ui/lab/Pagination';
 import { getAllWeeks, createWeek } from '../../../redux/actions/weekActions';
@@ -75,7 +74,7 @@ const WeekPage = () => {
       dispatch(
         getAllWeeks(buildQuery(value, isInExploreMode ? '&all=true' : ''))
       ),
-    '&fields=userId,weekName,weekDescription,weekDiet,caloGoal,planTag'
+    '&fields=userId,weekName,weekDescription,weekDiet,caloGoal,planTag,updatedTime'
   );
 
   // explore mode
@@ -132,8 +131,8 @@ const WeekPage = () => {
               key={`{'explore-page-${week._id}-${weekIdx}`}
               item
               xs={12}
-              sm={3}
-              md={3}
+              sm={4}
+              md={4}
             >
               <WeekCard week={week} />
             </Grid>
