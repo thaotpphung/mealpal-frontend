@@ -9,8 +9,8 @@ import CardHeader from '../../common/CardHeader/CardHeader';
 
 const WeekList = ({ weeks, toggleOpen }) => {
   const classes = useStyles();
-  const [selectedWeek, setSelectedWeek] = useState(currentUser.currentWeek);
-  const { currentUser } = useSelector((state) => state.user);
+  const [selectedWeek, setSelectedWeek] = useState(loggedInUser.currentWeek);
+  const { loggedInUser } = useSelector((state) => state.user);
 
   return (
     <Paper>
@@ -31,7 +31,7 @@ const WeekList = ({ weeks, toggleOpen }) => {
               <div className={classes.itemIcon}></div>
               <div className={classes.itemContent}>{week?.weekName}</div>
               <div className={classes.itemAction}>
-                {currentUser.currentWeek === week?._id && <StarOutlineIcon />}
+                {loggedInUser.currentWeek === week?._id && <StarOutlineIcon />}
               </div>
             </li>
           ))}

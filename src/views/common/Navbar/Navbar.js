@@ -13,7 +13,7 @@ import routes from '../../../constants/routes';
 
 const Navbar = () => {
   const classes = useStyles();
-  const { currentUser } = useSelector((state) => state.user);
+  const { loggedInUser } = useSelector((state) => state.user);
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -55,7 +55,7 @@ const Navbar = () => {
               variant="button"
               component={RouterLink}
               color="textPrimary"
-              to={routes.WEEK_PAGE}
+              to={loggedInUser ? `/users/${loggedInUser._id}/weeks` : `/weeks`}
               className={classes.link}
               activeClassName={classes.activeClassName}
             >
@@ -71,24 +71,26 @@ const Navbar = () => {
             >
               Recipes
             </Link>
-            <Link
-              variant="button"
-              component={RouterLink}
-              color="textPrimary"
-              to={routes.CART_PAGE}
-              className={classes.link}
-              activeClassName={classes.activeClassName}
-            >
-              Cart
-            </Link>
+            {loggedInUser && (
+              <Link
+                variant="button"
+                component={RouterLink}
+                color="textPrimary"
+                to={routes.CART_PAGE}
+                className={classes.link}
+                activeClassName={classes.activeClassName}
+              >
+                Cart
+              </Link>
+            )}
           </nav>
-          {currentUser ? (
+          {loggedInUser ? (
             <>
               <Link
                 variant="button"
                 component={RouterLink}
                 color="textPrimary"
-                to={`/users/${currentUser._id}`}
+                to={`/users/${loggedInUser._id}`}
                 className={classes.link}
                 activeClassName={classes.activeClassName}
               >

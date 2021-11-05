@@ -5,7 +5,6 @@ const formatTime = (date) => {
     month: 'short',
     day: 'numeric',
   });
-  console.log('newdate', newDate);
   return newDate;
 };
 

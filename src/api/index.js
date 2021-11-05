@@ -3,9 +3,9 @@ import axios from 'axios';
 const API = axios.create({ baseURL: 'http://localhost:5000' });
 
 API.interceptors.request.use((req) => {
-  if (localStorage.getItem('currentUser')) {
+  if (localStorage.getItem('loggedInUser')) {
     req.headers.Authorization = `Bearer ${
-      JSON.parse(localStorage.getItem('currentUser')).token
+      JSON.parse(localStorage.getItem('loggedInUser')).token
     }`;
   }
   return req;
@@ -23,9 +23,15 @@ export const updateUser = (userId, formData) =>
 export const getUser = (userId) => API.get(`api/users/${userId}`);
 
 // weeks
+export const getWeeks = (query, isInExploreMode, userId) => {
+  const url = `api/${
+    isInExploreMode || !userId ? '' : `users/${userId}/`
+  }weeks${query}`;
+  return API.get(url);
+};
+
 export const getWeek = (weekId) => API.get(`api/weeks/${weekId}`);
 export const createWeek = (newWeek) => API.post('api/weeks', newWeek);
-export const getWeeks = (query) => API.get(`api/weeks${query}`);
 export const deleteWeek = (weekId) => API.delete(`api/weeks/${weekId}`);
 export const updateWeek = (weekId, updatedWeek) =>
   API.patch(`api/weeks/${weekId}`, updatedWeek);

@@ -32,7 +32,7 @@ const RecipeCard = ({ recipe }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { recipeId } = useParams();
-  const { currentUser } = useSelector((state) => state.user);
+  const { loggedInUser } = useSelector((state) => state.user);
   const history = useHistory();
   const { openEditMode, toggleOpenEditMode, handleCloseEditMode } = useEditMode(
     () => reset()
@@ -73,7 +73,7 @@ const RecipeCard = ({ recipe }) => {
         }
         action={
           <>
-            {recipe.userId._id !== currentUser._id ? (
+            {recipe.userId._id !== loggedInUser._id ? (
               <>
                 <RoundButton type="add" />
               </>

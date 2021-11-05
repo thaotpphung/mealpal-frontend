@@ -17,7 +17,7 @@ const RecipeDetailsCard = ({ recipe }) => {
   const classes = useStyles();
   const localClasses = styles();
   const dispatch = useDispatch();
-  const { currentUser } = useSelector((state) => state.user);
+  const { loggedInUser } = useSelector((state) => state.user);
   const initialIngredient = {
     amount: 0,
     unit: { label: 'kg' },
@@ -78,7 +78,7 @@ const RecipeDetailsCard = ({ recipe }) => {
       <CardHeader
         action={
           <div>
-            {recipe.userId._id === currentUser._id && (
+            {recipe.userId._id === loggedInUser._id && (
               <>
                 {openEditMode ? (
                   <>

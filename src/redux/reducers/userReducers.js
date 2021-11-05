@@ -18,7 +18,7 @@ import {
 } from '../constants/userConstants';
 
 const INITIAL_STATE = {
-  currentUser: null,
+  loggedInUser: null,
   loading: false,
 };
 
@@ -35,7 +35,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: false,
-        currentUser: action.payload.data.result,
+        loggedInUser: action.payload.data.result,
       };
     }
 
@@ -46,7 +46,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: false,
-        currentUser: { ...state.currentUser, ...action.payload.data },
+        loggedInUser: { ...state.loggedInUser, ...action.payload.data },
       };
     }
 

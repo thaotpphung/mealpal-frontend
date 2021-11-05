@@ -35,7 +35,7 @@ const initialState = {
 
 const AuthPage = () => {
   const user = useSelector((state) => state.user);
-  const { loading, currentUser, status, message } = user;
+  const { loading, loggedInUser } = user;
   const dispatch = useDispatch();
   const history = useHistory();
   const classes = useStyles();
@@ -62,11 +62,11 @@ const AuthPage = () => {
   };
 
   useEffect(() => {
-    if (currentUser) {
+    if (loggedInUser) {
       history.push('/');
     }
     return () => {};
-  }, [currentUser]);
+  }, [loggedInUser]);
 
   const switchMode = () => {
     toggleIsRegister();

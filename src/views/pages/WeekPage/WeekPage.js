@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Button } from '@material-ui/core';
 import useStyles from '../../../containers/styles';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import WeekCard from '../../components/WeekCard/WeekCard';
 import Pagination from '@material-ui/lab/Pagination';
 import { getAllWeeks, createWeek } from '../../../redux/actions/weekActions';
@@ -20,8 +20,9 @@ import { getInitialWeekForm, weekFormFields } from '../../../utils/forms/weeks';
 const WeekPage = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const { userId } = useParams();
   const history = useHistory();
-  const { currentUser } = useSelector((state) => state.user);
+  const { loggedInUser } = useSelector((state) => state.user);
   const {
     weeks,
     count: weekCount,
@@ -30,7 +31,7 @@ const WeekPage = () => {
   } = useSelector((state) => state.weekList);
 
   useEffect(() => {
-    dispatch(getAllWeeks(buildQuery()));
+    dispatch(getAllWeeks(buildQuery(), isInExploreMode, userId));
   }, []);
 
   useEffect(() => {
@@ -51,7 +52,7 @@ const WeekPage = () => {
     getInitialWeekForm(false),
     () => {
       dispatch(
-        createWeek({ ...dialogValue, userId: currentUser._id }, history)
+        createWeek({ ...dialogValue, userId: loggedInUser._id }, history)
       );
     },
     validate,
@@ -68,21 +69,17 @@ const WeekPage = () => {
     handleChangeQueryField,
     setPageCount,
   } = usePagination(
-    getInitialWeekForm(false),
+    { ...getInitialWeekForm(false) },
     9,
     (value) =>
-      dispatch(
-        getAllWeeks(buildQuery(value, isInExploreMode ? '&all=true' : ''))
-      ),
+      dispatch(getAllWeeks(buildQuery(value), isInExploreMode, userId)),
     '&fields=userId,weekName,weekDescription,weekDiet,caloGoal,planTag,updatedTime'
   );
 
   // explore mode
   const [isInExploreMode, toggleIsInExploreMode] = useToggle(false);
   const handleChangeMode = () => {
-    dispatch(
-      getAllWeeks(buildQuery(undefined, !isInExploreMode ? '&all=true' : ''))
-    );
+    dispatch(getAllWeeks(buildQuery(undefined), !isInExploreMode, userId));
     toggleIsInExploreMode();
   };
 
@@ -109,20 +106,24 @@ const WeekPage = () => {
             >
               <SearchIcon /> Search
             </Button>
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={toggleOpenEditMode}
-            >
-              + Week
-            </Button>
-            <Button
-              variant={isInExploreMode ? 'contained' : 'outlined'}
-              color="primary"
-              onClick={handleChangeMode}
-            >
-              Explore
-            </Button>
+            {loggedInUser && (
+              <>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={toggleOpenEditMode}
+                >
+                  + Week
+                </Button>
+                <Button
+                  variant={isInExploreMode ? 'contained' : 'outlined'}
+                  color="primary"
+                  onClick={handleChangeMode}
+                >
+                  Explore
+                </Button>
+              </>
+            )}
           </div>
         </div>
         <Grid container alignItems="stretch" spacing={3}>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams, Link } from 'react-router-dom';
 import useStyles from '../../../containers/styles';
 import { styles } from './styles';
@@ -22,6 +22,7 @@ const DayList = ({ days, recipes }) => {
   const classes = useStyles();
   const { weekId } = useParams();
   const localClasses = styles();
+  const { loggedInUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [isInEditDayMode, setIsInEditDayMode] = useState([]);
   const defaultEditDayMode = new Array(days.length).fill(false);
@@ -183,7 +184,7 @@ const DayList = ({ days, recipes }) => {
             title={day.dayName}
             action={
               <>
-                {!!weekId && (
+                {!!weekId && !!loggedInUser && (
                   <>
                     {isInEditDayMode[dayIdx] ? (
                       <>

@@ -23,19 +23,15 @@ function App() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const location = useLocation();
-  const { currentUser } = useSelector((state) => state.user);
+  const { loggedInUser } = useSelector((state) => state.user);
   const history = useHistory();
 
-  useEffect(() => {
-    if (!currentUser) {
-      if (!location.pathname.includes('auth')) {
-        history.push('/auth');
-        dispatch(
-          addAlertWithTimeout('error', 'You need to sign in to do that')
-        );
-      }
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!loggedInUser) {
+  //     history.push('/auth');
+  //     dispatch(addAlertWithTimeout('error', 'You need to sign in to do that'));
+  //   }
+  // }, []);
 
   return (
     <ThemeProvider theme={theme}>
@@ -44,9 +40,10 @@ function App() {
       <div className={classes.root}>
         <FlashMessage />
         <Switch>
-          {currentUser && (
+          {loggedInUser && (
             <Route path={routes.HOME_PAGE} exact component={HomePage} />
           )}
+          <Route path={'/weeks'} exact component={WeekPage} />
           <Route path={routes.WEEK_PAGE} exact component={WeekPage} />
           <Route
             path={routes.WEEK_DETAILS_PAGE}

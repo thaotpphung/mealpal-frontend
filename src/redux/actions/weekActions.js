@@ -32,11 +32,11 @@ export {
 
 // week list
 const getAllWeeks =
-  (query = '') =>
+  (query = '', isInExploreMode, userId) =>
   async (dispatch) => {
     try {
       dispatch({ type: WEEK_LIST_REQUEST });
-      const { data } = await api.getWeeks(query);
+      const { data } = await api.getWeeks(query, isInExploreMode, userId);
       dispatch({ type: WEEK_LIST_SUCCESS, payload: data.data });
     } catch (error) {
       dispatch({ type: WEEK_LIST_FAIL });

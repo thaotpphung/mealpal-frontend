@@ -12,11 +12,11 @@ const HomePage = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { week, loading } = useSelector((state) => state.week);
-  const { currentUser } = useSelector((state) => state.user);
+  const { loggedInUser } = useSelector((state) => state.user);
   const { recipes } = useSelector((state) => state.recipeList);
 
   useEffect(() => {
-    dispatch(getWeek(currentUser.currentWeek));
+    dispatch(getWeek(loggedInUser.currentWeek));
     dispatch(getAllRecipes());
   }, []);
 

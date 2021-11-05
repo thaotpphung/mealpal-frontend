@@ -22,7 +22,7 @@ const signin = (formData) => async (dispatch) => {
   try {
     const { data } = await api.signin(formData);
     dispatch({ type: USER_SIGNIN_SUCCESS, payload: data });
-    localStorage.setItem('currentUser', JSON.stringify(data.data));
+    localStorage.setItem('loggedInUser', JSON.stringify(data.data));
     dispatch(addAlertWithTimeout('success', 'Welcome back!'));
   } catch (error) {
     dispatch({ type: USER_SIGNIN_FAIL });
@@ -35,7 +35,7 @@ const register = (formData) => async (dispatch) => {
   try {
     const { data } = await api.register(formData);
     dispatch({ type: USER_REGISTER_SUCCESS, payload: data });
-    localStorage.setItem('currentUser', JSON.stringify(data.data));
+    localStorage.setItem('loggedInUser', JSON.stringify(data.data));
     dispatch(addAlertWithTimeout('success', 'Welcome to MealPal!'));
   } catch (error) {
     dispatch({ type: USER_REGISTER_FAIL });

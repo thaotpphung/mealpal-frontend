@@ -27,7 +27,7 @@ const WeekCard = ({ week }) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const { weekId } = useParams();
-  const { currentUser } = useSelector((state) => state.user);
+  const { loggedInUser } = useSelector((state) => state.user);
   const { openEditMode, toggleOpenEditMode, handleCloseEditMode } = useEditMode(
     () => reset()
   );
@@ -43,8 +43,8 @@ const WeekCard = ({ week }) => {
   });
 
   const handleDeleteWeek = (weekId) => {
-    if (weekId !== undefined && weekId !== currentUser.currentWeek) {
-      dispatch(deleteWeek(weekId, currentUser.currentWeek, history));
+    if (weekId !== undefined && weekId !== loggedInUser.currentWeek) {
+      dispatch(deleteWeek(weekId, loggedInUser.currentWeek, history));
     } else {
       dispatch(
         addAlertWithTimeout(
@@ -56,7 +56,7 @@ const WeekCard = ({ week }) => {
   };
   const handleSetCurrentWeek = (weekId) => {
     if (weekId !== undefined) {
-      dispatch(updateUser(currentUser._id, { currentWeek: weekId }));
+      dispatch(updateUser(loggedInUser._id, { currentWeek: weekId }));
     }
   };
   return (
@@ -71,37 +71,41 @@ const WeekCard = ({ week }) => {
         }
         action={
           <>
-            {week.userId._id !== currentUser._id ? (
+            {loggedInUser && (
               <>
-                <RoundButton type="add" />
-              </>
-            ) : (
-              <>
-                {week._id === currentUser.currentWeek ? (
-                  <RoundButton type="default" />
-                ) : (
-                  <RoundButton
-                    type="setDefault"
-                    handleClick={() => handleSetCurrentWeek(week._id)}
-                  />
-                )}
-                {!!weekId && (
+                {week.userId._id !== loggedInUser._id ? (
                   <>
-                    <RoundButton type="shoppingCart" />
-                    <RoundButton
-                      type="delete"
-                      handleClick={() => handleDeleteWeek(week?._id)}
-                    />
-                    {openEditMode ? (
-                      <RoundButton
-                        type={'cancel'}
-                        handleClick={handleCloseEditMode}
-                      />
+                    <RoundButton type="add" />
+                  </>
+                ) : (
+                  <>
+                    {week._id === loggedInUser.currentWeek ? (
+                      <RoundButton type="default" />
                     ) : (
                       <RoundButton
-                        type={'edit'}
-                        handleClick={toggleOpenEditMode}
+                        type="setDefault"
+                        handleClick={() => handleSetCurrentWeek(week._id)}
                       />
+                    )}
+                    {!!weekId && (
+                      <>
+                        <RoundButton type="shoppingCart" />
+                        <RoundButton
+                          type="delete"
+                          handleClick={() => handleDeleteWeek(week?._id)}
+                        />
+                        {openEditMode ? (
+                          <RoundButton
+                            type={'cancel'}
+                            handleClick={handleCloseEditMode}
+                          />
+                        ) : (
+                          <RoundButton
+                            type={'edit'}
+                            handleClick={toggleOpenEditMode}
+                          />
+                        )}
+                      </>
                     )}
                   </>
                 )}

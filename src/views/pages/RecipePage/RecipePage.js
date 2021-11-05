@@ -28,7 +28,7 @@ const RecipePage = () => {
   const classes = useStyles();
   const history = useHistory();
   const dispatch = useDispatch();
-  const { currentUser } = useSelector((state) => state.user);
+  const { loggedInUser } = useSelector((state) => state.user);
   const {
     loading,
     recipes,
@@ -57,7 +57,7 @@ const RecipePage = () => {
     errors,
   } = useForm(getInitialRecipeForm(false), () => {
     dispatch(
-      createRecipe({ ...dialogValue, userId: currentUser._id }, history)
+      createRecipe({ ...dialogValue, userId: loggedInUser._id }, history)
     );
   });
 

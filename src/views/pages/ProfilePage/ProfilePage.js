@@ -15,6 +15,9 @@ import {
 } from '@material-ui/core';
 import FaceIcon from '@material-ui/icons/Face';
 import LockIcon from '@material-ui/icons/Lock';
+import ListIcon from '@material-ui/icons/List';
+import RestaurantMenuIcon from '@material-ui/icons/RestaurantMenu';
+
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
@@ -37,7 +40,7 @@ import Select from '@material-ui/core/Select';
 import { getUser } from '../../../api/index';
 
 const ProfilePage = () => {
-  const { loading, currentUser } = useSelector((state) => state.user);
+  const { loading, loggedInUser } = useSelector((state) => state.user);
   const { userId } = useParams();
   const history = useHistory();
   const dispatch = useDispatch();
@@ -51,45 +54,47 @@ const ProfilePage = () => {
       isShowComponent.Avatar && handleCancelChangeAvatar();
     }
   );
-  const [loadingOtherUser, setLoadingOtherUser] = useState(false);
+
+  const [currentUser, setCurrentUser] = useState({});
+  const [loadingCurrentUser, setLoadingCurrentUser] = useState(false);
 
   useEffect(() => {
-    if (currentUser._id !== userId) {
-      setLoadingOtherUser(true);
+    if ((loggedInUser && loggedInUser._id !== userId) || !loggedInUser) {
+      setLoadingCurrentUser(true);
       getUser(userId)
         .then(({ data }) => {
           setAvatarUrl(data.data.avatar);
-          setValues({ ...data.data, userName: data.data.username });
+          setCurrentUser(data.data);
         })
         .catch((error) => {
           history.push('/404');
           dispatch(addAlertWithTimeout('error', error.response.data.message));
         })
-        .finally(() => setLoadingOtherUser(false));
+        .finally(() => setLoadingCurrentUser(false));
+    } else {
+      setCurrentUser(loggedInUser);
+      setAvatarUrl(loggedInUser.avatar);
     }
   }, []);
-
-  const {
-    firstName,
-    lastName,
-    bio,
-    avatar,
-    caloGoal,
-    preferredDiet,
-    username,
-  } = currentUser;
 
   const {
     handleChange,
     handleSubmit,
     values: userForm,
     errors,
-    setValues,
     reset: resetProfileForm,
   } = useForm(
-    { firstName, lastName, bio, avatar, caloGoal, preferredDiet, username },
+    {
+      firstName: loggedInUser?.firstName,
+      lastName: loggedInUser?.lastName,
+      bio: loggedInUser?.bio,
+      avatar: loggedInUser?.avatar,
+      caloGoal: loggedInUser?.caloGoal,
+      preferredDiet: loggedInUser?.preferredDiet,
+      username: loggedInUser?.username,
+    },
     () => {
-      dispatch(updateUser(currentUser._id, userForm));
+      dispatch(updateUser(loggedInUser._id, userForm));
     }
   );
 
@@ -120,7 +125,7 @@ const ProfilePage = () => {
       confirmPassword: '',
     },
     () => {
-      dispatch(updatePassword(currentUser._id, passwordForm));
+      dispatch(updatePassword(loggedInUser._id, passwordForm));
     },
     validate
   );
@@ -146,10 +151,10 @@ const ProfilePage = () => {
   };
 
   const [avatarForm, setAvatarForm] = useState(initialAvatarForm);
-  const [avatarUrl, setAvatarUrl] = useState(currentUser.avatar);
+  const [avatarUrl, setAvatarUrl] = useState('');
 
   const makeAvatarUrl = (updatedAvatarForm) => {
-    let url = `https://avatars.dicebear.com/api/miniavs/${currentUser._id}.svg?`;
+    let url = `https://avatars.dicebear.com/api/miniavs/${loggedInUser._id}.svg?`;
     Object.entries(updatedAvatarForm).forEach(([key, value]) => {
       if (value !== 'none') url += `${key}=${value}&`;
     });
@@ -163,16 +168,16 @@ const ProfilePage = () => {
   };
 
   const handleCancelChangeAvatar = () => {
-    setAvatarUrl(currentUser.avatar);
+    setAvatarUrl(loggedInUser.avatar);
     setAvatarForm(initialAvatarForm);
   };
 
   const handleSubmitChangeAvatar = (event) => {
     event.preventDefault();
-    dispatch(updateUser(currentUser._id, { avatar: avatarUrl }));
+    dispatch(updateUser(loggedInUser._id, { avatar: avatarUrl }));
   };
 
-  if (!loadingOtherUser && !loading && Object.keys(currentUser).length > 0)
+  if (!loadingCurrentUser && !loading && Object.keys(currentUser).length > 0)
     return (
       <div className={localClasses.root}>
         <Grid
@@ -183,30 +188,57 @@ const ProfilePage = () => {
         >
           <Grid item xs={12} sm={4}>
             <Avatar className={localClasses.avatar} src={avatarUrl} />
-            {currentUser._id === userId && (
-              <Paper className={localClasses.paper}>
-                <List component="nav">
-                  {components.map((component, componentIdx) => (
+            <Paper className={localClasses.paper}>
+              <List component="nav">
+                {!!loggedInUser && loggedInUser._id === userId ? (
+                  <>
+                    {components.map((component, componentIdx) => (
+                      <ListItem
+                        key={`component-${component.name}-${componentIdx}`}
+                        button
+                        onClick={() => handleClickListItem(component.name)}
+                        selected={isShowComponent[component.name]}
+                      >
+                        <ListItemIcon>{component.icon}</ListItemIcon>
+                        <ListItemText primary={component.name} />
+                      </ListItem>
+                    ))}
+                  </>
+                ) : (
+                  <>
                     <ListItem
-                      key={`component-${component.name}-${componentIdx}`}
                       button
-                      onClick={() => handleClickListItem(component.name)}
-                      selected={isShowComponent[component.name]}
+                      onClick={() => {
+                        history.push(`/users/${userId}/weeks`);
+                      }}
                     >
-                      <ListItemIcon>{component.icon}</ListItemIcon>
-                      <ListItemText primary={component.name} />
+                      <ListItemIcon>
+                        <ListIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Meal Plans" />
                     </ListItem>
-                  ))}
-                </List>
-              </Paper>
-            )}
+                    <ListItem
+                      button
+                      onClick={() => {
+                        history.push(`/users/${userId}/recipes`);
+                      }}
+                    >
+                      <ListItemIcon>
+                        <RestaurantMenuIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Recipes" />
+                    </ListItem>
+                  </>
+                )}
+              </List>
+            </Paper>
           </Grid>
           <Grid item xs={12} sm={8} className={localClasses.rightColumn}>
             <CardHeader
               title={Object.keys(isShowComponent)[0]}
               action={
                 <>
-                  {userId === currentUser._id && (
+                  {loggedInUser && userId === loggedInUser._id && (
                     <>
                       {openEditMode ? (
                         <RoundButton
@@ -228,39 +260,53 @@ const ProfilePage = () => {
               {isShowComponent.Profile && (
                 <form className={classes.formContainer} onSubmit={handleSubmit}>
                   <Grid container spacing={2}>
-                    {userId === currentUser._id && (
+                    {loggedInUser && userId === loggedInUser._id && (
                       <Input label="Email" value={currentUser.email} disabled />
                     )}
                     <Input
                       name="username"
                       label="Username"
-                      value={userForm.username}
+                      value={currentUser.username}
                       disabled
                     />
-                    <Input
-                      name="firstName"
-                      label="First Name"
-                      required
-                      half
-                      value={userForm.firstName}
-                      handleChange={handleChange}
-                      errors={errors?.firstName}
-                      disabled={!openEditMode}
-                    />
-                    <Input
-                      name="lastName"
-                      label="Last Name"
-                      required
-                      half
-                      value={userForm.lastName}
-                      handleChange={handleChange}
-                      errors={errors?.lastName}
-                      disabled={!openEditMode}
-                    />
+                    {!openEditMode ? (
+                      <Input
+                        label="Name"
+                        value={`${currentUser.firstName} ${currentUser.lastName}`}
+                        disabled
+                      />
+                    ) : (
+                      <>
+                        <Input
+                          name="firstName"
+                          label="First Name"
+                          required
+                          half
+                          value={userForm.firstName}
+                          handleChange={handleChange}
+                          errors={errors?.firstName}
+                          disabled={!openEditMode}
+                        />
+                        <Input
+                          name="lastName"
+                          label="Last Name"
+                          required
+                          half
+                          value={userForm.lastName}
+                          handleChange={handleChange}
+                          errors={errors?.lastName}
+                          disabled={!openEditMode}
+                        />
+                      </>
+                    )}
                     <Input
                       name="preferredDiet"
                       label="Preferred Diet"
-                      value={userForm.preferredDiet}
+                      value={
+                        !openEditMode
+                          ? currentUser.preferredDiet
+                          : userForm.preferredDiet
+                      }
                       handleChange={handleChange}
                       errors={errors?.preferredDiet}
                       disabled={!openEditMode}
@@ -269,7 +315,9 @@ const ProfilePage = () => {
                       name="caloGoal"
                       label="Calories Goal"
                       type="number"
-                      value={userForm.caloGoal}
+                      value={
+                        !openEditMode ? currentUser.caloGoal : userForm.caloGoal
+                      }
                       handleChange={handleChange}
                       errors={errors?.caloGoal}
                       disabled={!openEditMode}
@@ -277,16 +325,14 @@ const ProfilePage = () => {
                     <Input
                       name="bio"
                       label="Bio"
-                      value={userForm.bio}
+                      value={!openEditMode ? currentUser.bio : userForm.bio}
                       multiline
                       rows={4}
                       handleChange={handleChange}
                       errors={errors?.bio}
                       disabled={!openEditMode}
                     />
-                    {userId === currentUser._id && (
-                      <BlockButton type="submit" />
-                    )}
+                    {openEditMode && <BlockButton type="submit" />}
                   </Grid>
                 </form>
               )}
@@ -314,7 +360,7 @@ const ProfilePage = () => {
                         }
                       />
                     ))}
-                    <BlockButton type="submit" />
+                    {openEditMode && <BlockButton type="submit" />}
                   </Grid>
                 </form>
               )}
@@ -360,7 +406,7 @@ const ProfilePage = () => {
                         </FormControl>
                       </Grid>
                     ))}
-                    <BlockButton type="submit" />
+                    {openEditMode && <BlockButton type="submit" />}
                   </Grid>
                 </form>
               )}
