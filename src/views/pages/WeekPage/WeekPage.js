@@ -24,10 +24,10 @@ const WeekPage = () => {
   const history = useHistory();
   const { loggedInUser } = useSelector((state) => state.user);
   const {
+    loading,
     weeks,
     count: weekCount,
     currentCount,
-    loading,
   } = useSelector((state) => state.weekList);
 
   useEffect(() => {

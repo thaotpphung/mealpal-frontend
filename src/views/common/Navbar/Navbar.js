@@ -65,7 +65,9 @@ const Navbar = () => {
               variant="button"
               component={RouterLink}
               color="textPrimary"
-              to={routes.RECIPE_PAGE}
+              to={
+                loggedInUser ? `/users/${loggedInUser._id}/recipes` : `/recipes`
+              }
               className={classes.link}
               activeClassName={classes.activeClassName}
             >

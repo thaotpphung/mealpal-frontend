@@ -5,7 +5,6 @@ import { Grid, Button } from '@material-ui/core';
 import Pagination from '@material-ui/lab/Pagination';
 import SearchIcon from '@material-ui/icons/Search';
 import useStyles from '../../../containers/styles';
-import { styles } from './styles';
 import RecipeCard from '../../components/RecipeCard/RecipeCard';
 import PopupDialog from '../../common/PopupDialog/PopupDialog';
 import Input from '../../common/Input/Input';
@@ -18,7 +17,6 @@ import {
   createRecipe,
   getAllRecipes,
 } from '../../../redux/actions/recipeActions';
-import { validate } from '../../../utils/validations/validate';
 import {
   getInitialRecipeForm,
   recipeFormFields,
@@ -27,6 +25,7 @@ import {
 const RecipePage = () => {
   const classes = useStyles();
   const history = useHistory();
+  const { userId } = useParams();
   const dispatch = useDispatch();
   const { loggedInUser } = useSelector((state) => state.user);
   const {
@@ -38,7 +37,7 @@ const RecipePage = () => {
 
   // get initial weeks
   useEffect(() => {
-    dispatch(getAllRecipes(buildQuery()));
+    dispatch(getAllRecipes(buildQuery(), isInExploreMode, userId));
   }, []);
 
   useEffect(() => {
@@ -74,18 +73,14 @@ const RecipePage = () => {
     getInitialRecipeForm(false),
     12,
     (value) =>
-      dispatch(
-        getAllRecipes(buildQuery(value, isInExploreMode ? '&all=true' : ''))
-      ),
-    '&fields=userId,recipeName,recipeDescription,recipeDiet,calories,servings,prepTime,cookTime,recipeImage,updatedTime'
+      dispatch(getAllRecipes(buildQuery(value), isInExploreMode, userId)),
+    '&fields=userId,recipeName,recipeDescription,recipeDiet,calories,servings,time,servingSize,recipeImage,updatedTime'
   );
 
   // explore mode
   const [isInExploreMode, toggleIsInExploreMode] = useToggle(false);
   const handleChangeMode = () => {
-    dispatch(
-      getAllRecipes(buildQuery(undefined, !isInExploreMode ? '&all=true' : ''))
-    );
+    dispatch(getAllRecipes(buildQuery(undefined), !isInExploreMode, userId));
     toggleIsInExploreMode();
   };
 
@@ -112,20 +107,24 @@ const RecipePage = () => {
             >
               <SearchIcon /> Search
             </Button>
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={() => toggleOpenEditMode(true)}
-            >
-              + Recipe
-            </Button>
-            <Button
-              variant={isInExploreMode ? 'contained' : 'outlined'}
-              color="primary"
-              onClick={handleChangeMode}
-            >
-              Explore
-            </Button>
+            {loggedInUser && (
+              <>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={() => toggleOpenEditMode(true)}
+                >
+                  + Recipe
+                </Button>
+                <Button
+                  variant={isInExploreMode ? 'contained' : 'outlined'}
+                  color="primary"
+                  onClick={handleChangeMode}
+                >
+                  Explore
+                </Button>
+              </>
+            )}
           </div>
         </div>
         <Grid

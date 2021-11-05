@@ -21,11 +21,11 @@ export { getAllRecipes, createRecipe, deleteRecipe, updateRecipe, getRecipe };
 
 // recipe list
 const getAllRecipes =
-  (query = '') =>
+  (query = '', isInExploreMode = false, userId) =>
   async (dispatch) => {
     try {
       dispatch({ type: RECIPE_LIST_REQUEST });
-      const { data } = await api.getRecipes(query);
+      const { data } = await api.getRecipes(query, isInExploreMode, userId);
       dispatch({ type: RECIPE_LIST_SUCCESS, payload: data.data });
     } catch (error) {
       dispatch({ type: RECIPE_LIST_FAIL });

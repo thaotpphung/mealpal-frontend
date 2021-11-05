@@ -68,34 +68,38 @@ const RecipeCard = ({ recipe }) => {
           <Avatar
             aria-label="recipe"
             className={classes.avatar}
-            src={recipe.userId.avatar}
+            src={recipe.userId?.avatar}
           />
         }
         action={
           <>
-            {recipe.userId._id !== loggedInUser._id ? (
+            {loggedInUser && (
               <>
-                <RoundButton type="add" />
-              </>
-            ) : (
-              <>
-                {!!recipeId && (
+                {recipe.userId._id !== loggedInUser._id ? (
                   <>
-                    <RoundButton type="shoppingCart" />
-                    <RoundButton
-                      type="delete"
-                      handleClick={() => handleDeleteRecipe(recipe._id)}
-                    />
-                    {openEditMode ? (
-                      <RoundButton
-                        type={'cancel'}
-                        handleClick={handleCloseEditMode}
-                      />
-                    ) : (
-                      <RoundButton
-                        type={'edit'}
-                        handleClick={toggleOpenEditMode}
-                      />
+                    <RoundButton type="add" />
+                  </>
+                ) : (
+                  <>
+                    {!!recipeId && (
+                      <>
+                        <RoundButton type="shoppingCart" />
+                        <RoundButton
+                          type="delete"
+                          handleClick={() => handleDeleteRecipe(recipe._id)}
+                        />
+                        {openEditMode ? (
+                          <RoundButton
+                            type={'cancel'}
+                            handleClick={handleCloseEditMode}
+                          />
+                        ) : (
+                          <RoundButton
+                            type={'edit'}
+                            handleClick={toggleOpenEditMode}
+                          />
+                        )}
+                      </>
                     )}
                   </>
                 )}

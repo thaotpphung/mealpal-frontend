@@ -78,7 +78,7 @@ const RecipeDetailsCard = ({ recipe }) => {
       <CardHeader
         action={
           <div>
-            {recipe.userId._id === loggedInUser._id && (
+            {loggedInUser && recipe.userId._id === loggedInUser._id && (
               <>
                 {openEditMode ? (
                   <>

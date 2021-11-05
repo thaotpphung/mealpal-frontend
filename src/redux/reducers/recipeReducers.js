@@ -19,6 +19,8 @@ import {
 const RECIPE_LIST_INITIAL_STATE = {
   recipes: {},
   loading: false,
+  count: 0,
+  currentCount: 0,
 };
 
 const recipeListReducer = (state = RECIPE_LIST_INITIAL_STATE, action) => {

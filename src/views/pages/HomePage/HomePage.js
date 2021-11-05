@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Grid, Typography } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import useStyles from './styles';
 import DayList from '../../components/DayList/DayList';
 import WeekInfoCard from '../../components/WeekCard/WeekCard';
@@ -17,7 +17,7 @@ const HomePage = () => {
 
   useEffect(() => {
     dispatch(getWeek(loggedInUser.currentWeek));
-    dispatch(getAllRecipes());
+    dispatch(getAllRecipes(undefined, false, loggedInUser.userId));
   }, []);
 
   if (!loading && Object.keys(week).length > 0 && recipes.length >= 0)

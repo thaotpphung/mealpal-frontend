@@ -6,7 +6,6 @@ import {
   Card,
   CardHeader,
   CardContent,
-  CardActions,
   Avatar,
   Typography,
 } from '@material-ui/core/';
@@ -59,6 +58,7 @@ const WeekCard = ({ week }) => {
       dispatch(updateUser(loggedInUser._id, { currentWeek: weekId }));
     }
   };
+
   return (
     <Card>
       <CardHeader
