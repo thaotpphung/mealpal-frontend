@@ -27,8 +27,12 @@ const useForm = (
 
   const handleSubmit = (event, otherErrors = {}, otherParams = []) => {
     event.preventDefault();
-    validate(values, optionalFields);
-    setErrors((prevErrors) => ({ ...prevErrors, ...otherErrors }));
+    console.log('erorrs before otehr errors', validate(values, optionalFields));
+    console.log('other errors', otherErrors);
+    setErrors({
+      ...validate(values, optionalFields),
+      ...otherErrors,
+    });
     setCallBackParams(otherParams);
     setIsSubmitting(true);
   };
@@ -38,6 +42,7 @@ const useForm = (
   };
 
   useEffect(() => {
+    console.log('error changes', errors);
     if (Object.keys(errors).length === 0 && isSubmitting) {
       callback(...callBackParams);
     }

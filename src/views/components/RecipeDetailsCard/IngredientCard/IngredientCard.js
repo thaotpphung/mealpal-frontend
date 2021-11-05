@@ -4,7 +4,7 @@ import useStyles from '../../../../containers/styles';
 import { styles } from '../styles';
 import Input from '../../../common/Input/Input';
 import useForm from '../../../../utils/hooks/useForm';
-import useDialog from '../../../../utils/hooks/useDialog';
+import useEditMode from '../../../../utils/hooks/useEditMode';
 import AutocompleteField from '../../../common/AutocompleteField/AutocompleteField';
 import PopupDialog from '../../../common/PopupDialog/PopupDialog';
 import RoundButton from '../../../common/Buttons/RoundButton';
@@ -17,17 +17,17 @@ const IngredientCard = ({
   handleChange,
   handleDelete,
   handleAdd,
-  isInEditMode,
+  openEditMode,
   errors,
   initialIngredient,
 }) => {
   const classes = useStyles();
   const localClasses = styles();
   const {
-    open: openDialog,
-    toggleOpen: toggleOpenDialog,
-    handleClose: handleCloseDialog,
-  } = useDialog(() => resetNewUnit());
+    openEditMode: openDialog,
+    toggleOpenEditMode: toggleOpenDialog,
+    handleCloseEditMode: handleCloseDialog,
+  } = useEditMode(() => resetNewUnit());
 
   const {
     handleChange: handleChangeUnit,
@@ -84,7 +84,7 @@ const IngredientCard = ({
               </div>
               <div className={localClasses.itemContent}>
                 <>
-                  {!isInEditMode ? (
+                  {!openEditMode ? (
                     <>
                       <Typography>
                         {item.numer % item.denom === 0 ? (
@@ -184,7 +184,7 @@ const IngredientCard = ({
                   )}
                 </>
               </div>
-              {isInEditMode && (
+              {openEditMode && (
                 <div className={classes.itemAction}>
                   <RoundButton
                     type="addField"

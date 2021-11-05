@@ -12,7 +12,7 @@ import Input from '../../common/Input/Input';
 import Spinner from '../../common/Spinner/Spinner';
 import PopupDialog from '../../common/PopupDialog/PopupDialog';
 import usePagination from '../../../utils/hooks/usePagination';
-import useDialog from '../../../utils/hooks/useDialog';
+import useEditMode from '../../../utils/hooks/useEditMode';
 import useForm from '../../../utils/hooks/useForm';
 import useToggle from '../../../utils/hooks/useToggle';
 import { validate } from '../../../utils/validations/validate';
@@ -39,7 +39,9 @@ const WeekPage = () => {
   }, [weekCount]);
 
   // create week dialog
-  const { open, toggleOpen, handleClose } = useDialog(() => reset());
+  const { openEditMode, toggleOpenEditMode, handleCloseEditMode } = useEditMode(
+    () => reset()
+  );
   const {
     values: dialogValue,
     handleSubmit,
@@ -108,7 +110,11 @@ const WeekPage = () => {
             >
               <SearchIcon /> Search
             </Button>
-            <Button variant="outlined" color="primary" onClick={toggleOpen}>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={toggleOpenEditMode}
+            >
               + Week
             </Button>
             <Button
@@ -143,9 +149,9 @@ const WeekPage = () => {
           showFirstButton
         />
         <PopupDialog
-          open={open}
+          open={openEditMode}
           title="Add a new week"
-          handleClose={handleClose}
+          handleClose={handleCloseEditMode}
           handleSubmit={handleSubmit}
           content={
             <div className={classes.formContainer}>

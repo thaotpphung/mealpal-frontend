@@ -14,7 +14,7 @@ import { deleteWeek, updateWeek } from '../../../redux/actions/weekActions';
 import { updateUser } from '../../../redux/actions/userActions';
 import { addAlertWithTimeout } from '../../../redux/actions/alertActions';
 import Input from '../../common/Input/Input';
-import useToggle from '../../../utils/hooks/useToggle';
+import useEditMode from '../../../utils/hooks/useEditMode';
 import useForm from '../../../utils/hooks/useForm';
 import { getInitialWeekForm, weekFormFields } from '../../../utils/forms/weeks';
 import RoundButton from '../../common/Buttons/RoundButton';
@@ -26,7 +26,9 @@ const WeekCard = ({ week }) => {
   const history = useHistory();
   const { weekId } = useParams();
   const { currentUser } = useSelector((state) => state.user);
-  const [isInEditMode, toggleIsInEditMode] = useToggle(false);
+  const { openEditMode, toggleOpenEditMode, handleCloseEditMode } = useEditMode(
+    () => reset()
+  );
   const {
     values: weekForm,
     handleSubmit,
@@ -35,12 +37,9 @@ const WeekCard = ({ week }) => {
     reset,
   } = useForm({ ...getInitialWeekForm(true, week) }, () => {
     dispatch(updateWeek(week._id, weekForm));
-    toggleIsInEditMode(false);
+    toggleOpenEditMode(false);
   });
-  const handleCancelEdit = () => {
-    toggleIsInEditMode(false);
-    reset();
-  };
+
   const handleDeleteWeek = (weekId) => {
     if (weekId !== undefined && weekId !== currentUser.currentWeek) {
       dispatch(deleteWeek(weekId, currentUser.currentWeek, history));
@@ -86,10 +85,13 @@ const WeekCard = ({ week }) => {
                   type="delete"
                   handleClick={() => handleDeleteWeek(week?._id)}
                 />
-                {isInEditMode ? (
-                  <RoundButton type={'cancel'} handleClick={handleCancelEdit} />
+                {openEditMode ? (
+                  <RoundButton
+                    type={'cancel'}
+                    handleClick={handleCloseEditMode}
+                  />
                 ) : (
-                  <RoundButton type={'edit'} handleClick={toggleIsInEditMode} />
+                  <RoundButton type={'edit'} handleClick={toggleOpenEditMode} />
                 )}
               </>
             )}
@@ -103,7 +105,7 @@ const WeekCard = ({ week }) => {
         subheader="Updated at 10/4/2021"
       />
       <CardContent>
-        {!isInEditMode && (
+        {!openEditMode && (
           <div>
             <Typography>Description: {week?.weekDescription}</Typography>
             <Typography>Diet: {week?.weekDiet}</Typography>
@@ -111,7 +113,7 @@ const WeekCard = ({ week }) => {
             <Typography>Plan Tag: {week?.planTag}</Typography>
           </div>
         )}
-        {isInEditMode && (
+        {openEditMode && (
           <form className={classes.formContainer} onSubmit={handleSubmit}>
             {weekFormFields.map((field, fieldIdx) => (
               <Input

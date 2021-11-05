@@ -10,7 +10,7 @@ import RecipeCard from '../../components/RecipeCard/RecipeCard';
 import PopupDialog from '../../common/PopupDialog/PopupDialog';
 import Input from '../../common/Input/Input';
 import Spinner from '../../common/Spinner/Spinner';
-import useDialog from '../../../utils/hooks/useDialog';
+import useEditMode from '../../../utils/hooks/useEditMode';
 import useForm from '../../../utils/hooks/useForm';
 import useToggle from '../../../utils/hooks/useToggle';
 import usePagination from '../../../utils/hooks/usePagination';
@@ -26,7 +26,6 @@ import {
 
 const RecipePage = () => {
   const classes = useStyles();
-  const localClasses = styles();
   const history = useHistory();
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
@@ -47,7 +46,9 @@ const RecipePage = () => {
   }, [recipeCount]);
 
   // create recipe dialog
-  const { open, toggleOpen, handleClose } = useDialog(() => reset());
+  const { openEditMode, toggleOpenEditMode, handleCloseEditMode } = useEditMode(
+    () => reset()
+  );
   const {
     values: dialogValue,
     handleSubmit,
@@ -119,7 +120,7 @@ const RecipePage = () => {
             <Button
               variant="outlined"
               color="primary"
-              onClick={() => toggleOpen(true)}
+              onClick={() => toggleOpenEditMode(true)}
             >
               + Recipe
             </Button>
@@ -154,9 +155,9 @@ const RecipePage = () => {
           showFirstButton
         />
         <PopupDialog
-          open={open}
+          open={openEditMode}
           title="Add a new recipe"
-          handleClose={handleClose}
+          handleClose={handleCloseEditMode}
           handleSubmit={handleSubmit}
           content={
             <div className={classes.formContainer}>

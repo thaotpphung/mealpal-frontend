@@ -12,7 +12,7 @@ const InstructionCard = ({
   handleChange,
   handleDelete,
   handleAdd,
-  isInEditMode,
+  openEditMode,
   errors,
 }) => {
   const classes = useStyles();
@@ -30,7 +30,7 @@ const InstructionCard = ({
               className={localClasses.notePaperItem}
               key={`${title}-item-field-${item}-${itemIdx}`}
             >
-              {!isInEditMode ? (
+              {!openEditMode ? (
                 <>
                   <div className={classes.itemIcon}>
                     <Typography>{itemIdx + 1}.</Typography>

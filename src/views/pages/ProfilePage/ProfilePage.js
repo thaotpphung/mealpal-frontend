@@ -4,7 +4,6 @@ import { styles } from './styles';
 import useStyles from '../../../containers/styles';
 import {
   Avatar,
-  Button,
   Paper,
   Grid,
   IconButton,
@@ -20,6 +19,7 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import useForm from '../../../utils/hooks/useForm';
 import useToggle from '../../../utils/hooks/useToggle';
+import useEditMode from '../../../utils/hooks/useEditMode';
 import Input from '../../common/Input/Input';
 import RoundButton from '../../common/Buttons/RoundButton';
 import Spinner from '../../common/Spinner/Spinner';
@@ -40,7 +40,12 @@ const ProfilePage = () => {
   const localClasses = styles();
   const [isShowComponent, setIsShowComponent] = useState({ Profile: true });
   const [showPassword, toggleShowPassword] = useToggle(false);
-  const [isInEditMode, toggleIsInEditMode] = useToggle(false);
+  const { openEditMode, toggleOpenEditMode, handleCloseEditMode } = useEditMode(
+    () => {
+      isShowComponent.Profile && resetProfileForm();
+      isShowComponent.Avatar && handleCancelChangeAvatar();
+    }
+  );
 
   const {
     handleChange,
@@ -140,12 +145,6 @@ const ProfilePage = () => {
     dispatch(updateUser(currentUser._id, { avatar: avatarUrl }));
   };
 
-  const handleCancelEdit = () => {
-    isShowComponent.Profile && resetProfileForm();
-    isShowComponent.Avatar && handleCancelChangeAvatar();
-    toggleIsInEditMode(false);
-  };
-
   if (!loading && Object.keys(currentUser).length > 0)
     return (
       <div className={localClasses.root}>
@@ -178,15 +177,15 @@ const ProfilePage = () => {
               title={Object.keys(isShowComponent)[0]}
               action={
                 <>
-                  {isInEditMode ? (
+                  {openEditMode ? (
                     <RoundButton
                       type={'cancel'}
-                      handleClick={handleCancelEdit}
+                      handleClick={handleCloseEditMode}
                     />
                   ) : (
                     <RoundButton
                       type={'edit'}
-                      handleClick={toggleIsInEditMode}
+                      handleClick={toggleOpenEditMode}
                     />
                   )}
                 </>
@@ -211,7 +210,7 @@ const ProfilePage = () => {
                       value={userForm.firstName}
                       handleChange={handleChange}
                       errors={errors?.firstName}
-                      disabled={!isInEditMode}
+                      disabled={!openEditMode}
                     />
                     <Input
                       name="lastName"
@@ -221,7 +220,7 @@ const ProfilePage = () => {
                       value={userForm.lastName}
                       handleChange={handleChange}
                       errors={errors?.lastName}
-                      disabled={!isInEditMode}
+                      disabled={!openEditMode}
                     />
                     <Input
                       name="preferredDiet"
@@ -229,7 +228,7 @@ const ProfilePage = () => {
                       value={userForm.preferredDiet}
                       handleChange={handleChange}
                       errors={errors?.preferredDiet}
-                      disabled={!isInEditMode}
+                      disabled={!openEditMode}
                     />
                     <Input
                       name="caloGoal"
@@ -238,7 +237,7 @@ const ProfilePage = () => {
                       value={userForm.caloGoal}
                       handleChange={handleChange}
                       errors={errors?.caloGoal}
-                      disabled={!isInEditMode}
+                      disabled={!openEditMode}
                     />
                     <Input
                       name="bio"
@@ -248,7 +247,7 @@ const ProfilePage = () => {
                       rows={4}
                       handleChange={handleChange}
                       errors={errors?.bio}
-                      disabled={!isInEditMode}
+                      disabled={!openEditMode}
                     />
                     <BlockButton type="submit" />
                   </Grid>
@@ -267,7 +266,7 @@ const ProfilePage = () => {
                         label={field.label}
                         value={passwordForm[field.name]}
                         required
-                        disabled={!isInEditMode}
+                        disabled={!openEditMode}
                         handleChange={handleChangePassword}
                         error={passwordErrors[field.name]}
                         type={showPassword ? 'text' : 'password'}
@@ -301,7 +300,7 @@ const ProfilePage = () => {
                           size="small"
                           fullWidth
                           className={classes.formControl}
-                          disabled={!isInEditMode}
+                          disabled={!openEditMode}
                         >
                           <InputLabel id={`${key}-label`}>{key}</InputLabel>
                           <Select

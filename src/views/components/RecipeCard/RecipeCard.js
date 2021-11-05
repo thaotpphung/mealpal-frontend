@@ -16,7 +16,7 @@ import FileInputComponent from 'react-file-input-previews-base64';
 import Input from '../../common/Input/Input';
 import RoundButton from '../../common/Buttons/RoundButton';
 import BlockButton from '../../common/Buttons/BlockButton';
-import useToggle from '../../../utils/hooks/useToggle';
+import useEditMode from '../../../utils/hooks/useEditMode';
 import useForm from '../../../utils/hooks/useForm';
 import {
   updateRecipe,
@@ -32,7 +32,9 @@ const RecipeCard = ({ recipe }) => {
   const dispatch = useDispatch();
   const { recipeId } = useParams();
   const history = useHistory();
-  const [isInEditMode, toggleIsInEditMode] = useToggle(false);
+  const { openEditMode, toggleOpenEditMode, handleCloseEditMode } = useEditMode(
+    () => reset()
+  );
   const initialForm = {
     ...getInitialRecipeForm(true, recipe),
     recipeImage: recipe.recipeImage,
@@ -46,13 +48,8 @@ const RecipeCard = ({ recipe }) => {
     reset,
   } = useForm(initialForm, () => {
     dispatch(updateRecipe(recipe._id, recipeForm));
-    toggleIsInEditMode(false);
+    toggleOpenEditMode(false);
   });
-
-  const handleCancelEdit = () => {
-    toggleIsInEditMode(false);
-    reset();
-  };
 
   const handleSelectFile = (file) => {
     setRecipeForm('recipeImage', file.base64);
@@ -69,7 +66,7 @@ const RecipeCard = ({ recipe }) => {
           <Avatar
             aria-label="recipe"
             className={classes.avatar}
-            src={recipe.userId?.avatar}
+            src={recipe.userId.avatar}
           />
         }
         action={
@@ -81,10 +78,13 @@ const RecipeCard = ({ recipe }) => {
                   type="delete"
                   handleClick={() => handleDeleteRecipe(recipe._id)}
                 />
-                {isInEditMode ? (
-                  <RoundButton type={'cancel'} handleClick={handleCancelEdit} />
+                {openEditMode ? (
+                  <RoundButton
+                    type={'cancel'}
+                    handleClick={handleCloseEditMode}
+                  />
                 ) : (
-                  <RoundButton type={'edit'} handleClick={toggleIsInEditMode} />
+                  <RoundButton type={'edit'} handleClick={toggleOpenEditMode} />
                 )}
               </>
             )}
@@ -107,7 +107,7 @@ const RecipeCard = ({ recipe }) => {
         alt={recipe.recipeName}
       />
       <CardContent>
-        {!isInEditMode && (
+        {!openEditMode && (
           <div>
             <Typography>Description: {recipe?.recipeDescription}</Typography>
             <Grid container>
@@ -122,7 +122,7 @@ const RecipeCard = ({ recipe }) => {
             </Grid>
           </div>
         )}
-        {isInEditMode && (
+        {openEditMode && (
           <form className={classes.formContainer} onSubmit={handleSubmit}>
             <FileInputComponent
               labelText=""

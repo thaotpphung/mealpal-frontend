@@ -5,7 +5,7 @@ import { updateRecipe } from '../../../redux/actions/recipeActions';
 import useStyles from '../../../containers/styles';
 import { styles } from './styles';
 import useArray from '../../../utils/hooks/useArray';
-import useToggle from '../../../utils/hooks/useToggle';
+import useEditMode from '../../../utils/hooks/useEditMode';
 import useForm from '../../../utils/hooks/useForm';
 import { validateArray } from '../../../utils/validations/validateFunctions';
 import RoundButton from '../../common/Buttons/RoundButton';
@@ -41,10 +41,15 @@ const RecipeDetailsCard = ({ recipe }) => {
     reset: resetInstructions,
   } = useArray(recipe.instructions.length === 0 ? [''] : recipe.instructions);
 
-  const [isInEditMode, toggleIsInEditMode] = useToggle(false);
+  const { openEditMode, toggleOpenEditMode, handleCloseEditMode } = useEditMode(
+    () => {
+      resetInstructions();
+      resetIngredients();
+    }
+  );
   const { handleSubmit, errors } = useForm({}, () => {
     dispatch(updateRecipe(recipe._id, { ingredients, instructions }));
-    toggleIsInEditMode(false);
+    toggleOpenEditMode(false);
   });
 
   const handleSubmitUpdateRecipe = (event) => {
@@ -60,14 +65,8 @@ const RecipeDetailsCard = ({ recipe }) => {
       );
     });
     validateArray('instructions', instructions, errors);
-    console.log(errors);
+    console.log('error', errors);
     handleSubmit(event, errors);
-  };
-
-  const handleCancelEdit = () => {
-    resetInstructions();
-    resetIngredients();
-    toggleIsInEditMode(false);
   };
 
   const handleChangeIngredientEntry = (idx, item, key, value) => {
@@ -79,16 +78,16 @@ const RecipeDetailsCard = ({ recipe }) => {
       <CardHeader
         action={
           <div>
-            {isInEditMode ? (
+            {openEditMode ? (
               <>
-                <RoundButton type="cancel" handleClick={handleCancelEdit} />
+                <RoundButton type="cancel" handleClick={handleCloseEditMode} />
                 <RoundButton
                   type="done"
                   handleClick={handleSubmitUpdateRecipe}
                 />
               </>
             ) : (
-              <RoundButton type="edit" handleClick={toggleIsInEditMode} />
+              <RoundButton type="edit" handleClick={toggleOpenEditMode} />
             )}
           </div>
         }
@@ -99,7 +98,7 @@ const RecipeDetailsCard = ({ recipe }) => {
         handleChange={handleChangeIngredientEntry}
         handleAdd={handleAddIngredient}
         handleDelete={handleDeleteIngredient}
-        isInEditMode={isInEditMode}
+        openEditMode={openEditMode}
         errors={errors?.ingredients}
         initialIngredient={initialIngredient}
       />
@@ -109,7 +108,7 @@ const RecipeDetailsCard = ({ recipe }) => {
         handleChange={handleChangeInstruction}
         handleAdd={handleAddInstruction}
         handleDelete={handleDeleteInstruction}
-        isInEditMode={isInEditMode}
+        openEditMode={openEditMode}
         errors={errors?.instructions}
       />
     </Paper>

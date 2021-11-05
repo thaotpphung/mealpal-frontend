@@ -8,7 +8,7 @@ import RestaurantMenuIcon from '@material-ui/icons/RestaurantMenu';
 import CardHeader from '../../common/CardHeader/CardHeader';
 import RoundButton from '../../common/Buttons/RoundButton';
 import useForm from '../../../utils/hooks/useForm';
-import useDialog from '../../../utils/hooks/useDialog';
+import useEditMode from '../../../utils/hooks/useEditMode';
 import AutocompleteField from '../../common/AutocompleteField/AutocompleteField';
 import PopupDialog from '../../common/PopupDialog/PopupDialog';
 import Input from '../../common/Input/Input';
@@ -40,10 +40,10 @@ const DayList = ({ days, recipes }) => {
   };
   // new recipe dialog form
   const {
-    open: openNewRecipeDialog,
-    toggleOpen: toggleOpenNewRecipeDialog,
-    handleClose: handleCloseNewRecipeDialog,
-  } = useDialog(() => resetNewRecipe());
+    openEditMode: openNewRecipeDialog,
+    toggleOpenEditMode: toggleOpenNewRecipeDialog,
+    handleCloseEditMode: handleCloseNewRecipeDialog,
+  } = useEditMode(() => resetNewRecipe());
   const {
     handleChange: handleChangeRecipe,
     handleSubmit: handleSubmitCreateRecipe,
