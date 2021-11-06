@@ -8,6 +8,7 @@ import {
 } from '../constants/cartConstants';
 import { addMixedNumber } from '../../utils/mixedNumber';
 import cloneDeep from 'lodash/cloneDeep';
+import { ContactsOutlined } from '@material-ui/icons';
 
 const INITIAL_STATE = {
   cart: {},
@@ -16,17 +17,22 @@ const INITIAL_STATE = {
 const cartReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case CART_ADD_BY_RECIPE: {
-      const ingredients = action.payload;
-      const updatedCart = cloneDeep(state.cart);
-      console.log('updated', updatedCart);
-      ingredients.forEach((ingredient) => {
-        // updatedCart[ingredient.food][ingredient.unit.label] = addMixedNumber(
-        //   updatedCart[ingredient.food][ingredient.unit.label],
-        //   ingredient.amount
-        // );
+      const recipe = action.payload;
+      let updatedCart = cloneDeep(state.cart);
+      if (updatedCart === undefined) updatedCart = {};
+      recipe.ingredients.forEach((ingredient) => {
+        updatedCart[ingredient.food] = updatedCart[ingredient.food]
+          ? updatedCart[ingredient.food]
+          : {};
+        if (!(ingredient.unit.label in updatedCart[ingredient.food])) {
+          updatedCart[ingredient.food][ingredient.unit.label] = {};
+        }
+        let current = updatedCart[ingredient.food][ingredient.unit.label];
+        if (Object.keys(current).length === 0)
+          current = { whole: 0, numer: 0, denom: 1 };
+        const result = addMixedNumber(current, ingredient.amount);
+        updatedCart[ingredient.food][ingredient.unit.label] = result;
       });
-
-      console.log('after', updatedCart);
       return {
         cart: updatedCart,
       };

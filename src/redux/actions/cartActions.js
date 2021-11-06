@@ -17,7 +17,7 @@ export {
 };
 
 const addToCartByRecipe = (recipe) => async (dispatch) => {
-  dispatch({ type: CART_ADD_BY_RECIPE, payload: recipe.ingredients });
+  dispatch({ type: CART_ADD_BY_RECIPE, payload: recipe });
   dispatch(
     addAlertWithTimeout('success', 'Successfully added to shopping list!')
   );

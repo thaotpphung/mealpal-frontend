@@ -117,7 +117,7 @@ const Navbar = () => {
               variant="outlined"
               className={classes.link}
             >
-              Log In
+              Sign In
             </Button>
           )}
         </Toolbar>
