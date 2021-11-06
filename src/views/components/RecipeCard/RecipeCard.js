@@ -151,7 +151,9 @@ const RecipeCard = ({ recipe }) => {
                 </Typography>
                 <Typography component="span">
                   <strong>Creator: </strong>
-                  <Link to={{ pathname: `/users/${recipe.userId._id}` }}>
+                  <Link
+                    to={{ pathname: `/users/${recipe.userId._id}/profile` }}
+                  >
                     {recipe.userId.username}
                   </Link>
                 </Typography>

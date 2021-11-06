@@ -145,7 +145,7 @@ const WeekCard = ({ week }) => {
                 </Typography>
                 <Typography component="span">
                   <strong>Creator: </strong>
-                  <Link to={{ pathname: `/users/${week.userId._id}` }}>
+                  <Link to={{ pathname: `/users/${week.userId._id}/profile` }}>
                     {week.userId.username}
                   </Link>
                 </Typography>

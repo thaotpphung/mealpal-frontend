@@ -33,7 +33,7 @@ const getAllRecipes =
       dispatch({ type: RECIPE_LIST_SUCCESS, payload: data.data });
     } catch (error) {
       dispatch({ type: RECIPE_LIST_FAIL });
-      dispatch(addAlertWithTimeout('error', error.response.data.message));
+      dispatch(addAlertWithTimeout('error', error?.response.data.message));
     }
   };
 
@@ -48,7 +48,7 @@ const createRecipe =
       if (router) router.push(`/recipes/${data.data._id}`);
     } catch (error) {
       dispatch({ type: RECIPE_CREATE_FAIL });
-      dispatch(addAlertWithTimeout('error', error.response.data.message));
+      dispatch(addAlertWithTimeout('error', error?.response.data.message));
     }
   };
 
@@ -59,7 +59,7 @@ const getRecipe = (recipeId) => async (dispatch) => {
     dispatch({ type: RECIPE_DETAILS_SUCCESS, payload: data.data });
   } catch (error) {
     dispatch({ type: RECIPE_DETAILS_FAIL });
-    dispatch(addAlertWithTimeout('error', error.response.data.message));
+    dispatch(addAlertWithTimeout('error', error?.response.data.message));
   }
 };
 
@@ -72,7 +72,7 @@ const deleteRecipe = (recipeId, router) => async (dispatch) => {
     dispatch(addAlertWithTimeout('success', data.message));
   } catch (error) {
     dispatch({ type: RECIPE_DELETE_FAIL });
-    dispatch(addAlertWithTimeout('error', error.response.data.message));
+    dispatch(addAlertWithTimeout('error', error?.response.data.message));
   }
 };
 
@@ -84,6 +84,6 @@ const updateRecipe = (recipeId, recipe) => async (dispatch) => {
     dispatch(addAlertWithTimeout('success', data.message));
   } catch (error) {
     dispatch({ type: RECIPE_UPDATE_FAIL });
-    dispatch(addAlertWithTimeout('error', error.response.data.message));
+    dispatch(addAlertWithTimeout('error', error?.response.data.message));
   }
 };

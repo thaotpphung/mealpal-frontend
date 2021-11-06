@@ -40,7 +40,7 @@ const getAllWeeks =
       dispatch({ type: WEEK_LIST_SUCCESS, payload: data.data });
     } catch (error) {
       dispatch({ type: WEEK_LIST_FAIL });
-      dispatch(addAlertWithTimeout('error', error.response.data.message));
+      dispatch(addAlertWithTimeout('error', error?.response.data.message));
     }
   };
 
@@ -58,7 +58,7 @@ const createWeek = (week, router) => async (dispatch) => {
     dispatch(addAlertWithTimeout('success', data.message));
   } catch (error) {
     dispatch({ type: WEEK_CREATE_FAIL });
-    dispatch(addAlertWithTimeout('error', error.response.data.message));
+    dispatch(addAlertWithTimeout('error', error?.response.data.message));
   }
 };
 
@@ -69,7 +69,7 @@ const getWeek = (weekId) => async (dispatch) => {
     dispatch({ type: WEEK_DETAILS_SUCCESS, payload: data.data });
   } catch (error) {
     dispatch({ type: WEEK_DETAILS_FAIL });
-    dispatch(addAlertWithTimeout('error', error.response.data.message));
+    dispatch(addAlertWithTimeout('error', error?.response.data.message));
   }
 };
 
@@ -82,7 +82,7 @@ const deleteWeek = (weekId, currentWeek, router) => async (dispatch) => {
     dispatch(addAlertWithTimeout('success', data.message));
   } catch (error) {
     dispatch({ type: WEEK_DELETE_FAIL });
-    dispatch(addAlertWithTimeout('error', error.response.data.message));
+    dispatch(addAlertWithTimeout('error', error?.response.data.message));
   }
 };
 
@@ -94,7 +94,7 @@ const updateWeek = (weekId, week) => async (dispatch) => {
     dispatch(addAlertWithTimeout('success', data.message));
   } catch (error) {
     dispatch({ type: WEEK_UPDATE_FAIL });
-    dispatch(addAlertWithTimeout('error', error.response.data.message));
+    dispatch(addAlertWithTimeout('error', error?.response.data.message));
   }
 };
 
@@ -106,6 +106,6 @@ const updateWeekByDay = (weekId, dayIdx, day) => async (dispatch) => {
     dispatch(addAlertWithTimeout('success', data.message));
   } catch (error) {
     dispatch({ type: WEEK_UPDATE_BY_DAY_FAIL });
-    dispatch(addAlertWithTimeout('error', error.response.data.message));
+    dispatch(addAlertWithTimeout('error', error?.response.data.message));
   }
 };
