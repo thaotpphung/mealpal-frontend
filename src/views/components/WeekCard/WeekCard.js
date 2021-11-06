@@ -16,7 +16,7 @@ import { addAlertWithTimeout } from '../../../redux/actions/alertActions';
 import Input from '../../common/Input/Input';
 import useEditMode from '../../../utils/hooks/useEditMode';
 import useForm from '../../../utils/hooks/useForm';
-import { formatTime } from '../../../utils/time/time';
+import { formatTime } from '../../../utils/time';
 import { getInitialWeekForm, weekFormFields } from '../../../utils/forms/weeks';
 import RoundButton from '../../common/Buttons/RoundButton';
 import BlockButton from '../../common/Buttons/BlockButton';
@@ -71,7 +71,7 @@ const WeekCard = ({ week }) => {
         }
         action={
           <>
-            {loggedInUser && (
+            {!!loggedInUser && (
               <>
                 {week.userId._id !== loggedInUser._id ? (
                   <>
@@ -165,6 +165,7 @@ const WeekCard = ({ week }) => {
                 handleChange={handleChange}
                 error={errors[field.name]}
                 required={field.required}
+                step={field.step}
               />
             ))}
             <BlockButton type="submit" />

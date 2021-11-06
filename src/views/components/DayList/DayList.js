@@ -6,13 +6,13 @@ import { styles } from './styles';
 import { Paper, Typography } from '@material-ui/core';
 import RestaurantMenuIcon from '@material-ui/icons/RestaurantMenu';
 import CardHeader from '../../common/CardHeader/CardHeader';
+import CardBody from '../../common/CardBody/CardBody';
 import RoundButton from '../../common/Buttons/RoundButton';
 import useForm from '../../../utils/hooks/useForm';
 import useEditMode from '../../../utils/hooks/useEditMode';
 import AutocompleteField from '../../common/AutocompleteField/AutocompleteField';
 import PopupDialog from '../../common/PopupDialog/PopupDialog';
 import Input from '../../common/Input/Input';
-import { validate } from '../../../utils/validations/validate';
 import { createRecipe } from '../../../redux/actions/recipeActions';
 import { updateWeekByDay } from '../../../redux/actions/weekActions';
 import cloneDeep from 'lodash/cloneDeep';
@@ -64,8 +64,7 @@ const DayList = ({ days, recipes }) => {
         })
       );
       handleCloseNewRecipeDialog();
-    },
-    validate
+    }
   );
   // edit day mode
   const handleEnableEditDayMode = (dayIdx) => {
@@ -90,9 +89,14 @@ const DayList = ({ days, recipes }) => {
     setIsInEditDayMode(modes);
   };
   // validation
+  // const { handleSubmit, errors, setError } = useForm({}, (dayIdx) => {
+  //   dispatch(updateWeekByDay(weekId, dayIdx, dayForm));
+  // });
+
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [dayIdx, setDayIdx] = useState('');
+
   const handleSubmitUpdateDay = (dayIdx) => {
     let currentErrors = {};
     dayForm.meals.forEach((meal, mealIdx) => {
@@ -106,11 +110,13 @@ const DayList = ({ days, recipes }) => {
     setIsSubmitting(true);
     setDayIdx(dayIdx);
   };
+
   useEffect(() => {
     if (Object.keys(errors).length === 0 && isSubmitting) {
       dispatch(updateWeekByDay(weekId, dayIdx, dayForm));
     }
   }, [errors]);
+
   // meal
   const handleDeleteMeal = (mealIdx) => {
     const updatedDays = cloneDeep(dayForm);
@@ -208,7 +214,7 @@ const DayList = ({ days, recipes }) => {
               </>
             }
           />
-          <div className={localClasses.content}>
+          <CardBody>
             {!isInEditDayMode[dayIdx] &&
               day.meals.map((meal, mealIdx) => {
                 return (
@@ -229,7 +235,7 @@ const DayList = ({ days, recipes }) => {
                                   key={`dish-in-meal-${recipe._id}-${recipeIdx})}`}
                                 >
                                   <RestaurantMenuIcon
-                                    style={{ marginRight: '8px' }}
+                                    style={{ marginRight: '10px' }}
                                   />
                                   <Link
                                     to={{
@@ -261,6 +267,7 @@ const DayList = ({ days, recipes }) => {
                         value={meal.mealName}
                         handleChange={(e) => handleChangeMeal(e, mealIdx)}
                         error={errors[`meal${mealIdx}`]}
+                        required
                       />
                     </div>
                     <div className={classes.itemContent}>
@@ -275,9 +282,10 @@ const DayList = ({ days, recipes }) => {
                               handleChangeAutocompleteField={handleChangeFood}
                               param="recipeName"
                               options={extractedFieldsForAutoComplete}
-                              changedIndices={[mealIdx, recipeIdx]}
+                              changedParams={[mealIdx, recipeIdx]}
                               error={errors[`meal${mealIdx}food${recipeIdx}`]}
                               style={{ minWidth: '70%' }}
+                              required
                             />
                             <RoundButton
                               type="deleteField"
@@ -310,7 +318,7 @@ const DayList = ({ days, recipes }) => {
                   </div>
                 );
               })}
-          </div>
+          </CardBody>
         </Paper>
       ))}
     </div>

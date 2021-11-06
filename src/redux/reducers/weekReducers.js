@@ -18,6 +18,7 @@ import {
   WEEK_UPDATE_BY_DAY_SUCCESS,
   WEEK_UPDATE_BY_DAY_FAIL,
 } from '../constants/weekConstants';
+import cloneDeep from 'lodash/cloneDeep';
 
 const INITIAL_STATE = {
   weeks: {},
@@ -74,7 +75,7 @@ function weekDetailsReducer(
 
     case WEEK_UPDATE_BY_DAY_SUCCESS: {
       const { dayIdx, day } = action.payload;
-      let updatedWeek = _.cloneDeep(state.week);
+      let updatedWeek = cloneDeep(state.week);
       updatedWeek.days[dayIdx] = day;
       return {
         loading: false,

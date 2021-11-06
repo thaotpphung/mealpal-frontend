@@ -12,6 +12,10 @@ import RoundButton from '../../common/Buttons/RoundButton';
 import CardHeader from '../../common/CardHeader/CardHeader';
 import InstructionCard from './InstructionCard/InstructionCard';
 import IngredientCard from './IngredientCard/IngredientCard';
+import {
+  formatMixedNumber,
+  simplifyMixedNumber,
+} from '../../../utils/mixedNumber';
 
 const RecipeDetailsCard = ({ recipe }) => {
   const classes = useStyles();
@@ -19,8 +23,12 @@ const RecipeDetailsCard = ({ recipe }) => {
   const dispatch = useDispatch();
   const { loggedInUser } = useSelector((state) => state.user);
   const initialIngredient = {
-    amount: 0,
-    unit: { label: 'kg' },
+    amount: {
+      whole: 0,
+      numer: 0,
+      denom: 1,
+    },
+    unit: { label: '' },
     food: '',
   };
   const {
@@ -48,7 +56,7 @@ const RecipeDetailsCard = ({ recipe }) => {
       resetIngredients();
     }
   );
-  const { handleSubmit, errors } = useForm({}, () => {
+  const { handleSubmit, errors, setError } = useForm({}, () => {
     dispatch(updateRecipe(recipe._id, { ingredients, instructions }));
     toggleOpenEditMode(false);
   });
@@ -57,14 +65,20 @@ const RecipeDetailsCard = ({ recipe }) => {
     const errors = {};
     validateArray('ingredients', ingredients, errors, (item) => {
       return (
-        !String(item.whole) ||
-        !String(item.numer) ||
-        !String(item.denom) ||
+        !String(item.amount.whole) ||
+        !String(item.amount.numer) ||
+        !String(item.amount.denom) ||
+        item.amount.denom == 0 ||
         !item.unit.label ||
         !item.food ||
         item.food.trim() === ''
       );
     });
+    if (!errors) {
+      ingredients.forEach((ingredient, idx) => {
+        ingredients[idx].amount = simplifyMixedNumber(ingredient.amount);
+      });
+    }
     validateArray('instructions', instructions, errors);
     handleSubmit(event, errors);
   };
@@ -100,6 +114,7 @@ const RecipeDetailsCard = ({ recipe }) => {
         }
       />
       <IngredientCard
+        setError={setError}
         title="Ingredients"
         array={ingredients}
         handleChange={handleChangeIngredientEntry}

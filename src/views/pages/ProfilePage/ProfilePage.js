@@ -17,7 +17,6 @@ import FaceIcon from '@material-ui/icons/Face';
 import LockIcon from '@material-ui/icons/Lock';
 import ListIcon from '@material-ui/icons/List';
 import RestaurantMenuIcon from '@material-ui/icons/RestaurantMenu';
-
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
@@ -25,6 +24,7 @@ import useForm from '../../../utils/hooks/useForm';
 import useToggle from '../../../utils/hooks/useToggle';
 import useEditMode from '../../../utils/hooks/useEditMode';
 import Input from '../../common/Input/Input';
+import CardBody from '../../common/CardBody/CardBody';
 import RoundButton from '../../common/Buttons/RoundButton';
 import Spinner from '../../common/Spinner/Spinner';
 import BlockButton from '../../common/Buttons/BlockButton';
@@ -54,7 +54,6 @@ const ProfilePage = () => {
       isShowComponent.Avatar && handleCancelChangeAvatar();
     }
   );
-
   const [currentUser, setCurrentUser] = useState({});
   const [loadingCurrentUser, setLoadingCurrentUser] = useState(false);
 
@@ -315,6 +314,7 @@ const ProfilePage = () => {
                       name="caloGoal"
                       label="Calories Goal"
                       type="number"
+                      step={0.01}
                       value={
                         !openEditMode ? currentUser.caloGoal : userForm.caloGoal
                       }

@@ -19,7 +19,7 @@ const styles = makeStyles((theme) => ({
   },
   form: {
     minHeight: '350px',
-    padding: theme.spacing(5),
+    padding: theme.spacing(4),
   },
 }));
 

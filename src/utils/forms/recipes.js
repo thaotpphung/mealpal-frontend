@@ -14,6 +14,7 @@ export const recipeFormFields = [
     label: 'Calories',
     required: true,
     type: 'number',
+    step: 0.01,
   },
   {
     name: 'recipeDiet',

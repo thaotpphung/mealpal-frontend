@@ -13,7 +13,7 @@ const AutocompleteField = ({
   handleChangeAutocompleteField,
   param,
   options,
-  changedIndices,
+  changedParams,
   error,
   ...rest
 }) => {
@@ -32,7 +32,7 @@ const AutocompleteField = ({
           setDialogValue(param, newValue.inputValue);
         } else {
           if (newValue !== null) {
-            handleChangeAutocompleteField(...changedIndices, newValue);
+            handleChangeAutocompleteField(...changedParams, newValue);
           }
         }
       }}

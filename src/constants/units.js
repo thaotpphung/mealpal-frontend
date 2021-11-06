@@ -48,6 +48,9 @@ export default [
     label: 'lb',
   },
   {
-    label: 'number',
+    label: 'none',
+  },
+  {
+    label: '',
   },
 ];

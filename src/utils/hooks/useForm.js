@@ -25,6 +25,10 @@ const useForm = (
     setValues({ ...values, [name]: value });
   };
 
+  const setError = (name, value) => {
+    setErrors({ ...errors, [name]: value });
+  };
+
   const handleSubmit = (event, otherErrors = {}, otherParams = []) => {
     event.preventDefault();
     setErrors({
@@ -54,6 +58,7 @@ const useForm = (
     errors,
     setErrors,
     setValues,
+    setError,
   };
 };
 

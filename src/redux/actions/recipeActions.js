@@ -24,7 +24,7 @@ const getAllRecipes =
   (
     query = '',
     isInExploreMode = false,
-    userId = JSON.parse(localStorage.getItem('loggedInUser')).result._id
+    userId = JSON.parse(localStorage.getItem('loggedInUser'))?.result._id
   ) =>
   async (dispatch) => {
     try {

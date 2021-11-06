@@ -14,6 +14,7 @@ import {
   USER_UPDATE_PASSWORD_FAIL,
 } from '../constants/userConstants';
 import { addAlertWithTimeout } from '../actions/alertActions';
+import { clearCart } from '../actions/cartActions';
 import * as api from '../../api/index';
 export { signin, register, logout, updateUser, updatePassword };
 
@@ -46,6 +47,7 @@ const register = (formData) => async (dispatch) => {
 const logout = () => (dispatch) => {
   localStorage.clear();
   dispatch({ type: USER_LOGOUT, payload: {} });
+  dispatch(clearCart());
   dispatch(addAlertWithTimeout('success', 'Successfully logged out!'));
 };
 

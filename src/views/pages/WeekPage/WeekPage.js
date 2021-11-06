@@ -95,6 +95,7 @@ const WeekPage = () => {
                 label={field.label}
                 handleChange={handleChangeQueryField}
                 type={field.type ? field.type : 'text'}
+                step={field.step}
               />
             ))}
           </div>
@@ -165,6 +166,7 @@ const WeekPage = () => {
                   error={errors[field.name]}
                   required={field.required}
                   type={field.type ? field.type : 'text'}
+                  step={field.step}
                 />
               ))}
             </div>

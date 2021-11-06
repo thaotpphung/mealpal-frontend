@@ -21,13 +21,14 @@ const RECIPE_LIST_INITIAL_STATE = {
   loading: false,
   count: 0,
   currentCount: 0,
+  error: true,
 };
 
 const recipeListReducer = (state = RECIPE_LIST_INITIAL_STATE, action) => {
   switch (action.type) {
     case RECIPE_LIST_REQUEST:
     case RECIPE_CREATE_REQUEST:
-      return { ...state, loading: true };
+      return { ...state, loading: true, error: false };
 
     case RECIPE_LIST_SUCCESS: {
       return {
@@ -36,6 +37,7 @@ const recipeListReducer = (state = RECIPE_LIST_INITIAL_STATE, action) => {
         recipes: action.payload.data,
         count: action.payload.count,
         currentCount: action.payload.currentCount,
+        error: false,
       };
     }
 
@@ -44,12 +46,13 @@ const recipeListReducer = (state = RECIPE_LIST_INITIAL_STATE, action) => {
         ...state,
         loading: false,
         recipes: [...state.recipes, action.payload],
+        error: false,
       };
     }
 
     case RECIPE_LIST_FAIL:
     case RECIPE_CREATE_FAIL:
-      return { ...state, loading: false };
+      return { ...state, loading: false, error: true };
 
     default:
       return state;

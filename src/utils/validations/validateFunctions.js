@@ -40,7 +40,7 @@ const validateArray = (
   let hasError = false;
   value.map((item, idx) => {
     if (condition(item)) {
-      currentErrors[idx] = '';
+      currentErrors[idx] = 'Please enter valid info!';
       hasError = true;
     }
   });

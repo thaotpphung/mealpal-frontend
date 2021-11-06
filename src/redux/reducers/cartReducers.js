@@ -1,26 +1,51 @@
-import { ALERT_ADD, ALERT_REMOVE } from '../constants/alertConstants';
+import {
+  CART_ADD_BY_RECIPE,
+  CART_ADD_BY_MEAL,
+  CART_ADD_BY_DAY,
+  CART_ADD_BY_WEEK,
+  CART_UPDATE,
+  CART_CLEAR,
+} from '../constants/cartConstants';
+import { addMixedNumber } from '../../utils/mixedNumber';
+import cloneDeep from 'lodash/cloneDeep';
 
-const ALERT_INITIAL_STATE = {
-  carts: [],
+const INITIAL_STATE = {
+  cart: {},
 };
 
-const alertListReducer = (state = ALERT_INITIAL_STATE, action) => {
+const cartReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case ALERT_ADD: {
+    case CART_ADD_BY_RECIPE: {
+      const ingredients = action.payload;
+      const updatedCart = cloneDeep(state.cart);
+      console.log('updated', updatedCart);
+      ingredients.forEach((ingredient) => {
+        // updatedCart[ingredient.food][ingredient.unit.label] = addMixedNumber(
+        //   updatedCart[ingredient.food][ingredient.unit.label],
+        //   ingredient.amount
+        // );
+      });
+
+      console.log('after', updatedCart);
       return {
-        alerts: { ...state.alerts, [action.payload.id]: action.payload },
+        cart: updatedCart,
       };
     }
-    case ALERT_REMOVE: {
-      const updatedAlerts = { ...state.alerts };
-      delete updatedAlerts[action.payload.id];
+    case CART_ADD_BY_MEAL:
+    case CART_ADD_BY_DAY:
+    case CART_ADD_BY_WEEK:
+    case CART_UPDATE: {
       return {
-        alerts: { ...state.updatedAlerts },
+        cart: action.payload,
       };
     }
+
+    case CART_CLEAR:
+      return {};
+
     default:
       return state;
   }
 };
 
-export default alertListReducer;
+export default cartReducer;

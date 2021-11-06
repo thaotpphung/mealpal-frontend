@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Grid } from '@material-ui/core';
+import { Typography, Grid, FormHelperText } from '@material-ui/core';
 import useStyles from '../../../../containers/styles';
 import { styles } from '../styles';
 import Input from '../../../common/Input/Input';
@@ -9,9 +9,11 @@ import AutocompleteField from '../../../common/AutocompleteField/AutocompleteFie
 import PopupDialog from '../../../common/PopupDialog/PopupDialog';
 import RoundButton from '../../../common/Buttons/RoundButton';
 import { validate } from '../../../../utils/validations/validate';
+import { formatMixedNumber } from '../../../../utils/mixedNumber';
 import unitOptions from '../../../../constants/units';
 
 const IngredientCard = ({
+  setError,
   title,
   array,
   handleChange,
@@ -87,71 +89,83 @@ const IngredientCard = ({
                   {!openEditMode ? (
                     <>
                       <Typography>
-                        {item.numer % item.denom === 0 ? (
-                          <>{item.whole + item.numer / item.denom} </>
-                        ) : (
-                          <>
-                            {item.whole !== 0 && item.whole}{' '}
-                            {item.numer !== 0 && item.numer}
-                            {item.denom !== 1 && `/${item.denom}`}
-                          </>
-                        )}
-                        {item.unit.label} <strong>{item.food}</strong>
+                        {formatMixedNumber(item.amount)}
+                        {'\u00A0'}
+                        {item.unit.label !== 'none' && item.unit.label}{' '}
+                        <strong>{item.food}</strong>
                       </Typography>
                     </>
                   ) : (
                     <>
                       <Grid container spacing={3} alignItems="center">
+                        <Grid item xs={12} sm={12}>
+                          <FormHelperText error>
+                            <Typography>{errors && errors[itemIdx]}</Typography>
+                          </FormHelperText>
+                        </Grid>
                         <Grid item xs={12} sm={2}>
                           <Input
                             label="Whole"
                             type="number"
-                            step={1}
-                            value={item.whole}
-                            handleChange={(event) =>
-                              handleChange(
-                                itemIdx,
-                                item,
-                                'whole',
-                                event.target.value
-                              )
-                            }
-                            error={errors && errors[itemIdx]}
+                            value={item.amount.whole}
+                            handleChange={(event) => {
+                              const { value } = event.target;
+                              if (
+                                value % 1 === 0 &&
+                                value >= 0 &&
+                                value <= 100000
+                              ) {
+                                handleChange(itemIdx, item, 'amount', {
+                                  ...item.amount,
+                                  ['whole']: value,
+                                });
+                              }
+                            }}
+                            error={errors && ''}
                           />
                         </Grid>
                         <Grid item xs={12} sm={2}>
                           <Input
                             label="Numer"
                             type="number"
-                            value={item.numer}
-                            handleChange={(event) =>
-                              handleChange(
-                                itemIdx,
-                                item,
-                                'numer',
-                                event.target.value
-                              )
-                            }
-                            error={errors && errors[itemIdx]}
+                            value={item.amount.numer}
+                            handleChange={(event) => {
+                              const { value } = event.target;
+                              if (
+                                value % 1 === 0 &&
+                                value >= 0 &&
+                                value <= 100000
+                              ) {
+                                handleChange(itemIdx, item, 'amount', {
+                                  ...item.amount,
+                                  ['numer']: value,
+                                });
+                              }
+                            }}
+                            error={errors && ''}
                           />
                           <hr />
                           <Input
                             label="Denom"
                             type="number"
-                            step={1}
-                            value={item.denom}
-                            handleChange={(event) =>
-                              handleChange(
-                                itemIdx,
-                                item,
-                                'denom',
-                                event.target.value
-                              )
-                            }
-                            error={errors && errors[itemIdx]}
+                            value={item.amount.denom}
+                            handleChange={(event) => {
+                              const { value } = event.target;
+                              if (
+                                value % 1 === 0 &&
+                                value >= 0 &&
+                                value <= 100000
+                              ) {
+                                handleChange(itemIdx, item, 'amount', {
+                                  ...item.amount,
+                                  ['denom']: value,
+                                });
+                              }
+                            }}
+                            error={errors && ''}
                           />
                         </Grid>
-                        <Grid item xs={12} sm={2}>
+                        <Grid item xs={12} sm={3}>
                           <AutocompleteField
                             label="Unit"
                             value={item.unit.label}
@@ -160,13 +174,13 @@ const IngredientCard = ({
                             handleChangeAutocompleteField={handleChange}
                             param="label"
                             options={unitOptions}
-                            changedIndices={[itemIdx, item, 'unit']}
-                            error={errors && errors[itemIdx]}
+                            changedParams={[itemIdx, item, 'unit']}
+                            error={errors && ''}
                           />
                         </Grid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid item xs={12} sm={5}>
                           <Input
-                            label="Food"
+                            label="Ingredient"
                             value={item.food}
                             handleChange={(event) =>
                               handleChange(
@@ -176,7 +190,7 @@ const IngredientCard = ({
                                 event.target.value
                               )
                             }
-                            error={errors && errors[itemIdx]}
+                            error={errors && ''}
                           />
                         </Grid>
                       </Grid>

@@ -39,11 +39,7 @@ const RoundButton = ({ type, handleClick, ...props }) => {
   };
 
   return (
-    <IconButton
-      onClick={handleClick}
-      className={classes.roundButton}
-      {...props}
-    >
+    <IconButton onClick={handleClick} className={classes.roundButton}>
       {roundButtonTypes[type]}
     </IconButton>
   );

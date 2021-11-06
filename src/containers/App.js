@@ -11,12 +11,12 @@ import FlashMessage from '../views/common/FlashMessage/FlashMessage';
 import WeekDetailsPage from '../views/pages/WeekDetailsPage/WeekDetailsPage';
 import WeekPage from '../views/pages/WeekPage/WeekPage';
 import HomePage from '../views/pages/HomePage/HomePage';
+import CartPage from '../views/pages/CartPage/CartPage';
 import AuthPage from '../views/pages/AuthPage/AuthPage';
 import ProfilePage from '../views/pages/ProfilePage/ProfilePage';
 import RecipePage from '../views/pages/RecipePage/RecipePage';
 import NotFoundPage from '../views/pages/NotFoundPage/NotFoundPage';
 import RecipeDetailsPage from '../views/pages/RecipeDetailsPage/RecipeDetailsPage';
-import routes from '../constants/routes';
 
 function App() {
   const classes = useStyles();
@@ -49,8 +49,9 @@ function App() {
               />
             )
           )}
-          <Route path="/auth" exact component={AuthPage} />
           <Route path="/users/:userId/profile" exact component={ProfilePage} />
+          <Route path="/cart" exact component={CartPage} />
+          <Route path="/auth" exact component={AuthPage} />
           <Route path={'/404'} exact component={NotFoundPage} />
           <Route component={NotFoundPage} />
         </Switch>

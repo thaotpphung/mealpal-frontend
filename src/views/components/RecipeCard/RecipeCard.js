@@ -17,12 +17,13 @@ import Input from '../../common/Input/Input';
 import RoundButton from '../../common/Buttons/RoundButton';
 import BlockButton from '../../common/Buttons/BlockButton';
 import useEditMode from '../../../utils/hooks/useEditMode';
-import { formatTime } from '../../../utils/time/time';
+import { formatTime } from '../../../utils/time';
 import useForm from '../../../utils/hooks/useForm';
 import {
   updateRecipe,
   deleteRecipe,
 } from '../../../redux/actions/recipeActions';
+import { addToCartByRecipe } from '../../../redux/actions/cartActions';
 import {
   getInitialRecipeForm,
   recipeFormFields,
@@ -61,6 +62,10 @@ const RecipeCard = ({ recipe }) => {
     dispatch(deleteRecipe(recipeId, history));
   };
 
+  const handleClickShoppingCart = () => {
+    dispatch(addToCartByRecipe(recipe));
+  };
+
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardHeader
@@ -83,7 +88,10 @@ const RecipeCard = ({ recipe }) => {
                   <>
                     {!!recipeId && (
                       <>
-                        <RoundButton type="shoppingCart" />
+                        <RoundButton
+                          type="shoppingCart"
+                          handleClick={handleClickShoppingCart}
+                        />
                         <RoundButton
                           type="delete"
                           handleClick={() => handleDeleteRecipe(recipe._id)}
