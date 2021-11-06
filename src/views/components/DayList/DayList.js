@@ -88,16 +88,12 @@ const DayList = ({ days, recipes }) => {
     setDayForm(days[dayIdx]);
     setIsInEditDayMode(modes);
   };
-  // validation
-  // const { handleSubmit, errors, setError } = useForm({}, (dayIdx) => {
-  //   dispatch(updateWeekByDay(weekId, dayIdx, dayForm));
-  // });
+  // update week by day
+  const { handleSubmit, errors } = useForm({}, (dayIdx) => {
+    dispatch(updateWeekByDay(weekId, dayIdx, dayForm));
+  });
 
-  const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [dayIdx, setDayIdx] = useState('');
-
-  const handleSubmitUpdateDay = (dayIdx) => {
+  const handleSubmitUpdateDay = (event, dayIdx) => {
     let currentErrors = {};
     dayForm.meals.forEach((meal, mealIdx) => {
       if (meal.mealName.trim() === '') currentErrors[`meal${mealIdx}`] = '';
@@ -106,16 +102,8 @@ const DayList = ({ days, recipes }) => {
           currentErrors[`meal${mealIdx}food${recipeIdx}`] = '';
       });
     });
-    setErrors(currentErrors);
-    setIsSubmitting(true);
-    setDayIdx(dayIdx);
+    handleSubmit(event, currentErrors, [dayIdx]);
   };
-
-  useEffect(() => {
-    if (Object.keys(errors).length === 0 && isSubmitting) {
-      dispatch(updateWeekByDay(weekId, dayIdx, dayForm));
-    }
-  }, [errors]);
 
   // meal
   const handleDeleteMeal = (mealIdx) => {
@@ -200,7 +188,9 @@ const DayList = ({ days, recipes }) => {
                         />
                         <RoundButton
                           type="done"
-                          handleClick={() => handleSubmitUpdateDay(dayIdx)}
+                          handleClick={(event) =>
+                            handleSubmitUpdateDay(event, dayIdx)
+                          }
                         />
                       </>
                     ) : (
