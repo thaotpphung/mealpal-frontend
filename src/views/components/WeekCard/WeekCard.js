@@ -54,13 +54,8 @@ const WeekCard = ({ week }) => {
       );
     }
   };
-  const handleSetCurrentWeek = (weekId) => {
-    if (weekId !== undefined) {
-      dispatch(updateUser(loggedInUser._id, { currentWeek: weekId }));
-    }
-  };
-  const handleClickShoppingCart = () => {
-    dispatch(addToCartByWeek(week));
+  const handleSetCurrentWeek = () => {
+    dispatch(updateUser(loggedInUser._id, { currentWeek: weekId }));
   };
 
   return (
@@ -77,26 +72,28 @@ const WeekCard = ({ week }) => {
           <>
             {!!loggedInUser && (
               <>
+                <RoundButton
+                  type="shoppingCart"
+                  handleClick={() => dispatch(addToCartByWeek(week))}
+                />
                 {week.userId._id !== loggedInUser._id ? (
                   <>
                     <RoundButton type="add" />
                   </>
                 ) : (
                   <>
-                    {week._id === loggedInUser.currentWeek ? (
+                    {week._id === loggedInUser.currentWeek && (
                       <RoundButton type="default" />
-                    ) : (
-                      <RoundButton
-                        type="setDefault"
-                        handleClick={() => handleSetCurrentWeek(week._id)}
-                      />
                     )}
                     {!!weekId && (
                       <>
-                        <RoundButton
-                          type="shoppingCart"
-                          handleClick={handleClickShoppingCart}
-                        />
+                        {weekId !== loggedInUser.currentWeek && (
+                          <RoundButton
+                            type="setDefault"
+                            handleClick={handleSetCurrentWeek}
+                          />
+                        )}
+
                         <RoundButton
                           type="delete"
                           handleClick={() => handleDeleteWeek(week?._id)}

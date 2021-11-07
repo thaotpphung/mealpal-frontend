@@ -8,8 +8,10 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.primary.contrastText,
     margin: theme.spacing(2, 0),
   },
-  roundButton: {
-    // color: theme.palette.primary.contrastText,
+  noPadding: {
+    '&.MuiIconButton-root': {
+      padding: 0,
+    },
   },
 }));
 

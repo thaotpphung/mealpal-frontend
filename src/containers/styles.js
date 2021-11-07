@@ -43,7 +43,6 @@ export default makeStyles((theme) => ({
   },
   // card
   item: {
-    height: '55px',
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(2),
@@ -60,8 +59,8 @@ export default makeStyles((theme) => ({
     flex: '1 1 auto',
   },
   itemAction: {
-    flex: '0 0 auto',
-    marginRight: theme.spacing(2),
+    display: 'flex',
+    justifyContent: 'end',
   },
   selected: {
     backgroundColor: theme.palette.grey[300],

@@ -55,7 +55,7 @@ const updateUser = (userId, formData) => async (dispatch) => {
   dispatch({ type: USER_UPDATE_REQUEST });
   try {
     const { data } = await api.updateUser(userId, formData);
-    dispatch({ type: USER_UPDATE_SUCCESS, payload: data });
+    dispatch({ type: USER_UPDATE_SUCCESS, payload: formData });
     dispatch(addAlertWithTimeout('success', 'Successfully updated user!'));
   } catch (error) {
     dispatch({ type: USER_UPDATE_FAIL });

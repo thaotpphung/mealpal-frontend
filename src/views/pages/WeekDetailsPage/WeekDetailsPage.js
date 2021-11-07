@@ -21,7 +21,7 @@ const WeekDetailsPage = () => {
     if (!location.isRedirect) {
       dispatch(getWeek(weekId));
     }
-    dispatch(getAllRecipes());
+    dispatch(getAllRecipes('?fields=recipeName'));
   }, []);
 
   if (!loading && Object.keys(week).length > 0 && recipes.length >= 0)

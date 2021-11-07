@@ -14,13 +14,12 @@ const INITIAL_STATE = {
 };
 
 const addOne = (recipe, cart) => {
-  recipe.ingredients.forEach((ingredient) => {
+  recipe?.ingredients.forEach((ingredient) => {
     if (ingredient.unit.label !== '') {
       // initialize food
       cart[ingredient.food] = cart[ingredient.food]
         ? cart[ingredient.food]
         : { units: {}, recipes: {} };
-      console.log('after initialize cart', cart[ingredient.food]);
       // initialize unit
       if (!(ingredient.unit.label in cart[ingredient.food].units)) {
         cart[ingredient.food].units[ingredient.unit.label] = {};
@@ -31,9 +30,7 @@ const addOne = (recipe, cart) => {
         current = { whole: 0, numer: 0, denom: 1 };
       const result = addMixedNumber(current, ingredient.amount);
       cart[ingredient.food].units[ingredient.unit.label] = result;
-      console.log('add recipe name', recipe.recipeName);
       cart[ingredient.food].recipes[recipe.recipeName] = recipe.recipeName;
-      console.log('after add recipe to set', cart[ingredient.food]);
     }
   });
   return cart;
@@ -60,6 +57,32 @@ const cartReducer = (state = INITIAL_STATE, action) => {
             addOne(recipe, updatedCart);
           });
         });
+      });
+      return {
+        cart: updatedCart,
+      };
+    }
+
+    case CART_ADD_BY_DAY: {
+      const day = action.payload;
+      let updatedCart = cloneDeep(state.cart);
+      if (updatedCart === undefined) updatedCart = {};
+      day.meals.forEach((meal) => {
+        meal.food.forEach((recipe) => {
+          addOne(recipe, updatedCart);
+        });
+      });
+      return {
+        cart: updatedCart,
+      };
+    }
+
+    case CART_ADD_BY_MEAL: {
+      const meal = action.payload;
+      let updatedCart = cloneDeep(state.cart);
+      if (updatedCart === undefined) updatedCart = {};
+      meal.food.forEach((recipe) => {
+        addOne(recipe, updatedCart);
       });
       return {
         cart: updatedCart,

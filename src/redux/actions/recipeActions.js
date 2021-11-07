@@ -28,6 +28,7 @@ const getAllRecipes =
   ) =>
   async (dispatch) => {
     try {
+      console.log('query', query);
       dispatch({ type: RECIPE_LIST_REQUEST });
       const { data } = await api.getRecipes(query, isInExploreMode, userId);
       dispatch({ type: RECIPE_LIST_SUCCESS, payload: data.data });

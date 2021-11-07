@@ -43,7 +43,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: false,
-        loggedInUser: { ...state.loggedInUser, ...action.payload.data },
+        loggedInUser: { ...state.loggedInUser, ...action.payload },
       };
     }
 

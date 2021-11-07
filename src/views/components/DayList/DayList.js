@@ -15,6 +15,11 @@ import PopupDialog from '../../common/PopupDialog/PopupDialog';
 import Input from '../../common/Input/Input';
 import { createRecipe } from '../../../redux/actions/recipeActions';
 import { updateWeekByDay } from '../../../redux/actions/weekActions';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import {
+  addToCartByDay,
+  addToCartByMeal,
+} from '../../../redux/actions/cartActions';
 import cloneDeep from 'lodash/cloneDeep';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
@@ -178,26 +183,40 @@ const DayList = ({ days, recipes }) => {
             title={day.dayName}
             action={
               <>
-                {!!weekId && !!loggedInUser && (
+                {!!loggedInUser && (
                   <>
-                    {isInEditDayMode[dayIdx] ? (
+                    <RoundButton
+                      type="shoppingCart"
+                      handleClick={() => dispatch(addToCartByDay(days[dayIdx]))}
+                    />
+                    {!!weekId && (
                       <>
-                        <RoundButton
-                          type="cancel"
-                          handleClick={() => handleCancelEditDayMode(dayIdx)}
-                        />
-                        <RoundButton
-                          type="done"
-                          handleClick={(event) =>
-                            handleSubmitUpdateDay(event, dayIdx)
-                          }
-                        />
+                        {isInEditDayMode[dayIdx] ? (
+                          <>
+                            <RoundButton
+                              type="cancel"
+                              handleClick={() =>
+                                handleCancelEditDayMode(dayIdx)
+                              }
+                            />
+                            <RoundButton
+                              type="done"
+                              handleClick={(event) =>
+                                handleSubmitUpdateDay(event, dayIdx)
+                              }
+                            />
+                          </>
+                        ) : (
+                          <>
+                            <RoundButton
+                              type={isInEditDayMode[dayIdx] ? 'cancel' : 'edit'}
+                              handleClick={() =>
+                                handleEnableEditDayMode(dayIdx)
+                              }
+                            />
+                          </>
+                        )}
                       </>
-                    ) : (
-                      <RoundButton
-                        type={isInEditDayMode[dayIdx] ? 'cancel' : 'edit'}
-                        handleClick={() => handleEnableEditDayMode(dayIdx)}
-                      />
                     )}
                   </>
                 )}
@@ -240,6 +259,14 @@ const DayList = ({ days, recipes }) => {
                           </>
                         )}
                       </ul>
+                    </div>
+                    <div className={classes.itemAction}>
+                      <RoundButton
+                        type="shoppingCart"
+                        handleClick={() =>
+                          dispatch(addToCartByMeal(days[dayIdx].meals[mealIdx]))
+                        }
+                      />
                     </div>
                   </div>
                 );

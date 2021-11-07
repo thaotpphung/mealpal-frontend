@@ -18,28 +18,28 @@ export {
 
 const addToCartByRecipe = (recipe) => async (dispatch) => {
   dispatch({ type: CART_ADD_BY_RECIPE, payload: recipe });
-  dispatch(
-    addAlertWithTimeout('success', 'Successfully added to shopping list!')
-  );
+  dispatch(addAlertWithTimeout('success', 'Successfully added to cart!'));
 };
 
 const addToCartByMeal = (meal) => async (dispatch) => {
-  const cart = {};
-  dispatch({ type: CART_ADD_BY_MEAL, payload: cart });
+  dispatch({ type: CART_ADD_BY_MEAL, payload: meal });
+  dispatch(addAlertWithTimeout('success', 'Successfully added to cart!'));
 };
 
 const addToCartByDay = (day) => async (dispatch) => {
-  const cart = {};
-  dispatch({ type: CART_ADD_BY_DAY, payload: cart });
+  dispatch({ type: CART_ADD_BY_DAY, payload: day });
+  dispatch(addAlertWithTimeout('success', 'Successfully added to cart!'));
 };
 
 const addToCartByWeek = (week) => async (dispatch) => {
   dispatch({ type: CART_ADD_BY_WEEK, payload: week });
+  dispatch(addAlertWithTimeout('success', 'Successfully added to cart!'));
 };
 
 const updateCart = (cart) => async (dispatch) => {
   const cart = {};
   dispatch({ type: CART_UPDATE, payload: cart });
+  dispatch(addAlertWithTimeout('success', 'Successfully updated cart!'));
 };
 
 const clearCart = () => async (dispatch) => {
