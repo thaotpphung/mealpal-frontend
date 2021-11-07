@@ -16,7 +16,8 @@ import CardHeader from '../../common/CardHeader/CardHeader';
 import CardBody from '../../common/CardBody/CardBody';
 import Message from '../../common/Message/Message';
 import RoundButton from '../../common/Buttons/RoundButton';
-import { updateCart } from '../../../redux/actions/cartActions';
+import { updateCart, clearCart } from '../../../redux/actions/cartActions';
+import { formatMixedNumber } from '../../../utils/mixedNumber';
 
 const CartPage = () => {
   const classes = useStyles();
@@ -41,6 +42,9 @@ const CartPage = () => {
     // }
     // setChecked(newChecked);
   };
+  const handleClickDeleteCart = () => {
+    dispatch(clearCart());
+  };
 
   return (
     <>
@@ -51,15 +55,25 @@ const CartPage = () => {
       <Paper className={classes.root}>
         <CardHeader
           title="Shopping Cart"
-          action={<RoundButton type="edit" />}
+          action={
+            <>
+              <RoundButton type="delete" handleClick={handleClickDeleteCart} />
+              <RoundButton type="edit" />
+            </>
+          }
         />
         <CardBody>
           <List className={classes.container}>
-            {[0, 1, 2, 3].map((value) => {
-              const labelId = `checkbox-list-label-${value}`;
+            {Object.entries(cart).map(([food, value], foodIdx) => {
+              const labelId = `checkbox-list-label-${food}-${foodIdx}}`;
               return (
-                <>
-                  <ListItem key={value} dense button>
+                // <>
+                //   {Object.entries(value.units).map(
+                //     ([unit, amount], unitIdx) => {
+                //       const labelId = `checkbox-list-label-${food}-${foodIdx}-${unitIdx}`;
+                //       return (
+                <div key={`list-${food}`}>
+                  <ListItem dense button>
                     <ListItemIcon>
                       <Checkbox
                         onChange={handleToggle}
@@ -73,9 +87,20 @@ const CartPage = () => {
                     <ListItemText
                       id={labelId}
                       primary={
-                        <typography>
-                          <strong>{`3 1/2 Banana`}</strong>
-                        </typography>
+                        <Typography>
+                          {Object.entries(value.units).map(
+                            ([unit, amount], unitIdx, array) => (
+                              <span key={`unit-${unit}-${unitIdx}`}>
+                                {formatMixedNumber(amount)}
+                                {'\u00A0'}
+                                {unit}
+                                {'\u00A0'}
+                                {unitIdx < array.length - 1 && '+ '}
+                              </span>
+                            )
+                          )}
+                          <strong>{food}</strong>{' '}
+                        </Typography>
                       }
                     />
                     {open ? (
@@ -86,21 +111,29 @@ const CartPage = () => {
                   </ListItem>
                   <Collapse in={open} timeout="auto" unmountOnExit>
                     <div className={classes.nested}>
+                      {/* {console.log('recipes', new Array(value.recipes))} */}
                       <RestaurantMenuIcon
                         style={{ margin: '10px 10px 10px 0' }}
                       />
-                      {['blue berry', 'chicken pie'].map((recipeName, idx) => (
-                        <Typography
-                          key={`name-${recipeName}-${idx}`}
-                          component="span"
-                        >
-                          {recipeName}
-                          {',\u00A0'}
-                        </Typography>
-                      ))}
+                      {Object.keys(value.recipes).map(
+                        (recipeName, recipeIdx, recipes) => (
+                          <Typography
+                            key={`recipe-name-${recipeName}-${recipeIdx}`}
+                            component="span"
+                          >
+                            {recipeName}
+                            {recipeIdx < recipes.length - 1 && ', \u00A0'}
+                          </Typography>
+                        )
+                      )}
                     </div>
                   </Collapse>
-                </>
+                </div>
+                //     );
+                //   }
+                // )}
+
+                // </>
               );
             })}
           </List>

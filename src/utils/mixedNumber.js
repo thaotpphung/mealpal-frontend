@@ -1,5 +1,6 @@
 const formatMixedNumber = (num) => {
   const { whole, numer, denom } = simplifyMixedNumber(num);
+  if (whole === 0 && numer === 0) return <>0</>;
   return (
     <>
       {whole !== 0 && whole}{' '}

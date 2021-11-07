@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Paper } from '@material-ui/core';
-import { updateRecipe } from '../../../redux/actions/recipeActions';
 import useStyles from '../../../containers/styles';
 import { styles } from './styles';
 import useArray from '../../../utils/hooks/useArray';
@@ -12,10 +11,9 @@ import RoundButton from '../../common/Buttons/RoundButton';
 import CardHeader from '../../common/CardHeader/CardHeader';
 import InstructionCard from './InstructionCard/InstructionCard';
 import IngredientCard from './IngredientCard/IngredientCard';
-import {
-  formatMixedNumber,
-  simplifyMixedNumber,
-} from '../../../utils/mixedNumber';
+import { simplifyMixedNumber } from '../../../utils/mixedNumber';
+import { updateRecipe } from '../../../redux/actions/recipeActions';
+import { addAlertWithTimeout } from '../../../redux/actions/alertActions';
 
 const RecipeDetailsCard = ({ recipe }) => {
   const classes = useStyles();

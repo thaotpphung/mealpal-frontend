@@ -100,7 +100,7 @@ const IngredientCard = ({
                       <Grid container spacing={3} alignItems="center">
                         <Grid item xs={12} sm={12}>
                           <FormHelperText error>
-                            <Typography>{errors && errors[itemIdx]}</Typography>
+                            {errors && errors[itemIdx]}
                           </FormHelperText>
                         </Grid>
                         <Grid item xs={12} sm={2}>
@@ -121,7 +121,7 @@ const IngredientCard = ({
                                 });
                               }
                             }}
-                            error={errors && ''}
+                            error={errors && errors[itemIdx]}
                           />
                         </Grid>
                         <Grid item xs={12} sm={2}>
@@ -142,7 +142,7 @@ const IngredientCard = ({
                                 });
                               }
                             }}
-                            error={errors && ''}
+                            error={errors && errors[itemIdx]}
                           />
                           <hr />
                           <Input
@@ -162,7 +162,7 @@ const IngredientCard = ({
                                 });
                               }
                             }}
-                            error={errors && ''}
+                            error={errors && errors[itemIdx]}
                           />
                         </Grid>
                         <Grid item xs={12} sm={3}>
@@ -175,7 +175,7 @@ const IngredientCard = ({
                             param="label"
                             options={unitOptions}
                             changedParams={[itemIdx, item, 'unit']}
-                            error={errors && ''}
+                            error={errors && errors[itemIdx]}
                           />
                         </Grid>
                         <Grid item xs={12} sm={5}>
@@ -190,7 +190,7 @@ const IngredientCard = ({
                                 event.target.value
                               )
                             }
-                            error={errors && ''}
+                            error={errors && errors[itemIdx]}
                           />
                         </Grid>
                       </Grid>

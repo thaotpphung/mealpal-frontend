@@ -12,6 +12,7 @@ import {
 import useStyles from '../../../containers/styles';
 import { deleteWeek, updateWeek } from '../../../redux/actions/weekActions';
 import { updateUser } from '../../../redux/actions/userActions';
+import { addToCartByWeek } from '../../../redux/actions/cartActions';
 import { addAlertWithTimeout } from '../../../redux/actions/alertActions';
 import Input from '../../common/Input/Input';
 import useEditMode from '../../../utils/hooks/useEditMode';
@@ -58,6 +59,9 @@ const WeekCard = ({ week }) => {
       dispatch(updateUser(loggedInUser._id, { currentWeek: weekId }));
     }
   };
+  const handleClickShoppingCart = () => {
+    dispatch(addToCartByWeek(week));
+  };
 
   return (
     <Card>
@@ -89,7 +93,10 @@ const WeekCard = ({ week }) => {
                     )}
                     {!!weekId && (
                       <>
-                        <RoundButton type="shoppingCart" />
+                        <RoundButton
+                          type="shoppingCart"
+                          handleClick={handleClickShoppingCart}
+                        />
                         <RoundButton
                           type="delete"
                           handleClick={() => handleDeleteWeek(week?._id)}

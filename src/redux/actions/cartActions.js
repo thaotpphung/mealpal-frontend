@@ -34,8 +34,7 @@ const addToCartByDay = (day) => async (dispatch) => {
 };
 
 const addToCartByWeek = (week) => async (dispatch) => {
-  const cart = {};
-  dispatch({ type: CART_ADD_BY_WEEK, payload: cart });
+  dispatch({ type: CART_ADD_BY_WEEK, payload: week });
 };
 
 const updateCart = (cart) => async (dispatch) => {
