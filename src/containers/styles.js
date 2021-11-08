@@ -59,8 +59,7 @@ export default makeStyles((theme) => ({
     flex: '1 1 auto',
   },
   itemAction: {
-    display: 'flex',
-    justifyContent: 'end',
+    flex: '0 0 auto',
   },
   selected: {
     backgroundColor: theme.palette.grey[300],

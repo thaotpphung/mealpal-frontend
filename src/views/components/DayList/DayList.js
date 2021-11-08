@@ -149,6 +149,14 @@ const DayList = ({ days, recipes }) => {
     setDayForm(updatedDays);
   };
 
+  const handleOnDragEnd = (result) => {
+    if (!result.destination) return;
+    const updatedDays = cloneDeep(dayForm);
+    const [reorderedItem] = updatedDays.meals.splice(result.source.index, 1);
+    updatedDays.meals.splice(result.destination.index, 0, reorderedItem);
+    setDayForm(updatedDays);
+  };
+
   return (
     <div>
       <PopupDialog
@@ -279,70 +287,101 @@ const DayList = ({ days, recipes }) => {
                   </div>
                 );
               })}
-            {isInEditDayMode[dayIdx] &&
-              dayForm !== undefined &&
-              dayForm.meals.map((meal, mealIdx) => {
-                return (
-                  <div
-                    key={`meal-in-field-${meal._id}-${mealIdx}`}
-                    className={localClasses.menuItem}
-                  >
-                    <div className={classes.itemIcon}>
-                      <Input
-                        value={meal.mealName}
-                        handleChange={(e) => handleChangeMeal(e, mealIdx)}
-                        error={errors[`meal${mealIdx}`]}
-                        required
-                      />
-                    </div>
-                    <div className={classes.itemContent}>
-                      <ul className={localClasses.menuContent}>
-                        {meal.food.map((recipe, recipeIdx) => (
-                          <li key={`food-field-${recipe._id}-${recipeIdx}`}>
-                            <RestaurantMenuIcon />
-                            <AutocompleteField
-                              value={recipe}
-                              toggleOpen={toggleOpenNewRecipeDialog}
-                              setDialogValue={setNewRecipe}
-                              handleChangeAutocompleteField={handleChangeFood}
-                              param="recipeName"
-                              options={extractedFieldsForAutoComplete}
-                              changedParams={[mealIdx, recipeIdx]}
-                              error={errors[`meal${mealIdx}food${recipeIdx}`]}
-                              style={{ minWidth: '70%' }}
-                              required
-                            />
-                            <RoundButton
-                              type="deleteField"
-                              handleClick={() =>
-                                handleDeleteFood(mealIdx, recipeIdx)
-                              }
-                            />
-                            <RoundButton
-                              type="addField"
-                              handleClick={() =>
-                                handleAddFood(mealIdx, recipeIdx)
-                              }
-                            />
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div className={classes.itemAction}>
-                      <>
-                        <RoundButton
-                          type="delete"
-                          handleClick={() => handleDeleteMeal(mealIdx)}
-                        />
-                        <RoundButton
-                          type="add"
-                          handleClick={() => handleAddMeal(mealIdx)}
-                        />
-                      </>
-                    </div>
-                  </div>
-                );
-              })}
+            {isInEditDayMode[dayIdx] && dayForm !== undefined && (
+              <DragDropContext onDragEnd={handleOnDragEnd}>
+                <Droppable droppableId="meals">
+                  {(provided) => (
+                    <ul {...provided.droppableProps} ref={provided.innerRef}>
+                      {dayForm.meals.map((meal, mealIdx) => {
+                        return (
+                          <Draggable
+                            key={`meal-in-field-${meal._id}-${mealIdx}`}
+                            draggableId={meal._id}
+                            index={mealIdx}
+                          >
+                            {(provided) => (
+                              <li
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                className={localClasses.menuItem}
+                              >
+                                <div className={classes.itemIcon}>
+                                  <Input
+                                    value={meal.mealName}
+                                    handleChange={(e) =>
+                                      handleChangeMeal(e, mealIdx)
+                                    }
+                                    error={errors[`meal${mealIdx}`]}
+                                    required
+                                  />
+                                </div>
+                                <div className={classes.itemContent}>
+                                  <ul className={localClasses.menuContent}>
+                                    {meal.food.map((recipe, recipeIdx) => (
+                                      <li
+                                        key={`food-field-${recipe._id}-${recipeIdx}`}
+                                      >
+                                        <RestaurantMenuIcon />
+                                        <AutocompleteField
+                                          value={recipe}
+                                          toggleOpen={toggleOpenNewRecipeDialog}
+                                          setDialogValue={setNewRecipe}
+                                          handleChangeAutocompleteField={
+                                            handleChangeFood
+                                          }
+                                          param="recipeName"
+                                          options={
+                                            extractedFieldsForAutoComplete
+                                          }
+                                          changedParams={[mealIdx, recipeIdx]}
+                                          error={
+                                            errors[
+                                              `meal${mealIdx}food${recipeIdx}`
+                                            ]
+                                          }
+                                          style={{ minWidth: '70%' }}
+                                          required
+                                        />
+                                        <RoundButton
+                                          type="deleteField"
+                                          handleClick={() =>
+                                            handleDeleteFood(mealIdx, recipeIdx)
+                                          }
+                                        />
+                                        <RoundButton
+                                          type="addField"
+                                          handleClick={() =>
+                                            handleAddFood(mealIdx, recipeIdx)
+                                          }
+                                        />
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                                <div className={classes.itemAction}>
+                                  <RoundButton
+                                    type="delete"
+                                    handleClick={() =>
+                                      handleDeleteMeal(mealIdx)
+                                    }
+                                  />
+                                  <RoundButton
+                                    type="add"
+                                    handleClick={() => handleAddMeal(mealIdx)}
+                                  />
+                                </div>
+                              </li>
+                            )}
+                          </Draggable>
+                        );
+                      })}
+                      {provided.placeholder}
+                    </ul>
+                  )}
+                </Droppable>
+              </DragDropContext>
+            )}
           </CardBody>
         </Paper>
       ))}
