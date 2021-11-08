@@ -72,7 +72,8 @@ const WeekCard = ({ week }) => {
           <>
             {!!loggedInUser && (
               <>
-                {week.userId._id === loggedInUser._id && (
+                {console.log('week', week, 'loggedin', loggedInUser)}
+                {week?.userId._id === loggedInUser._id && (
                   <>
                     {week._id === loggedInUser.currentWeek && (
                       <RoundButton type="default" />

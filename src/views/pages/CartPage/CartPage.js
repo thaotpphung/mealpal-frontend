@@ -18,31 +18,27 @@ import RoundButton from '../../common/Buttons/RoundButton';
 import { updateCart, clearCart } from '../../../redux/actions/cartActions';
 import { addAlertWithTimeout } from '../../../redux/actions/alertActions';
 import { formatMixedNumber } from '../../../utils/mixedNumber';
+import useEditMode from '../../../utils/hooks/useEditMode';
 import { display } from '@mui/system';
 
 const CartPage = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { cart } = useSelector((state) => state.cart);
-  const [cartForm, setCartForm] = useState({ cart });
-  const { loggedInUser } = useSelector((state) => state.user);
-  const [checked, setChecked] = React.useState([0]);
+  let initialChecked = {};
+  Object.keys(cart).forEach((food) => {
+    initialChecked[food] = false;
+  });
+  const [cartForm, setCartForm] = useState(initialChecked);
   const [open, setOpen] = React.useState(true);
-
   const handleClick = () => {
     setOpen(!open);
   };
 
-  const handleToggle = (value) => {
-    // const currentIndex = checked.indexOf(value);
-    // const newChecked = [...checked];
-    // if (currentIndex === -1) {
-    //   newChecked.push(value);
-    // } else {
-    //   newChecked.splice(currentIndex, 1);
-    // }
-    // setChecked(newChecked);
+  const handleSelectCheckBox = (event) => {
+    setCartForm({ ...cartForm, [event.target.name]: event.target.checked });
   };
+
   const handleClickDeleteCart = () => {
     dispatch(clearCart());
   };
@@ -55,7 +51,6 @@ const CartPage = () => {
           action={
             <>
               <RoundButton type="delete" handleClick={handleClickDeleteCart} />
-              <RoundButton type="edit" />
             </>
           }
         />
@@ -64,18 +59,14 @@ const CartPage = () => {
             {Object.entries(cart).map(([food, value], foodIdx) => {
               const labelId = `checkbox-list-label-${food}-${foodIdx}}`;
               return (
-                // <>
-                //   {Object.entries(value.units).map(
-                //     ([unit, amount], unitIdx) => {
-                //       const labelId = `checkbox-list-label-${food}-${foodIdx}-${unitIdx}`;
-                //       return (
                 <div key={`list-${food}`}>
                   <ListItem dense button>
                     <ListItemIcon>
                       <Checkbox
-                        onChange={handleToggle}
+                        onChange={(event) => handleSelectCheckBox(event)}
+                        name={food}
                         edge="start"
-                        checked={checked.indexOf(value) !== -1}
+                        checked={cartForm[food]}
                         tabIndex={-1}
                         disableRipple
                         inputProps={{ 'aria-labelledby': labelId }}
@@ -108,7 +99,6 @@ const CartPage = () => {
                   </ListItem>
                   <Collapse in={open} timeout="auto" unmountOnExit>
                     <div className={classes.nested}>
-                      {/* {console.log('recipes', new Array(value.recipes))} */}
                       <RestaurantMenuIcon
                         style={{ margin: '10px 10px 10px 0' }}
                       />
@@ -126,11 +116,6 @@ const CartPage = () => {
                     </div>
                   </Collapse>
                 </div>
-                //     );
-                //   }
-                // )}
-
-                // </>
               );
             })}
           </List>
