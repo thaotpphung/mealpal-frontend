@@ -92,7 +92,7 @@ const IngredientCard = ({
                         {formatMixedNumber(item.amount)}
                         {'\u00A0'}
                         {item.unit.label !== 'none' && item.unit.label}{' '}
-                        <strong>{item.food}</strong>
+                        <strong>{item.ingredientName}</strong>
                       </Typography>
                     </>
                   ) : (
@@ -181,12 +181,12 @@ const IngredientCard = ({
                         <Grid item xs={12} sm={5}>
                           <Input
                             label="Ingredient"
-                            value={item.food}
+                            value={item.ingredientName}
                             handleChange={(event) =>
                               handleChange(
                                 itemIdx,
                                 item,
-                                'food',
+                                'ingredientName',
                                 event.target.value
                               )
                             }

@@ -66,22 +66,19 @@ const CartPage = () => {
     setCartForm(updatedCart);
   };
 
-  const handleDeleteIngredient = (event, food) => {
+  const handleDeleteIngredient = (event, ingredientName) => {
     let updatedCart = cloneDeep(cartForm);
-    delete updatedCart[food];
+    delete updatedCart[ingredientName];
     setCartForm(updatedCart);
   };
 
-  const handleChangeIngredient = (event, oldFood) => {
+  const handleChangeIngredient = (event, oldIngredientName) => {
     let updatedCart = cloneDeep(cartForm);
-    if (oldFood !== event.target.value) {
-      Object.defineProperty(
-        updatedCart,
-        event.target.value,
-        Object.getOwnPropertyDescriptor(updatedCart, oldFood)
-      );
-      delete updatedCart[oldFood];
-    }
+    // if (oldIngredientName !== event.target.value) {
+    //   const value = updatedCart[oldIngredientName];
+    //   delete updatedCart.oldIngredientName;
+    //   updatedCart[event.target.value] = value;
+    // }
     setCartForm(updatedCart);
   };
 
@@ -116,85 +113,87 @@ const CartPage = () => {
         <CardBody>
           {!openEditMode && (
             <List className={localClasses.container}>
-              {Object.entries(cart).map(([food, value], foodIdx) => {
-                const labelId = `checkbox-list-label-${food}-${foodIdx}}`;
-                return (
-                  <div key={`list-${food}`}>
-                    <ListItem dense button>
-                      <ListItemIcon>
-                        <Checkbox
-                          onChange={(event) => handleSelectCheckBox(event)}
-                          name={food}
-                          edge="start"
-                          checked={cartForm[food]}
-                          tabIndex={-1}
-                          disableRipple
-                          inputProps={{ 'aria-labelledby': labelId }}
-                        />
-                      </ListItemIcon>
-                      <ListItemText
-                        id={labelId}
-                        primary={
-                          <Typography>
-                            {Object.entries(value.units).map(
-                              ([unit, amount], unitIdx, array) => (
-                                <span key={`unit-${unit}-${unitIdx}`}>
-                                  {formatMixedNumber(amount)}
-                                  {'\u00A0'}
-                                  {unit}
-                                  {'\u00A0'}
-                                  {unitIdx < array.length - 1 && '+ '}
-                                </span>
-                              )
-                            )}
-                            <strong>{food}</strong>{' '}
-                          </Typography>
-                        }
-                      />
-                      {showRecipeNameList ? (
-                        <RoundButton
-                          type="expandLess"
-                          handleClick={toggleShowRecipeNameList}
-                        />
-                      ) : (
-                        <RoundButton
-                          type="expandMore"
-                          handleClick={toggleShowRecipeNameList}
-                        />
-                      )}
-                    </ListItem>
-                    <Collapse
-                      in={showRecipeNameList}
-                      timeout="auto"
-                      unmountOnExit
-                    >
-                      <div className={localClasses.nested}>
-                        <RestaurantMenuIcon
-                          style={{ margin: '10px 10px 10px 0' }}
-                        />
-                        {Object.keys(value.recipes).map(
-                          (recipeName, recipeIdx, recipes) => (
-                            <Typography
-                              key={`recipe-name-${recipeName}-${recipeIdx}`}
-                              component="span"
-                            >
-                              {recipeName}
-                              {recipeIdx < recipes.length - 1 && ', \u00A0'}
+              {Object.entries(cart).map(
+                ([ingredientName, value], ingredientNameIdx) => {
+                  const labelId = `checkbox-list-label-${ingredientName}-${ingredientNameIdx}}`;
+                  return (
+                    <div key={`list-${ingredientName}`}>
+                      <ListItem dense button>
+                        <ListItemIcon>
+                          <Checkbox
+                            onChange={(event) => handleSelectCheckBox(event)}
+                            name={ingredientName}
+                            edge="start"
+                            checked={cartForm[ingredientName]}
+                            tabIndex={-1}
+                            disableRipple
+                            inputProps={{ 'aria-labelledby': labelId }}
+                          />
+                        </ListItemIcon>
+                        <ListItemText
+                          id={labelId}
+                          primary={
+                            <Typography>
+                              {Object.entries(value.units).map(
+                                ([unit, amount], unitIdx, array) => (
+                                  <span key={`unit-${unit}-${unitIdx}`}>
+                                    {formatMixedNumber(amount)}
+                                    {'\u00A0'}
+                                    {unit}
+                                    {'\u00A0'}
+                                    {unitIdx < array.length - 1 && '+ '}
+                                  </span>
+                                )
+                              )}
+                              <strong>{ingredientName}</strong>{' '}
                             </Typography>
-                          )
+                          }
+                        />
+                        {showRecipeNameList ? (
+                          <RoundButton
+                            type="expandLess"
+                            handleClick={toggleShowRecipeNameList}
+                          />
+                        ) : (
+                          <RoundButton
+                            type="expandMore"
+                            handleClick={toggleShowRecipeNameList}
+                          />
                         )}
-                      </div>
-                    </Collapse>
-                  </div>
-                );
-              })}
+                      </ListItem>
+                      <Collapse
+                        in={showRecipeNameList}
+                        timeout="auto"
+                        unmountOnExit
+                      >
+                        <div className={localClasses.nested}>
+                          <RestaurantMenuIcon
+                            style={{ margin: '10px 10px 10px 0' }}
+                          />
+                          {Object.keys(value.recipes).map(
+                            (recipeName, recipeIdx, recipes) => (
+                              <Typography
+                                key={`recipe-name-${recipeName}-${recipeIdx}`}
+                                component="span"
+                              >
+                                {recipeName}
+                                {recipeIdx < recipes.length - 1 && ', \u00A0'}
+                              </Typography>
+                            )
+                          )}
+                        </div>
+                      </Collapse>
+                    </div>
+                  );
+                }
+              )}
             </List>
           )}
           {openEditMode && (
             <div>
-              {Object.entries(cartForm).map(([food, value]) => (
+              {Object.entries(cartForm).map(([ingredientName, value]) => (
                 <div
-                  key={`edit-form-${food}`}
+                  key={`edit-form-${ingredientName}`}
                   className={localClasses.editForm}
                 >
                   <Grid container spacing={3}>
@@ -202,9 +201,9 @@ const CartPage = () => {
                     <Grid item xs={12} sm={3}>
                       <Input
                         label="Ingredient"
-                        value={food}
+                        value={ingredientName}
                         handleChange={(event) =>
-                          handleChangeIngredient(event, food)
+                          handleChangeIngredient(event, ingredientName)
                         }
                       />
                     </Grid>
@@ -277,7 +276,7 @@ const CartPage = () => {
                     <RoundButton
                       type="delete"
                       handleClick={(event) =>
-                        handleDeleteIngredient(event, food)
+                        handleDeleteIngredient(event, ingredientName)
                       }
                     />
                   </div>

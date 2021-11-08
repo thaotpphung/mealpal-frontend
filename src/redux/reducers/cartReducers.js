@@ -10,27 +10,48 @@ import { addMixedNumber } from '../../utils/mixedNumber';
 import cloneDeep from 'lodash/cloneDeep';
 
 const INITIAL_STATE = {
-  cart: {},
+  cart: [],
 };
 
 const addOne = (recipe, cart) => {
   recipe?.ingredients.forEach((ingredient) => {
     if (ingredient.unit.label !== '') {
+      // cart.forEach((cartIngredient) => {
+      //   // check if ingredient exists, initialize if not
+      //   if (cartIngredient.ingredientName !== ingredient.ingredientName) {
+      //     cart.push({
+      //       ingredientName: ingredient.ingredientName,
+      //       units: [],
+      //       recipes: {},
+      //     });
+      //   }
+      //   // check if unit exists
+      //   cartIngredient.units.forEach((cartUnit) => {
+      //     if (cartUnit !== ingredient.unit.label) {
+      //       cart.units.push({
+      //         unit: ingredient.unit.label,
+      //       });
+      //     }
+      //   });
+      // });
+
       // initialize food
-      cart[ingredient.food] = cart[ingredient.food]
-        ? cart[ingredient.food]
+      cart[ingredient.ingredientName] = cart[ingredient.ingredientName]
+        ? cart[ingredient.ingredientName]
         : { units: {}, recipes: {} };
       // initialize unit
-      if (!(ingredient.unit.label in cart[ingredient.food].units)) {
-        cart[ingredient.food].units[ingredient.unit.label] = {};
+      if (!(ingredient.unit.label in cart[ingredient.ingredientName].units)) {
+        cart[ingredient.ingredientName].units[ingredient.unit.label] = {};
       }
       // compute
-      let current = cart[ingredient.food].units[ingredient.unit.label];
+      let current =
+        cart[ingredient.ingredientName].units[ingredient.unit.label];
       if (Object.keys(current).length === 0)
         current = { whole: 0, numer: 0, denom: 1 };
       const result = addMixedNumber(current, ingredient.amount);
-      cart[ingredient.food].units[ingredient.unit.label] = result;
-      cart[ingredient.food].recipes[recipe.recipeName] = recipe.recipeName;
+      cart[ingredient.ingredientName].units[ingredient.unit.label] = result;
+      cart[ingredient.ingredientName].recipes[recipe.recipeName] =
+        recipe.recipeName;
     }
   });
   return cart;

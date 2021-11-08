@@ -27,7 +27,7 @@ const RecipeDetailsCard = ({ recipe }) => {
       denom: 1,
     },
     unit: { label: '' },
-    food: '',
+    ingredientName: '',
   };
   const {
     array: ingredients,
@@ -69,8 +69,8 @@ const RecipeDetailsCard = ({ recipe }) => {
         !String(item.amount.denom) ||
         item.amount.denom == 0 ||
         !item.unit.label ||
-        !item.food ||
-        item.food.trim() === ''
+        !item.ingredientName ||
+        item.ingredientName.trim() === ''
       );
     });
     if (!errors) {
