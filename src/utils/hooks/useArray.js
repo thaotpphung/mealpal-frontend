@@ -39,7 +39,7 @@ const useArray = (initialState) => {
 
   return {
     array,
-    set: setArray,
+    setArray,
     push,
     filter,
     update,

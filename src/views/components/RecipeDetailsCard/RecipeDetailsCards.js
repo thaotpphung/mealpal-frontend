@@ -46,6 +46,7 @@ const RecipeDetailsCard = ({ recipe }) => {
     remove: handleDeleteInstruction,
     update: handleChangeInstruction,
     reset: resetInstructions,
+    setArray: setInstructions,
   } = useArray(recipe.instructions.length === 0 ? [''] : recipe.instructions);
 
   const { openEditMode, toggleOpenEditMode, handleCloseEditMode } = useEditMode(
@@ -130,6 +131,7 @@ const RecipeDetailsCard = ({ recipe }) => {
         handleDelete={handleDeleteInstruction}
         openEditMode={openEditMode}
         errors={errors?.instructions}
+        setInstructions={setInstructions}
       />
     </Paper>
   );
