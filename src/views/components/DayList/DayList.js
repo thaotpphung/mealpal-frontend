@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, Link, useHistory } from 'react-router-dom';
-import useStyles from '../../../containers/styles';
+import useStyles from '../../../app/styles';
 import { styles } from './styles';
 import { Paper, Typography } from '@material-ui/core';
 import RestaurantMenuIcon from '@material-ui/icons/RestaurantMenu';
@@ -23,7 +23,7 @@ import {
 import cloneDeep from 'lodash/cloneDeep';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
-const DayList = ({ days, recipes }) => {
+const DayList = ({ days, recipes, userId }) => {
   const classes = useStyles();
   const { weekId } = useParams();
   const history = useHistory();
@@ -192,7 +192,7 @@ const DayList = ({ days, recipes }) => {
             title={day.dayName}
             action={
               <>
-                {!!loggedInUser && (
+                {!!loggedInUser && loggedInUser._id === userId._id && (
                   <>
                     <RoundButton
                       type="shoppingCart"
@@ -243,7 +243,9 @@ const DayList = ({ days, recipes }) => {
                     className={localClasses.menuItem}
                   >
                     <div className={classes.itemIcon}>
-                      <Typography>{meal.mealName}</Typography>
+                      <Typography>
+                        <strong>{meal.mealName}</strong>
+                      </Typography>
                     </div>
                     <div className={classes.itemContent}>
                       <ul className={localClasses.menuContent}>
@@ -271,19 +273,21 @@ const DayList = ({ days, recipes }) => {
                         )}
                       </ul>
                     </div>
-                    <div className={classes.itemAction}>
-                      <RoundButton
-                        type="shoppingCart"
-                        handleClick={() =>
-                          dispatch(
-                            addToCartByMeal(
-                              days[dayIdx].meals[mealIdx],
-                              history
+                    {!!loggedInUser && loggedInUser._id === userId._id && (
+                      <div className={classes.itemAction}>
+                        <RoundButton
+                          type="shoppingCart"
+                          handleClick={() =>
+                            dispatch(
+                              addToCartByMeal(
+                                days[dayIdx].meals[mealIdx],
+                                history
+                              )
                             )
-                          )
-                        }
-                      />
-                    </div>
+                          }
+                        />
+                      </div>
+                    )}
                   </div>
                 );
               })}

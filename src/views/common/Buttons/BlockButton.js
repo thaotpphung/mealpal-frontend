@@ -2,21 +2,29 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import useStyles from './styles';
 
-const BlockButton = ({ type, handleClick, label = type, ...props }) => {
+const BlockButton = ({
+  color = 'primary',
+  variant = 'contained',
+  type,
+  handleClick,
+  width = '100%',
+  children,
+  ...props
+}) => {
   const classes = useStyles();
 
   return (
     <Button
       {...props}
       {...(type === 'submit' ? { type: 'submit' } : { onClick: handleClick })}
-      fullWidth
-      color="primary"
-      variant="contained"
+      style={{ width: width }}
+      color={color}
+      variant={variant}
       className={`${classes[type] ? classes[type] : null} ${
         classes.blockButton
       }`}
     >
-      {label}
+      {children}
     </Button>
   );
 };

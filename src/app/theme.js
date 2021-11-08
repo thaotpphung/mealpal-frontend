@@ -1,19 +1,12 @@
 import { createTheme } from '@material-ui/core/styles';
-import {
-  cyan,
-  purple,
-  blue,
-  orange,
-  green,
-  amber,
-  deepPurple,
-} from '@material-ui/core/colors';
+import { deepPurple } from '@material-ui/core/colors';
 import 'lato-font';
 
 export const theme = createTheme({
   palette: {
     primary: {
-      main: deepPurple[300],
+      // main: deepPurple[300],
+      main: '#666AF6',
     },
   },
   typography: {

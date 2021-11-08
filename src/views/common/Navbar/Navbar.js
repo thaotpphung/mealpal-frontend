@@ -9,7 +9,6 @@ import Toolbar from '@material-ui/core/Toolbar';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../../redux/actions/userActions';
-import routes from '../../../constants/routes';
 
 const Navbar = () => {
   const classes = useStyles();
@@ -106,7 +105,7 @@ const Navbar = () => {
                 className={classes.link}
                 onClick={handleLogout}
               >
-                Logout
+                Log out
               </Button>
             </>
           ) : (

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import useStyles from '../../../containers/styles';
+import useStyles from '../../../app/styles';
 import {
   Card,
   Grid,
@@ -80,11 +80,7 @@ const RecipeCard = ({ recipe }) => {
           <>
             {loggedInUser && (
               <>
-                {recipe.userId._id !== loggedInUser._id ? (
-                  <>
-                    <RoundButton type="add" />
-                  </>
-                ) : (
+                {recipe.userId._id === loggedInUser._id ? (
                   <>
                     {!!recipeId && (
                       <>
@@ -110,6 +106,8 @@ const RecipeCard = ({ recipe }) => {
                       </>
                     )}
                   </>
+                ) : (
+                  <></>
                 )}
               </>
             )}
@@ -199,7 +197,7 @@ const RecipeCard = ({ recipe }) => {
                 required={field.required}
               />
             ))}
-            <BlockButton type="submit" />
+            <BlockButton type="submit">Submit</BlockButton>
           </form>
         )}
       </CardContent>

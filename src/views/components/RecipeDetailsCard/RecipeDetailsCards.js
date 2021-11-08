@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Paper } from '@material-ui/core';
-import useStyles from '../../../containers/styles';
+import useStyles from '../../../app/styles';
 import { styles } from './styles';
 import useArray from '../../../utils/hooks/useArray';
 import useEditMode from '../../../utils/hooks/useEditMode';

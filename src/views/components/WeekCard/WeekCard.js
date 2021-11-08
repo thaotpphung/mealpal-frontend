@@ -9,7 +9,7 @@ import {
   Avatar,
   Typography,
 } from '@material-ui/core/';
-import useStyles from '../../../containers/styles';
+import useStyles from '../../../app/styles';
 import { deleteWeek, updateWeek } from '../../../redux/actions/weekActions';
 import { updateUser } from '../../../redux/actions/userActions';
 import { addToCartByWeek } from '../../../redux/actions/cartActions';
@@ -54,6 +54,7 @@ const WeekCard = ({ week }) => {
       );
     }
   };
+
   const handleSetCurrentWeek = () => {
     dispatch(updateUser(loggedInUser._id, { currentWeek: weekId }));
   };
@@ -73,10 +74,12 @@ const WeekCard = ({ week }) => {
             {!!loggedInUser && (
               <>
                 {console.log('week', week, 'loggedin', loggedInUser)}
-                {week?.userId._id === loggedInUser._id && (
+                {week?.userId._id === loggedInUser._id ? (
                   <>
                     {week._id === loggedInUser.currentWeek && (
-                      <RoundButton type="default" />
+                      <>
+                        <RoundButton type="default" />
+                      </>
                     )}
                     {!!weekId && (
                       <>
@@ -110,6 +113,12 @@ const WeekCard = ({ week }) => {
                       </>
                     )}
                   </>
+                ) : (
+                  <></>
+                  // <RoundButton
+                  //   type="add"
+                  //   handleClick={() => handleDuplicateWeek(week._id)}
+                  // />
                 )}
               </>
             )}
@@ -170,7 +179,7 @@ const WeekCard = ({ week }) => {
                 step={field.step}
               />
             ))}
-            <BlockButton type="submit" />
+            <BlockButton type="submit">Submit</BlockButton>
           </form>
         )}
       </CardContent>

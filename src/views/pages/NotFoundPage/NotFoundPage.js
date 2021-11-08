@@ -1,7 +1,9 @@
 import React from 'react';
-import { Typography, Button } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import useStyles from './styles';
+import NotFoundLogo from '../../../assets/undraw_not_found_2.svg';
+import BlockButton from '../../../views/common/Buttons/BlockButton';
 
 const NotFoundPage = () => {
   const classes = useStyles();
@@ -13,17 +15,18 @@ const NotFoundPage = () => {
 
   return (
     <div className={classes.root}>
-      <div>
-        <Typography variant="h1">404</Typography>
+      <div className={classes.leftColumn}>
+        {/* <Typography variant="h1">404</Typography> */}
+        <img src={NotFoundLogo} alt="Not Found Logo" className={classes.logo} />
       </div>
       <div className={classes.rightColumn}>
         <Typography variant="h3">Sorry</Typography>
         <Typography variant="h5">
           The page you&apos;re looking for was not found
         </Typography>
-        <Button variant="contained" color="primary" onClick={goBack}>
+        <BlockButton handleClick={goBack} width="fit-content">
           Go Back
-        </Button>
+        </BlockButton>
       </div>
     </div>
   );

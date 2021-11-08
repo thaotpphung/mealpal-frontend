@@ -1,6 +1,6 @@
 import React from 'react';
 import { Typography, Grid, FormHelperText } from '@material-ui/core';
-import useStyles from '../../../../containers/styles';
+import useStyles from '../../../../app/styles';
 import { styles } from '../styles';
 import Input from '../../../common/Input/Input';
 import useForm from '../../../../utils/hooks/useForm';

@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { styles } from './styles';
-import useStyles from '../../../containers/styles';
+import useStyles from '../../../app/styles';
 import {
   Avatar,
   Button,
@@ -38,10 +38,13 @@ const AuthPage = () => {
   const { loading, loggedInUser } = user;
   const dispatch = useDispatch();
   const history = useHistory();
+  const location = useLocation();
   const classes = useStyles();
   const localClasses = styles();
   const [showPassword, toggleShowPassword] = useToggle(false);
-  const [isRegister, toggleIsRegister] = useToggle(false);
+  const [isRegister, toggleIsRegister] = useToggle(
+    location.isRedirect ? true : false
+  );
 
   const {
     values: form,
@@ -148,10 +151,9 @@ const AuthPage = () => {
               />
             )}
           </Grid>
-          <BlockButton
-            type="submit"
-            label={isRegister ? 'Sign Up' : 'Sign In'}
-          />
+          <BlockButton type="submit">
+            {isRegister ? 'Sign Up' : 'Sign In'}
+          </BlockButton>
           <Grid container justifyContent="flex-end">
             <Grid item>
               <Button onClick={switchMode}>

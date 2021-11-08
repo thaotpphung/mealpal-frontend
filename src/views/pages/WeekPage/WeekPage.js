@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Button } from '@material-ui/core';
-import useStyles from '../../../containers/styles';
+import useStyles from '../../../app/styles';
 import { useHistory, useParams } from 'react-router-dom';
 import WeekCard from '../../components/WeekCard/WeekCard';
-import Pagination from '@material-ui/lab/Pagination';
 import { getAllWeeks, createWeek } from '../../../redux/actions/weekActions';
 import SearchIcon from '@material-ui/icons/Search';
 import Input from '../../common/Input/Input';
 import Spinner from '../../common/Spinner/Spinner';
+import PageNav from '../../common/PageNav/PageNav';
 import PopupDialog from '../../common/PopupDialog/PopupDialog';
 import usePagination from '../../../utils/hooks/usePagination';
 import useEditMode from '../../../utils/hooks/useEditMode';
@@ -140,14 +140,11 @@ const WeekPage = () => {
             </Grid>
           ))}
         </Grid>
-        <Pagination
+        <PageNav
           count={count}
           page={page}
-          boundaryCount={2}
           onChange={handleChangePage}
           className={classes.pagination}
-          showLastButton
-          showFirstButton
         />
         <PopupDialog
           open={openEditMode}

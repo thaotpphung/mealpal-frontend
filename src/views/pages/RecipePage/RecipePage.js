@@ -4,7 +4,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { Grid, Button } from '@material-ui/core';
 import Pagination from '@material-ui/lab/Pagination';
 import SearchIcon from '@material-ui/icons/Search';
-import useStyles from '../../../containers/styles';
+import useStyles from '../../../app/styles';
 import RecipeCard from '../../components/RecipeCard/RecipeCard';
 import PopupDialog from '../../common/PopupDialog/PopupDialog';
 import Input from '../../common/Input/Input';

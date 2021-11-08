@@ -11,10 +11,18 @@ export default makeStyles((theme) => ({
     },
   },
   rightColumn: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
     paddingLeft: theme.spacing(3),
     borderLeft: '1px solid',
     '& h3, & h5': {
       marginBottom: theme.spacing(2),
     },
+  },
+  logo: {
+    height: '300px',
+    width: '300px',
+    marginRight: theme.spacing(3),
   },
 }));

@@ -2,6 +2,7 @@ import { makeStyles } from '@material-ui/core/styles';
 export default makeStyles((theme) => ({
   root: {
     padding: theme.spacing(5, 10),
+    minHeight: '100vh',
   },
   '@global': {
     ul: {
@@ -60,6 +61,8 @@ export default makeStyles((theme) => ({
   },
   itemAction: {
     flex: '0 0 auto',
+    display: 'flex',
+    justifyContent: 'end',
   },
   selected: {
     backgroundColor: theme.palette.grey[300],
@@ -74,11 +77,6 @@ export default makeStyles((theme) => ({
     '&:hover': {
       backgroundColor: theme.palette.grey[200],
     },
-  },
-  pagination: {
-    margin: theme.spacing(7),
-    display: 'flex',
-    justifyContent: 'center',
   },
   selectEmpty: {
     marginTop: theme.spacing(2),

@@ -19,7 +19,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 import useStyles from './styles';
 
-const RoundButton = ({ type, handleClick, noPadding = false, ...props }) => {
+const RoundButton = ({ type, handleClick, ...props }) => {
   const classes = useStyles();
 
   const roundButtonTypes = {
@@ -39,10 +39,7 @@ const RoundButton = ({ type, handleClick, noPadding = false, ...props }) => {
   };
 
   return (
-    <IconButton
-      onClick={handleClick}
-      className={`${classes.roundButton} ${noPadding && classes.noPadding}`}
-    >
+    <IconButton onClick={handleClick} className={`${classes.roundButton}`}>
       {roundButtonTypes[type]}
     </IconButton>
   );

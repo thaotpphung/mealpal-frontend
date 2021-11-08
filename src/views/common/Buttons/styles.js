@@ -8,9 +8,9 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.primary.contrastText,
     margin: theme.spacing(2, 0),
   },
-  noPadding: {
+  roundButton: {
     '&.MuiIconButton-root': {
-      padding: 0,
+      maxHeight: '50px',
     },
   },
 }));

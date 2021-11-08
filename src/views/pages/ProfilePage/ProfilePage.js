@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { styles } from './styles';
-import useStyles from '../../../containers/styles';
+import useStyles from '../../../app/styles';
 import { useParams, useHistory } from 'react-router-dom';
 import {
   Avatar,
@@ -332,7 +332,9 @@ const ProfilePage = () => {
                       errors={errors?.bio}
                       disabled={!openEditMode}
                     />
-                    {openEditMode && <BlockButton type="submit" />}
+                    {openEditMode && (
+                      <BlockButton type="submit">Submit</BlockButton>
+                    )}
                   </Grid>
                 </form>
               )}
@@ -360,7 +362,9 @@ const ProfilePage = () => {
                         }
                       />
                     ))}
-                    {openEditMode && <BlockButton type="submit" />}
+                    {openEditMode && (
+                      <BlockButton type="submit">Submit</BlockButton>
+                    )}
                   </Grid>
                 </form>
               )}
@@ -406,7 +410,9 @@ const ProfilePage = () => {
                         </FormControl>
                       </Grid>
                     ))}
-                    {openEditMode && <BlockButton type="submit" />}
+                    {openEditMode && (
+                      <BlockButton type="submit">Submit</BlockButton>
+                    )}
                   </Grid>
                 </form>
               )}

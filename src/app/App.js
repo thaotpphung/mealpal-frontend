@@ -7,6 +7,7 @@ import { CssBaseline } from '@material-ui/core';
 import { theme } from './theme';
 import { ThemeProvider } from '@material-ui/core/styles';
 import Navbar from '../views/common/Navbar/Navbar';
+import Footer from '../views/common/Footer/Footer';
 import FlashMessage from '../views/common/FlashMessage/FlashMessage';
 import WeekDetailsPage from '../views/pages/WeekDetailsPage/WeekDetailsPage';
 import WeekPage from '../views/pages/WeekPage/WeekPage';
@@ -29,7 +30,7 @@ function App() {
       <div className={classes.root}>
         <FlashMessage />
         <Switch>
-          {loggedInUser && <Route path="/" exact component={HomePage} />}
+          <Route path="/" exact component={HomePage} />
           {['/users/:userId/weeks', '/weeks'].map((route) => (
             <Route key={route} path={route} exact component={WeekPage} />
           ))}
@@ -56,6 +57,7 @@ function App() {
           <Route component={NotFoundPage} />
         </Switch>
       </div>
+      <Footer />
     </ThemeProvider>
   );
 }

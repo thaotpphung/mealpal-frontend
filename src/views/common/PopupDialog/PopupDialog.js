@@ -16,7 +16,7 @@ const PopupDialog = ({ open, content, title, handleClose, handleSubmit }) => {
           <DialogTitle>{title}</DialogTitle>
           <DialogContent>{content}</DialogContent>
           <DialogActions>
-            <BlockButton type="submit" />
+            <BlockButton type="submit">Submit</BlockButton>
           </DialogActions>
         </form>
       </CardBody>
