@@ -15,7 +15,6 @@ import PopupDialog from '../../common/PopupDialog/PopupDialog';
 import Input from '../../common/Input/Input';
 import { createRecipe } from '../../../redux/actions/recipeActions';
 import { updateWeekByDay } from '../../../redux/actions/weekActions';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import {
   addToCartByDay,
   addToCartByMeal,
@@ -257,7 +256,7 @@ const DayList = ({ days, recipes, userId }) => {
                                   key={`dish-in-meal-${recipe._id}-${recipeIdx})}`}
                                 >
                                   <RestaurantMenuIcon
-                                    style={{ marginRight: '10px' }}
+                                    className={classes.foodIcon}
                                   />
                                   <Link
                                     to={{
@@ -326,7 +325,9 @@ const DayList = ({ days, recipes, userId }) => {
                                       <li
                                         key={`food-field-${recipe._id}-${recipeIdx}`}
                                       >
-                                        <RestaurantMenuIcon />
+                                        <RestaurantMenuIcon
+                                          className={classes.foodIcon}
+                                        />
                                         <AutocompleteField
                                           value={recipe}
                                           toggleOpen={toggleOpenNewRecipeDialog}

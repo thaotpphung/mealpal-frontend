@@ -54,7 +54,7 @@ const Home = () => {
         <Grid item xs={12} sm={6} className={classes.rowCenter}>
           <Typography variant="h4">Meal Plans and Recipes</Typography>
           <Typography variant="h5">
-            Share and get Inspiration from others
+            Share and get inspiration from others
           </Typography>
         </Grid>
         {/* 3rd Row - Features - shopping cart s*/}

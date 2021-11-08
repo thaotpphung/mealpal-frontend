@@ -103,4 +103,7 @@ export default makeStyles((theme) => ({
       margin: theme.spacing(1),
     },
   },
+  foodIcon: {
+    marginRight: theme.spacing(1),
+  },
 }));

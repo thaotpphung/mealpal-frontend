@@ -14,4 +14,11 @@ export default makeStyles((theme) => ({
     alignItems: 'center',
     display: 'flex',
   },
+  editForm: {
+    display: 'flex',
+  },
+  action: {
+    display: 'flex',
+    paddingTop: theme.spacing(3),
+  },
 }));

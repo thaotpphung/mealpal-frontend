@@ -16,6 +16,8 @@ import StarOutlineIcon from '@material-ui/icons/StarOutline';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import ControlPointDuplicateIcon from '@material-ui/icons/ControlPointDuplicate';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import useStyles from './styles';
 
@@ -36,6 +38,8 @@ const RoundButton = ({ type, handleClick, ...props }) => {
     shoppingCart: <ShoppingCartIcon />,
     duplicate: <ControlPointDuplicateIcon />,
     avatar: <AccountCircleIcon />,
+    expandLess: <ExpandLessIcon />,
+    expandMore: <ExpandMoreIcon />,
   };
 
   return (

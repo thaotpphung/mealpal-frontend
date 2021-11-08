@@ -382,6 +382,7 @@ const ProfilePage = () => {
                         sm={6}
                       >
                         <FormControl
+                          style={{ width: '100%' }}
                           margin="dense"
                           variant="outlined"
                           size="small"
@@ -389,11 +390,15 @@ const ProfilePage = () => {
                           className={classes.formControl}
                           disabled={!openEditMode}
                         >
-                          <InputLabel id={`${key}-label`}>{key}</InputLabel>
+                          <InputLabel id={`${key}-label-${idx}`}>
+                            {key}
+                          </InputLabel>
                           <Select
+                            width={100}
                             defaultValue=""
                             labelId={`${key}-label`}
                             value={avatarForm[key]}
+                            label={key}
                             onChange={(e) =>
                               handleChangeAvatar(key, e.target.value)
                             }
