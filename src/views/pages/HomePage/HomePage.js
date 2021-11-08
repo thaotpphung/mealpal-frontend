@@ -12,7 +12,9 @@ const HomePage = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { week, loading } = useSelector((state) => state.week);
-  const { loggedInUser } = useSelector((state) => state.user);
+  const { loggedInUser, loading: userLoading } = useSelector(
+    (state) => state.user
+  );
   const { recipes } = useSelector((state) => state.recipeList);
 
   useEffect(() => {
@@ -20,7 +22,13 @@ const HomePage = () => {
     dispatch(getAllRecipes());
   }, []);
 
-  if (!loading && Object.keys(week).length > 0 && recipes.length >= 0)
+  if (
+    !userLoading &&
+    Object.keys(loggedInUser).length > 0 &&
+    !loading &&
+    Object.keys(week).length > 0 &&
+    recipes.length >= 0
+  )
     return (
       <Grid
         container

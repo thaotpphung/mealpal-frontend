@@ -28,7 +28,6 @@ const getAllRecipes =
   ) =>
   async (dispatch) => {
     try {
-      console.log('query', query);
       dispatch({ type: RECIPE_LIST_REQUEST });
       const { data } = await api.getRecipes(query, isInExploreMode, userId);
       dispatch({ type: RECIPE_LIST_SUCCESS, payload: data.data });
@@ -43,7 +42,7 @@ const createRecipe =
   (recipe, router = null) =>
   async (dispatch) => {
     try {
-      dispatch({ type: RECIPE_CREATE_REQUEST, payload: recipe });
+      dispatch({ type: RECIPE_CREATE_REQUEST });
       const { data } = await api.createRecipe(recipe);
       dispatch({ type: RECIPE_CREATE_SUCCESS, payload: data.data });
       if (router) router.push(`/recipes/${data.data._id}`);

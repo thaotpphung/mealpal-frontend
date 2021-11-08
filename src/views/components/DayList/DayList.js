@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useHistory } from 'react-router-dom';
 import useStyles from '../../../containers/styles';
 import { styles } from './styles';
 import { Paper, Typography } from '@material-ui/core';
@@ -26,6 +26,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 const DayList = ({ days, recipes }) => {
   const classes = useStyles();
   const { weekId } = useParams();
+  const history = useHistory();
   const localClasses = styles();
   const { loggedInUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -187,7 +188,9 @@ const DayList = ({ days, recipes }) => {
                   <>
                     <RoundButton
                       type="shoppingCart"
-                      handleClick={() => dispatch(addToCartByDay(days[dayIdx]))}
+                      handleClick={() =>
+                        dispatch(addToCartByDay(days[dayIdx], history))
+                      }
                     />
                     {!!weekId && (
                       <>
@@ -264,7 +267,12 @@ const DayList = ({ days, recipes }) => {
                       <RoundButton
                         type="shoppingCart"
                         handleClick={() =>
-                          dispatch(addToCartByMeal(days[dayIdx].meals[mealIdx]))
+                          dispatch(
+                            addToCartByMeal(
+                              days[dayIdx].meals[mealIdx],
+                              history
+                            )
+                          )
                         }
                       />
                     </div>

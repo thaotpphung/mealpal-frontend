@@ -16,30 +16,53 @@ export {
   clearCart,
 };
 
-const addToCartByRecipe = (recipe) => async (dispatch) => {
+const addToCartByRecipe = (recipe, router) => async (dispatch) => {
   dispatch({ type: CART_ADD_BY_RECIPE, payload: recipe });
-  dispatch(addAlertWithTimeout('success', 'Successfully added to cart!'));
+  router.push('/cart');
+  dispatch(
+    addAlertWithTimeout(
+      'warning',
+      'This cart was automatically generated and might be not accurate, please make changes as you wish!'
+    )
+  );
 };
 
-const addToCartByMeal = (meal) => async (dispatch) => {
+const addToCartByMeal = (meal, router) => async (dispatch) => {
   dispatch({ type: CART_ADD_BY_MEAL, payload: meal });
-  dispatch(addAlertWithTimeout('success', 'Successfully added to cart!'));
+  router.push('/cart');
+  dispatch(
+    addAlertWithTimeout(
+      'warning',
+      'This cart was automatically generated and might be not accurate, please make changes as you wish!'
+    )
+  );
 };
 
-const addToCartByDay = (day) => async (dispatch) => {
+const addToCartByDay = (day, router) => async (dispatch) => {
   dispatch({ type: CART_ADD_BY_DAY, payload: day });
-  dispatch(addAlertWithTimeout('success', 'Successfully added to cart!'));
+  router.push('/cart');
+  dispatch(
+    addAlertWithTimeout(
+      'warning',
+      'This cart was automatically generated and might be not accurate, please make changes as you wish!'
+    )
+  );
 };
 
-const addToCartByWeek = (week) => async (dispatch) => {
+const addToCartByWeek = (week, router) => async (dispatch) => {
   dispatch({ type: CART_ADD_BY_WEEK, payload: week });
-  dispatch(addAlertWithTimeout('success', 'Successfully added to cart!'));
+  router.push('/cart');
+  dispatch(
+    addAlertWithTimeout(
+      'warning',
+      'This cart was automatically generated and might be not accurate, please make changes as you wish!'
+    )
+  );
 };
 
 const updateCart = (cart) => async (dispatch) => {
   const cart = {};
   dispatch({ type: CART_UPDATE, payload: cart });
-  dispatch(addAlertWithTimeout('success', 'Successfully updated cart!'));
 };
 
 const clearCart = () => async (dispatch) => {

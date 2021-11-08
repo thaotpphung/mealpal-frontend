@@ -72,28 +72,25 @@ const WeekCard = ({ week }) => {
           <>
             {!!loggedInUser && (
               <>
-                <RoundButton
-                  type="shoppingCart"
-                  handleClick={() => dispatch(addToCartByWeek(week))}
-                />
-                {week.userId._id !== loggedInUser._id ? (
-                  <>
-                    <RoundButton type="add" />
-                  </>
-                ) : (
+                {week.userId._id === loggedInUser._id && (
                   <>
                     {week._id === loggedInUser.currentWeek && (
                       <RoundButton type="default" />
                     )}
                     {!!weekId && (
                       <>
+                        <RoundButton
+                          type="shoppingCart"
+                          handleClick={() =>
+                            dispatch(addToCartByWeek(week, history))
+                          }
+                        />
                         {weekId !== loggedInUser.currentWeek && (
                           <RoundButton
                             type="setDefault"
                             handleClick={handleSetCurrentWeek}
                           />
                         )}
-
                         <RoundButton
                           type="delete"
                           handleClick={() => handleDeleteWeek(week?._id)}

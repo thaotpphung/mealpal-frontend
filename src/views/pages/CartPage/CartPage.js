@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useStyles from './styles';
 import List from '@material-ui/core/List';
@@ -14,17 +14,18 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Paper from '@material-ui/core/Paper';
 import CardHeader from '../../common/CardHeader/CardHeader';
 import CardBody from '../../common/CardBody/CardBody';
-import Message from '../../common/Message/Message';
 import RoundButton from '../../common/Buttons/RoundButton';
 import { updateCart, clearCart } from '../../../redux/actions/cartActions';
+import { addAlertWithTimeout } from '../../../redux/actions/alertActions';
 import { formatMixedNumber } from '../../../utils/mixedNumber';
+import { display } from '@mui/system';
 
 const CartPage = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { cart } = useSelector((state) => state.cart);
   const [cartForm, setCartForm] = useState({ cart });
-
+  const { loggedInUser } = useSelector((state) => state.user);
   const [checked, setChecked] = React.useState([0]);
   const [open, setOpen] = React.useState(true);
 
@@ -48,10 +49,6 @@ const CartPage = () => {
 
   return (
     <>
-      {/* <Message
-        severity="info"
-        message="This cart is estimatedly generated, please make changes as you wish"
-      /> */}
       <Paper className={classes.root}>
         <CardHeader
           title="Shopping Cart"

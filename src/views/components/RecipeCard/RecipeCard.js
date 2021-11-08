@@ -63,7 +63,7 @@ const RecipeCard = ({ recipe }) => {
   };
 
   const handleClickShoppingCart = () => {
-    dispatch(addToCartByRecipe(recipe));
+    dispatch(addToCartByRecipe(recipe, history));
   };
 
   return (

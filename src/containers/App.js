@@ -50,7 +50,7 @@ function App() {
             )
           )}
           <Route path="/users/:userId/profile" exact component={ProfilePage} />
-          <Route path="/cart" exact component={CartPage} />
+          {loggedInUser && <Route path="/cart" exact component={CartPage} />}
           <Route path="/auth" exact component={AuthPage} />
           <Route path={'/404'} exact component={NotFoundPage} />
           <Route component={NotFoundPage} />
