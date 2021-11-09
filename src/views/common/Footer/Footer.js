@@ -14,7 +14,7 @@ const Footer = () => {
       <div className={classes.container}>
         <div className={classes.item}>
           <Typography variant="h6">Feedback Contact</Typography>
-          <Typography>mealpal@gmail.com</Typography>
+          <Typography>mealpal.feedback@gmail.com</Typography>
         </div>
         <div className={classes.item}>
           <Typography variant="h6">Connect with me</Typography>
