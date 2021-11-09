@@ -11,7 +11,6 @@ export const envVars = {
 };
 
 export const getEnvVars = (host) => {
-  console.log(host);
   switch (true) {
     case host.includes('localhost'):
       return envVars.local;

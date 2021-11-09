@@ -12,7 +12,7 @@ export default makeStyles((theme) => ({
     },
   },
   listContainer: {
-    minHeight: '80vh',
+    // minHeight: '80vh',
   },
   menuItem: {
     display: 'grid',

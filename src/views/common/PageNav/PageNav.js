@@ -7,6 +7,7 @@ const PageNav = ({ count, page, handleChangePage = () => {} }) => {
 
   return (
     <Pagination
+      color="primary"
       count={count}
       page={page}
       boundaryCount={2}
