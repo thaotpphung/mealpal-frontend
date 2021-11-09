@@ -16,29 +16,10 @@ const INITIAL_STATE = {
 const addOne = (recipe, cart) => {
   recipe?.ingredients.forEach((ingredient) => {
     if (ingredient.unit.label !== '') {
-      // cart.forEach((cartIngredient) => {
-      //   // check if ingredient exists, initialize if not
-      //   if (cartIngredient.ingredientName !== ingredient.ingredientName) {
-      //     cart.push({
-      //       ingredientName: ingredient.ingredientName,
-      //       units: [],
-      //       recipes: {},
-      //     });
-      //   }
-      //   // check if unit exists
-      //   cartIngredient.units.forEach((cartUnit) => {
-      //     if (cartUnit !== ingredient.unit.label) {
-      //       cart.units.push({
-      //         unit: ingredient.unit.label,
-      //       });
-      //     }
-      //   });
-      // });
-
       // initialize food
       cart[ingredient.ingredientName] = cart[ingredient.ingredientName]
         ? cart[ingredient.ingredientName]
-        : { units: {}, recipes: {} };
+        : { units: {}, recipes: {}, checked: false };
       // initialize unit
       if (!(ingredient.unit.label in cart[ingredient.ingredientName].units)) {
         cart[ingredient.ingredientName].units[ingredient.unit.label] = {};

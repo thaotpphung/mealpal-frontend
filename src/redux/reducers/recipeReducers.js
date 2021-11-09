@@ -21,14 +21,14 @@ const RECIPE_LIST_INITIAL_STATE = {
   loading: false,
   count: 0,
   currentCount: 0,
-  error: true,
+  error: '',
 };
 
 const recipeListReducer = (state = RECIPE_LIST_INITIAL_STATE, action) => {
   switch (action.type) {
     case RECIPE_LIST_REQUEST:
     case RECIPE_CREATE_REQUEST:
-      return { ...state, loading: true, error: false };
+      return { ...state, loading: true, error: '' };
 
     case RECIPE_LIST_SUCCESS: {
       return {
@@ -37,7 +37,7 @@ const recipeListReducer = (state = RECIPE_LIST_INITIAL_STATE, action) => {
         recipes: action.payload.data,
         count: action.payload.count,
         currentCount: action.payload.currentCount,
-        error: false,
+        error: '',
       };
     }
 
@@ -46,13 +46,13 @@ const recipeListReducer = (state = RECIPE_LIST_INITIAL_STATE, action) => {
         ...state,
         loading: false,
         recipes: [...state.recipes, action.payload],
-        error: false,
+        error: '',
       };
     }
 
     case RECIPE_LIST_FAIL:
     case RECIPE_CREATE_FAIL:
-      return { ...state, loading: false, error: true };
+      return { ...state, loading: false, error: action.payload };
 
     default:
       return state;
@@ -62,6 +62,7 @@ const recipeListReducer = (state = RECIPE_LIST_INITIAL_STATE, action) => {
 const RECIPE_DETAILS_INITIAL_STATE = {
   recipe: {},
   loading: false,
+  error: '',
 };
 
 const recipeDetailsReducer = (state = RECIPE_DETAILS_INITIAL_STATE, action) => {
@@ -69,18 +70,23 @@ const recipeDetailsReducer = (state = RECIPE_DETAILS_INITIAL_STATE, action) => {
     case RECIPE_DETAILS_REQUEST:
     case RECIPE_UPDATE_REQUEST:
     case RECIPE_DELETE_REQUEST:
-      return { ...state, loading: true };
+      return { ...state, loading: true, error: '' };
 
     case RECIPE_DETAILS_SUCCESS:
     case RECIPE_UPDATE_SUCCESS: {
-      return { loading: false, recipe: { ...state.recipe, ...action.payload } };
+      return {
+        loading: false,
+        recipe: { ...state.recipe, ...action.payload },
+        error: '',
+      };
     }
+    case RECIPE_DELETE_SUCCESS:
+      return { ...state, loading: false, error: '' };
 
     case RECIPE_DETAILS_FAIL:
     case RECIPE_UPDATE_FAIL:
     case RECIPE_DELETE_FAIL:
-    case RECIPE_DELETE_SUCCESS:
-      return { ...state, loading: false };
+      return { ...state, loading: false, error: action.payload };
 
     default:
       return state;

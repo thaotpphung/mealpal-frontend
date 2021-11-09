@@ -32,7 +32,7 @@ const Footer = () => {
         </div>
       </div>
       <Typography variant="body1" className={classes.copyRight}>
-        Copyright &copy; ${new Date().getFullYear()}&nbsp;Thao Phung.&nbsp;All
+        Copyright &copy; {new Date().getFullYear()}&nbsp;Thao Phung.&nbsp;All
         Rights Reserved.
       </Typography>
     </footer>

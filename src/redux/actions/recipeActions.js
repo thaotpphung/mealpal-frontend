@@ -32,7 +32,10 @@ const getAllRecipes =
       const { data } = await api.getRecipes(query, isInExploreMode, userId);
       dispatch({ type: RECIPE_LIST_SUCCESS, payload: data.data });
     } catch (error) {
-      dispatch({ type: RECIPE_LIST_FAIL });
+      dispatch({
+        type: RECIPE_LIST_FAIL,
+        payload: error?.response.data.message,
+      });
       dispatch(addAlertWithTimeout('error', error?.response.data.message));
     }
   };
@@ -47,7 +50,10 @@ const createRecipe =
       dispatch({ type: RECIPE_CREATE_SUCCESS, payload: data.data });
       if (router) router.push(`/recipes/${data.data._id}`);
     } catch (error) {
-      dispatch({ type: RECIPE_CREATE_FAIL });
+      dispatch({
+        type: RECIPE_CREATE_FAIL,
+        payload: error?.response.data.message,
+      });
       dispatch(addAlertWithTimeout('error', error?.response.data.message));
     }
   };
@@ -58,7 +64,10 @@ const getRecipe = (recipeId) => async (dispatch) => {
     const { data } = await api.getRecipe(recipeId);
     dispatch({ type: RECIPE_DETAILS_SUCCESS, payload: data.data });
   } catch (error) {
-    dispatch({ type: RECIPE_DETAILS_FAIL });
+    dispatch({
+      type: RECIPE_DETAILS_FAIL,
+      payload: error?.response.data.message,
+    });
     dispatch(addAlertWithTimeout('error', error?.response.data.message));
   }
 };
@@ -71,7 +80,10 @@ const deleteRecipe = (recipeId, router) => async (dispatch) => {
     router.push('/recipes');
     dispatch(addAlertWithTimeout('success', data.message));
   } catch (error) {
-    dispatch({ type: RECIPE_DELETE_FAIL });
+    dispatch({
+      type: RECIPE_DELETE_FAIL,
+      payload: error?.response.data.message,
+    });
     dispatch(addAlertWithTimeout('error', error?.response.data.message));
   }
 };
@@ -83,7 +95,10 @@ const updateRecipe = (recipeId, recipe) => async (dispatch) => {
     dispatch({ type: RECIPE_UPDATE_SUCCESS, payload: recipe });
     dispatch(addAlertWithTimeout('success', data.message));
   } catch (error) {
-    dispatch({ type: RECIPE_UPDATE_FAIL });
+    dispatch({
+      type: RECIPE_UPDATE_FAIL,
+      payload: error?.response.data.message,
+    });
     dispatch(addAlertWithTimeout('error', error?.response.data.message));
   }
 };

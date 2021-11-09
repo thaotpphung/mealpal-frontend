@@ -16,6 +16,10 @@ const useStyles = makeStyles((theme) => ({
   activeClassName: {
     color: theme.palette.primary.main,
   },
+  logo: {
+    height: '40px',
+    margin: theme.spacing(1),
+  },
 }));
 
 export default useStyles;

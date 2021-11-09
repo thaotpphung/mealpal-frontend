@@ -61,7 +61,6 @@ const addToCartByWeek = (week, router) => async (dispatch) => {
 };
 
 const updateCart = (cart) => async (dispatch) => {
-  const cart = {};
   dispatch({ type: CART_UPDATE, payload: cart });
 };
 

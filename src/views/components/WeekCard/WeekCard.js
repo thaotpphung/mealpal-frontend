@@ -44,7 +44,7 @@ const WeekCard = ({ week }) => {
 
   const handleDeleteWeek = (weekId) => {
     if (weekId !== undefined && weekId !== loggedInUser.currentWeek) {
-      dispatch(deleteWeek(weekId, loggedInUser.currentWeek, history));
+      dispatch(deleteWeek(weekId, loggedInUser, history));
     } else {
       dispatch(
         addAlertWithTimeout(
@@ -73,7 +73,6 @@ const WeekCard = ({ week }) => {
           <>
             {!!loggedInUser && (
               <>
-                {console.log('week', week, 'loggedin', loggedInUser)}
                 {week?.userId._id === loggedInUser._id ? (
                   <>
                     {week._id === loggedInUser.currentWeek && (

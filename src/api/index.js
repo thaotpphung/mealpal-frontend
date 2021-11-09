@@ -1,6 +1,8 @@
 import axios from 'axios';
+import { getEnvVars } from '../utils/envs';
 
-const API = axios.create({ baseURL: 'http://localhost:5000' });
+const env = getEnvVars(window.location.host);
+const API = axios.create({ baseURL: env.BASE_URL });
 
 API.interceptors.request.use((req) => {
   if (localStorage.getItem('loggedInUser')) {

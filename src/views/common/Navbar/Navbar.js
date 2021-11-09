@@ -9,6 +9,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../../redux/actions/userActions';
+import Logo from '../../../assets/logo/default-monochrome.svg';
 
 const Navbar = () => {
   const classes = useStyles();
@@ -30,14 +31,10 @@ const Navbar = () => {
         className={classes.appBar}
       >
         <Toolbar className={classes.toolbar}>
-          <Typography
-            className={classes.toolbarTitle}
-            variant="h6"
-            color="inherit"
-            noWrap
-          >
-            MealPal
-          </Typography>
+          <div className={classes.toolbarTitle}>
+            <img src={Logo} className={classes.logo} />
+          </div>
+
           <nav className={classes.navLeft}>
             <Link
               variant="button"

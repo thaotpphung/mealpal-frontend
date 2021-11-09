@@ -9,6 +9,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import Input from '../../common/Input/Input';
 import Spinner from '../../common/Spinner/Spinner';
 import PageNav from '../../common/PageNav/PageNav';
+import EmptyMessage from '../../common/EmptyMessage/EmptyMessage';
 import PopupDialog from '../../common/PopupDialog/PopupDialog';
 import usePagination from '../../../utils/hooks/usePagination';
 import useEditMode from '../../../utils/hooks/useEditMode';
@@ -28,6 +29,7 @@ const WeekPage = () => {
     weeks,
     count: weekCount,
     currentCount,
+    error,
   } = useSelector((state) => state.weekList);
 
   useEffect(() => {
@@ -83,6 +85,8 @@ const WeekPage = () => {
     toggleIsInExploreMode();
   };
 
+  if (!loading && error) return <EmptyMessage />;
+
   if (!loading && weeks.length >= 0)
     return (
       <div>
@@ -127,25 +131,36 @@ const WeekPage = () => {
             )}
           </div>
         </div>
-        <Grid container alignItems="stretch" spacing={3}>
-          {weeks.map((week, weekIdx) => (
+        {weeks.length === 0 ? (
+          <EmptyMessage />
+        ) : (
+          <>
             <Grid
-              key={`{'explore-page-${week._id}-${weekIdx}`}
-              item
-              xs={12}
-              sm={4}
-              md={4}
+              container
+              alignItems="stretch"
+              spacing={3}
+              className={classes.listContainer}
             >
-              <WeekCard week={week} />
+              {weeks.map((week, weekIdx) => (
+                <Grid
+                  key={`{'explore-page-${week._id}-${weekIdx}`}
+                  item
+                  xs={12}
+                  sm={4}
+                  md={4}
+                >
+                  <WeekCard week={week} />
+                </Grid>
+              ))}
             </Grid>
-          ))}
-        </Grid>
-        <PageNav
-          count={count}
-          page={page}
-          onChange={handleChangePage}
-          className={classes.pagination}
-        />
+            <PageNav
+              count={count}
+              page={page}
+              handleChangePage={handleChangePage}
+              className={classes.pagination}
+            />
+          </>
+        )}
         <PopupDialog
           open={openEditMode}
           title="Add a new week"

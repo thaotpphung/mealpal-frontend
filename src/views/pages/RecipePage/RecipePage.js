@@ -2,13 +2,14 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { Grid, Button } from '@material-ui/core';
-import Pagination from '@material-ui/lab/Pagination';
 import SearchIcon from '@material-ui/icons/Search';
 import useStyles from '../../../app/styles';
 import RecipeCard from '../../components/RecipeCard/RecipeCard';
 import PopupDialog from '../../common/PopupDialog/PopupDialog';
+import PageNav from '../../common/PageNav/PageNav';
 import Input from '../../common/Input/Input';
 import Spinner from '../../common/Spinner/Spinner';
+import EmptyMessage from '../../common/EmptyMessage/EmptyMessage';
 import useEditMode from '../../../utils/hooks/useEditMode';
 import useForm from '../../../utils/hooks/useForm';
 import useToggle from '../../../utils/hooks/useToggle';
@@ -33,6 +34,7 @@ const RecipePage = () => {
     recipes,
     count: recipeCount,
     currentCount,
+    error,
   } = useSelector((state) => state.recipeList);
 
   // get initial weeks
@@ -71,7 +73,7 @@ const RecipePage = () => {
     setPageCount,
   } = usePagination(
     getInitialRecipeForm(false),
-    12,
+    9,
     (value) =>
       dispatch(getAllRecipes(buildQuery(value), isInExploreMode, userId)),
     '&fields=userId,recipeName,recipeDescription,recipeDiet,calories,servings,time,servingSize,recipeImage,updatedTime'
@@ -83,6 +85,8 @@ const RecipePage = () => {
     dispatch(getAllRecipes(buildQuery(undefined), !isInExploreMode, userId));
     toggleIsInExploreMode();
   };
+
+  if (!loading && error) return <EmptyMessage />;
 
   if (!loading && recipes.length >= 0)
     return (
@@ -127,27 +131,30 @@ const RecipePage = () => {
             )}
           </div>
         </div>
-        <Grid
-          className={classes.container}
-          container
-          alignItems="stretch"
-          spacing={3}
-        >
-          {recipes.map((recipe) => (
-            <Grid key={recipe._id} item xs={12} sm={4} md={4}>
-              <RecipeCard recipe={recipe} />
+        {recipes.length === 0 ? (
+          <EmptyMessage />
+        ) : (
+          <>
+            <Grid
+              className={classes.listContainer}
+              container
+              alignItems="stretch"
+              spacing={3}
+            >
+              {recipes.map((recipe) => (
+                <Grid key={recipe._id} item xs={12} sm={44} md={4}>
+                  <RecipeCard recipe={recipe} />
+                </Grid>
+              ))}
             </Grid>
-          ))}
-        </Grid>
-        <Pagination
-          count={count}
-          page={page}
-          boundaryCount={2}
-          onChange={handleChangePage}
-          className={classes.pagination}
-          showLastButton
-          showFirstButton
-        />
+            <PageNav
+              count={count}
+              page={page}
+              handleChangePage={handleChangePage}
+            />
+          </>
+        )}
+
         <PopupDialog
           open={openEditMode}
           title="Add a new recipe"
@@ -172,7 +179,6 @@ const RecipePage = () => {
         />
       </div>
     );
-
   return <Spinner />;
 };
 

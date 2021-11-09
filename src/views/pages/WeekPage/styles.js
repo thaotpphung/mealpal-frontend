@@ -5,9 +5,6 @@ const styles = makeStyles((theme) => ({
     margin: theme.spacing(1),
     minWidth: 120,
   },
-  container: {
-    minHeight: '20vh',
-  },
 }));
 
 export { styles };

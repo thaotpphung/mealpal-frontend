@@ -3,12 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import WeekDetails from '../../containers/WeekDetails/WeekDetails';
 import Home from '../../containers/Home/Home';
 import Spinner from '../../common/Spinner/Spinner';
+import EmptyMessage from '../../common/EmptyMessage/EmptyMessage';
 import { getWeek } from '../../../redux/actions/weekActions';
 import { getAllRecipes } from '../../../redux/actions/recipeActions';
 
 const HomePage = () => {
   const dispatch = useDispatch();
-  const { week, loading } = useSelector((state) => state.week);
+  const { week, loading, error } = useSelector((state) => state.week);
   const { loggedInUser, loading: userLoading } = useSelector(
     (state) => state.user
   );
@@ -21,6 +22,7 @@ const HomePage = () => {
     }
   }, []);
 
+  if (!loading && error) return <EmptyMessage />;
   if (!userLoading && !loggedInUser) return <Home />;
   if (
     !userLoading &&

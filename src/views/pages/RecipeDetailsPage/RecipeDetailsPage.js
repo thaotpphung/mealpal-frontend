@@ -7,16 +7,19 @@ import RecipeCard from '../../components/RecipeCard/RecipeCard';
 import RecipeDetailsCard from '../../components/RecipeDetailsCard/RecipeDetailsCards';
 import { getRecipe } from '../../../redux/actions/recipeActions';
 import Spinner from '../../common/Spinner/Spinner';
+import EmptyMessage from '../../common/EmptyMessage/EmptyMessage';
 
 const RecipeDetailsPage = () => {
   const classes = useStyles();
   const { recipeId } = useParams();
   const dispatch = useDispatch();
-  const { recipe, loading } = useSelector((state) => state.recipe);
+  const { recipe, loading, error } = useSelector((state) => state.recipe);
 
   useEffect(() => {
     dispatch(getRecipe(recipeId));
   }, []);
+
+  if (!loading && error) return <EmptyMessage />;
 
   if (!loading && Object.keys(recipe).length > 0)
     return (

@@ -11,10 +11,9 @@ export default makeStyles((theme) => ({
       listStyle: 'none',
     },
   },
-  // field
-  fieldValue: {},
-  fieldTitle: {},
-  // menu, edit day
+  listContainer: {
+    minHeight: '80vh',
+  },
   menuItem: {
     display: 'grid',
     gridTemplateColumns: '2fr 6fr 1fr',
@@ -34,7 +33,6 @@ export default makeStyles((theme) => ({
   menuContainer: {
     marginBottom: theme.spacing(3),
   },
-  // form
   formContainer: {
     padding: theme.spacing(2),
   },
@@ -42,7 +40,6 @@ export default makeStyles((theme) => ({
     margin: theme.spacing(1),
     minWidth: 120,
   },
-  // card
   item: {
     display: 'flex',
     alignItems: 'center',

@@ -2,8 +2,6 @@ import React from 'react';
 import { Grid, Typography, Button } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import useStyles from './styles';
-import CookieLoveLogo from '../../../assets/home/undraw_cookie_love.svg';
-import CookingLogo from '../../../assets/home/undraw_cooking.svg';
 import DietLogo from '../../../assets/home/undraw_diet.svg';
 import EatingTogetherLogo from '../../../assets/home/undraw_eating_together.svg';
 import ShoppingLogo from '../../../assets/home/undraw_shopping_app.svg';
@@ -24,7 +22,7 @@ const Home = () => {
       >
         {/* 1st Row - Short Intro */}
         <Grid item xs={12} sm={6} className={classes.rowCenter}>
-          <Typography variant="h3">Meal Prep Makes Easy</Typography>
+          <Typography variant="h3">Meal Prep Made Easy</Typography>
           <Typography variant="h5">
             Track and shop for your meal plans in a breeze with MealPal
           </Typography>
