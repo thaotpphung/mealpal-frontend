@@ -15,7 +15,7 @@ export const getEnvVars = (host) => {
   switch (true) {
     case host.includes('localhost'):
       return envVars.local;
-    case host.includes('dev'):
+    case host.includes('-dev'):
       return envVars.dev;
     case host.includes('mealpal.netlify.app'):
       return envVars.prod;

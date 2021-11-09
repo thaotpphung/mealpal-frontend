@@ -12,13 +12,14 @@ const useStyles = makeStyles((theme) => ({
   },
   link: {
     margin: theme.spacing(1, 1.5),
+    fontSize: 15,
   },
   activeClassName: {
     color: theme.palette.primary.main,
   },
   logo: {
-    height: '40px',
-    margin: theme.spacing(1),
+    height: '42px',
+    margin: theme.spacing(1.4),
   },
 }));
 
