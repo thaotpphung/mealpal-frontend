@@ -9,7 +9,6 @@ const Input = ({
   required = false,
   label,
   half,
-  autoFocus = true,
   type = 'text',
   endAction,
   value,
@@ -35,7 +34,6 @@ const Input = ({
         fullWidth
         label={label}
         value={value}
-        autoFocus={autoFocus}
         type={type}
         helperText={error}
         error={error !== undefined}

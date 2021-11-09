@@ -79,12 +79,7 @@ const AuthPage = () => {
   return (
     <Container component="main" maxWidth="xs">
       <Paper className={localClasses.paper} elevation={3}>
-        <div>
-          {loading && <Spinner />}
-          {status === 'error' && (
-            <FlashMessage status="error" message={message} />
-          )}
-        </div>
+        <div>{loading && <Spinner />}</div>
         <Avatar className={localClasses.avatar}>
           <LockOutlinedIcon />
         </Avatar>
@@ -96,6 +91,7 @@ const AuthPage = () => {
             {isRegister && (
               <>
                 <Input
+                  autoFocus={isRegister}
                   name="firstName"
                   label="First Name"
                   handleChange={handleChange}
@@ -119,6 +115,7 @@ const AuthPage = () => {
               </>
             )}
             <Input
+              autoFocus={!isRegister}
               name="username"
               label="Username"
               handleChange={handleChange}
