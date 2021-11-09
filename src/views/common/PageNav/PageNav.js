@@ -7,6 +7,7 @@ const PageNav = ({ count, page, handleChangePage = () => {} }) => {
 
   return (
     <Pagination
+      shape="rounded"
       color="primary"
       count={count}
       page={page}

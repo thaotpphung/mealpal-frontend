@@ -11,9 +11,6 @@ export default makeStyles((theme) => ({
       listStyle: 'none',
     },
   },
-  listContainer: {
-    // minHeight: '80vh',
-  },
   menuItem: {
     display: 'grid',
     gridTemplateColumns: '2fr 6fr 1fr',
