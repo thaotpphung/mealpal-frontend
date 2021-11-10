@@ -135,7 +135,7 @@ const WeekCard = ({ week }) => {
           <div>
             <Typography>
               <strong>Description: </strong>
-              {week.description}
+              {week.weekDescription}
             </Typography>
             <Grid container>
               <Grid item xs={12} sm={6}>
