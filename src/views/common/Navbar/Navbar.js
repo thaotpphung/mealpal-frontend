@@ -1,8 +1,8 @@
 import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
+import Chip from '@material-ui/core/Chip';
 import { NavLink as RouterLink } from 'react-router-dom';
 import useStyles from './styles';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -33,8 +33,13 @@ const Navbar = () => {
         <Toolbar className={classes.toolbar}>
           <div className={classes.toolbarTitle}>
             <img src={Logo} className={classes.logo} />
+            <Chip
+              variant="outlined"
+              size="small"
+              label="Beta"
+              color="primary"
+            />
           </div>
-
           <nav className={classes.navLeft}>
             <Link
               variant="button"
@@ -55,7 +60,7 @@ const Navbar = () => {
               className={classes.link}
               activeClassName={classes.activeClassName}
             >
-              MealPlans
+              Plans
             </Link>
             <Link
               variant="button"
@@ -108,7 +113,7 @@ const Navbar = () => {
           ) : (
             <Button
               component={RouterLink}
-              to={'auth'}
+              to={'/auth'}
               color="primary"
               variant="outlined"
               className={classes.link}

@@ -139,7 +139,7 @@ const RecipeCard = ({ recipe }) => {
             <Grid container>
               <Grid item xs={12} sm={6}>
                 <Typography>
-                  <strong>Calories:</strong> {recipe?.calories}
+                  <strong>Calories:</strong> {recipe?.calories} kCal
                 </Typography>
                 <Typography>
                   <strong>Servings:</strong> {recipe?.servings}

@@ -54,7 +54,7 @@ const InstructionCard = ({ recipe }) => {
   return (
     <Paper className={localClasses.notePaper}>
       <CardHeader
-        title="Ingredients"
+        title="Instructions"
         action={
           <div>
             {loggedInUser && recipe.userId._id === loggedInUser._id && (
@@ -78,7 +78,7 @@ const InstructionCard = ({ recipe }) => {
           </div>
         }
       />
-      <CardBody className={localClasses.recipeDetailsCardContent}>
+      <CardBody>
         {!openEditMode && (
           <ul>
             {instructions.map((item, itemIdx) => (

@@ -16,7 +16,7 @@ const Input = ({
   disabled = false,
   min = 0,
   max = 10000,
-  step = 1,
+  step = 0.01,
   ...rest
 }) => {
   const classes = useStyles();

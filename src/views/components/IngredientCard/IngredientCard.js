@@ -134,25 +134,25 @@ const IngredientCard = ({ recipe }) => {
           </div>
         }
       />
+      <PopupDialog
+        title="Add a new unit"
+        content={
+          <div className={classes.formPaper}>
+            <Input
+              name="label"
+              label="Unit"
+              handleChange={handleChangeUnit}
+              value={newUnit.label}
+              error={newUnitErrors.label}
+              required
+            />
+          </div>
+        }
+        handleSubmit={(event) => handleCreateUnit(event, newUnit.label)}
+        open={openDialog}
+        handleClose={handleCloseDialog}
+      />
       <CardBody>
-        <PopupDialog
-          title="Add a new unit"
-          content={
-            <div className={classes.formPaper}>
-              <Input
-                name="label"
-                label="Unit"
-                handleChange={handleChangeUnit}
-                value={newUnit.label}
-                error={newUnitErrors.label}
-                required
-              />
-            </div>
-          }
-          handleSubmit={(event) => handleCreateUnit(event, newUnit.label)}
-          open={openDialog}
-          handleClose={handleCloseDialog}
-        />
         <ul>
           {ingredients.map((item, itemIdx) => {
             return (

@@ -19,7 +19,7 @@ const Footer = () => {
         <div className={classes.item}>
           <Typography variant="h6">Connect with me</Typography>
           <div className={classes.icons}>
-            <Link href="www.linkedin.com/in/thaotpphung">
+            <Link href="https://www.linkedin.com/in/thaotpphung">
               <LinkedInIcon />
             </Link>
             <Link href="https://github.com/thaotpphung">

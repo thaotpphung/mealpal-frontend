@@ -36,6 +36,7 @@ const DayList = ({ days, recipes, userId }) => {
     return {
       recipeName: recipe.recipeName,
       _id: recipe._id,
+      calories: recipe.calories,
     };
   });
 
@@ -80,6 +81,7 @@ const DayList = ({ days, recipes, userId }) => {
       day.meals[0] = {
         mealName: '[PlaceHolder]',
         food: [{ ...initialRecipe }],
+        calories: 0,
       };
     }
     day.meals.forEach((meal) => {
@@ -121,6 +123,7 @@ const DayList = ({ days, recipes, userId }) => {
     updatedDays.meals.splice(mealIdx + 1, 0, {
       mealName: '[Meal Name]',
       food: [{ ...initialRecipe }],
+      calories: 0,
     });
     setDayForm(updatedDays);
   };
@@ -133,11 +136,25 @@ const DayList = ({ days, recipes, userId }) => {
   const handleChangeFood = (mealIdx, recipeIdx, newValue) => {
     const updatedDays = cloneDeep(dayForm);
     updatedDays.meals[mealIdx].food[recipeIdx] = newValue;
+    const foodTotalCalories = updatedDays.meals[mealIdx].food.reduce(function (
+      acc,
+      recipe
+    ) {
+      return acc + recipe.calories;
+    },
+    0);
+    updatedDays.meals[mealIdx].calories = foodTotalCalories;
+    const mealTotalCalories = updatedDays.meals.reduce(function (acc, meal) {
+      return acc + meal.calories;
+    }, 0);
+    updatedDays.calories = mealTotalCalories;
     setDayForm(updatedDays);
   };
-  const handleDeleteFood = (mealIdx, recipeIdx) => {
+  const handleDeleteFood = (mealIdx, recipeIdx, recipe) => {
     const updatedDays = cloneDeep(dayForm);
     updatedDays.meals[mealIdx].food.splice(recipeIdx, 1);
+    updatedDays.meals[mealIdx].calories -= recipe.calories;
+    updatedDays.calories -= recipe.calories;
     setDayForm(updatedDays);
   };
   const handleAddFood = (mealIdx, recipeIdx) => {
@@ -188,7 +205,7 @@ const DayList = ({ days, recipes, userId }) => {
       {days.map((day, dayIdx) => (
         <Paper key={`day-card-${day._id}-${dayIdx}`}>
           <CardHeader
-            title={day.dayName}
+            title={`${day.dayName}`}
             action={
               <>
                 {!!loggedInUser && loggedInUser._id === userId._id && (
@@ -234,158 +251,181 @@ const DayList = ({ days, recipes, userId }) => {
             }
           />
           <CardBody>
-            {!isInEditDayMode[dayIdx] &&
-              day.meals.map((meal, mealIdx) => {
-                return (
-                  <div
-                    key={`meal-in-day-card-${meal._id}-${dayIdx}-${mealIdx}}`}
-                    className={localClasses.menuItem}
-                  >
-                    <div className={classes.itemIcon}>
-                      <Typography>
-                        <strong>{meal.mealName}</strong>
-                      </Typography>
-                    </div>
-                    <div className={classes.itemContent}>
-                      <ul className={localClasses.menuContent}>
-                        {!isInEditDayMode[dayIdx] && (
-                          <>
-                            {meal.food.map((recipe, recipeIdx) => {
-                              return (
-                                <li
-                                  key={`dish-in-meal-${recipe._id}-${recipeIdx})}`}
-                                >
-                                  <RestaurantMenuIcon
-                                    className={classes.foodIcon}
-                                  />
-                                  <Link
-                                    to={{
-                                      pathname: `/recipes/${recipe._id}`,
-                                    }}
-                                  >
-                                    <Typography>{recipe.recipeName}</Typography>
-                                  </Link>
-                                </li>
-                              );
-                            })}
-                          </>
-                        )}
-                      </ul>
-                    </div>
-                    {!!loggedInUser && loggedInUser._id === userId._id && (
-                      <div className={classes.itemAction}>
-                        <RoundButton
-                          type="shoppingCart"
-                          handleClick={() =>
-                            dispatch(
-                              addToCartByMeal(
-                                days[dayIdx].meals[mealIdx],
-                                history
-                              )
-                            )
-                          }
-                        />
+            {!isInEditDayMode[dayIdx] && (
+              <>
+                {day.meals.map((meal, mealIdx) => {
+                  return (
+                    <div
+                      key={`meal-in-day-card-${meal._id}-${dayIdx}-${mealIdx}}`}
+                      className={localClasses.menuItem}
+                    >
+                      <div className={classes.itemIcon}>
+                        <Typography>
+                          <strong>{meal.mealName}</strong>
+                        </Typography>
+                        <Typography>{meal.calories.toFixed(2)}</Typography>
                       </div>
-                    )}
-                  </div>
-                );
-              })}
+                      <div className={classes.itemContent}>
+                        <ul className={localClasses.menuContent}>
+                          {!isInEditDayMode[dayIdx] && (
+                            <>
+                              {meal.food.map((recipe, recipeIdx) => {
+                                return (
+                                  <li
+                                    key={`dish-in-meal-${recipe._id}-${recipeIdx})}`}
+                                  >
+                                    <RestaurantMenuIcon
+                                      className={classes.foodIcon}
+                                    />
+                                    <Link
+                                      to={{
+                                        pathname: `/recipes/${recipe._id}`,
+                                      }}
+                                    >
+                                      <Typography>
+                                        {recipe.recipeName}
+                                      </Typography>
+                                    </Link>
+                                  </li>
+                                );
+                              })}
+                            </>
+                          )}
+                        </ul>
+                      </div>
+                      {!!loggedInUser && loggedInUser._id === userId._id && (
+                        <div className={classes.itemAction}>
+                          <RoundButton
+                            type="shoppingCart"
+                            handleClick={() =>
+                              dispatch(
+                                addToCartByMeal(
+                                  days[dayIdx].meals[mealIdx],
+                                  history
+                                )
+                              )
+                            }
+                          />
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+                <Typography className={localClasses.total}>
+                  <strong>Total:</strong> {day.calories.toFixed(2)} kCal
+                </Typography>
+              </>
+            )}
             {isInEditDayMode[dayIdx] && dayForm !== undefined && (
-              <DragDropContext onDragEnd={handleOnDragEnd}>
-                <Droppable droppableId="meals">
-                  {(provided) => (
-                    <ul {...provided.droppableProps} ref={provided.innerRef}>
-                      {dayForm.meals.map((meal, mealIdx) => {
-                        return (
-                          <Draggable
-                            key={`meal-in-field-${meal._id}-${mealIdx}`}
-                            draggableId={meal._id}
-                            index={mealIdx}
-                          >
-                            {(provided) => (
-                              <li
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                                className={localClasses.menuItem}
-                              >
-                                <div className={classes.itemIcon}>
-                                  <Input
-                                    value={meal.mealName}
-                                    handleChange={(e) =>
-                                      handleChangeMeal(e, mealIdx)
-                                    }
-                                    error={errors[`meal${mealIdx}`]}
-                                    required
-                                  />
-                                </div>
-                                <div className={classes.itemContent}>
-                                  <ul className={localClasses.menuContent}>
-                                    {meal.food.map((recipe, recipeIdx) => (
-                                      <li
-                                        key={`food-field-${recipe._id}-${recipeIdx}`}
-                                      >
-                                        <RestaurantMenuIcon
-                                          className={classes.foodIcon}
-                                        />
-                                        <AutocompleteField
-                                          value={recipe}
-                                          toggleOpen={toggleOpenNewRecipeDialog}
-                                          setDialogValue={setNewRecipe}
-                                          handleChangeAutocompleteField={
-                                            handleChangeFood
-                                          }
-                                          param="recipeName"
-                                          options={
-                                            extractedFieldsForAutoComplete
-                                          }
-                                          changedParams={[mealIdx, recipeIdx]}
-                                          error={
-                                            errors[
-                                              `meal${mealIdx}food${recipeIdx}`
-                                            ]
-                                          }
-                                          style={{ minWidth: '70%' }}
-                                          required
-                                        />
-                                        <RoundButton
-                                          type="deleteField"
-                                          handleClick={() =>
-                                            handleDeleteFood(mealIdx, recipeIdx)
-                                          }
-                                        />
-                                        <RoundButton
-                                          type="addField"
-                                          handleClick={() =>
-                                            handleAddFood(mealIdx, recipeIdx)
-                                          }
-                                        />
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </div>
-                                <div className={classes.itemAction}>
-                                  <RoundButton
-                                    type="delete"
-                                    handleClick={() =>
-                                      handleDeleteMeal(mealIdx)
-                                    }
-                                  />
-                                  <RoundButton
-                                    type="add"
-                                    handleClick={() => handleAddMeal(mealIdx)}
-                                  />
-                                </div>
-                              </li>
-                            )}
-                          </Draggable>
-                        );
-                      })}
-                      {provided.placeholder}
-                    </ul>
-                  )}
-                </Droppable>
-              </DragDropContext>
+              <>
+                <DragDropContext onDragEnd={handleOnDragEnd}>
+                  <Droppable droppableId="meals">
+                    {(provided) => (
+                      <ul {...provided.droppableProps} ref={provided.innerRef}>
+                        {dayForm.meals.map((meal, mealIdx) => {
+                          return (
+                            <Draggable
+                              key={`meal-in-field-${meal._id}-${mealIdx}`}
+                              draggableId={meal._id}
+                              index={mealIdx}
+                            >
+                              {(provided) => (
+                                <li
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                  className={localClasses.menuItem}
+                                >
+                                  <div className={classes.itemIcon}>
+                                    <Input
+                                      value={meal.mealName}
+                                      handleChange={(e) =>
+                                        handleChangeMeal(e, mealIdx)
+                                      }
+                                      error={errors[`meal${mealIdx}`]}
+                                      required
+                                    />
+                                    <Typography>
+                                      {meal.calories.toFixed(2)}
+                                    </Typography>
+                                  </div>
+                                  <div className={classes.itemContent}>
+                                    <ul className={localClasses.menuContent}>
+                                      {meal.food.map((recipe, recipeIdx) => (
+                                        <li
+                                          key={`food-field-${recipe._id}-${recipeIdx}`}
+                                        >
+                                          <RestaurantMenuIcon
+                                            className={classes.foodIcon}
+                                          />
+                                          <AutocompleteField
+                                            value={recipe}
+                                            toggleOpen={
+                                              toggleOpenNewRecipeDialog
+                                            }
+                                            setDialogValue={setNewRecipe}
+                                            handleChangeAutocompleteField={
+                                              handleChangeFood
+                                            }
+                                            param="recipeName"
+                                            options={
+                                              extractedFieldsForAutoComplete
+                                            }
+                                            changedParams={[mealIdx, recipeIdx]}
+                                            error={
+                                              errors[
+                                                `meal${mealIdx}food${recipeIdx}`
+                                              ]
+                                            }
+                                            style={{ minWidth: '70%' }}
+                                            required
+                                          />
+                                          <RoundButton
+                                            type="deleteField"
+                                            handleClick={() =>
+                                              handleDeleteFood(
+                                                mealIdx,
+                                                recipeIdx,
+                                                recipe
+                                              )
+                                            }
+                                          />
+                                          <RoundButton
+                                            type="addField"
+                                            handleClick={() =>
+                                              handleAddFood(mealIdx, recipeIdx)
+                                            }
+                                          />
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                  <div className={classes.itemAction}>
+                                    <RoundButton
+                                      type="delete"
+                                      handleClick={() =>
+                                        handleDeleteMeal(mealIdx)
+                                      }
+                                    />
+                                    <RoundButton
+                                      type="add"
+                                      handleClick={() => handleAddMeal(mealIdx)}
+                                    />
+                                  </div>
+                                </li>
+                              )}
+                            </Draggable>
+                          );
+                        })}
+                        {provided.placeholder}
+                      </ul>
+                    )}
+                  </Droppable>
+                </DragDropContext>
+                <Typography className={localClasses.total}>
+                  <strong>Total:</strong> {dayForm.calories.toFixed(2)} kCal
+                </Typography>
+              </>
             )}
           </CardBody>
         </Paper>
