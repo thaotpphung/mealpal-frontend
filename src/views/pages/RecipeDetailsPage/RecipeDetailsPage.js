@@ -4,7 +4,8 @@ import { Grid } from '@material-ui/core';
 import useStyles from './styles';
 import { useParams } from 'react-router-dom';
 import RecipeCard from '../../components/RecipeCard/RecipeCard';
-import RecipeDetailsCard from '../../components/RecipeDetailsCard/RecipeDetailsCards';
+import InstructionCard from '../../components/InstructionCard/InstructionCard';
+import IngredientCard from '../../components/IngredientCard/IngredientCard';
 import { getRecipe } from '../../../redux/actions/recipeActions';
 import Spinner from '../../common/Spinner/Spinner';
 import EmptyMessage from '../../common/EmptyMessage/EmptyMessage';
@@ -20,7 +21,6 @@ const RecipeDetailsPage = () => {
   }, []);
 
   if (!loading && error) return <EmptyMessage />;
-
   if (!loading && Object.keys(recipe).length > 0)
     return (
       <div className={classes.root}>
@@ -34,7 +34,8 @@ const RecipeDetailsPage = () => {
             <RecipeCard recipe={recipe} />
           </Grid>
           <Grid item xs={12} sm={8} className={classes.rightColumn}>
-            <RecipeDetailsCard recipe={recipe} />
+            <IngredientCard recipe={recipe} />
+            <InstructionCard recipe={recipe} />
           </Grid>
         </Grid>
       </div>
