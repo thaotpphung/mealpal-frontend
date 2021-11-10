@@ -19,45 +19,25 @@ export {
 const addToCartByRecipe = (recipe, router) => async (dispatch) => {
   dispatch({ type: CART_ADD_BY_RECIPE, payload: recipe });
   router.push('/cart');
-  dispatch(
-    addAlertWithTimeout(
-      'warning',
-      'This cart was automatically generated and might be not accurate, please make changes as you wish!'
-    )
-  );
+  dispatch(addAlertWithTimeout('success', 'Successfully added to cart!'));
 };
 
 const addToCartByMeal = (meal, router) => async (dispatch) => {
   dispatch({ type: CART_ADD_BY_MEAL, payload: meal });
   router.push('/cart');
-  dispatch(
-    addAlertWithTimeout(
-      'warning',
-      'This cart was automatically generated and might be not accurate, please make changes as you wish!'
-    )
-  );
+  dispatch(addAlertWithTimeout('success', 'Successfully added to cart!'));
 };
 
 const addToCartByDay = (day, router) => async (dispatch) => {
   dispatch({ type: CART_ADD_BY_DAY, payload: day });
   router.push('/cart');
-  dispatch(
-    addAlertWithTimeout(
-      'warning',
-      'This cart was automatically generated and might be not accurate, please make changes as you wish!'
-    )
-  );
+  dispatch(addAlertWithTimeout('success', 'Successfully added to cart!'));
 };
 
 const addToCartByWeek = (week, router) => async (dispatch) => {
   dispatch({ type: CART_ADD_BY_WEEK, payload: week });
   router.push('/cart');
-  dispatch(
-    addAlertWithTimeout(
-      'warning',
-      'This cart was automatically generated and might be not accurate, please make changes as you wish!'
-    )
-  );
+  dispatch(addAlertWithTimeout('success', 'Successfully added to cart!'));
 };
 
 const updateCart = (cart) => async (dispatch) => {
