@@ -1,12 +1,6 @@
 export default [
   {
-    label: 'drop',
-  },
-  {
-    label: 'pinch',
-  },
-  {
-    label: 'dash',
+    label: 'none',
   },
   {
     label: 'tsp',
@@ -19,18 +13,6 @@ export default [
   },
   {
     label: 'cup',
-  },
-  {
-    label: 'pint',
-  },
-  {
-    label: 'quart',
-  },
-  {
-    label: 'pottle',
-  },
-  {
-    label: 'gallon',
   },
   {
     label: 'kg',
@@ -48,7 +30,25 @@ export default [
     label: 'lb',
   },
   {
-    label: 'none',
+    label: 'drop',
+  },
+  {
+    label: 'pinch',
+  },
+  {
+    label: 'dash',
+  },
+  {
+    label: 'pint',
+  },
+  {
+    label: 'quart',
+  },
+  {
+    label: 'pottle',
+  },
+  {
+    label: 'gallon',
   },
   {
     label: '',

@@ -116,7 +116,7 @@ const CartPage = () => {
                                       <span key={`unit-${unit}-${unitIdx}`}>
                                         {formatMixedNumber(amount)}
                                         {'\u00A0'}
-                                        {unit}
+                                        {unit !== 'none' && unit}
                                         {'\u00A0'}
                                         {unitIdx < array.length - 1 && '+ '}
                                       </span>
