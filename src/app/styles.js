@@ -3,12 +3,12 @@ export default makeStyles((theme) => ({
   root: {
     padding: theme.spacing(5, 10),
     minHeight: '100vh',
-  },
-  '@global': {
-    ul: {
-      margin: 0,
-      padding: 0,
-      listStyle: 'none',
+    '@global': {
+      ul: {
+        margin: 0,
+        padding: 0,
+        listStyle: 'none',
+      },
     },
   },
   menuItem: {

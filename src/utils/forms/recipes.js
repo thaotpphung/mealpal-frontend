@@ -11,7 +11,7 @@ export const recipeFormFields = [
   },
   {
     name: 'calories',
-    label: 'Calories',
+    label: 'Calories(kCal)',
     required: true,
     type: 'number',
     step: 0.01,

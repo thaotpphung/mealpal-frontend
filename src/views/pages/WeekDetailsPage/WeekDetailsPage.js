@@ -18,7 +18,7 @@ const WeekDetailsPage = () => {
     if (!location.isRedirect) {
       dispatch(getWeek(weekId));
     }
-    dispatch(getAllRecipes('?fields=recipeName'));
+    dispatch(getAllRecipes('?fields=recipeName,calories'));
   }, []);
 
   if (!loading && error) return <EmptyMessage />;

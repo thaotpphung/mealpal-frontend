@@ -82,18 +82,18 @@ const WeekCard = ({ week }) => {
                     )}
                     {!!weekId && (
                       <>
-                        <RoundButton
-                          type="shoppingCart"
-                          handleClick={() =>
-                            dispatch(addToCartByWeek(week, history))
-                          }
-                        />
                         {weekId !== loggedInUser.currentWeek && (
                           <RoundButton
                             type="setDefault"
                             handleClick={handleSetCurrentWeek}
                           />
                         )}
+                        <RoundButton
+                          type="shoppingCart"
+                          handleClick={() =>
+                            dispatch(addToCartByWeek(week, history))
+                          }
+                        />
                         <RoundButton
                           type="delete"
                           handleClick={() => handleDeleteWeek(week?._id)}
@@ -140,8 +140,8 @@ const WeekCard = ({ week }) => {
             <Grid container>
               <Grid item xs={12} sm={6}>
                 <Typography>
-                  <strong>Calo Goal: </strong>
-                  {week.caloGoal}
+                  <strong>Calories Goal: </strong>
+                  {week.caloGoal} kCal
                 </Typography>
                 <Typography>
                   <strong>Diet: </strong>

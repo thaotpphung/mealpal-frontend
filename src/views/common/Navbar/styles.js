@@ -9,6 +9,8 @@ const useStyles = makeStyles((theme) => ({
   },
   toolbarTitle: {
     flexGrow: 1,
+    display: 'flex',
+    alignItems: 'center',
   },
   link: {
     margin: theme.spacing(1, 1.5),

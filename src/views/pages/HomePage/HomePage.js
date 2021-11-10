@@ -13,25 +13,17 @@ const HomePage = () => {
   const { loggedInUser, loading: userLoading } = useSelector(
     (state) => state.user
   );
-  const { recipes } = useSelector((state) => state.recipeList);
 
   useEffect(() => {
     if (loggedInUser) {
       dispatch(getWeek(loggedInUser.currentWeek));
-      dispatch(getAllRecipes());
     }
   }, []);
 
   if (!loading && error) return <EmptyMessage />;
   if (!userLoading && !loggedInUser) return <Home />;
-  if (
-    !userLoading &&
-    loggedInUser &&
-    !loading &&
-    week.days.length > 0 &&
-    recipes.length >= 0
-  )
-    return <WeekDetails week={week} recipes={recipes} />;
+  if (!userLoading && loggedInUser && !loading && week.days.length > 0)
+    return <WeekDetails week={week} recipes={[]} />;
   return <Spinner />;
 };
 

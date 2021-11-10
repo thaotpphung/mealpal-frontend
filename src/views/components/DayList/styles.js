@@ -19,6 +19,9 @@ const styles = makeStyles((theme) => ({
     paddingBottom: theme.spacing(1),
     marginBottom: theme.spacing(3),
   },
+  total: {
+    marginLeft: theme.spacing(2),
+  },
 }));
 
 export { styles };
