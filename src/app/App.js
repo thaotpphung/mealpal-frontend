@@ -17,6 +17,7 @@ import AuthPage from '../views/pages/AuthPage/AuthPage';
 import ProfilePage from '../views/pages/ProfilePage/ProfilePage';
 import RecipePage from '../views/pages/RecipePage/RecipePage';
 import NotFoundPage from '../views/pages/NotFoundPage/NotFoundPage';
+import SuccessPage from '../views/pages/SuccessPage/SuccessPage';
 import RecipeDetailsPage from '../views/pages/RecipeDetailsPage/RecipeDetailsPage';
 
 function App() {
@@ -53,6 +54,13 @@ function App() {
           <Route path="/users/:userId/profile" exact component={ProfilePage} />
           {loggedInUser && <Route path="/cart" exact component={CartPage} />}
           <Route path="/auth" exact component={AuthPage} />
+          {loggedInUser && (
+            <Route
+              path="/users/:userId/success"
+              exact
+              component={SuccessPage}
+            />
+          )}
           <Route path={'/404'} exact component={NotFoundPage} />
           <Route component={NotFoundPage} />
         </Switch>

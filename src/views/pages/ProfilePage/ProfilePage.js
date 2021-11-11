@@ -76,16 +76,14 @@ const ProfilePage = () => {
     openEditMode: openEditPassword,
     toggleOpenEditMode: toggleEditPassword,
     handleCloseEditMode: handleCloseEditPassword,
-  } = useEditMode(() => {
-    setPasswordErrors({});
-  });
+  } = useEditMode(() => {});
 
   const {
     openEditMode: openEditEmail,
     toggleOpenEditMode: toggleEditEmail,
     handleCloseEditMode: handleCloseEditEmail,
   } = useEditMode(() => {
-    setEmailErrors({});
+    resetEmailForm();
   });
 
   const [currentUser, setCurrentUser] = useState({});
@@ -118,7 +116,6 @@ const ProfilePage = () => {
     reset: resetProfileForm,
   } = useForm(
     {
-      username: loggedInUser?.username,
       firstName: loggedInUser?.firstName,
       lastName: loggedInUser?.lastName,
       bio: loggedInUser?.bio,
@@ -151,7 +148,6 @@ const ProfilePage = () => {
     handleSubmit: handleSubmitChangePassword,
     values: passwordForm,
     errors: passwordErrors,
-    setErrors: setPasswordErrors,
   } = useForm(
     {
       oldPassword: '',
@@ -169,7 +165,7 @@ const ProfilePage = () => {
     handleSubmit: handleSubmitChangeEmail,
     values: emailForm,
     errors: emailErrors,
-    setErrors: setEmailErrors,
+    reset: resetEmailForm,
   } = useForm(
     {
       email: loggedInUser?.email,
@@ -320,14 +316,8 @@ const ProfilePage = () => {
                       <Input
                         name="username"
                         label="Username"
-                        value={
-                          !openEditProfile
-                            ? currentUser.username
-                            : userForm.username
-                        }
-                        handleChange={handleChange}
-                        errors={errors?.username}
-                        disabled={!openEditProfile}
+                        value={currentUser.username}
+                        disabled
                       />
                       {!openEditProfile ? (
                         <Input

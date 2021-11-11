@@ -19,14 +19,15 @@ export const register = (formData) => API.post('api/users/register', formData);
 export const updatePassword = (formData) =>
   API.patch(`api/users/changepassword`, formData);
 export const sendConfirmationEmail = (formData) =>
-  API.patch(`api/users/email/sendcode`, formData);
-export const confirmEmail = (formData) =>
   API.patch(`api/users/email/confirm`, formData);
 
 // users
 export const updateUser = (userId, formData) =>
   API.patch(`api/users/${userId}`, formData);
-export const getUser = (userId) => API.get(`api/users/${userId}`);
+export const getUser = (userId, query = '') => {
+  const url = `api/users/${userId}${query}`;
+  return API.get(url);
+};
 
 // weeks
 export const getWeeks = (query, isInExploreMode, userId) => {

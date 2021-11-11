@@ -100,7 +100,6 @@ const IngredientCard = ({ recipe }) => {
         ingredients[idx].amount = simplifyMixedNumber(ingredient.amount);
       });
     }
-    console.log('submitting', errors);
     handleSubmit(event, errors);
   };
 
