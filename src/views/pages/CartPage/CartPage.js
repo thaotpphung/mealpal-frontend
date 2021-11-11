@@ -15,6 +15,7 @@ import CardBody from '../../common/CardBody/CardBody';
 import EmptyMessage from '../../common/EmptyMessage/EmptyMessage';
 import RoundButton from '../../common/Buttons/RoundButton';
 import { updateCart, clearCart } from '../../../redux/actions/cartActions';
+import { addAlertWithTimeout } from '../../../redux/actions/alertActions';
 import useEditMode from '../../../utils/hooks/useEditMode';
 import useToggle from '../../../utils/hooks/useToggle';
 import { formatMixedNumber } from '../../../utils/mixedNumber';
@@ -22,6 +23,7 @@ import { formatMixedNumber } from '../../../utils/mixedNumber';
 const CartPage = () => {
   const localClasses = useStyles();
   const dispatch = useDispatch();
+  const { loggedInUser } = useSelector((state) => state.user);
   const { cart } = useSelector((state) => state.cart);
   const { handleCloseEditMode, openEditMode, toggleOpenEditMode } = useEditMode(
     () => {
@@ -46,6 +48,17 @@ const CartPage = () => {
     dispatch(clearCart());
   };
 
+  const handleSendEmail = () => {
+    if (!loggedInUser.isVerified) {
+      dispatch(
+        addAlertWithTimeout(
+          'error',
+          'Please confirm your email to use this service (Profile > Confirm Email)'
+        )
+      );
+    }
+  };
+
   // TODO
   const handleSubmitUpdateCart = () => {};
   const handleAddIngredient = () => {};
@@ -61,6 +74,7 @@ const CartPage = () => {
           title="Shopping Cart"
           action={
             <>
+              <RoundButton type="send" handleClick={handleSendEmail} />
               <RoundButton type="delete" handleClick={handleClickDeleteCart} />
               {openEditMode ? (
                 <>

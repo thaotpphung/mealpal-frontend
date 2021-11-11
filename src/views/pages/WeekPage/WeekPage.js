@@ -146,7 +146,7 @@ const WeekPage = () => {
                   key={`{'explore-page-${week._id}-${weekIdx}`}
                   item
                   xs={12}
-                  sm={4}
+                  sm={6}
                   md={4}
                 >
                   <WeekCard week={week} />

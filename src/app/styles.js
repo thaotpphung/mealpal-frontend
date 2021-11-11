@@ -84,11 +84,9 @@ export default makeStyles((theme) => ({
     backgroundColor: 'white',
   },
   utilsFields: {
-    flex: '1 1 auto',
     display: 'flex',
-    flexDirection: 'row',
     '& > div': {
-      margin: theme.spacing(0, 3),
+      marginRight: theme.spacing(2),
     },
   },
   utilsActions: {

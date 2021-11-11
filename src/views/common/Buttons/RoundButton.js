@@ -18,6 +18,7 @@ import ControlPointDuplicateIcon from '@material-ui/icons/ControlPointDuplicate'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import SendIcon from '@material-ui/icons/Send';
 
 import useStyles from './styles';
 
@@ -40,6 +41,7 @@ const RoundButton = ({ type, handleClick, ...props }) => {
     avatar: <AccountCircleIcon />,
     expandLess: <ExpandLessIcon />,
     expandMore: <ExpandMoreIcon />,
+    send: <SendIcon />,
   };
 
   return (

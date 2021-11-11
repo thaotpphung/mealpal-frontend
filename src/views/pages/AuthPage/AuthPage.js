@@ -148,7 +148,7 @@ const AuthPage = () => {
               />
             )}
           </Grid>
-          <BlockButton type="submit">
+          <BlockButton type="submit" fullWidth>
             {isRegister ? 'Sign Up' : 'Sign In'}
           </BlockButton>
           <Grid container justifyContent="flex-end">

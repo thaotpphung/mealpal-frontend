@@ -7,7 +7,8 @@ const BlockButton = ({
   variant = 'contained',
   type,
   handleClick,
-  width = '100%',
+  fullWidth,
+  width = fullWidth ? '100%' : 'fit-content',
   children,
   ...props
 }) => {

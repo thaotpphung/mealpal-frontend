@@ -66,7 +66,7 @@ const updateUser = (userId, formData) => async (dispatch) => {
 const updatePassword = (userId, formData) => async (dispatch) => {
   dispatch({ type: USER_UPDATE_PASSWORD_REQUEST });
   try {
-    const { data } = await api.updatePassword(userId, formData);
+    const { data } = await api.updatePassword(formData);
     dispatch({ type: USER_UPDATE_PASSWORD_SUCCESS, payload: data });
     dispatch(addAlertWithTimeout('success', data.message));
   } catch (error) {

@@ -6,8 +6,7 @@ export default makeStyles((theme) => ({
     margin: 'auto',
   },
   logo: {
-    width: '500px',
-    height: '500px',
+    width: '100%',
   },
   rowCenter: {
     display: 'flex',

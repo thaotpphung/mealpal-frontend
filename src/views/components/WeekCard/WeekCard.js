@@ -178,7 +178,9 @@ const WeekCard = ({ week }) => {
                 step={field.step}
               />
             ))}
-            <BlockButton type="submit">Submit</BlockButton>
+            <BlockButton type="submit" fullWidth>
+              Submit
+            </BlockButton>
           </form>
         )}
       </CardContent>

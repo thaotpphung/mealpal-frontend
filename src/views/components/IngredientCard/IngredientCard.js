@@ -100,6 +100,7 @@ const IngredientCard = ({ recipe }) => {
         ingredients[idx].amount = simplifyMixedNumber(ingredient.amount);
       });
     }
+    console.log('submitting', errors);
     handleSubmit(event, errors);
   };
 
@@ -177,15 +178,11 @@ const IngredientCard = ({ recipe }) => {
                     ) : (
                       <>
                         <Grid container spacing={3} alignItems="center">
-                          <Grid item xs={12} sm={12}>
-                            <FormHelperText error>
-                              {errors && errors[itemIdx]}
-                            </FormHelperText>
-                          </Grid>
                           <Grid item xs={12} sm={2}>
                             <Input
                               label="Whole"
                               type="number"
+                              step={1}
                               value={item.amount.whole}
                               handleChange={(event) => {
                                 const { value } = event.target;
@@ -205,13 +202,17 @@ const IngredientCard = ({ recipe }) => {
                                   );
                                 }
                               }}
-                              error={errors && errors[itemIdx]}
+                              error={
+                                errors.ingredients &&
+                                errors.ingredients[itemIdx]
+                              }
                             />
                           </Grid>
                           <Grid item xs={12} sm={2}>
                             <Input
                               label="Numer"
                               type="number"
+                              step={1}
                               value={item.amount.numer}
                               handleChange={(event) => {
                                 const { value } = event.target;
@@ -231,13 +232,17 @@ const IngredientCard = ({ recipe }) => {
                                   );
                                 }
                               }}
-                              error={errors && errors[itemIdx]}
+                              error={
+                                errors.ingredients &&
+                                errors.ingredients[itemIdx]
+                              }
                             />
                             <hr />
                             <Input
                               label="Denom"
                               type="number"
                               value={item.amount.denom}
+                              step={1}
                               handleChange={(event) => {
                                 const { value } = event.target;
                                 if (
@@ -256,7 +261,10 @@ const IngredientCard = ({ recipe }) => {
                                   );
                                 }
                               }}
-                              error={errors && errors[itemIdx]}
+                              error={
+                                errors.ingredients &&
+                                errors.ingredients[itemIdx]
+                              }
                             />
                           </Grid>
                           <Grid item xs={12} sm={3}>
@@ -271,7 +279,10 @@ const IngredientCard = ({ recipe }) => {
                               param="label"
                               options={unitOptions}
                               changedParams={[itemIdx, item, 'unit']}
-                              error={errors && errors[itemIdx]}
+                              error={
+                                errors.ingredients &&
+                                errors.ingredients[itemIdx]
+                              }
                             />
                           </Grid>
                           <Grid item xs={12} sm={5}>
@@ -286,7 +297,10 @@ const IngredientCard = ({ recipe }) => {
                                   event.target.value
                                 )
                               }
-                              error={errors && errors[itemIdx]}
+                              error={
+                                errors.ingredients &&
+                                errors.ingredients[itemIdx]
+                              }
                             />
                           </Grid>
                         </Grid>
