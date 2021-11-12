@@ -6,7 +6,6 @@ export default makeStyles((theme) => ({
     margin: '16px auto',
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center',
     zIndex: '100',
   },
 }));

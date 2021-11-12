@@ -18,11 +18,10 @@ import ControlPointDuplicateIcon from '@material-ui/icons/ControlPointDuplicate'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import SendIcon from '@material-ui/icons/Send';
 
 import useStyles from './styles';
 
-const RoundButton = ({ type, handleClick, loading, ...props }) => {
+const RoundButton = ({ type, handleClick, ...props }) => {
   const classes = useStyles();
 
   const roundButtonTypes = {
@@ -41,15 +40,10 @@ const RoundButton = ({ type, handleClick, loading, ...props }) => {
     avatar: <AccountCircleIcon />,
     expandLess: <ExpandLessIcon />,
     expandMore: <ExpandMoreIcon />,
-    send: <SendIcon />,
   };
 
   return (
-    <IconButton
-      onClick={handleClick}
-      disabled={loading}
-      className={`${classes.roundButton}`}
-    >
+    <IconButton onClick={handleClick} className={`${classes.roundButton}`}>
       {roundButtonTypes[type]}
     </IconButton>
   );

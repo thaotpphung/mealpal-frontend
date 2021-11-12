@@ -17,7 +17,6 @@ import {
   WEEK_UPDATE_BY_DAY_REQUEST,
   WEEK_UPDATE_BY_DAY_SUCCESS,
   WEEK_UPDATE_BY_DAY_FAIL,
-  WEEK_UPDATE_FRONTEND,
 } from '../constants/weekConstants';
 import cloneDeep from 'lodash/cloneDeep';
 
@@ -90,9 +89,6 @@ function weekDetailsReducer(
 
     case WEEK_DELETE_SUCCESS:
       return { ...state, loading: false, error: '' };
-
-    case WEEK_UPDATE_FRONTEND:
-      return { ...state, week: action.payload };
 
     case WEEK_CREATE_FAIL:
     case WEEK_DETAILS_FAIL:

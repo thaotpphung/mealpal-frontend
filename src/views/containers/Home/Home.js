@@ -22,11 +22,12 @@ const Home = () => {
       >
         {/* 1st Row - Short Intro */}
         <Grid item xs={12} sm={6} className={classes.rowCenter}>
-          <Typography variant="h3">Meal Planning Made Easy</Typography>
+          <Typography variant="h3">Meal Prep Made Easy</Typography>
           <Typography variant="h5">
             Track and shop for your meal plans in a breeze with MealPal
           </Typography>
           <BlockButton
+            width="fit-content"
             handleClick={() => {
               history.push({
                 pathname: '/auth',
