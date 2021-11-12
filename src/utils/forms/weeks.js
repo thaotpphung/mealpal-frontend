@@ -19,7 +19,7 @@ export const weekFormFields = [
   {
     name: 'weekDiet',
     label: 'Diet',
-    required: true,
+    required: false,
   },
   {
     name: 'planTag',

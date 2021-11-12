@@ -14,10 +14,10 @@ const WeekDetails = ({ week, recipes }) => {
       alignItems="stretch"
       spacing={7}
     >
-      <Grid item xs={12} sm={4} className={classes.leftColumn}>
+      <Grid item sm={12} md={4} className={classes.leftColumn}>
         <WeekCard week={week} />
       </Grid>
-      <Grid item xs={12} sm={8}>
+      <Grid item sm={12} md={8}>
         <DayList days={week.days} recipes={recipes} userId={week.userId} />
       </Grid>
     </Grid>

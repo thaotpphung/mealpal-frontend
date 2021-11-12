@@ -137,27 +137,31 @@ const WeekCard = ({ week }) => {
               <strong>Description: </strong>
               {week.weekDescription}
             </Typography>
-            <Grid container>
-              <Grid item xs={12} sm={6}>
+            <Grid container spacing={1} alignItems="stretch">
+              <Grid item sm={12} md={6}>
                 <Typography>
-                  <strong>Calories Goal: </strong>
+                  <strong>Calo Goal: </strong>
                   {week.caloGoal} kCal
                 </Typography>
-                <Typography>
-                  <strong>Diet: </strong>
-                  {week.weekDiet}
-                </Typography>
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <Typography>
-                  <strong>Plan Tag: </strong>
-                  {week.planTag}
-                </Typography>
+              <Grid item sm={12} md={6}>
                 <Typography component="span">
                   <strong>Creator: </strong>
                   <Link to={{ pathname: `/users/${week.userId._id}/profile` }}>
                     {week.userId.username}
                   </Link>
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Typography>
+                  <strong>Diet: </strong>
+                  {week.weekDiet}
+                </Typography>
+              </Grid>
+              <Grid>
+                <Typography>
+                  <strong>Plan Tag: </strong>
+                  {week.planTag}
                 </Typography>
               </Grid>
             </Grid>
