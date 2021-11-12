@@ -197,9 +197,7 @@ const RecipeCard = ({ recipe }) => {
                 required={field.required}
               />
             ))}
-            <BlockButton type="submit" fullWidth>
-              Submit
-            </BlockButton>
+            <BlockButton type="submit">Submit</BlockButton>
           </form>
         )}
       </CardContent>

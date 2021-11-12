@@ -12,13 +12,10 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  Typography,
 } from '@material-ui/core';
-import { Alert, AlertTitle } from '@material-ui/lab';
 import FaceIcon from '@material-ui/icons/Face';
 import LockIcon from '@material-ui/icons/Lock';
 import ListIcon from '@material-ui/icons/List';
-import EmailIcon from '@material-ui/icons/Email';
 import RestaurantMenuIcon from '@material-ui/icons/RestaurantMenu';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import Visibility from '@material-ui/icons/Visibility';
@@ -40,11 +37,7 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import {
-  getUser,
-  sendConfirmationEmail,
-  confirmEmail,
-} from '../../../api/index';
+import { getUser } from '../../../api/index';
 
 const ProfilePage = () => {
   const { loading, loggedInUser } = useSelector((state) => state.user);
@@ -55,37 +48,12 @@ const ProfilePage = () => {
   const localClasses = styles();
   const [isShowComponent, setIsShowComponent] = useState({ Profile: true });
   const [showPassword, toggleShowPassword] = useToggle(false);
-
-  const {
-    openEditMode: openEditProfile,
-    toggleOpenEditMode: toggleEditProfile,
-    handleCloseEditMode: handleCloseEditProfile,
-  } = useEditMode(() => {
-    resetProfileForm();
-  });
-
-  const {
-    openEditMode: openEditAvatar,
-    toggleOpenEditMode: toggleEditAvatar,
-    handleCloseEditMode: handleCloseEditAvatar,
-  } = useEditMode(() => {
-    handleCancelChangeAvatar();
-  });
-
-  const {
-    openEditMode: openEditPassword,
-    toggleOpenEditMode: toggleEditPassword,
-    handleCloseEditMode: handleCloseEditPassword,
-  } = useEditMode(() => {});
-
-  const {
-    openEditMode: openEditEmail,
-    toggleOpenEditMode: toggleEditEmail,
-    handleCloseEditMode: handleCloseEditEmail,
-  } = useEditMode(() => {
-    resetEmailForm();
-  });
-
+  const { openEditMode, toggleOpenEditMode, handleCloseEditMode } = useEditMode(
+    () => {
+      isShowComponent.Profile && resetProfileForm();
+      isShowComponent.Avatar && handleCancelChangeAvatar();
+    }
+  );
   const [currentUser, setCurrentUser] = useState({});
   const [loadingCurrentUser, setLoadingCurrentUser] = useState(false);
 
@@ -122,6 +90,7 @@ const ProfilePage = () => {
       avatar: loggedInUser?.avatar,
       caloGoal: loggedInUser?.caloGoal,
       preferredDiet: loggedInUser?.preferredDiet,
+      username: loggedInUser?.username,
     },
     () => {
       dispatch(updateUser(loggedInUser._id, userForm));
@@ -160,22 +129,6 @@ const ProfilePage = () => {
     validate
   );
 
-  const {
-    handleChange: handleChangeEmail,
-    handleSubmit: handleSubmitChangeEmail,
-    values: emailForm,
-    errors: emailErrors,
-    reset: resetEmailForm,
-  } = useForm(
-    {
-      email: loggedInUser?.email,
-    },
-    () => {
-      dispatch(updateUser(loggedInUser._id, emailForm));
-    },
-    validate
-  );
-
   const components = [
     {
       name: 'Profile',
@@ -183,16 +136,12 @@ const ProfilePage = () => {
       public: true,
     },
     {
-      name: 'Avatar',
-      icon: <FaceIcon />,
-    },
-    {
-      name: 'Password',
+      name: 'Security',
       icon: <LockIcon />,
     },
     {
-      name: 'Contact',
-      icon: <EmailIcon />,
+      name: 'Avatar',
+      icon: <FaceIcon />,
     },
   ];
 
@@ -227,19 +176,6 @@ const ProfilePage = () => {
     dispatch(updateUser(loggedInUser._id, { avatar: avatarUrl }));
   };
 
-  const [isSendingEmail, setIsSendingEmail] = useState(false);
-  const handleSendConfirmationEmail = () => {
-    setIsSendingEmail(true);
-    sendConfirmationEmail()
-      .then(({ data }) => {
-        dispatch(addAlertWithTimeout('success', data.message));
-      })
-      .catch((error) => {
-        dispatch(addAlertWithTimeout('error', error.response.data.message));
-      })
-      .finally(() => setIsSendingEmail(false));
-  };
-
   if (!loadingCurrentUser && !loading && Object.keys(currentUser).length > 0)
     return (
       <div className={localClasses.root}>
@@ -249,7 +185,7 @@ const ProfilePage = () => {
           alignItems="stretch"
           spacing={7}
         >
-          <Grid item sm={12} md={4}>
+          <Grid item xs={12} sm={4}>
             <Avatar className={localClasses.avatar} src={avatarUrl} />
             <Paper className={localClasses.paper}>
               <List component="nav">
@@ -296,280 +232,196 @@ const ProfilePage = () => {
               </List>
             </Paper>
           </Grid>
-          <Grid item sm={12} md={8} className={localClasses.rightColumn}>
-            {isShowComponent['Profile'] && (
-              <>
-                <CardHeader
-                  title={Object.keys(isShowComponent)[0]}
-                  useEditMode={true}
-                  useEditCondition={loggedInUser && userId === loggedInUser._id}
-                  showEdit={openEditProfile}
-                  handleOpenEdit={toggleEditProfile}
-                  handleCloseEdit={handleCloseEditProfile}
-                />
-                <Paper className={localClasses.form}>
-                  <form
-                    className={classes.formContainer}
-                    onSubmit={handleSubmit}
-                  >
-                    <Grid container spacing={2}>
-                      <Input
-                        name="username"
-                        label="Username"
-                        value={currentUser.username}
-                        disabled
-                      />
-                      {!openEditProfile ? (
-                        <Input
-                          label="Name"
-                          value={`${currentUser.firstName} ${currentUser.lastName}`}
-                          disabled
+          <Grid item xs={12} sm={8} className={localClasses.rightColumn}>
+            <CardHeader
+              title={Object.keys(isShowComponent)[0]}
+              action={
+                <>
+                  {loggedInUser && userId === loggedInUser._id && (
+                    <>
+                      {openEditMode ? (
+                        <RoundButton
+                          type={'cancel'}
+                          handleClick={handleCloseEditMode}
                         />
                       ) : (
-                        <>
-                          <Input
-                            name="firstName"
-                            label="First Name"
-                            required
-                            half
-                            value={userForm.firstName}
-                            handleChange={handleChange}
-                            errors={errors?.firstName}
-                            disabled={!openEditProfile}
-                          />
-                          <Input
-                            name="lastName"
-                            label="Last Name"
-                            required
-                            half
-                            value={userForm.lastName}
-                            handleChange={handleChange}
-                            errors={errors?.lastName}
-                            disabled={!openEditProfile}
-                          />
-                        </>
-                      )}
-                      <Input
-                        name="preferredDiet"
-                        label="Preferred Diet"
-                        value={
-                          !openEditProfile
-                            ? currentUser.preferredDiet
-                            : userForm.preferredDiet
-                        }
-                        handleChange={handleChange}
-                        errors={errors?.preferredDiet}
-                        disabled={!openEditProfile}
-                      />
-                      <Input
-                        name="caloGoal"
-                        label="Calories Goal"
-                        type="number"
-                        step={0.01}
-                        value={
-                          !openEditProfile
-                            ? currentUser.caloGoal
-                            : userForm.caloGoal
-                        }
-                        handleChange={handleChange}
-                        errors={errors?.caloGoal}
-                        disabled={!openEditProfile}
-                      />
-                      <Input
-                        name="bio"
-                        label="Bio"
-                        value={
-                          !openEditProfile ? currentUser.bio : userForm.bio
-                        }
-                        multiline
-                        rows={4}
-                        handleChange={handleChange}
-                        errors={errors?.bio}
-                        disabled={!openEditProfile}
-                      />
-                      {openEditProfile && (
-                        <BlockButton type="submit" fullWidth>
-                          Submit
-                        </BlockButton>
-                      )}
-                    </Grid>
-                  </form>
-                </Paper>
-              </>
-            )}
-
-            {isShowComponent['Password'] && (
-              <>
-                <CardHeader
-                  title={Object.keys(isShowComponent)[0]}
-                  useEditMode={true}
-                  useEditCondition={loggedInUser && userId === loggedInUser._id}
-                  showEdit={openEditPassword}
-                  handleOpenEdit={toggleEditPassword}
-                  handleCloseEdit={handleCloseEditPassword}
-                />
-                <Paper className={localClasses.form}>
-                  <form
-                    className={classes.formContainer}
-                    onSubmit={handleSubmitChangePassword}
-                  >
-                    <Grid container spacing={2}>
-                      {passwordFields.map((field, fieldIdx) => (
-                        <Input
-                          key={`password-field-${field.name}-${fieldIdx}`}
-                          name={field.name}
-                          label={field.label}
-                          value={passwordForm[field.name]}
-                          required
-                          disabled={!openEditPassword}
-                          handleChange={handleChangePassword}
-                          error={passwordErrors[field.name]}
-                          type={showPassword ? 'text' : 'password'}
-                          endAction={
-                            <IconButton onClick={toggleShowPassword}>
-                              {showPassword ? (
-                                <VisibilityOff />
-                              ) : (
-                                <Visibility />
-                              )}
-                            </IconButton>
-                          }
+                        <RoundButton
+                          type={'edit'}
+                          handleClick={toggleOpenEditMode}
                         />
-                      ))}
-                      {openEditPassword && (
-                        <BlockButton type="submit" fullWidth>
-                          Submit
-                        </BlockButton>
                       )}
-                    </Grid>
-                  </form>
-                </Paper>
-              </>
-            )}
-            {isShowComponent['Avatar'] && (
-              <>
-                <CardHeader
-                  title={Object.keys(isShowComponent)[0]}
-                  useEditMode={true}
-                  useEditCondition={loggedInUser && userId === loggedInUser._id}
-                  showEdit={openEditAvatar}
-                  handleOpenEdit={toggleEditAvatar}
-                  handleCloseEdit={handleCloseEditAvatar}
-                />
-                <Paper className={localClasses.form}>
-                  <form
-                    className={classes.formContainer}
-                    onSubmit={handleSubmitChangeAvatar}
-                  >
-                    <Grid container spacing={2}>
-                      {Object.entries(avatarOptions).map(
-                        ([key, value], idx) => (
-                          <Grid
-                            key={`avatar-options-${key}-${idx}`}
-                            item
-                            xs={12}
-                            sm={6}
-                          >
-                            <FormControl
-                              style={{ width: '100%' }}
-                              margin="dense"
-                              variant="outlined"
-                              size="small"
-                              fullWidth
-                              className={classes.formControl}
-                              disabled={!openEditAvatar}
-                            >
-                              <InputLabel id={`${key}-label-${idx}`}>
-                                {key}
-                              </InputLabel>
-                              <Select
-                                width={100}
-                                defaultValue=""
-                                labelId={`${key}-label`}
-                                value={avatarForm[key]}
-                                label={key}
-                                onChange={(e) =>
-                                  handleChangeAvatar(key, e.target.value)
-                                }
-                              >
-                                {value.map((item, itemIdx) => (
-                                  <MenuItem
-                                    key={`item-${item}-${itemIdx}`}
-                                    value={item}
-                                  >
-                                    {item}
-                                  </MenuItem>
-                                ))}
-                              </Select>
-                            </FormControl>
-                          </Grid>
-                        )
-                      )}
-                      {openEditAvatar && (
-                        <BlockButton type="submit" fullWidth>
-                          Submit
-                        </BlockButton>
-                      )}
-                    </Grid>
-                  </form>
-                </Paper>
-              </>
-            )}
-            {isShowComponent['Contact'] && (
-              <>
-                <CardHeader
-                  title={Object.keys(isShowComponent)[0]}
-                  useEditMode={true}
-                  useEditCondition={loggedInUser && userId === loggedInUser._id}
-                  showEdit={openEditEmail}
-                  handleOpenEdit={toggleEditEmail}
-                  handleCloseEdit={handleCloseEditEmail}
-                />
-                <Paper className={localClasses.form}>
-                  <div style={{ marginBottom: '10px' }}>
-                    {loggedInUser.isVerified ? (
-                      <Alert severity="success">
-                        <AlertTitle>Verified Email</AlertTitle>
-                      </Alert>
+                    </>
+                  )}
+                </>
+              }
+            />
+            <Paper className={localClasses.form}>
+              {isShowComponent.Profile && (
+                <form className={classes.formContainer} onSubmit={handleSubmit}>
+                  <Grid container spacing={2}>
+                    {loggedInUser && userId === loggedInUser._id && (
+                      <Input label="Email" value={currentUser.email} disabled />
+                    )}
+                    <Input
+                      name="username"
+                      label="Username"
+                      value={currentUser.username}
+                      disabled
+                    />
+                    {!openEditMode ? (
+                      <Input
+                        label="Name"
+                        value={`${currentUser.firstName} ${currentUser.lastName}`}
+                        disabled
+                      />
                     ) : (
                       <>
-                        <Alert severity="warning">
-                          <AlertTitle>Confirm your email</AlertTitle>
-                          <Typography>
-                            To enable emailing shopping list and forgot password
-                            reset token
-                          </Typography>
-                        </Alert>
-                        <BlockButton
-                          handleClick={handleSendConfirmationEmail}
-                          disabled={isSendingEmail}
-                        >
-                          {isSendingEmail ? <Spinner /> : 'Send Confirmation'}
-                        </BlockButton>
+                        <Input
+                          name="firstName"
+                          label="First Name"
+                          required
+                          half
+                          value={userForm.firstName}
+                          handleChange={handleChange}
+                          errors={errors?.firstName}
+                          disabled={!openEditMode}
+                        />
+                        <Input
+                          name="lastName"
+                          label="Last Name"
+                          required
+                          half
+                          value={userForm.lastName}
+                          handleChange={handleChange}
+                          errors={errors?.lastName}
+                          disabled={!openEditMode}
+                        />
                       </>
                     )}
-                  </div>
-
-                  <form onSubmit={handleSubmitChangeEmail}>
-                    {loggedInUser && userId === loggedInUser._id && (
+                    <Input
+                      name="preferredDiet"
+                      label="Preferred Diet"
+                      value={
+                        !openEditMode
+                          ? currentUser.preferredDiet
+                          : userForm.preferredDiet
+                      }
+                      handleChange={handleChange}
+                      errors={errors?.preferredDiet}
+                      disabled={!openEditMode}
+                    />
+                    <Input
+                      name="caloGoal"
+                      label="Calories Goal"
+                      type="number"
+                      step={0.01}
+                      value={
+                        !openEditMode ? currentUser.caloGoal : userForm.caloGoal
+                      }
+                      handleChange={handleChange}
+                      errors={errors?.caloGoal}
+                      disabled={!openEditMode}
+                    />
+                    <Input
+                      name="bio"
+                      label="Bio"
+                      value={!openEditMode ? currentUser.bio : userForm.bio}
+                      multiline
+                      rows={4}
+                      handleChange={handleChange}
+                      errors={errors?.bio}
+                      disabled={!openEditMode}
+                    />
+                    {openEditMode && (
+                      <BlockButton type="submit">Submit</BlockButton>
+                    )}
+                  </Grid>
+                </form>
+              )}
+              {isShowComponent.Security && (
+                <form
+                  className={classes.formContainer}
+                  onSubmit={handleSubmitChangePassword}
+                >
+                  <Grid container spacing={2}>
+                    {passwordFields.map((field, fieldIdx) => (
                       <Input
-                        name="email"
-                        label="Email"
-                        value={emailForm.email}
-                        disabled={!openEditEmail}
-                        handleChange={handleChangeEmail}
-                        error={emailErrors['email']}
+                        key={`password-field-${field.name}-${fieldIdx}`}
+                        name={field.name}
+                        label={field.label}
+                        value={passwordForm[field.name]}
+                        required
+                        disabled={!openEditMode}
+                        handleChange={handleChangePassword}
+                        error={passwordErrors[field.name]}
+                        type={showPassword ? 'text' : 'password'}
+                        endAction={
+                          <IconButton onClick={toggleShowPassword}>
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        }
                       />
+                    ))}
+                    {openEditMode && (
+                      <BlockButton type="submit">Submit</BlockButton>
                     )}
-                    {openEditEmail && (
-                      <BlockButton type="submit" fullWidth>
-                        Submit
-                      </BlockButton>
+                  </Grid>
+                </form>
+              )}
+              {isShowComponent.Avatar && (
+                <form
+                  className={classes.formContainer}
+                  onSubmit={handleSubmitChangeAvatar}
+                >
+                  <Grid container spacing={2}>
+                    {Object.entries(avatarOptions).map(([key, value], idx) => (
+                      <Grid
+                        key={`avatar-options-${key}-${idx}`}
+                        item
+                        xs={12}
+                        sm={6}
+                      >
+                        <FormControl
+                          style={{ width: '100%' }}
+                          margin="dense"
+                          variant="outlined"
+                          size="small"
+                          fullWidth
+                          className={classes.formControl}
+                          disabled={!openEditMode}
+                        >
+                          <InputLabel id={`${key}-label-${idx}`}>
+                            {key}
+                          </InputLabel>
+                          <Select
+                            width={100}
+                            defaultValue=""
+                            labelId={`${key}-label`}
+                            value={avatarForm[key]}
+                            label={key}
+                            onChange={(e) =>
+                              handleChangeAvatar(key, e.target.value)
+                            }
+                          >
+                            {value.map((item, itemIdx) => (
+                              <MenuItem
+                                key={`item-${item}-${itemIdx}`}
+                                value={item}
+                              >
+                                {item}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                    ))}
+                    {openEditMode && (
+                      <BlockButton type="submit">Submit</BlockButton>
                     )}
-                  </form>
-                </Paper>
-              </>
-            )}
+                  </Grid>
+                </form>
+              )}
+            </Paper>
           </Grid>
         </Grid>
       </div>
