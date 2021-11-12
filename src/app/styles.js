@@ -105,9 +105,8 @@ export default makeStyles((theme) => ({
       alignItems: 'center',
     },
     '& > button': {
-      width: '90px',
-      margin: theme.spacing(0.5),
-      [theme.breakpoints.down('md')]: {},
+      width: '95px',
+      margin: theme.spacing(1, 0.5),
     },
   },
   foodIcon: {

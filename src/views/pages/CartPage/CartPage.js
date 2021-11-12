@@ -10,6 +10,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Collapse from '@material-ui/core/Collapse';
 import Checkbox from '@material-ui/core/Checkbox';
 import Paper from '@material-ui/core/Paper';
+import Spinner from '../../common/Spinner/Spinner';
 import CardHeader from '../../common/CardHeader/CardHeader';
 import CardBody from '../../common/CardBody/CardBody';
 import EmptyMessage from '../../common/EmptyMessage/EmptyMessage';
@@ -49,18 +50,18 @@ const CartPage = () => {
     dispatch(clearCart());
   };
 
-  const [sending, setSending] = useState(false);
+  const [isSending, setIsSending] = useState(false);
   const handleSendEmail = () => {
     if (loggedInUser.isVerified) {
-      setSending(true);
+      setIsSending(true);
       sendCart(loggedInUser._id, cartForm)
         .then(({ data }) => {
-          console.log(data);
+          dispatch(addAlertWithTimeout('success', data.message));
         })
         .catch((error) => {
           dispatch(addAlertWithTimeout('error', error.response.data.message));
         })
-        .finally(() => setSending(false));
+        .finally(() => setIsSending(false));
     } else {
       dispatch(
         addAlertWithTimeout(
@@ -81,12 +82,17 @@ const CartPage = () => {
 
   return (
     <>
+      {isSending && <Spinner />}
       <Paper className={localClasses.root}>
         <CardHeader
           title="Shopping Cart"
           action={
             <>
-              <RoundButton type="send" handleClick={handleSendEmail} />
+              <RoundButton
+                type="send"
+                handleClick={handleSendEmail}
+                loading={isSending}
+              />
               <RoundButton type="delete" handleClick={handleClickDeleteCart} />
               {openEditMode ? (
                 <>

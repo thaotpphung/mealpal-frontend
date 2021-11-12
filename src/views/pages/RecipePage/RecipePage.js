@@ -3,11 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { Grid, Button } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
-import LibraryAddIcon from '@material-ui/icons/LibraryAdd';
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-import ExploreOutlinedIcon from '@material-ui/icons/ExploreOutlined';
 import AddBoxOutlinedIcon from '@material-ui/icons/AddBoxOutlined';
-import AddIcon from '@material-ui/icons/Add';
+import ExploreOutlinedIcon from '@material-ui/icons/ExploreOutlined';
 import useStyles from '../../../app/styles';
 import RecipeCard from '../../components/RecipeCard/RecipeCard';
 import PopupDialog from '../../common/PopupDialog/PopupDialog';
@@ -101,10 +98,7 @@ const RecipePage = () => {
             <div className={classes.utilsFields}>
               {recipeFormFields.map((field, fieldIdx) => (
                 <Input
-                  classes={{
-                    root: classes.utilField,
-                    // input: classes.utilField,
-                  }}
+                  className={classes.utilField}
                   key={`recipe-utils-${field.name}-${fieldIdx}`}
                   name={field.name}
                   label={field.label}
@@ -116,21 +110,12 @@ const RecipePage = () => {
           </Grid>
           <Grid item sm={12} md={12} lg={3}>
             <div className={classes.utilsActions}>
-              {/* <Button
-                startIcon={<SearchIcon />}
-                variant="outlined"
-                color="primary"
-                onClick={() => handleSubmitFilter(currentCount)}
-              >
-                Search
-              </Button> */}
-
               <Button
                 variant="outlined"
                 color="primary"
                 onClick={() => handleSubmitFilter(currentCount)}
               >
-                <SearchIcon /> Search
+                <SearchIcon fontSize="small" /> Search
               </Button>
               {loggedInUser && (
                 <>
@@ -147,54 +132,13 @@ const RecipePage = () => {
                     color="primary"
                     onClick={handleChangeMode}
                   >
-                    Explore
+                    <ExploreOutlinedIcon fontSize="small" /> Explore
                   </Button>
                 </>
               )}
             </div>
           </Grid>
         </Grid>
-
-        {/* <div className={classes.utilsBar}>
-          <div className={classes.utilsFields}>
-            {recipeFormFields.map((field, fieldIdx) => (
-              <Input
-                key={`recipe-utils-${field.name}-${fieldIdx}`}
-                name={field.name}
-                label={field.label}
-                handleChange={handleChangeQueryField}
-                type={field.type ? field.type : 'text'}
-              />
-            ))}
-          </div>
-          <div className={classes.utilsActions}>
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={() => handleSubmitFilter(currentCount)}
-            >
-              <SearchIcon /> Search
-            </Button>
-            {loggedInUser && (
-              <>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  onClick={() => toggleOpenEditMode(true)}
-                >
-                  + Recipe
-                </Button>
-                <Button
-                  variant={isInExploreMode ? 'contained' : 'outlined'}
-                  color="primary"
-                  onClick={handleChangeMode}
-                >
-                  Explore
-                </Button>
-              </>
-            )}
-          </div>
-        </div> */}
 
         {recipes.length === 0 ? (
           <EmptyMessage />
