@@ -24,9 +24,7 @@ const NotFoundPage = () => {
         <Typography variant="h5">
           The page you&apos;re looking for was not found
         </Typography>
-        <BlockButton handleClick={goBack} width="fit-content">
-          Go Back
-        </BlockButton>
+        <BlockButton handleClick={goBack}>Go Back</BlockButton>
       </div>
     </div>
   );

@@ -32,6 +32,7 @@ const DayList = ({ days, recipes, userId }) => {
   const [isInEditDayMode, setIsInEditDayMode] = useState([]);
   const defaultEditDayMode = new Array(days.length).fill(false);
   const [dayForm, setDayForm] = useState({});
+  const [daysWithCalories, setDaysWithCalories] = useState([]);
   const extractedFieldsForAutoComplete = recipes.map((recipe) => {
     return {
       recipeName: recipe.recipeName,
@@ -39,6 +40,22 @@ const DayList = ({ days, recipes, userId }) => {
       calories: recipe.calories,
     };
   });
+
+  useEffect(() => {
+    let updatedDays = cloneDeep(days);
+    updatedDays.forEach((day, dayIdx) => {
+      let dayTotalCalories = 0;
+      day.meals.forEach((meal, mealIx) => {
+        let mealTotalCalories = meal.food.reduce((acc, recipe) => {
+          return acc + recipe.calories;
+        }, 0);
+        meal.calories = mealTotalCalories;
+        dayTotalCalories += mealTotalCalories;
+      });
+      day.calories = dayTotalCalories;
+    });
+    setDaysWithCalories(updatedDays);
+  }, []);
 
   const initialRecipe = {
     recipeName: '',
@@ -76,7 +93,7 @@ const DayList = ({ days, recipes, userId }) => {
   const handleEnableEditDayMode = (dayIdx) => {
     const modes = [...defaultEditDayMode];
     modes[dayIdx] = true;
-    const day = { ...days[dayIdx] };
+    const day = { ...daysWithCalories[dayIdx] };
     if (day.meals.length === 0) {
       day.meals[0] = {
         mealName: '[PlaceHolder]',
@@ -92,7 +109,7 @@ const DayList = ({ days, recipes, userId }) => {
   };
   const handleCancelEditDayMode = (dayIdx) => {
     const modes = [...defaultEditDayMode];
-    setDayForm(days[dayIdx]);
+    setDayForm(daysWithCalories[dayIdx]);
     setIsInEditDayMode(modes);
   };
   // update week by day
@@ -133,22 +150,29 @@ const DayList = ({ days, recipes, userId }) => {
     setDayForm(updatedDays);
   };
   // food
-  const handleChangeFood = (mealIdx, recipeIdx, newValue) => {
-    const updatedDays = cloneDeep(dayForm);
-    updatedDays.meals[mealIdx].food[recipeIdx] = newValue;
-    const foodTotalCalories = updatedDays.meals[mealIdx].food.reduce(function (
-      acc,
-      recipe
-    ) {
-      return acc + recipe.calories;
-    },
-    0);
-    updatedDays.meals[mealIdx].calories = foodTotalCalories;
-    const mealTotalCalories = updatedDays.meals.reduce(function (acc, meal) {
+
+  const calculateDayCalories = (day) => {
+    const dayTotalCalories = day.meals.reduce(function (acc, meal) {
       return acc + meal.calories;
     }, 0);
-    updatedDays.calories = mealTotalCalories;
-    setDayForm(updatedDays);
+    return Number.isNaN(dayTotalCalories) ? 0 : dayTotalCalories;
+  };
+
+  const calculateMealCalories = (meal) => {
+    const mealTotalCalories = meal.food.reduce(function (acc, recipe) {
+      return acc + recipe.calories;
+    }, 0);
+    return Number.isNaN(mealTotalCalories) ? 0 : mealTotalCalories;
+  };
+
+  const handleChangeFood = (mealIdx, recipeIdx, newValue) => {
+    const updatedDay = cloneDeep(dayForm);
+    updatedDay.meals[mealIdx].food[recipeIdx] = newValue;
+    updatedDay.meals[mealIdx].calories = calculateMealCalories(
+      updatedDay.meals[mealIdx]
+    );
+    updatedDay.calories = calculateDayCalories(updatedDay);
+    setDayForm(updatedDay);
   };
   const handleDeleteFood = (mealIdx, recipeIdx, recipe) => {
     const updatedDays = cloneDeep(dayForm);
@@ -202,7 +226,7 @@ const DayList = ({ days, recipes, userId }) => {
         open={openNewRecipeDialog}
         handleClose={handleCloseNewRecipeDialog}
       />
-      {days.map((day, dayIdx) => (
+      {daysWithCalories.map((day, dayIdx) => (
         <Paper key={`day-card-${day._id}-${dayIdx}`}>
           <CardHeader
             title={`${day.dayName}`}
@@ -213,7 +237,9 @@ const DayList = ({ days, recipes, userId }) => {
                     <RoundButton
                       type="shoppingCart"
                       handleClick={() =>
-                        dispatch(addToCartByDay(days[dayIdx], history))
+                        dispatch(
+                          addToCartByDay(daysWithCalories[dayIdx], history)
+                        )
                       }
                     />
                     {!!weekId && (
@@ -263,7 +289,7 @@ const DayList = ({ days, recipes, userId }) => {
                         <Typography>
                           <strong>{meal.mealName}</strong>
                         </Typography>
-                        <Typography>{meal.calories.toFixed(2)}</Typography>
+                        <Typography>{meal.calories}</Typography>
                       </div>
                       <div className={classes.itemContent}>
                         <ul className={localClasses.menuContent}>
@@ -300,7 +326,7 @@ const DayList = ({ days, recipes, userId }) => {
                             handleClick={() =>
                               dispatch(
                                 addToCartByMeal(
-                                  days[dayIdx].meals[mealIdx],
+                                  daysWithCalories[dayIdx].meals[mealIdx],
                                   history
                                 )
                               )
@@ -312,7 +338,7 @@ const DayList = ({ days, recipes, userId }) => {
                   );
                 })}
                 <Typography className={localClasses.total}>
-                  <strong>Total:</strong> {day.calories.toFixed(2)} kCal
+                  <strong>Total:</strong> {day.calories} kCal
                 </Typography>
               </>
             )}
@@ -345,9 +371,7 @@ const DayList = ({ days, recipes, userId }) => {
                                       error={errors[`meal${mealIdx}`]}
                                       required
                                     />
-                                    <Typography>
-                                      {meal.calories.toFixed(2)}
-                                    </Typography>
+                                    <Typography>{meal.calories}</Typography>
                                   </div>
                                   <div className={classes.itemContent}>
                                     <ul className={localClasses.menuContent}>
@@ -423,7 +447,7 @@ const DayList = ({ days, recipes, userId }) => {
                   </Droppable>
                 </DragDropContext>
                 <Typography className={localClasses.total}>
-                  <strong>Total:</strong> {dayForm.calories.toFixed(2)} kCal
+                  <strong>Total:</strong> {dayForm.calories} kCal
                 </Typography>
               </>
             )}

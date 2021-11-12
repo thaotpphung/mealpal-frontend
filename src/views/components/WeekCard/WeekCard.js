@@ -138,7 +138,7 @@ const WeekCard = ({ week }) => {
               {week.weekDescription}
             </Typography>
             <Grid container>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} lg={6}>
                 <Typography>
                   <strong>Calories Goal: </strong>
                   {week.caloGoal} kCal
@@ -148,7 +148,7 @@ const WeekCard = ({ week }) => {
                   {week.weekDiet}
                 </Typography>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} lg={6}>
                 <Typography>
                   <strong>Plan Tag: </strong>
                   {week.planTag}
@@ -178,7 +178,9 @@ const WeekCard = ({ week }) => {
                 step={field.step}
               />
             ))}
-            <BlockButton type="submit">Submit</BlockButton>
+            <BlockButton type="submit" fullWidth>
+              Submit
+            </BlockButton>
           </form>
         )}
       </CardContent>

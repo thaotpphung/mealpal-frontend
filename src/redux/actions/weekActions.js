@@ -17,6 +17,7 @@ import {
   WEEK_UPDATE_BY_DAY_REQUEST,
   WEEK_UPDATE_BY_DAY_SUCCESS,
   WEEK_UPDATE_BY_DAY_FAIL,
+  WEEK_UPDATE_FRONTEND,
 } from '../constants/weekConstants';
 import { addAlertWithTimeout } from '../actions/alertActions';
 import * as api from '../../api/index';
@@ -28,6 +29,7 @@ export {
   updateWeek,
   getWeek,
   updateWeekByDay,
+  updateWeekFrontend,
 };
 
 // week list
@@ -114,4 +116,8 @@ const updateWeekByDay = (weekId, dayIdx, day) => async (dispatch) => {
     });
     dispatch(addAlertWithTimeout('error', error?.response.data.message));
   }
+};
+
+const updateWeekFrontend = (weekId, week) => async (dispatch) => {
+  dispatch({ type: WEEK_UPDATE_FRONTEND, payload: week });
 };

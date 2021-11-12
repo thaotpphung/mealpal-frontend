@@ -1,6 +1,9 @@
 import { makeStyles } from '@material-ui/core/styles';
 export default makeStyles((theme) => ({
   root: {
+    // minWidth: '850px',
+  },
+  container: {
     padding: theme.spacing(5, 10),
     minHeight: '100vh',
     '@global': {
@@ -84,17 +87,26 @@ export default makeStyles((theme) => ({
     backgroundColor: 'white',
   },
   utilsFields: {
-    flex: '1 1 auto',
     display: 'flex',
-    flexDirection: 'row',
+    flexWrap: 'wrap',
     '& > div': {
-      margin: theme.spacing(0, 3),
+      flex: '1 1 auto',
+      marginRight: theme.spacing(2),
+      width: '110px',
     },
   },
   utilsActions: {
-    flex: '0 0 auto',
+    display: 'flex',
+    justifyContent: 'end',
+    marginRight: theme.spacing(1),
+    alignItems: 'center',
+    '& div': {
+      display: 'flex',
+      alignItems: 'center',
+    },
     '& > button': {
-      margin: theme.spacing(1),
+      width: '95px',
+      margin: theme.spacing(1, 0.5),
     },
   },
   foodIcon: {
