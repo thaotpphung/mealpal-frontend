@@ -90,6 +90,57 @@ const WeekPage = () => {
   if (!loading && weeks.length >= 0)
     return (
       <div>
+        <Grid
+          container
+          alignItems="stretch"
+          spacing={3}
+          className={classes.listContainer}
+        >
+          <Grid item xs={12} sm={6} md={8}>
+            <div className={classes.utilsFields}>
+              {weekFormFields.map((field, fieldIdx) => (
+                <Input
+                  key={`weekfieldform-${field.name}-${fieldIdx}`}
+                  name={field.name}
+                  label={field.label}
+                  handleChange={handleChangeQueryField}
+                  type={field.type ? field.type : 'text'}
+                  step={field.step}
+                />
+              ))}
+            </div>
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <div className={classes.utilsActions}>
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={() => handleSubmitFilter(currentCount)}
+              >
+                <SearchIcon /> Search
+              </Button>
+              {loggedInUser && (
+                <>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={toggleOpenEditMode}
+                  >
+                    + Week
+                  </Button>
+                  <Button
+                    variant={isInExploreMode ? 'contained' : 'outlined'}
+                    color="primary"
+                    onClick={handleChangeMode}
+                  >
+                    Explore
+                  </Button>
+                </>
+              )}
+            </div>
+          </Grid>
+        </Grid>
+
         <div className={classes.utilsBar}>
           <div className={classes.utilsFields}>
             {weekFormFields.map((field, fieldIdx) => (
@@ -131,6 +182,7 @@ const WeekPage = () => {
             )}
           </div>
         </div>
+
         {weeks.length === 0 ? (
           <EmptyMessage />
         ) : (

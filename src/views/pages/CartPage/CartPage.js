@@ -19,6 +19,7 @@ import { addAlertWithTimeout } from '../../../redux/actions/alertActions';
 import useEditMode from '../../../utils/hooks/useEditMode';
 import useToggle from '../../../utils/hooks/useToggle';
 import { formatMixedNumber } from '../../../utils/mixedNumber';
+import { sendCart } from '../../../api/index';
 
 const CartPage = () => {
   const localClasses = useStyles();
@@ -48,8 +49,19 @@ const CartPage = () => {
     dispatch(clearCart());
   };
 
+  const [sending, setSending] = useState(false);
   const handleSendEmail = () => {
-    if (!loggedInUser.isVerified) {
+    if (loggedInUser.isVerified) {
+      setSending(true);
+      sendCart(loggedInUser._id, cartForm)
+        .then(({ data }) => {
+          console.log(data);
+        })
+        .catch((error) => {
+          dispatch(addAlertWithTimeout('error', error.response.data.message));
+        })
+        .finally(() => setSending(false));
+    } else {
       dispatch(
         addAlertWithTimeout(
           'error',

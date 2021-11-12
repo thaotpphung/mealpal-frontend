@@ -13,6 +13,10 @@ API.interceptors.request.use((req) => {
   return req;
 });
 
+// cart
+export const sendCart = (userId, cart) =>
+  API.post(`api/users/${userId}/cart`, cart);
+
 // auth
 export const signin = (formData) => API.post('api/users/signin', formData);
 export const register = (formData) => API.post('api/users/register', formData);
