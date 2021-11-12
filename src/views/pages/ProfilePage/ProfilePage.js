@@ -249,7 +249,7 @@ const ProfilePage = () => {
           alignItems="stretch"
           spacing={7}
         >
-          <Grid item xs={12} sm={4}>
+          <Grid item sm={12} md={4}>
             <Avatar className={localClasses.avatar} src={avatarUrl} />
             <Paper className={localClasses.paper}>
               <List component="nav">
@@ -296,7 +296,7 @@ const ProfilePage = () => {
               </List>
             </Paper>
           </Grid>
-          <Grid item xs={12} sm={8} className={localClasses.rightColumn}>
+          <Grid item sm={12} md={8} className={localClasses.rightColumn}>
             {isShowComponent['Profile'] && (
               <>
                 <CardHeader

@@ -22,7 +22,7 @@ import SendIcon from '@material-ui/icons/Send';
 
 import useStyles from './styles';
 
-const RoundButton = ({ type, handleClick, ...props }) => {
+const RoundButton = ({ type, handleClick, loading, ...props }) => {
   const classes = useStyles();
 
   const roundButtonTypes = {
@@ -45,7 +45,11 @@ const RoundButton = ({ type, handleClick, ...props }) => {
   };
 
   return (
-    <IconButton onClick={handleClick} className={`${classes.roundButton}`}>
+    <IconButton
+      onClick={handleClick}
+      disabled={loading}
+      className={`${classes.roundButton}`}
+    >
       {roundButtonTypes[type]}
     </IconButton>
   );
