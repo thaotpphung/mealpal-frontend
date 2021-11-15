@@ -19,10 +19,12 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import SendIcon from '@material-ui/icons/Send';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import BookmarkIcon from '@material-ui/icons/Bookmarks';
 
 import useStyles from './styles';
 
-const RoundButton = ({ type, handleClick, ...props }) => {
+const RoundButton = ({ type, handleClick, loading, ...props }) => {
   const classes = useStyles();
 
   const roundButtonTypes = {
@@ -42,10 +44,17 @@ const RoundButton = ({ type, handleClick, ...props }) => {
     expandLess: <ExpandLessIcon />,
     expandMore: <ExpandMoreIcon />,
     send: <SendIcon />,
+    more: <MoreVertIcon />,
+    save: <BookmarkIcon />,
   };
 
   return (
-    <IconButton onClick={handleClick} className={`${classes.roundButton}`}>
+    <IconButton
+      {...props}
+      onClick={handleClick}
+      disabled={loading}
+      className={`${classes.roundButton}`}
+    >
       {roundButtonTypes[type]}
     </IconButton>
   );

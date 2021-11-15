@@ -11,6 +11,8 @@ import {
   Avatar,
   Button,
   Typography,
+  Menu,
+  MenuItem,
 } from '@material-ui/core';
 import FileInputComponent from 'react-file-input-previews-base64';
 import Input from '../../common/Input/Input';
@@ -22,6 +24,7 @@ import useForm from '../../../utils/hooks/useForm';
 import {
   updateRecipe,
   deleteRecipe,
+  createRecipe,
 } from '../../../redux/actions/recipeActions';
 import { addToCartByRecipe } from '../../../redux/actions/cartActions';
 import {
@@ -62,9 +65,64 @@ const RecipeCard = ({ recipe }) => {
     dispatch(deleteRecipe(recipeId, history));
   };
 
-  const handleClickShoppingCart = () => {
-    dispatch(addToCartByRecipe(recipe, history));
+  const handleDuplicateRecipe = (recipeId) => {
+    dispatch(createRecipe({ recipeId }, history));
   };
+
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
+  const mobileMenuId = 'primary-menu-mobile';
+  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  const handleMobileMenuClose = () => {
+    setMobileMoreAnchorEl(null);
+  };
+
+  const handleMobileMenuOpen = (event) => {
+    setMobileMoreAnchorEl(event.currentTarget);
+  };
+
+  const renderMobileMenu = (
+    <Menu
+      anchorEl={mobileMoreAnchorEl}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      id={mobileMenuId}
+      keepMounted
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      open={isMobileMenuOpen}
+      onClose={handleMobileMenuClose}
+    >
+      {recipe?.userId._id === loggedInUser._id ? (
+        [
+          <MenuItem
+            key="addCart"
+            onClick={() => {
+              dispatch(addToCartByRecipe(recipe, history));
+            }}
+          >
+            <RoundButton type="shoppingCart" />
+            <Typography>Add To Cart</Typography>
+          </MenuItem>,
+          <MenuItem
+            key="deleteCart"
+            onClick={() => {
+              handleDeleteRecipe(recipe._id);
+            }}
+          >
+            <RoundButton type="delete" />
+            <Typography>Delete</Typography>
+          </MenuItem>,
+        ]
+      ) : (
+        <MenuItem
+          key="saveWeek"
+          onClick={() => handleDuplicateRecipe(recipeId)}
+        >
+          <RoundButton type="save" />
+          <Typography>Save</Typography>
+        </MenuItem>
+      )}
+    </Menu>
+  );
 
   return (
     <Card sx={{ maxWidth: 345 }}>
@@ -78,39 +136,36 @@ const RecipeCard = ({ recipe }) => {
         }
         action={
           <>
-            {loggedInUser && (
+            {/* single recipe view*/}
+            {loggedInUser && recipeId && (
               <>
-                {recipe.userId._id === loggedInUser._id ? (
+                {recipe.userId._id === loggedInUser._id && (
                   <>
-                    {!!recipeId && (
-                      <>
+                    <>
+                      {openEditMode ? (
                         <RoundButton
-                          type="shoppingCart"
-                          handleClick={handleClickShoppingCart}
+                          type={'cancel'}
+                          handleClick={handleCloseEditMode}
                         />
+                      ) : (
                         <RoundButton
-                          type="delete"
-                          handleClick={() => handleDeleteRecipe(recipe._id)}
+                          type={'edit'}
+                          handleClick={toggleOpenEditMode}
                         />
-                        {openEditMode ? (
-                          <RoundButton
-                            type={'cancel'}
-                            handleClick={handleCloseEditMode}
-                          />
-                        ) : (
-                          <RoundButton
-                            type={'edit'}
-                            handleClick={toggleOpenEditMode}
-                          />
-                        )}
-                      </>
-                    )}
+                      )}
+                    </>
                   </>
-                ) : (
-                  <></>
                 )}
+                <RoundButton
+                  type="more"
+                  aria-label="show more"
+                  aria-controls={mobileMenuId}
+                  aria-haspopup="true"
+                  handleClick={handleMobileMenuOpen}
+                />
               </>
             )}
+            {renderMobileMenu}
           </>
         }
         title={
@@ -133,28 +188,38 @@ const RecipeCard = ({ recipe }) => {
       <CardContent>
         {!openEditMode && (
           <div>
-            <Typography>
-              <strong>Description:</strong> {recipe?.recipeDescription}
-            </Typography>
-            <Grid container>
-              <Grid item xs={12} sm={6}>
+            <Grid container spacing={1} alignItems="stretch">
+              <Grid item xs={12} sm={12}>
+                <Typography>
+                  <strong>Description:</strong> {recipe?.recipeDescription}
+                </Typography>
+              </Grid>
+              <Grid item xs={12} md={6}>
                 <Typography>
                   <strong>Calories:</strong> {recipe?.calories} kCal
                 </Typography>
+              </Grid>
+              <Grid item xs={12} md={6}>
                 <Typography>
                   <strong>Servings:</strong> {recipe?.servings}
                 </Typography>
+              </Grid>
+              <Grid item xs={12} md={6}>
                 <Typography>
                   <strong>Diet:</strong> {recipe?.recipeDiet}
                 </Typography>
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <Typography>
-                  <strong>Time (mins):</strong> {recipe?.time}
-                </Typography>
+              <Grid item xs={12} md={6}>
                 <Typography>
                   <strong>Serving Size:</strong> {recipe?.servingSize}
                 </Typography>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Typography>
+                  <strong>Time (mins):</strong> {recipe?.time}
+                </Typography>
+              </Grid>
+              <Grid item xs={12} md={6}>
                 <Typography component="span">
                   <strong>Creator: </strong>
                   <Link

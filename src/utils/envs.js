@@ -1,11 +1,14 @@
 export const envVars = {
   local: {
+    ENV: 'local',
     BASE_URL: 'http://localhost:5000/',
   },
   dev: {
+    ENV: 'develop',
     BASE_URL: 'https://mealpal-develop.herokuapp.com/',
   },
   prod: {
+    ENV: 'production',
     BASE_URL: 'https://mealpal-thao.herokuapp.com/',
   },
 };

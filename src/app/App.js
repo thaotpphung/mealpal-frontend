@@ -27,45 +27,56 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Navbar />
       <div className={classes.root}>
-        <FlashMessage />
-        <Switch>
-          <Route path="/" exact component={HomePage} />
-          {['/users/:userId/weeks', '/weeks'].map((route) => (
-            <Route key={route} path={route} exact component={WeekPage} />
-          ))}
-          {['/users/:userId/weeks/:weekId', '/weeks/:weekId'].map((route) => (
-            <Route key={route} path={route} exact component={WeekDetailsPage} />
-          ))}
-          {['/users/:userId/recipes', '/recipes'].map((route) => (
-            <Route key={route} path={route} exact component={RecipePage} />
-          ))}
-          {['/users/:userId/recipes/:recipeId', '/recipes/:recipeId'].map(
-            (route) => (
+        <Navbar />
+        <div className={classes.container}>
+          <FlashMessage />
+          <Switch>
+            <Route path="/" exact component={HomePage} />
+            {['/users/:userId/weeks', '/weeks'].map((route) => (
+              <Route key={route} path={route} exact component={WeekPage} />
+            ))}
+            {['/users/:userId/weeks/:weekId', '/weeks/:weekId'].map((route) => (
               <Route
                 key={route}
                 path={route}
                 exact
-                component={RecipeDetailsPage}
+                component={WeekDetailsPage}
               />
-            )
-          )}
-          <Route path="/users/:userId/profile" exact component={ProfilePage} />
-          {loggedInUser && <Route path="/cart" exact component={CartPage} />}
-          <Route path="/auth" exact component={AuthPage} />
-          {loggedInUser && (
+            ))}
+            {['/users/:userId/recipes', '/recipes'].map((route) => (
+              <Route key={route} path={route} exact component={RecipePage} />
+            ))}
+            {['/users/:userId/recipes/:recipeId', '/recipes/:recipeId'].map(
+              (route) => (
+                <Route
+                  key={route}
+                  path={route}
+                  exact
+                  component={RecipeDetailsPage}
+                />
+              )
+            )}
             <Route
-              path="/users/:userId/success"
+              path="/users/:userId/profile"
               exact
-              component={SuccessPage}
+              component={ProfilePage}
             />
-          )}
-          <Route path={'/404'} exact component={NotFoundPage} />
-          <Route component={NotFoundPage} />
-        </Switch>
+            {loggedInUser && <Route path="/cart" exact component={CartPage} />}
+            <Route path="/auth" exact component={AuthPage} />
+            {loggedInUser && (
+              <Route
+                path="/users/:userId/success"
+                exact
+                component={SuccessPage}
+              />
+            )}
+            <Route path={'/404'} exact component={NotFoundPage} />
+            <Route component={NotFoundPage} />
+          </Switch>
+        </div>
+        <Footer />
       </div>
-      <Footer />
     </ThemeProvider>
   );
 }
