@@ -125,7 +125,7 @@ const RecipeCard = ({ recipe }) => {
   );
 
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card>
       <CardHeader
         avatar={
           <Avatar

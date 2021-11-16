@@ -1,26 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  Grid,
-  Button,
-  Typography,
-  Menu,
-  MenuItem,
-  IconButton,
-} from '@material-ui/core';
+import { Grid, Button } from '@material-ui/core';
 import useStyles from '../../../app/styles';
 import { useHistory, useParams } from 'react-router-dom';
 import WeekCard from '../../components/WeekCard/WeekCard';
 import { getAllWeeks, createWeek } from '../../../redux/actions/weekActions';
 import SearchIcon from '@material-ui/icons/Search';
 import ExploreIcon from '@material-ui/icons/Explore';
-import ExploreOffIcon from '@material-ui/icons/ExploreOff';
 import AddBoxOutlinedIcon from '@material-ui/icons/AddBoxOutlined';
 import Input from '../../common/Input/Input';
 import Spinner from '../../common/Spinner/Spinner';
 import PageNav from '../../common/PageNav/PageNav';
-import RoundButton from '../../common/Buttons/RoundButton';
-
 import EmptyMessage from '../../common/EmptyMessage/EmptyMessage';
 import PopupDialog from '../../common/PopupDialog/PopupDialog';
 import usePagination from '../../../utils/hooks/usePagination';

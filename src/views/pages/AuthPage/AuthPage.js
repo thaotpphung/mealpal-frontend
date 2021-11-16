@@ -74,7 +74,7 @@ const AuthPage = () => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main">
       <Paper className={localClasses.paper} elevation={3}>
         <div>{loading && <Spinner />}</div>
         <Avatar className={localClasses.avatar}>

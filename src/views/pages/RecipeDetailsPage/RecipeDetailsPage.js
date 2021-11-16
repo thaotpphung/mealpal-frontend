@@ -33,10 +33,10 @@ const RecipeDetailsPage = () => {
           alignItems="stretch"
           spacing={7}
         >
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} md={5} lg={4}>
             <RecipeCard recipe={recipe} />
           </Grid>
-          <Grid item xs={12} sm={8} className={classes.rightColumn}>
+          <Grid item xs={12} md={7} lg={8} className={classes.rightColumn}>
             <IngredientCard recipe={recipe} />
             <InstructionCard recipe={recipe} />
           </Grid>

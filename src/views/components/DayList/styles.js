@@ -20,6 +20,10 @@ const styles = makeStyles((theme) => ({
   foodIcon: {
     margin: theme.spacing(2, 1, 0, 0),
   },
+  rowAction: {
+    display: 'flex',
+    justifyContent: 'end',
+  },
 }));
 
 export { styles };

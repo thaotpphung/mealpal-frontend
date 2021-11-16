@@ -198,10 +198,6 @@ const DayList = ({ days, recipes, userId }) => {
     setDayForm(updatedDays);
   };
 
-  const handleAddToCartByMeal = () => {};
-
-  const handleAddToCartByDay = () => {};
-
   return (
     <div>
       <PopupDialog
@@ -291,17 +287,17 @@ const DayList = ({ days, recipes, userId }) => {
                   return (
                     <Grid
                       container
-                      spacing={1}
+                      spacing={2}
                       alignItems="stretch"
                       key={`meal-in-day-card-${meal._id}-${dayIdx}-${mealIdx}}`}
                     >
-                      <Grid item xs={3}>
+                      <Grid item xs={4} sm={3}>
                         <Typography>
                           <strong>{meal.mealName}</strong>
                         </Typography>
-                        <Typography>{meal.calories}</Typography>
+                        <Typography>{meal.calories} kCal</Typography>
                       </Grid>
-                      <Grid item xs={7}>
+                      <Grid item xs={6} sm={6}>
                         <ul className={localClasses.menuContent}>
                           {!isInEditDayMode[dayIdx] && (
                             <>
@@ -330,7 +326,12 @@ const DayList = ({ days, recipes, userId }) => {
                         </ul>
                       </Grid>
                       {!!loggedInUser && loggedInUser._id === userId._id && (
-                        <Grid item xs={2}>
+                        <Grid
+                          item
+                          xs={2}
+                          sm={3}
+                          className={localClasses.rowAction}
+                        >
                           <RoundButton
                             type="shoppingCart"
                             handleClick={() => {
@@ -382,7 +383,9 @@ const DayList = ({ days, recipes, userId }) => {
                                       error={errors[`meal${mealIdx}`]}
                                       required
                                     />
-                                    <Typography>{meal.calories}</Typography>
+                                    <Typography>
+                                      {meal.calories} kCal
+                                    </Typography>
                                   </Grid>
                                   <Grid item xs={12} sm={6}>
                                     <ul className={localClasses.menuContent}>
@@ -442,7 +445,12 @@ const DayList = ({ days, recipes, userId }) => {
                                       ))}
                                     </ul>
                                   </Grid>
-                                  <Grid item xs={12} sm={3}>
+                                  <Grid
+                                    item
+                                    xs={12}
+                                    sm={3}
+                                    className={localClasses.rowAction}
+                                  >
                                     <RoundButton
                                       type="delete"
                                       handleClick={() =>
