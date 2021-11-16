@@ -123,13 +123,13 @@ const Navbar = () => {
       ) : (
         <MenuItem
           onClick={() => {
-            history.push('/');
+            history.push('/auth');
           }}
         >
           <IconButton color="inherit">
             <LogoutIcon />
           </IconButton>
-          <Typography>Log Out</Typography>
+          <Typography>Sign In</Typography>
         </MenuItem>
       )}
     </Menu>

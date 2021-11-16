@@ -1,6 +1,8 @@
 import { makeStyles } from '@material-ui/core/styles';
 export default makeStyles((theme) => ({
-  root: {},
+  root: {
+    minWidth: '370px',
+  },
   container: {
     padding: theme.spacing(4, 10),
     [theme.breakpoints.down('md')]: {
