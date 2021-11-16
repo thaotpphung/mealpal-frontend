@@ -3,6 +3,9 @@ import { makeStyles } from '@material-ui/core/styles';
 const styles = makeStyles((theme) => ({
   root: {
     width: '70%',
+    [theme.breakpoints.down('md')]: {
+      width: '95%',
+    },
     margin: '0 auto',
   },
   avatar: {
