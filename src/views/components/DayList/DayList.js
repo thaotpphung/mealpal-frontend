@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams, Link, useHistory } from 'react-router-dom';
 import useStyles from '../../../app/styles';
 import { styles } from './styles';
-import { Paper, Typography } from '@material-ui/core';
+import { Paper, Typography, Grid } from '@material-ui/core';
 import RestaurantMenuIcon from '@material-ui/icons/RestaurantMenu';
 import CardHeader from '../../common/CardHeader/CardHeader';
 import CardBody from '../../common/CardBody/CardBody';
@@ -289,17 +289,19 @@ const DayList = ({ days, recipes, userId }) => {
               <>
                 {day.meals.map((meal, mealIdx) => {
                   return (
-                    <div
+                    <Grid
+                      container
+                      spacing={1}
+                      alignItems="stretch"
                       key={`meal-in-day-card-${meal._id}-${dayIdx}-${mealIdx}}`}
-                      className={localClasses.menuItem}
                     >
-                      <div className={classes.itemIcon}>
+                      <Grid item xs={3}>
                         <Typography>
                           <strong>{meal.mealName}</strong>
                         </Typography>
                         <Typography>{meal.calories}</Typography>
-                      </div>
-                      <div className={classes.itemContent}>
+                      </Grid>
+                      <Grid item xs={7}>
                         <ul className={localClasses.menuContent}>
                           {!isInEditDayMode[dayIdx] && (
                             <>
@@ -326,9 +328,9 @@ const DayList = ({ days, recipes, userId }) => {
                             </>
                           )}
                         </ul>
-                      </div>
+                      </Grid>
                       {!!loggedInUser && loggedInUser._id === userId._id && (
-                        <div className={classes.itemAction}>
+                        <Grid item xs={2}>
                           <RoundButton
                             type="shoppingCart"
                             handleClick={() => {
@@ -340,9 +342,9 @@ const DayList = ({ days, recipes, userId }) => {
                               );
                             }}
                           />
-                        </div>
+                        </Grid>
                       )}
-                    </div>
+                    </Grid>
                   );
                 })}
                 <Typography className={localClasses.total}>
@@ -364,13 +366,14 @@ const DayList = ({ days, recipes, userId }) => {
                               index={mealIdx}
                             >
                               {(provided) => (
-                                <li
+                                <Grid
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}
-                                  className={localClasses.menuItem}
+                                  container
+                                  spacing={2}
                                 >
-                                  <div className={classes.itemIcon}>
+                                  <Grid item xs={12} sm={3}>
                                     <Input
                                       value={meal.mealName}
                                       handleChange={(e) =>
@@ -380,15 +383,15 @@ const DayList = ({ days, recipes, userId }) => {
                                       required
                                     />
                                     <Typography>{meal.calories}</Typography>
-                                  </div>
-                                  <div className={classes.itemContent}>
+                                  </Grid>
+                                  <Grid item xs={12} sm={6}>
                                     <ul className={localClasses.menuContent}>
                                       {meal.food.map((recipe, recipeIdx) => (
                                         <li
                                           key={`food-field-${recipe._id}-${recipeIdx}`}
                                         >
                                           <RestaurantMenuIcon
-                                            className={classes.foodIcon}
+                                            className={localClasses.foodIcon}
                                           />
                                           <AutocompleteField
                                             value={recipe}
@@ -412,27 +415,34 @@ const DayList = ({ days, recipes, userId }) => {
                                             style={{ minWidth: '70%' }}
                                             required
                                           />
-                                          <RoundButton
-                                            type="deleteField"
-                                            handleClick={() =>
-                                              handleDeleteFood(
-                                                mealIdx,
-                                                recipeIdx,
-                                                recipe
-                                              )
-                                            }
-                                          />
-                                          <RoundButton
-                                            type="addField"
-                                            handleClick={() =>
-                                              handleAddFood(mealIdx, recipeIdx)
-                                            }
-                                          />
+                                          <div
+                                            className={localClasses.fieldAction}
+                                          >
+                                            <RoundButton
+                                              type="deleteField"
+                                              handleClick={() =>
+                                                handleDeleteFood(
+                                                  mealIdx,
+                                                  recipeIdx,
+                                                  recipe
+                                                )
+                                              }
+                                            />
+                                            <RoundButton
+                                              type="addField"
+                                              handleClick={() =>
+                                                handleAddFood(
+                                                  mealIdx,
+                                                  recipeIdx
+                                                )
+                                              }
+                                            />
+                                          </div>
                                         </li>
                                       ))}
                                     </ul>
-                                  </div>
-                                  <div className={classes.itemAction}>
+                                  </Grid>
+                                  <Grid item xs={12} sm={3}>
                                     <RoundButton
                                       type="delete"
                                       handleClick={() =>
@@ -443,8 +453,8 @@ const DayList = ({ days, recipes, userId }) => {
                                       type="add"
                                       handleClick={() => handleAddMeal(mealIdx)}
                                     />
-                                  </div>
-                                </li>
+                                  </Grid>
+                                </Grid>
                               )}
                             </Draggable>
                           );
