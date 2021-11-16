@@ -1,10 +1,17 @@
 import { makeStyles } from '@material-ui/core/styles';
 export default makeStyles((theme) => ({
-  root: {
-    // minWidth: '850px',
-  },
+  root: {},
   container: {
     padding: theme.spacing(4, 10),
+    [theme.breakpoints.down('md')]: {
+      padding: theme.spacing(6),
+    },
+    [theme.breakpoints.down('sm')]: {
+      padding: theme.spacing(4),
+    },
+    [theme.breakpoints.down('xs')]: {
+      padding: theme.spacing(2),
+    },
     minHeight: '100vh',
     '@global': {
       ul: {
@@ -97,6 +104,9 @@ export default makeStyles((theme) => ({
   },
   utilsActions: {
     display: 'flex',
+    [theme.breakpoints.down('sm')]: {
+      display: 'block',
+    },
     justifyContent: 'end',
     marginRight: theme.spacing(1),
     alignItems: 'center',
@@ -106,8 +116,8 @@ export default makeStyles((theme) => ({
     },
     '& > button': {
       textAlign: 'center',
-      // minWidth: '95px',
-      margin: theme.spacing(1, 0.5),
+      minWidth: '90px',
+      margin: theme.spacing(1, 0.6),
     },
   },
   foodIcon: {
