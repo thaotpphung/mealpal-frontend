@@ -176,8 +176,8 @@ const IngredientCard = ({ recipe }) => {
                       </>
                     ) : (
                       <>
-                        <Grid container spacing={3} alignItems="center">
-                          <Grid item xs={12} sm={2}>
+                        <Grid container spacing={2} alignItems="center">
+                          <Grid item xs={4} lg={2}>
                             <Input
                               label="Whole"
                               type="number"
@@ -207,7 +207,7 @@ const IngredientCard = ({ recipe }) => {
                               }
                             />
                           </Grid>
-                          <Grid item xs={12} sm={2}>
+                          <Grid item xs={4} lg={2}>
                             <Input
                               label="Numer"
                               type="number"
@@ -266,7 +266,7 @@ const IngredientCard = ({ recipe }) => {
                               }
                             />
                           </Grid>
-                          <Grid item xs={12} sm={3}>
+                          <Grid item xs={4} lg={3}>
                             <AutocompleteField
                               label="Unit"
                               value={item.unit.label}
@@ -284,7 +284,7 @@ const IngredientCard = ({ recipe }) => {
                               }
                             />
                           </Grid>
-                          <Grid item xs={12} sm={5}>
+                          <Grid item xs={12} lg={5}>
                             <Input
                               label="Ingredient"
                               value={item.ingredientName}
