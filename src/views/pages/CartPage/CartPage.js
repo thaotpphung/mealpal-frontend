@@ -10,24 +10,26 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Collapse from '@material-ui/core/Collapse';
 import Checkbox from '@material-ui/core/Checkbox';
 import Paper from '@material-ui/core/Paper';
+import Spinner from '../../common/Spinner/Spinner';
 import CardHeader from '../../common/CardHeader/CardHeader';
 import CardBody from '../../common/CardBody/CardBody';
 import EmptyMessage from '../../common/EmptyMessage/EmptyMessage';
 import RoundButton from '../../common/Buttons/RoundButton';
 import { updateCart, clearCart } from '../../../redux/actions/cartActions';
+import { addAlertWithTimeout } from '../../../redux/actions/alertActions';
 import useEditMode from '../../../utils/hooks/useEditMode';
 import useToggle from '../../../utils/hooks/useToggle';
 import { formatMixedNumber } from '../../../utils/mixedNumber';
+import { sendCart } from '../../../api/index';
 
 const CartPage = () => {
   const localClasses = useStyles();
   const dispatch = useDispatch();
+  const { loggedInUser } = useSelector((state) => state.user);
   const { cart } = useSelector((state) => state.cart);
-  const { handleCloseEditMode, openEditMode, toggleOpenEditMode } = useEditMode(
-    () => {
-      setCartForm(cart);
-    }
-  );
+  const { handleCloseEditMode, openEditMode } = useEditMode(() => {
+    setCartForm(cart);
+  });
   const [showRecipeNameList, toggleShowRecipeNameList] = useToggle(false);
   const [cartForm, setCartForm] = useState(cart);
   const handleSelectCheckBox = (event) => {
@@ -46,21 +48,44 @@ const CartPage = () => {
     dispatch(clearCart());
   };
 
+  const [isSending, setIsSending] = useState(false);
+  const handleSendEmail = () => {
+    if (loggedInUser.isVerified) {
+      setIsSending(true);
+      sendCart(loggedInUser._id, cartForm)
+        .then(({ data }) => {
+          dispatch(addAlertWithTimeout('success', data.message));
+        })
+        .catch((error) => {
+          dispatch(addAlertWithTimeout('error', error.response.data.message));
+        })
+        .finally(() => setIsSending(false));
+    } else {
+      dispatch(
+        addAlertWithTimeout(
+          'error',
+          'Please confirm your email to use this service (Profile > Contact)'
+        )
+      );
+    }
+  };
+
   // TODO
   const handleSubmitUpdateCart = () => {};
-  const handleAddIngredient = () => {};
-  const handleDeleteIngredient = (event, ingredientName) => {};
-  const handleChangeIngredient = (event, oldIngredientName) => {};
-  const handleAddIngredientUnit = () => {};
-  const handleDeleteIngredientUnit = () => {};
 
   return (
     <>
+      {isSending && <Spinner />}
       <Paper className={localClasses.root}>
         <CardHeader
           title="Shopping Cart"
           action={
             <>
+              <RoundButton
+                type="send"
+                handleClick={handleSendEmail}
+                loading={isSending}
+              />
               <RoundButton type="delete" handleClick={handleClickDeleteCart} />
               {openEditMode ? (
                 <>

@@ -8,4 +8,7 @@ export default makeStyles((theme) => ({
       marginBottom: theme.spacing(3),
     },
   },
+  weekContainer: {
+    maxWidth: '100%',
+  },
 }));

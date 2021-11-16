@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams, Link, useHistory } from 'react-router-dom';
 import useStyles from '../../../app/styles';
 import { styles } from './styles';
-import { Paper, Typography } from '@material-ui/core';
+import { Paper, Typography, Grid } from '@material-ui/core';
 import RestaurantMenuIcon from '@material-ui/icons/RestaurantMenu';
 import CardHeader from '../../common/CardHeader/CardHeader';
 import CardBody from '../../common/CardBody/CardBody';
@@ -32,13 +32,31 @@ const DayList = ({ days, recipes, userId }) => {
   const [isInEditDayMode, setIsInEditDayMode] = useState([]);
   const defaultEditDayMode = new Array(days.length).fill(false);
   const [dayForm, setDayForm] = useState({});
+  const [daysWithCalories, setDaysWithCalories] = useState([]);
   const extractedFieldsForAutoComplete = recipes.map((recipe) => {
     return {
       recipeName: recipe.recipeName,
       _id: recipe._id,
       calories: recipe.calories,
+      ingredients: recipe.ingredients,
     };
   });
+
+  useEffect(() => {
+    let updatedDays = cloneDeep(days);
+    updatedDays.forEach((day) => {
+      let dayTotalCalories = 0;
+      day.meals.forEach((meal) => {
+        let mealTotalCalories = meal.food.reduce((acc, recipe) => {
+          return acc + recipe.calories;
+        }, 0);
+        meal.calories = mealTotalCalories;
+        dayTotalCalories += mealTotalCalories;
+      });
+      day.calories = dayTotalCalories;
+    });
+    setDaysWithCalories(updatedDays);
+  }, []);
 
   const initialRecipe = {
     recipeName: '',
@@ -76,7 +94,7 @@ const DayList = ({ days, recipes, userId }) => {
   const handleEnableEditDayMode = (dayIdx) => {
     const modes = [...defaultEditDayMode];
     modes[dayIdx] = true;
-    const day = { ...days[dayIdx] };
+    const day = { ...daysWithCalories[dayIdx] };
     if (day.meals.length === 0) {
       day.meals[0] = {
         mealName: '[PlaceHolder]',
@@ -92,7 +110,7 @@ const DayList = ({ days, recipes, userId }) => {
   };
   const handleCancelEditDayMode = (dayIdx) => {
     const modes = [...defaultEditDayMode];
-    setDayForm(days[dayIdx]);
+    setDayForm(daysWithCalories[dayIdx]);
     setIsInEditDayMode(modes);
   };
   // update week by day
@@ -133,22 +151,29 @@ const DayList = ({ days, recipes, userId }) => {
     setDayForm(updatedDays);
   };
   // food
-  const handleChangeFood = (mealIdx, recipeIdx, newValue) => {
-    const updatedDays = cloneDeep(dayForm);
-    updatedDays.meals[mealIdx].food[recipeIdx] = newValue;
-    const foodTotalCalories = updatedDays.meals[mealIdx].food.reduce(function (
-      acc,
-      recipe
-    ) {
-      return acc + recipe.calories;
-    },
-    0);
-    updatedDays.meals[mealIdx].calories = foodTotalCalories;
-    const mealTotalCalories = updatedDays.meals.reduce(function (acc, meal) {
+
+  const calculateDayCalories = (day) => {
+    const dayTotalCalories = day.meals.reduce(function (acc, meal) {
       return acc + meal.calories;
     }, 0);
-    updatedDays.calories = mealTotalCalories;
-    setDayForm(updatedDays);
+    return Number.isNaN(dayTotalCalories) ? 0 : dayTotalCalories;
+  };
+
+  const calculateMealCalories = (meal) => {
+    const mealTotalCalories = meal.food.reduce(function (acc, recipe) {
+      return acc + recipe.calories;
+    }, 0);
+    return Number.isNaN(mealTotalCalories) ? 0 : mealTotalCalories;
+  };
+
+  const handleChangeFood = (mealIdx, recipeIdx, newValue) => {
+    const updatedDay = cloneDeep(dayForm);
+    updatedDay.meals[mealIdx].food[recipeIdx] = newValue;
+    updatedDay.meals[mealIdx].calories = calculateMealCalories(
+      updatedDay.meals[mealIdx]
+    );
+    updatedDay.calories = calculateDayCalories(updatedDay);
+    setDayForm(updatedDay);
   };
   const handleDeleteFood = (mealIdx, recipeIdx, recipe) => {
     const updatedDays = cloneDeep(dayForm);
@@ -202,7 +227,7 @@ const DayList = ({ days, recipes, userId }) => {
         open={openNewRecipeDialog}
         handleClose={handleCloseNewRecipeDialog}
       />
-      {days.map((day, dayIdx) => (
+      {daysWithCalories.map((day, dayIdx) => (
         <Paper key={`day-card-${day._id}-${dayIdx}`}>
           <CardHeader
             title={`${day.dayName}`}
@@ -210,12 +235,6 @@ const DayList = ({ days, recipes, userId }) => {
               <>
                 {!!loggedInUser && loggedInUser._id === userId._id && (
                   <>
-                    <RoundButton
-                      type="shoppingCart"
-                      handleClick={() =>
-                        dispatch(addToCartByDay(days[dayIdx], history))
-                      }
-                    />
                     {!!weekId && (
                       <>
                         {isInEditDayMode[dayIdx] ? (
@@ -241,6 +260,17 @@ const DayList = ({ days, recipes, userId }) => {
                                 handleEnableEditDayMode(dayIdx)
                               }
                             />
+                            <RoundButton
+                              type="shoppingCart"
+                              handleClick={() =>
+                                dispatch(
+                                  addToCartByDay(
+                                    daysWithCalories[dayIdx],
+                                    history
+                                  )
+                                )
+                              }
+                            />
                           </>
                         )}
                       </>
@@ -255,17 +285,19 @@ const DayList = ({ days, recipes, userId }) => {
               <>
                 {day.meals.map((meal, mealIdx) => {
                   return (
-                    <div
+                    <Grid
+                      container
+                      spacing={2}
+                      alignItems="stretch"
                       key={`meal-in-day-card-${meal._id}-${dayIdx}-${mealIdx}}`}
-                      className={localClasses.menuItem}
                     >
-                      <div className={classes.itemIcon}>
+                      <Grid item xs={4} sm={3}>
                         <Typography>
                           <strong>{meal.mealName}</strong>
                         </Typography>
-                        <Typography>{meal.calories.toFixed(2)}</Typography>
-                      </div>
-                      <div className={classes.itemContent}>
+                        <Typography>{meal.calories} kCal</Typography>
+                      </Grid>
+                      <Grid item xs={6} sm={6}>
                         <ul className={localClasses.menuContent}>
                           {!isInEditDayMode[dayIdx] && (
                             <>
@@ -292,27 +324,32 @@ const DayList = ({ days, recipes, userId }) => {
                             </>
                           )}
                         </ul>
-                      </div>
+                      </Grid>
                       {!!loggedInUser && loggedInUser._id === userId._id && (
-                        <div className={classes.itemAction}>
+                        <Grid
+                          item
+                          xs={2}
+                          sm={3}
+                          className={localClasses.rowAction}
+                        >
                           <RoundButton
                             type="shoppingCart"
-                            handleClick={() =>
+                            handleClick={() => {
                               dispatch(
                                 addToCartByMeal(
-                                  days[dayIdx].meals[mealIdx],
+                                  daysWithCalories[dayIdx].meals[mealIdx],
                                   history
                                 )
-                              )
-                            }
+                              );
+                            }}
                           />
-                        </div>
+                        </Grid>
                       )}
-                    </div>
+                    </Grid>
                   );
                 })}
                 <Typography className={localClasses.total}>
-                  <strong>Total:</strong> {day.calories.toFixed(2)} kCal
+                  <strong>Total:</strong> {day.calories} kCal
                 </Typography>
               </>
             )}
@@ -330,13 +367,14 @@ const DayList = ({ days, recipes, userId }) => {
                               index={mealIdx}
                             >
                               {(provided) => (
-                                <li
+                                <Grid
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}
-                                  className={localClasses.menuItem}
+                                  container
+                                  spacing={2}
                                 >
-                                  <div className={classes.itemIcon}>
+                                  <Grid item xs={12} sm={3}>
                                     <Input
                                       value={meal.mealName}
                                       handleChange={(e) =>
@@ -346,17 +384,17 @@ const DayList = ({ days, recipes, userId }) => {
                                       required
                                     />
                                     <Typography>
-                                      {meal.calories.toFixed(2)}
+                                      {meal.calories} kCal
                                     </Typography>
-                                  </div>
-                                  <div className={classes.itemContent}>
+                                  </Grid>
+                                  <Grid item xs={12} sm={6}>
                                     <ul className={localClasses.menuContent}>
                                       {meal.food.map((recipe, recipeIdx) => (
                                         <li
                                           key={`food-field-${recipe._id}-${recipeIdx}`}
                                         >
                                           <RestaurantMenuIcon
-                                            className={classes.foodIcon}
+                                            className={localClasses.foodIcon}
                                           />
                                           <AutocompleteField
                                             value={recipe}
@@ -380,27 +418,39 @@ const DayList = ({ days, recipes, userId }) => {
                                             style={{ minWidth: '70%' }}
                                             required
                                           />
-                                          <RoundButton
-                                            type="deleteField"
-                                            handleClick={() =>
-                                              handleDeleteFood(
-                                                mealIdx,
-                                                recipeIdx,
-                                                recipe
-                                              )
-                                            }
-                                          />
-                                          <RoundButton
-                                            type="addField"
-                                            handleClick={() =>
-                                              handleAddFood(mealIdx, recipeIdx)
-                                            }
-                                          />
+                                          <div
+                                            className={localClasses.fieldAction}
+                                          >
+                                            <RoundButton
+                                              type="deleteField"
+                                              handleClick={() =>
+                                                handleDeleteFood(
+                                                  mealIdx,
+                                                  recipeIdx,
+                                                  recipe
+                                                )
+                                              }
+                                            />
+                                            <RoundButton
+                                              type="addField"
+                                              handleClick={() =>
+                                                handleAddFood(
+                                                  mealIdx,
+                                                  recipeIdx
+                                                )
+                                              }
+                                            />
+                                          </div>
                                         </li>
                                       ))}
                                     </ul>
-                                  </div>
-                                  <div className={classes.itemAction}>
+                                  </Grid>
+                                  <Grid
+                                    item
+                                    xs={12}
+                                    sm={3}
+                                    className={localClasses.rowAction}
+                                  >
                                     <RoundButton
                                       type="delete"
                                       handleClick={() =>
@@ -411,8 +461,8 @@ const DayList = ({ days, recipes, userId }) => {
                                       type="add"
                                       handleClick={() => handleAddMeal(mealIdx)}
                                     />
-                                  </div>
-                                </li>
+                                  </Grid>
+                                </Grid>
                               )}
                             </Draggable>
                           );
@@ -423,7 +473,7 @@ const DayList = ({ days, recipes, userId }) => {
                   </Droppable>
                 </DragDropContext>
                 <Typography className={localClasses.total}>
-                  <strong>Total:</strong> {dayForm.calories.toFixed(2)} kCal
+                  <strong>Total:</strong> {dayForm.calories} kCal
                 </Typography>
               </>
             )}

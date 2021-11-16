@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import { styles } from './styles';
-import useStyles from '../../../app/styles';
 import {
   Avatar,
   Button,
@@ -16,7 +15,6 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Input from '../../common/Input/Input';
-import FlashMessage from '../../common/FlashMessage/FlashMessage';
 import Spinner from '../../common/Spinner/Spinner';
 import BlockButton from '../../common/Buttons/BlockButton';
 import useForm from '../../../utils/hooks/useForm';
@@ -39,7 +37,6 @@ const AuthPage = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const location = useLocation();
-  const classes = useStyles();
   const localClasses = styles();
   const [showPassword, toggleShowPassword] = useToggle(false);
   const [isRegister, toggleIsRegister] = useToggle(
@@ -77,7 +74,7 @@ const AuthPage = () => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main">
       <Paper className={localClasses.paper} elevation={3}>
         <div>{loading && <Spinner />}</div>
         <Avatar className={localClasses.avatar}>

@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-} from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent } from '@material-ui/core';
 import BlockButton from '../Buttons/BlockButton';
 import CardBody from '../CardBody/CardBody';
 
@@ -13,11 +8,17 @@ const PopupDialog = ({ open, content, title, handleClose, handleSubmit }) => {
     <Dialog fullWidth open={open} onClose={handleClose}>
       <CardBody>
         <form onSubmit={handleSubmit}>
-          <DialogTitle>{title}</DialogTitle>
-          <DialogContent>{content}</DialogContent>
-          <DialogActions>
-            <BlockButton type="submit">Submit</BlockButton>
-          </DialogActions>
+          <DialogTitle
+            style={{ textAlign: 'center', textTransform: 'capitalize' }}
+          >
+            {title}
+          </DialogTitle>
+          <DialogContent>
+            {content}
+            <BlockButton type="submit" fullWidth>
+              Submit
+            </BlockButton>
+          </DialogContent>
         </form>
       </CardBody>
     </Dialog>

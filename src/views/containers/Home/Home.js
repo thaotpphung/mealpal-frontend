@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Typography, Button } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import useStyles from './styles';
 import DietLogo from '../../../assets/home/undraw_diet.svg';

@@ -6,6 +6,8 @@ import { useHistory, useParams } from 'react-router-dom';
 import WeekCard from '../../components/WeekCard/WeekCard';
 import { getAllWeeks, createWeek } from '../../../redux/actions/weekActions';
 import SearchIcon from '@material-ui/icons/Search';
+import ExploreIcon from '@material-ui/icons/Explore';
+import AddBoxOutlinedIcon from '@material-ui/icons/AddBoxOutlined';
 import Input from '../../common/Input/Input';
 import Spinner from '../../common/Spinner/Spinner';
 import PageNav from '../../common/PageNav/PageNav';
@@ -58,7 +60,7 @@ const WeekPage = () => {
       );
     },
     validate,
-    ['weekDescription', 'planTag']
+    ['weekDescription', 'planTag', 'weekDiet']
   );
 
   // pagination & filtering
@@ -90,47 +92,53 @@ const WeekPage = () => {
   if (!loading && weeks.length >= 0)
     return (
       <div>
-        <div className={classes.utilsBar}>
-          <div className={classes.utilsFields}>
-            {weekFormFields.map((field, fieldIdx) => (
-              <Input
-                key={`weekfieldform-${field.name}-${fieldIdx}`}
-                name={field.name}
-                label={field.label}
-                handleChange={handleChangeQueryField}
-                type={field.type ? field.type : 'text'}
-                step={field.step}
-              />
-            ))}
-          </div>
-          <div className={classes.utilsActions}>
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={() => handleSubmitFilter(currentCount)}
-            >
-              <SearchIcon /> Search
-            </Button>
-            {loggedInUser && (
-              <>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  onClick={toggleOpenEditMode}
-                >
-                  + Week
-                </Button>
-                <Button
-                  variant={isInExploreMode ? 'contained' : 'outlined'}
-                  color="primary"
-                  onClick={handleChangeMode}
-                >
-                  Explore
-                </Button>
-              </>
-            )}
-          </div>
-        </div>
+        <Grid container spacing={3}>
+          <Grid item sm={12} md={12} lg={9}>
+            <div className={classes.utilsFields}>
+              {weekFormFields.map((field, fieldIdx) => (
+                <Input
+                  key={`weekfieldform-${field.name}-${fieldIdx}`}
+                  name={field.name}
+                  label={field.label}
+                  handleChange={handleChangeQueryField}
+                  type={field.type ? field.type : 'text'}
+                  step={field.step}
+                />
+              ))}
+            </div>
+          </Grid>
+          <Grid item sm={12} md={12} lg={3}>
+            <div className={classes.utilsActions}>
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={() => handleSubmitFilter(currentCount)}
+              >
+                <SearchIcon fontSize="small" /> Search
+              </Button>
+              {/* <div className={classes.sectionDesktop}> */}
+              {loggedInUser && (
+                <>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={toggleOpenEditMode}
+                  >
+                    <AddBoxOutlinedIcon fontSize="small" />
+                    &nbsp;Week
+                  </Button>
+                  <Button
+                    variant={isInExploreMode ? 'contained' : 'outlined'}
+                    color="primary"
+                    onClick={handleChangeMode}
+                  >
+                    <ExploreIcon fontSize="small" /> Explore
+                  </Button>
+                </>
+              )}
+            </div>
+          </Grid>
+        </Grid>
         {weeks.length === 0 ? (
           <EmptyMessage />
         ) : (
@@ -146,8 +154,8 @@ const WeekPage = () => {
                   key={`{'explore-page-${week._id}-${weekIdx}`}
                   item
                   xs={12}
-                  sm={4}
-                  md={4}
+                  md={6}
+                  lg={4}
                 >
                   <WeekCard week={week} />
                 </Grid>
@@ -167,13 +175,13 @@ const WeekPage = () => {
           handleClose={handleCloseEditMode}
           handleSubmit={handleSubmit}
           content={
-            <div className={classes.formContainer}>
+            <div>
               {weekFormFields.map((field, fieldIdx) => (
                 <Input
                   key={`new-week-form-field-${field.name}-${fieldIdx}`}
                   name={field.name}
                   label={field.label}
-                  value={dialogValue[field.name]}
+                  value={dialogValue[field.name].toString()}
                   handleChange={handleChange}
                   error={errors[field.name]}
                   required={field.required}

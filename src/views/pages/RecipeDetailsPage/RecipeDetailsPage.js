@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid } from '@material-ui/core';
 import useStyles from './styles';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import RecipeCard from '../../components/RecipeCard/RecipeCard';
 import InstructionCard from '../../components/InstructionCard/InstructionCard';
 import IngredientCard from '../../components/IngredientCard/IngredientCard';
@@ -13,11 +13,14 @@ import EmptyMessage from '../../common/EmptyMessage/EmptyMessage';
 const RecipeDetailsPage = () => {
   const classes = useStyles();
   const { recipeId } = useParams();
+  const location = useLocation();
   const dispatch = useDispatch();
   const { recipe, loading, error } = useSelector((state) => state.recipe);
 
   useEffect(() => {
-    dispatch(getRecipe(recipeId));
+    if (!location.isRedirect) {
+      dispatch(getRecipe(recipeId));
+    }
   }, []);
 
   if (!loading && error) return <EmptyMessage />;
@@ -30,10 +33,10 @@ const RecipeDetailsPage = () => {
           alignItems="stretch"
           spacing={7}
         >
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} md={5} lg={4}>
             <RecipeCard recipe={recipe} />
           </Grid>
-          <Grid item xs={12} sm={8} className={classes.rightColumn}>
+          <Grid item xs={12} md={7} lg={8} className={classes.rightColumn}>
             <IngredientCard recipe={recipe} />
             <InstructionCard recipe={recipe} />
           </Grid>

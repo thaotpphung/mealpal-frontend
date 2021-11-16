@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { Grid, Button } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
+import AddBoxOutlinedIcon from '@material-ui/icons/AddBoxOutlined';
+import ExploreOutlinedIcon from '@material-ui/icons/ExploreOutlined';
 import useStyles from '../../../app/styles';
 import RecipeCard from '../../components/RecipeCard/RecipeCard';
 import PopupDialog from '../../common/PopupDialog/PopupDialog';
@@ -91,46 +93,53 @@ const RecipePage = () => {
   if (!loading && recipes.length >= 0)
     return (
       <div>
-        <div className={classes.utilsBar}>
-          <div className={classes.utilsFields}>
-            {recipeFormFields.map((field, fieldIdx) => (
-              <Input
-                key={`recipe-utils-${field.name}-${fieldIdx}`}
-                name={field.name}
-                label={field.label}
-                handleChange={handleChangeQueryField}
-                type={field.type ? field.type : 'text'}
-              />
-            ))}
-          </div>
-          <div className={classes.utilsActions}>
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={() => handleSubmitFilter(currentCount)}
-            >
-              <SearchIcon /> Search
-            </Button>
-            {loggedInUser && (
-              <>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  onClick={() => toggleOpenEditMode(true)}
-                >
-                  + Recipe
-                </Button>
-                <Button
-                  variant={isInExploreMode ? 'contained' : 'outlined'}
-                  color="primary"
-                  onClick={handleChangeMode}
-                >
-                  Explore
-                </Button>
-              </>
-            )}
-          </div>
-        </div>
+        <Grid container spacing={3}>
+          <Grid item sm={12} md={12} lg={9}>
+            <div className={classes.utilsFields}>
+              {recipeFormFields.map((field, fieldIdx) => (
+                <Input
+                  className={classes.utilField}
+                  key={`recipe-utils-${field.name}-${fieldIdx}`}
+                  name={field.name}
+                  label={field.label}
+                  handleChange={handleChangeQueryField}
+                  type={field.type ? field.type : 'text'}
+                />
+              ))}
+            </div>
+          </Grid>
+          <Grid item sm={12} md={12} lg={3}>
+            <div className={classes.utilsActions}>
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={() => handleSubmitFilter(currentCount)}
+              >
+                <SearchIcon fontSize="small" /> Search
+              </Button>
+              {loggedInUser && (
+                <>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => toggleOpenEditMode(true)}
+                  >
+                    <AddBoxOutlinedIcon fontSize="small" />
+                    &nbsp;Recipe
+                  </Button>
+                  <Button
+                    variant={isInExploreMode ? 'contained' : 'outlined'}
+                    color="primary"
+                    onClick={handleChangeMode}
+                  >
+                    <ExploreOutlinedIcon fontSize="small" /> Explore
+                  </Button>
+                </>
+              )}
+            </div>
+          </Grid>
+        </Grid>
+
         {recipes.length === 0 ? (
           <EmptyMessage />
         ) : (
@@ -142,7 +151,7 @@ const RecipePage = () => {
               spacing={3}
             >
               {recipes.map((recipe) => (
-                <Grid key={recipe._id} item xs={12} sm={44} md={4}>
+                <Grid key={recipe._id} item xs={12} md={6} lg={4}>
                   <RecipeCard recipe={recipe} />
                 </Grid>
               ))}
@@ -161,7 +170,7 @@ const RecipePage = () => {
           handleClose={handleCloseEditMode}
           handleSubmit={handleSubmit}
           content={
-            <div className={classes.formContainer}>
+            <div>
               {recipeFormFields.map((field, fieldIdx) => (
                 <Input
                   key={`new-recipe-form-${field.name}-${fieldIdx}`}
