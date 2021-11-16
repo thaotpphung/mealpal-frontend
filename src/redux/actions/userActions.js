@@ -12,25 +12,18 @@ import {
   USER_UPDATE_PASSWORD_REQUEST,
   USER_UPDATE_PASSWORD_SUCCESS,
   USER_UPDATE_PASSWORD_FAIL,
-  USER_SET,
 } from '../constants/userConstants';
 import { addAlertWithTimeout } from '../actions/alertActions';
 import { clearCart } from '../actions/cartActions';
 import * as api from '../../api/index';
-export { signin, register, logout, updateUser, updatePassword, setUser };
+export { signin, register, logout, updateUser, updatePassword };
 
 const signin = (formData) => async (dispatch) => {
   dispatch({ type: USER_SIGNIN_REQUEST, payload: formData });
   try {
     const { data } = await api.signin(formData);
     dispatch({ type: USER_SIGNIN_SUCCESS, payload: data });
-    localStorage.setItem(
-      'loggedInUser',
-      JSON.stringify({
-        _id: data.data.result._id,
-        token: data.data.token,
-      })
-    );
+    localStorage.setItem('loggedInUser', JSON.stringify(data.data));
     dispatch(addAlertWithTimeout('success', 'Welcome back!'));
   } catch (error) {
     dispatch({ type: USER_SIGNIN_FAIL });
@@ -43,13 +36,7 @@ const register = (formData) => async (dispatch) => {
   try {
     const { data } = await api.register(formData);
     dispatch({ type: USER_REGISTER_SUCCESS, payload: data });
-    localStorage.setItem(
-      'loggedInUser',
-      JSON.stringify({
-        _id: data.data.result._id,
-        token: data.data.token,
-      })
-    );
+    localStorage.setItem('loggedInUser', JSON.stringify(data.data));
     dispatch(addAlertWithTimeout('success', 'Welcome to MealPal!'));
   } catch (error) {
     dispatch({ type: USER_REGISTER_FAIL });
@@ -59,16 +46,16 @@ const register = (formData) => async (dispatch) => {
 
 const logout = () => (dispatch) => {
   localStorage.clear();
-  dispatch({ type: USER_LOGOUT });
+  dispatch({ type: USER_LOGOUT, payload: {} });
   dispatch(clearCart());
   dispatch(addAlertWithTimeout('success', 'Successfully logged out!'));
 };
 
 const updateUser = (userId, formData) => async (dispatch) => {
-  dispatch({ type: USER_UPDATE_REQUEST, payload: formData });
+  dispatch({ type: USER_UPDATE_REQUEST });
   try {
     const { data } = await api.updateUser(userId, formData);
-    dispatch({ type: USER_UPDATE_SUCCESS, payload: data.data });
+    dispatch({ type: USER_UPDATE_SUCCESS, payload: formData });
     dispatch(addAlertWithTimeout('success', 'Successfully updated user!'));
   } catch (error) {
     dispatch({ type: USER_UPDATE_FAIL });
@@ -77,17 +64,13 @@ const updateUser = (userId, formData) => async (dispatch) => {
 };
 
 const updatePassword = (userId, formData) => async (dispatch) => {
-  dispatch({ type: USER_UPDATE_PASSWORD_REQUEST, payload: formData });
+  dispatch({ type: USER_UPDATE_PASSWORD_REQUEST });
   try {
-    const { data } = await api.updatePassword(formData);
+    const { data } = await api.updatePassword(userId, formData);
     dispatch({ type: USER_UPDATE_PASSWORD_SUCCESS, payload: data });
     dispatch(addAlertWithTimeout('success', data.message));
   } catch (error) {
     dispatch({ type: USER_UPDATE_PASSWORD_FAIL });
     dispatch(addAlertWithTimeout('error', error?.response.data.message));
   }
-};
-
-const setUser = (user) => async (dispatch) => {
-  dispatch({ type: USER_SET, payload: user });
 };

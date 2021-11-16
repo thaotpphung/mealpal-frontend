@@ -12,16 +12,8 @@ import {
   recipeListReducer,
   recipeDetailsReducer,
 } from './reducers/recipeReducers';
-import { getEnvVars } from '../utils/envs';
-const env = getEnvVars(window.location.host);
-
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-
-const middlewares =
-  env.ENV === 'production'
-    ? applyMiddleware(thunk)
-    : applyMiddleware(thunk, logger);
-
+const middlewares = applyMiddleware(thunk, logger);
 const rootPersistConfig = {
   key: 'root',
   storage,

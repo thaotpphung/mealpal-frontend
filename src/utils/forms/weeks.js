@@ -11,7 +11,7 @@ export const weekFormFields = [
   },
   {
     name: 'caloGoal',
-    label: 'Calo Goal',
+    label: 'Calories Goal(kCal)',
     required: true,
     type: 'number',
     step: 0.01,
