@@ -64,7 +64,7 @@ const CartPage = () => {
       dispatch(
         addAlertWithTimeout(
           'error',
-          'Please confirm your email to use this service (Profile > Confirm Email)'
+          'Please confirm your email to use this service (Profile > Contact)'
         )
       );
     }
