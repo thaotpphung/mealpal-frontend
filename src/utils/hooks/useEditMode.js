@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import useToggle from './useToggle';
 
 const useEditMode = (resetCallback) => {
-  const [openEditMode, toggleOpenEditMode] = useState(false);
+  const [openEditMode, toggleOpenEditMode] = useToggle(false);
 
   const handleCloseEditMode = (params) => {
     resetCallback(params);

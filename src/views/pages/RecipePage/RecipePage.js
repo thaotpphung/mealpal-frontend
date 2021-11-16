@@ -151,7 +151,7 @@ const RecipePage = () => {
               spacing={3}
             >
               {recipes.map((recipe) => (
-                <Grid key={recipe._id} item xs={12} sm={6} md={4}>
+                <Grid key={recipe._id} item xs={12} md={6} lg={4}>
                   <RecipeCard recipe={recipe} />
                 </Grid>
               ))}
@@ -170,7 +170,7 @@ const RecipePage = () => {
           handleClose={handleCloseEditMode}
           handleSubmit={handleSubmit}
           content={
-            <div className={classes.formContainer}>
+            <div>
               {recipeFormFields.map((field, fieldIdx) => (
                 <Input
                   key={`new-recipe-form-${field.name}-${fieldIdx}`}

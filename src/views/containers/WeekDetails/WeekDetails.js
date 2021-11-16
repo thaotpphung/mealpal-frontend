@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Grid } from '@material-ui/core';
 import useStyles from './styles';
 import DayList from '../../components/DayList/DayList';

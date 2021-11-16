@@ -4,7 +4,7 @@ export default makeStyles((theme) => ({
     // minWidth: '850px',
   },
   container: {
-    padding: theme.spacing(5, 10),
+    padding: theme.spacing(4, 10),
     minHeight: '100vh',
     '@global': {
       ul: {
@@ -105,6 +105,7 @@ export default makeStyles((theme) => ({
       alignItems: 'center',
     },
     '& > button': {
+      textAlign: 'center',
       // minWidth: '95px',
       margin: theme.spacing(1, 0.5),
     },
@@ -122,7 +123,7 @@ export default makeStyles((theme) => ({
   sectionMobile: {
     display: 'flex',
     [theme.breakpoints.up('md')]: {
-      display: 'none',
+      display: 'none !important',
     },
   },
 }));

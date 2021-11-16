@@ -189,37 +189,37 @@ const RecipeCard = ({ recipe }) => {
         {!openEditMode && (
           <div>
             <Grid container spacing={1} alignItems="stretch">
-              <Grid item xs={12} sm={12}>
+              <Grid item xs={12} lg={12}>
                 <Typography>
                   <strong>Description:</strong> {recipe?.recipeDescription}
                 </Typography>
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} lg={6}>
                 <Typography>
                   <strong>Calories:</strong> {recipe?.calories} kCal
                 </Typography>
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} lg={6}>
                 <Typography>
                   <strong>Servings:</strong> {recipe?.servings}
                 </Typography>
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} lg={6}>
                 <Typography>
                   <strong>Diet:</strong> {recipe?.recipeDiet}
                 </Typography>
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} lg={6}>
                 <Typography>
                   <strong>Serving Size:</strong> {recipe?.servingSize}
                 </Typography>
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} lg={6}>
                 <Typography>
                   <strong>Time (mins):</strong> {recipe?.time}
                 </Typography>
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} lg={6}>
                 <Typography component="span">
                   <strong>Creator: </strong>
                   <Link
@@ -255,7 +255,7 @@ const RecipeCard = ({ recipe }) => {
                 key={`recipe-update-form-${field.name}-${fieldIdx}`}
                 name={field.name}
                 label={field.label}
-                value={recipeForm[field.name]}
+                value={recipeForm[field.name].toString()}
                 handleChange={handleChange}
                 error={errors[field.name]}
                 type={field.type ? field.type : 'text'}

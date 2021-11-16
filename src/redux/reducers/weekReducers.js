@@ -22,7 +22,7 @@ import {
 import cloneDeep from 'lodash/cloneDeep';
 
 const INITIAL_STATE = {
-  weeks: {},
+  weeks: [],
   loading: false,
   count: 0,
   currentCount: 0,
@@ -73,7 +73,8 @@ function weekDetailsReducer(
     case WEEK_UPDATE_SUCCESS: {
       return {
         loading: false,
-        week: { ...state.week, ...action.payload, error: '' },
+        week: { ...state.week, ...action.payload },
+        error: '',
       };
     }
 

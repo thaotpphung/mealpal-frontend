@@ -27,8 +27,6 @@ import useForm from '../../../utils/hooks/useForm';
 import useToggle from '../../../utils/hooks/useToggle';
 import useEditMode from '../../../utils/hooks/useEditMode';
 import Input from '../../common/Input/Input';
-import CardBody from '../../common/CardBody/CardBody';
-import RoundButton from '../../common/Buttons/RoundButton';
 import Spinner from '../../common/Spinner/Spinner';
 import BlockButton from '../../common/Buttons/BlockButton';
 import { validate } from '../../../utils/validations/validate';
@@ -40,11 +38,7 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import {
-  getUser,
-  sendConfirmationEmail,
-  confirmEmail,
-} from '../../../api/index';
+import { getUser, sendConfirmationEmail } from '../../../api/index';
 
 const ProfilePage = () => {
   const { loading, loggedInUser } = useSelector((state) => state.user);

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Switch, Route, Router } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import useStyles from './styles';
 import './App.css';
 import { CssBaseline } from '@material-ui/core';
@@ -29,8 +29,8 @@ function App() {
       <CssBaseline />
       <div className={classes.root}>
         <Navbar />
+        <FlashMessage />
         <div className={classes.container}>
-          <FlashMessage />
           <Switch>
             <Route path="/" exact component={HomePage} />
             {['/users/:userId/weeks', '/weeks'].map((route) => (

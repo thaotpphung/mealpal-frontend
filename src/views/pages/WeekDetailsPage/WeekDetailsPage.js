@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useLocation, useHistory } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import WeekDetails from '../../containers/WeekDetails/WeekDetails';
 import Spinner from '../../common/Spinner/Spinner';
 import EmptyMessage from '../../common/EmptyMessage/EmptyMessage';
@@ -18,7 +18,7 @@ const WeekDetailsPage = () => {
     if (!location.isRedirect) {
       dispatch(getWeek(weekId));
     }
-    dispatch(getAllRecipes('?fields=recipeName,calories'));
+    dispatch(getAllRecipes('?fields=recipeName,calories,ingredients'));
   }, []);
 
   if (!loading && error) return <EmptyMessage />;

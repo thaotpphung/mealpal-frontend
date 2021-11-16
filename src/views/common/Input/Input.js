@@ -1,6 +1,5 @@
 import React from 'react';
 import { TextField, Grid, InputAdornment } from '@material-ui/core';
-import PropTypes from 'prop-types';
 import useStyles from './styles';
 
 const Input = ({
@@ -51,18 +50,6 @@ const Input = ({
       />
     </Grid>
   );
-};
-
-Input.propTypes = {
-  name: PropTypes.string,
-  handleChange: PropTypes.func,
-  required: PropTypes.bool,
-  label: PropTypes.string,
-  autoFocus: PropTypes.bool,
-  type: PropTypes.string,
-  handleShowPassword: PropTypes.func,
-  value: PropTypes.string,
-  error: PropTypes.string,
 };
 
 export default Input;

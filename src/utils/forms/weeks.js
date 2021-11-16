@@ -32,7 +32,7 @@ export const getInitialWeekForm = (isPrefilled, week = {}) => {
   return {
     weekName: isPrefilled ? week.weekName : '',
     weekDescription: isPrefilled ? week.weekDescription : '',
-    caloGoal: isPrefilled ? week.caloGoal : '',
+    caloGoal: isPrefilled ? week.caloGoal : 0,
     weekDiet: isPrefilled ? week.weekDiet : '',
     planTag: isPrefilled ? week.planTag : '',
   };

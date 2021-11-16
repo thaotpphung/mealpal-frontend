@@ -38,14 +38,15 @@ const DayList = ({ days, recipes, userId }) => {
       recipeName: recipe.recipeName,
       _id: recipe._id,
       calories: recipe.calories,
+      ingredients: recipe.ingredients,
     };
   });
 
   useEffect(() => {
     let updatedDays = cloneDeep(days);
-    updatedDays.forEach((day, dayIdx) => {
+    updatedDays.forEach((day) => {
       let dayTotalCalories = 0;
-      day.meals.forEach((meal, mealIx) => {
+      day.meals.forEach((meal) => {
         let mealTotalCalories = meal.food.reduce((acc, recipe) => {
           return acc + recipe.calories;
         }, 0);
@@ -197,6 +198,10 @@ const DayList = ({ days, recipes, userId }) => {
     setDayForm(updatedDays);
   };
 
+  const handleAddToCartByMeal = () => {};
+
+  const handleAddToCartByDay = () => {};
+
   return (
     <div>
       <PopupDialog
@@ -234,14 +239,6 @@ const DayList = ({ days, recipes, userId }) => {
               <>
                 {!!loggedInUser && loggedInUser._id === userId._id && (
                   <>
-                    <RoundButton
-                      type="shoppingCart"
-                      handleClick={() =>
-                        dispatch(
-                          addToCartByDay(daysWithCalories[dayIdx], history)
-                        )
-                      }
-                    />
                     {!!weekId && (
                       <>
                         {isInEditDayMode[dayIdx] ? (
@@ -265,6 +262,17 @@ const DayList = ({ days, recipes, userId }) => {
                               type={isInEditDayMode[dayIdx] ? 'cancel' : 'edit'}
                               handleClick={() =>
                                 handleEnableEditDayMode(dayIdx)
+                              }
+                            />
+                            <RoundButton
+                              type="shoppingCart"
+                              handleClick={() =>
+                                dispatch(
+                                  addToCartByDay(
+                                    daysWithCalories[dayIdx],
+                                    history
+                                  )
+                                )
                               }
                             />
                           </>
@@ -323,14 +331,14 @@ const DayList = ({ days, recipes, userId }) => {
                         <div className={classes.itemAction}>
                           <RoundButton
                             type="shoppingCart"
-                            handleClick={() =>
+                            handleClick={() => {
                               dispatch(
                                 addToCartByMeal(
                                   daysWithCalories[dayIdx].meals[mealIdx],
                                   history
                                 )
-                              )
-                            }
+                              );
+                            }}
                           />
                         </div>
                       )}

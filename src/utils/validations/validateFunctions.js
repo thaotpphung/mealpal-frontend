@@ -1,5 +1,3 @@
-import { initial } from 'lodash';
-
 const validateField = (name, value, errors, password = null) => {
   value = String(value);
   if (!value || value.trim() === '') errors[name] = 'This field is required';

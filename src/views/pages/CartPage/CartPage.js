@@ -27,11 +27,9 @@ const CartPage = () => {
   const dispatch = useDispatch();
   const { loggedInUser } = useSelector((state) => state.user);
   const { cart } = useSelector((state) => state.cart);
-  const { handleCloseEditMode, openEditMode, toggleOpenEditMode } = useEditMode(
-    () => {
-      setCartForm(cart);
-    }
-  );
+  const { handleCloseEditMode, openEditMode } = useEditMode(() => {
+    setCartForm(cart);
+  });
   const [showRecipeNameList, toggleShowRecipeNameList] = useToggle(false);
   const [cartForm, setCartForm] = useState(cart);
   const handleSelectCheckBox = (event) => {
@@ -74,11 +72,6 @@ const CartPage = () => {
 
   // TODO
   const handleSubmitUpdateCart = () => {};
-  const handleAddIngredient = () => {};
-  const handleDeleteIngredient = (event, ingredientName) => {};
-  const handleChangeIngredient = (event, oldIngredientName) => {};
-  const handleAddIngredientUnit = () => {};
-  const handleDeleteIngredientUnit = () => {};
 
   return (
     <>

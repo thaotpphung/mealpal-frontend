@@ -1,16 +1,26 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Grid, Button } from '@material-ui/core';
+import {
+  Grid,
+  Button,
+  Typography,
+  Menu,
+  MenuItem,
+  IconButton,
+} from '@material-ui/core';
 import useStyles from '../../../app/styles';
 import { useHistory, useParams } from 'react-router-dom';
 import WeekCard from '../../components/WeekCard/WeekCard';
 import { getAllWeeks, createWeek } from '../../../redux/actions/weekActions';
 import SearchIcon from '@material-ui/icons/Search';
-import ExploreOutlinedIcon from '@material-ui/icons/ExploreOutlined';
+import ExploreIcon from '@material-ui/icons/Explore';
+import ExploreOffIcon from '@material-ui/icons/ExploreOff';
 import AddBoxOutlinedIcon from '@material-ui/icons/AddBoxOutlined';
 import Input from '../../common/Input/Input';
 import Spinner from '../../common/Spinner/Spinner';
 import PageNav from '../../common/PageNav/PageNav';
+import RoundButton from '../../common/Buttons/RoundButton';
+
 import EmptyMessage from '../../common/EmptyMessage/EmptyMessage';
 import PopupDialog from '../../common/PopupDialog/PopupDialog';
 import usePagination from '../../../utils/hooks/usePagination';
@@ -116,6 +126,7 @@ const WeekPage = () => {
               >
                 <SearchIcon fontSize="small" /> Search
               </Button>
+              {/* <div className={classes.sectionDesktop}> */}
               {loggedInUser && (
                 <>
                   <Button
@@ -131,7 +142,7 @@ const WeekPage = () => {
                     color="primary"
                     onClick={handleChangeMode}
                   >
-                    <ExploreOutlinedIcon fontSize="small" /> Explore
+                    <ExploreIcon fontSize="small" /> Explore
                   </Button>
                 </>
               )}
@@ -153,8 +164,8 @@ const WeekPage = () => {
                   key={`{'explore-page-${week._id}-${weekIdx}`}
                   item
                   xs={12}
-                  sm={6}
-                  md={4}
+                  md={6}
+                  lg={4}
                 >
                   <WeekCard week={week} />
                 </Grid>
@@ -174,13 +185,13 @@ const WeekPage = () => {
           handleClose={handleCloseEditMode}
           handleSubmit={handleSubmit}
           content={
-            <div className={classes.formContainer}>
+            <div>
               {weekFormFields.map((field, fieldIdx) => (
                 <Input
                   key={`new-week-form-field-${field.name}-${fieldIdx}`}
                   name={field.name}
                   label={field.label}
-                  value={dialogValue[field.name]}
+                  value={dialogValue[field.name].toString()}
                   handleChange={handleChange}
                   error={errors[field.name]}
                   required={field.required}

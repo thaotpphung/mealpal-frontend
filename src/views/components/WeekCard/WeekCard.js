@@ -191,31 +191,31 @@ const WeekCard = ({ week }) => {
         {!openEditMode && (
           <div>
             <Grid container spacing={1} alignItems="stretch">
-              <Grid item sm={12} md={12}>
+              <Grid item xs={12} lg={12}>
                 <Typography>
                   <strong>Description: </strong>
                   {week.weekDescription}
                 </Typography>
               </Grid>
-              <Grid item sm={12} md={6}>
+              <Grid item xs={12} lg={6}>
                 <Typography>
                   <strong>Calo Goal: </strong>
                   {week.caloGoal} kCal
                 </Typography>
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} lg={6}>
                 <Typography>
                   <strong>Diet: </strong>
                   {week.weekDiet}
                 </Typography>
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} lg={6}>
                 <Typography>
                   <strong>Plan Tag: </strong>
                   {week.planTag}
                 </Typography>
               </Grid>
-              <Grid item sm={12} md={6}>
+              <Grid item xs={12} lg={6}>
                 <Typography component="span">
                   <strong>Creator: </strong>
                   <Link to={{ pathname: `/users/${week.userId._id}/profile` }}>
@@ -234,7 +234,7 @@ const WeekCard = ({ week }) => {
                 name={field.name}
                 type={field.type ? field.type : 'text'}
                 label={field.label}
-                value={weekForm[field.name]}
+                value={weekForm[field.name].toString()}
                 handleChange={handleChange}
                 error={errors[field.name]}
                 required={field.required}
