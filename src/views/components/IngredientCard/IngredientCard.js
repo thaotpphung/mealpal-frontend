@@ -31,7 +31,7 @@ const IngredientCard = ({ recipe }) => {
       numer: 0,
       denom: 1,
     },
-    unit: { label: '' },
+    unit: { label: 'none' },
     ingredientName: '',
   };
   const {
