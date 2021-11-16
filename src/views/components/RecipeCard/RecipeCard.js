@@ -91,35 +91,39 @@ const RecipeCard = ({ recipe }) => {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      {recipe?.userId._id === loggedInUser._id ? (
-        [
-          <MenuItem
-            key="addCart"
-            onClick={() => {
-              dispatch(addToCartByRecipe(recipe, history));
-            }}
-          >
-            <RoundButton type="shoppingCart" />
-            <Typography>Add To Cart</Typography>
-          </MenuItem>,
-          <MenuItem
-            key="deleteCart"
-            onClick={() => {
-              handleDeleteRecipe(recipe._id);
-            }}
-          >
-            <RoundButton type="delete" />
-            <Typography>Delete</Typography>
-          </MenuItem>,
-        ]
-      ) : (
-        <MenuItem
-          key="saveWeek"
-          onClick={() => handleDuplicateRecipe(recipeId)}
-        >
-          <RoundButton type="save" />
-          <Typography>Save</Typography>
-        </MenuItem>
+      {loggedInUser && (
+        <>
+          {recipe?.userId._id === loggedInUser._id ? (
+            [
+              <MenuItem
+                key="addCart"
+                onClick={() => {
+                  dispatch(addToCartByRecipe(recipe, history));
+                }}
+              >
+                <RoundButton type="shoppingCart" />
+                <Typography>Add To Cart</Typography>
+              </MenuItem>,
+              <MenuItem
+                key="deleteCart"
+                onClick={() => {
+                  handleDeleteRecipe(recipe._id);
+                }}
+              >
+                <RoundButton type="delete" />
+                <Typography>Delete</Typography>
+              </MenuItem>,
+            ]
+          ) : (
+            <MenuItem
+              key="saveWeek"
+              onClick={() => handleDuplicateRecipe(recipeId)}
+            >
+              <RoundButton type="save" />
+              <Typography>Save</Typography>
+            </MenuItem>
+          )}
+        </>
       )}
     </Menu>
   );
