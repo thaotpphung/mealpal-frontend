@@ -151,7 +151,7 @@ const RecipePage = () => {
               spacing={3}
             >
               {recipes.map((recipe) => (
-                <Grid key={recipe._id} item xs={12} md={6} lg={4}>
+                <Grid key={recipe._id} item xs={12} md={6} lg={4} xl={3}>
                   <RecipeCard recipe={recipe} />
                 </Grid>
               ))}
