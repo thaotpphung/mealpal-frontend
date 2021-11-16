@@ -17,7 +17,7 @@ import {
 } from '../constants/recipeConstants';
 
 const RECIPE_LIST_INITIAL_STATE = {
-  recipes: [],
+  recipes: {},
   loading: false,
   count: 0,
   currentCount: 0,
@@ -70,11 +70,9 @@ const recipeDetailsReducer = (state = RECIPE_DETAILS_INITIAL_STATE, action) => {
     case RECIPE_DETAILS_REQUEST:
     case RECIPE_UPDATE_REQUEST:
     case RECIPE_DELETE_REQUEST:
-    case RECIPE_CREATE_REQUEST:
       return { ...state, loading: true, error: '' };
 
     case RECIPE_DETAILS_SUCCESS:
-    case RECIPE_CREATE_SUCCESS:
     case RECIPE_UPDATE_SUCCESS: {
       return {
         loading: false,
@@ -88,7 +86,6 @@ const recipeDetailsReducer = (state = RECIPE_DETAILS_INITIAL_STATE, action) => {
     case RECIPE_DETAILS_FAIL:
     case RECIPE_UPDATE_FAIL:
     case RECIPE_DELETE_FAIL:
-    case RECIPE_CREATE_FAIL:
       return { ...state, loading: false, error: action.payload };
 
     default:

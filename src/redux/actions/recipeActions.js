@@ -48,14 +48,7 @@ const createRecipe =
       dispatch({ type: RECIPE_CREATE_REQUEST });
       const { data } = await api.createRecipe(recipe);
       dispatch({ type: RECIPE_CREATE_SUCCESS, payload: data.data });
-      if (router) {
-        router.push({
-          pathname: `/recipes/${data.data._id}`,
-          isRedirect: true,
-          data: data.data,
-        });
-      }
-      dispatch(addAlertWithTimeout('success', data.message));
+      if (router) router.push(`/recipes/${data.data._id}`);
     } catch (error) {
       dispatch({
         type: RECIPE_CREATE_FAIL,

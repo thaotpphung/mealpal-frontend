@@ -12,8 +12,7 @@ const WeekDetails = ({ week, recipes }) => {
       container
       justifyContent="space-between"
       alignItems="stretch"
-      spacing={5}
-      className={classes.weekContainer}
+      spacing={7}
     >
       <Grid item xs={12} sm={4} className={classes.leftColumn}>
         <WeekCard week={week} />

@@ -46,8 +46,8 @@ export const getInitialRecipeForm = (isPrefilled, recipe = {}) => {
     recipeDescription: isPrefilled ? recipe.recipeDescription : '',
     calories: isPrefilled ? recipe.calories : '',
     recipeDiet: isPrefilled ? recipe.recipeDiet : '',
-    time: isPrefilled ? recipe.time : 0,
-    servings: isPrefilled ? recipe.servings : 0,
+    time: isPrefilled ? recipe.time : '',
+    servings: isPrefilled ? recipe.servings : '',
     servingSize: isPrefilled ? recipe.servingSize : '',
   };
 };

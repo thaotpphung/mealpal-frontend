@@ -1,11 +1,14 @@
 import React from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
+import DoneIcon from '@material-ui/icons/Done';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import FavoriteIcon from '@material-ui/icons/Favorite';
+import ShareIcon from '@material-ui/icons/Share';
 import DeleteIcon from '@material-ui/icons/Delete';
 import StarIcon from '@material-ui/icons/Star';
+import AddIcon from '@material-ui/icons/Add';
 import CancelIcon from '@material-ui/icons/Cancel';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
@@ -15,14 +18,10 @@ import ControlPointDuplicateIcon from '@material-ui/icons/ControlPointDuplicate'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import SendIcon from '@material-ui/icons/Send';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import BookmarkIcon from '@material-ui/icons/Bookmarks';
-import MenuIcon from '@material-ui/icons/Menu';
 
 import useStyles from './styles';
 
-const RoundButton = ({ type, handleClick, loading, ...props }) => {
+const RoundButton = ({ type, handleClick, ...props }) => {
   const classes = useStyles();
 
   const roundButtonTypes = {
@@ -41,19 +40,10 @@ const RoundButton = ({ type, handleClick, loading, ...props }) => {
     avatar: <AccountCircleIcon />,
     expandLess: <ExpandLessIcon />,
     expandMore: <ExpandMoreIcon />,
-    send: <SendIcon />,
-    more: <MoreVertIcon />,
-    save: <BookmarkIcon />,
-    menu: <MenuIcon />,
   };
 
   return (
-    <IconButton
-      {...props}
-      onClick={handleClick}
-      disabled={loading}
-      className={`${classes.roundButton}`}
-    >
+    <IconButton onClick={handleClick} className={`${classes.roundButton}`}>
       {roundButtonTypes[type]}
     </IconButton>
   );

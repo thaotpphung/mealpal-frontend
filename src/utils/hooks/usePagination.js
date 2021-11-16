@@ -6,13 +6,14 @@ const usePagination = (
   callBack,
   initialQuery = ''
 ) => {
+  const [limit, setLimit] = useState(initialLimit); // docs per page
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(1); // number of total page on load
   const [queryFields, setQueryFields] = useState(initialState);
 
   const buildQuery = (page = 1, additionalQuery = '') => {
     let filterQuery = '?';
-    filterQuery += `limit=${initialLimit}&page=${page}`;
+    filterQuery += `limit=${limit}&page=${page}`;
     filterQuery += initialQuery;
     Object.entries(queryFields).map(([key, value]) => {
       if (value !== '') filterQuery += `&${key}=${value}`;
@@ -37,7 +38,7 @@ const usePagination = (
   };
 
   const setPageCount = (newCount) => {
-    const pageCount = newCount / initialLimit;
+    const pageCount = newCount / limit;
     setCount(pageCount !== 1 ? Math.floor(pageCount) + 1 : pageCount);
   };
 

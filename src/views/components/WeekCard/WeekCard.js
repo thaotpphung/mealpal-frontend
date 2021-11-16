@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -8,15 +8,9 @@ import {
   CardContent,
   Avatar,
   Typography,
-  Menu,
-  MenuItem,
 } from '@material-ui/core/';
 import useStyles from '../../../app/styles';
-import {
-  deleteWeek,
-  updateWeek,
-  createWeek,
-} from '../../../redux/actions/weekActions';
+import { deleteWeek, updateWeek } from '../../../redux/actions/weekActions';
 import { updateUser } from '../../../redux/actions/userActions';
 import { addToCartByWeek } from '../../../redux/actions/cartActions';
 import { addAlertWithTimeout } from '../../../redux/actions/alertActions';
@@ -65,69 +59,6 @@ const WeekCard = ({ week }) => {
     dispatch(updateUser(loggedInUser._id, { currentWeek: weekId }));
   };
 
-  const handleDuplicateWeek = (weekId) => {
-    dispatch(createWeek({ weekId }, history));
-  };
-
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
-  const mobileMenuId = 'primary-menu-mobile';
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
-  };
-
-  const handleMobileMenuOpen = (event) => {
-    setMobileMoreAnchorEl(event.currentTarget);
-  };
-
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      {week?.userId._id === loggedInUser._id &&
-        weekId !== loggedInUser.currentWeek && (
-          <MenuItem onClick={handleSetCurrentWeek}>
-            <RoundButton type="default" />
-            <Typography>Set Default</Typography>
-          </MenuItem>
-        )}
-      {week?.userId._id === loggedInUser._id ? (
-        [
-          <MenuItem
-            key="addCart"
-            onClick={() => {
-              dispatch(addToCartByWeek(week, history));
-            }}
-          >
-            <RoundButton type="shoppingCart" />
-            <Typography>Add To Cart</Typography>
-          </MenuItem>,
-          <MenuItem
-            key="deleteCart"
-            onClick={() => {
-              handleDeleteWeek(week?._id);
-            }}
-          >
-            <RoundButton type="delete" />
-            <Typography>Delete</Typography>
-          </MenuItem>,
-        ]
-      ) : (
-        <MenuItem key="saveWeek" onClick={() => handleDuplicateWeek(weekId)}>
-          <RoundButton type="save" />
-          <Typography>Save</Typography>
-        </MenuItem>
-      )}
-    </Menu>
-  );
-
   return (
     <Card>
       <CardHeader
@@ -142,20 +73,34 @@ const WeekCard = ({ week }) => {
           <>
             {!!loggedInUser && (
               <>
-                {/* all week view */}
-                {!weekId && week._id === loggedInUser.currentWeek && (
+                {week?.userId._id === loggedInUser._id ? (
                   <>
-                    <RoundButton type="default" />
-                  </>
-                )}
-                {/* single week view*/}
-                {weekId && (
-                  <>
-                    {loggedInUser._id === week.userId._id && (
+                    {week._id === loggedInUser.currentWeek && (
                       <>
+                        <RoundButton type="default" />
+                      </>
+                    )}
+                    {!!weekId && (
+                      <>
+                        {weekId !== loggedInUser.currentWeek && (
+                          <RoundButton
+                            type="setDefault"
+                            handleClick={handleSetCurrentWeek}
+                          />
+                        )}
+                        <RoundButton
+                          type="shoppingCart"
+                          handleClick={() =>
+                            dispatch(addToCartByWeek(week, history))
+                          }
+                        />
+                        <RoundButton
+                          type="delete"
+                          handleClick={() => handleDeleteWeek(week?._id)}
+                        />
                         {openEditMode ? (
                           <RoundButton
-                            type="cancel"
+                            type={'cancel'}
                             handleClick={handleCloseEditMode}
                           />
                         ) : (
@@ -166,18 +111,16 @@ const WeekCard = ({ week }) => {
                         )}
                       </>
                     )}
-                    <RoundButton
-                      type="more"
-                      aria-label="show more"
-                      aria-controls={mobileMenuId}
-                      aria-haspopup="true"
-                      handleClick={handleMobileMenuOpen}
-                    />
                   </>
+                ) : (
+                  <></>
+                  // <RoundButton
+                  //   type="add"
+                  //   handleClick={() => handleDuplicateWeek(week._id)}
+                  // />
                 )}
               </>
             )}
-            {renderMobileMenu}
           </>
         }
         title={
@@ -190,32 +133,26 @@ const WeekCard = ({ week }) => {
       <CardContent>
         {!openEditMode && (
           <div>
-            <Grid container spacing={1} alignItems="stretch">
-              <Grid item xs={12} lg={12}>
+            <Typography>
+              <strong>Description: </strong>
+              {week.weekDescription}
+            </Typography>
+            <Grid container>
+              <Grid item xs={12} sm={6}>
                 <Typography>
-                  <strong>Description: </strong>
-                  {week.weekDescription}
-                </Typography>
-              </Grid>
-              <Grid item xs={12} lg={6}>
-                <Typography>
-                  <strong>Calo Goal: </strong>
+                  <strong>Calories Goal: </strong>
                   {week.caloGoal} kCal
                 </Typography>
-              </Grid>
-              <Grid item xs={12} lg={6}>
                 <Typography>
                   <strong>Diet: </strong>
                   {week.weekDiet}
                 </Typography>
               </Grid>
-              <Grid item xs={12} lg={6}>
+              <Grid item xs={12} sm={6}>
                 <Typography>
                   <strong>Plan Tag: </strong>
                   {week.planTag}
                 </Typography>
-              </Grid>
-              <Grid item xs={12} lg={6}>
                 <Typography component="span">
                   <strong>Creator: </strong>
                   <Link to={{ pathname: `/users/${week.userId._id}/profile` }}>
@@ -234,16 +171,14 @@ const WeekCard = ({ week }) => {
                 name={field.name}
                 type={field.type ? field.type : 'text'}
                 label={field.label}
-                value={weekForm[field.name].toString()}
+                value={weekForm[field.name]}
                 handleChange={handleChange}
                 error={errors[field.name]}
                 required={field.required}
                 step={field.step}
               />
             ))}
-            <BlockButton type="submit" fullWidth>
-              Submit
-            </BlockButton>
+            <BlockButton type="submit">Submit</BlockButton>
           </form>
         )}
       </CardContent>

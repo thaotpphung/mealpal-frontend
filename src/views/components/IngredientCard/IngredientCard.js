@@ -1,7 +1,7 @@
 import React from 'react';
 import useStyles from '../../../app/styles';
 import { styles } from './styles';
-import { Typography, Grid, Paper } from '@material-ui/core';
+import { Typography, Grid, FormHelperText, Paper } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import useArray from '../../../utils/hooks/useArray';
 import useEditMode from '../../../utils/hooks/useEditMode';

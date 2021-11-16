@@ -1,19 +1,7 @@
 import { makeStyles } from '@material-ui/core/styles';
 export default makeStyles((theme) => ({
   root: {
-    minWidth: '380px',
-  },
-  container: {
-    padding: theme.spacing(4, 10),
-    [theme.breakpoints.down('md')]: {
-      padding: theme.spacing(6),
-    },
-    [theme.breakpoints.down('sm')]: {
-      padding: theme.spacing(4),
-    },
-    [theme.breakpoints.down('xs')]: {
-      padding: theme.spacing(2),
-    },
+    padding: theme.spacing(5, 10),
     minHeight: '100vh',
     '@global': {
       ul: {
@@ -96,46 +84,20 @@ export default makeStyles((theme) => ({
     backgroundColor: 'white',
   },
   utilsFields: {
+    flex: '1 1 auto',
     display: 'flex',
-    flexWrap: 'wrap',
+    flexDirection: 'row',
     '& > div': {
-      flex: '1 1 auto',
-      marginRight: theme.spacing(2),
-      width: '110px',
+      margin: theme.spacing(0, 3),
     },
   },
   utilsActions: {
-    display: 'flex',
-    [theme.breakpoints.down('sm')]: {
-      display: 'block',
-    },
-    justifyContent: 'end',
-    marginRight: theme.spacing(1),
-    alignItems: 'center',
-    '& div': {
-      display: 'flex',
-      alignItems: 'center',
-    },
+    flex: '0 0 auto',
     '& > button': {
-      textAlign: 'center',
-      minWidth: '90px',
-      margin: theme.spacing(1, 0.6),
+      margin: theme.spacing(1),
     },
   },
   foodIcon: {
     marginRight: theme.spacing(1),
-  },
-
-  sectionDesktop: {
-    display: 'none',
-    [theme.breakpoints.up('md')]: {
-      display: 'flex',
-    },
-  },
-  sectionMobile: {
-    display: 'flex',
-    [theme.breakpoints.up('md')]: {
-      display: 'none !important',
-    },
   },
 }));

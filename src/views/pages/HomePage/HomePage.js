@@ -5,6 +5,7 @@ import Home from '../../containers/Home/Home';
 import Spinner from '../../common/Spinner/Spinner';
 import EmptyMessage from '../../common/EmptyMessage/EmptyMessage';
 import { getWeek } from '../../../redux/actions/weekActions';
+import { getAllRecipes } from '../../../redux/actions/recipeActions';
 
 const HomePage = () => {
   const dispatch = useDispatch();
