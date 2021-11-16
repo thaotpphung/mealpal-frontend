@@ -15,7 +15,7 @@ const usePagination = (
     filterQuery += `limit=${initialLimit}&page=${page}`;
     filterQuery += initialQuery;
     Object.entries(queryFields).map(([key, value]) => {
-      if (value !== '') filterQuery += `&${key}=${value}`;
+      if (value !== '' && value !== 0) filterQuery += `&${key}=${value}`;
     });
     filterQuery += additionalQuery;
     return filterQuery;

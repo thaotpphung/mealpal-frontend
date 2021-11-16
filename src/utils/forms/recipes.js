@@ -25,7 +25,6 @@ export const recipeFormFields = [
     name: 'time',
     label: 'Time',
     required: false,
-    type: 'number',
   },
   {
     name: 'servings',
@@ -46,7 +45,7 @@ export const getInitialRecipeForm = (isPrefilled, recipe = {}) => {
     recipeDescription: isPrefilled ? recipe.recipeDescription : '',
     calories: isPrefilled ? recipe.calories : '',
     recipeDiet: isPrefilled ? recipe.recipeDiet : '',
-    time: isPrefilled ? recipe.time : 0,
+    time: isPrefilled ? recipe.time : '',
     servings: isPrefilled ? recipe.servings : 0,
     servingSize: isPrefilled ? recipe.servingSize : '',
   };
