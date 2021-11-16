@@ -19,7 +19,7 @@ const addOne = (recipe, cart) => {
       // initialize food
       cart[ingredient.ingredientName] = cart[ingredient.ingredientName]
         ? cart[ingredient.ingredientName]
-        : { units: {}, recipes: {}, checked: false };
+        : { units: {}, recipes: {}, checked: false, showDetails: false };
       // initialize unit
       if (!(ingredient.unit.label in cart[ingredient.ingredientName].units)) {
         cart[ingredient.ingredientName].units[ingredient.unit.label] = {};

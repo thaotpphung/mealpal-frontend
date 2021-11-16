@@ -44,6 +44,18 @@ const CartPage = () => {
     dispatch(updateCart(updatedCart));
   };
 
+  const handleToggleShowDetails = (ingredientName) => {
+    let updatedCart = {
+      ...cartForm,
+      [ingredientName]: {
+        ...cartForm[ingredientName],
+        showDetails: !cartForm[ingredientName].showDetails,
+      },
+    };
+    setCartForm(updatedCart);
+    dispatch(updateCart(updatedCart));
+  };
+
   const handleClickDeleteCart = () => {
     dispatch(clearCart());
   };
@@ -150,20 +162,17 @@ const CartPage = () => {
                                 </Typography>
                               }
                             />
-                            {showRecipeNameList ? (
-                              <RoundButton
-                                type="expandLess"
-                                handleClick={toggleShowRecipeNameList}
-                              />
-                            ) : (
-                              <RoundButton
-                                type="expandMore"
-                                handleClick={toggleShowRecipeNameList}
-                              />
-                            )}
+                            <RoundButton
+                              type={
+                                value.showDetails ? 'expandLess' : 'expandMore'
+                              }
+                              handleClick={() =>
+                                handleToggleShowDetails(ingredientName)
+                              }
+                            />
                           </ListItem>
                           <Collapse
-                            in={showRecipeNameList}
+                            in={value.showDetails}
                             timeout="auto"
                             unmountOnExit
                           >

@@ -239,9 +239,9 @@ const ProfilePage = () => {
       <div className={localClasses.root}>
         <Grid
           container
-          justifyContent="space-between"
           alignItems="stretch"
           spacing={7}
+          justifyContent="center"
         >
           <Grid item sm={12} md={4}>
             <Avatar className={localClasses.avatar} src={avatarUrl} />

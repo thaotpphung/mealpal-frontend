@@ -10,7 +10,7 @@ const WeekDetails = ({ week, recipes }) => {
   return (
     <Grid
       container
-      justifyContent="space-between"
+      justifyContent="center"
       alignItems="stretch"
       spacing={5}
       className={classes.weekContainer}
