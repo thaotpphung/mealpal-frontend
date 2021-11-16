@@ -91,39 +91,46 @@ const WeekCard = ({ week }) => {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      {week?.userId._id === loggedInUser._id &&
-        weekId !== loggedInUser.currentWeek && (
-          <MenuItem onClick={handleSetCurrentWeek}>
-            <RoundButton type="default" />
-            <Typography>Set Default</Typography>
-          </MenuItem>
-        )}
-      {week?.userId._id === loggedInUser._id ? (
-        [
-          <MenuItem
-            key="addCart"
-            onClick={() => {
-              dispatch(addToCartByWeek(week, history));
-            }}
-          >
-            <RoundButton type="shoppingCart" />
-            <Typography>Add To Cart</Typography>
-          </MenuItem>,
-          <MenuItem
-            key="deleteCart"
-            onClick={() => {
-              handleDeleteWeek(week?._id);
-            }}
-          >
-            <RoundButton type="delete" />
-            <Typography>Delete</Typography>
-          </MenuItem>,
-        ]
-      ) : (
-        <MenuItem key="saveWeek" onClick={() => handleDuplicateWeek(weekId)}>
-          <RoundButton type="save" />
-          <Typography>Save</Typography>
-        </MenuItem>
+      {loggedInUser && (
+        <>
+          {week?.userId._id === loggedInUser._id &&
+            weekId !== loggedInUser.currentWeek && (
+              <MenuItem onClick={handleSetCurrentWeek}>
+                <RoundButton type="default" />
+                <Typography>Set Default</Typography>
+              </MenuItem>
+            )}
+          {week?.userId._id === loggedInUser._id ? (
+            [
+              <MenuItem
+                key="addCart"
+                onClick={() => {
+                  dispatch(addToCartByWeek(week, history));
+                }}
+              >
+                <RoundButton type="shoppingCart" />
+                <Typography>Add To Cart</Typography>
+              </MenuItem>,
+              <MenuItem
+                key="deleteCart"
+                onClick={() => {
+                  handleDeleteWeek(week?._id);
+                }}
+              >
+                <RoundButton type="delete" />
+                <Typography>Delete</Typography>
+              </MenuItem>,
+            ]
+          ) : (
+            <MenuItem
+              key="saveWeek"
+              onClick={() => handleDuplicateWeek(weekId)}
+            >
+              <RoundButton type="save" />
+              <Typography>Save</Typography>
+            </MenuItem>
+          )}
+        </>
       )}
     </Menu>
   );
