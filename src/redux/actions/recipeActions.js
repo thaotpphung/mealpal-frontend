@@ -99,7 +99,8 @@ const updateRecipe = (recipeId, recipe) => async (dispatch) => {
   try {
     dispatch({ type: RECIPE_UPDATE_REQUEST });
     const { data } = await api.updateRecipe(recipeId, recipe);
-    dispatch({ type: RECIPE_UPDATE_SUCCESS, payload: recipe });
+    const payload = { ...recipe, ...data.data };
+    dispatch({ type: RECIPE_UPDATE_SUCCESS, payload: payload });
     dispatch(addAlertWithTimeout('success', data.message));
   } catch (error) {
     dispatch({

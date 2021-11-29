@@ -43,8 +43,8 @@ const RecipeCard = ({ recipe }) => {
   );
   const initialForm = {
     ...getInitialRecipeForm(true, recipe),
-    recipeImage: recipe.recipeImage,
   };
+
   const {
     values: recipeForm,
     handleSubmit,
@@ -79,6 +79,10 @@ const RecipeCard = ({ recipe }) => {
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
+  };
+
+  const handleSubmitUpdateRecipe = (event) => {
+    handleSubmit(event);
   };
 
   const renderMobileMenu = (
@@ -178,14 +182,17 @@ const RecipeCard = ({ recipe }) => {
       />
       <CardMedia
         component="img"
-        height="194"
+        height="200"
         image={
-          recipeForm?.recipeImage
-            ? recipeForm?.recipeImage
+          recipeForm.recipeImage
+            ? recipeForm.recipeImage
+            : recipe.recipeImage?.url
+            ? recipe.recipeImage.url
             : 'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'
         }
         alt={recipe.recipeName}
       />
+
       <CardContent>
         {!openEditMode && (
           <div>
@@ -234,39 +241,44 @@ const RecipeCard = ({ recipe }) => {
           </div>
         )}
         {openEditMode && (
-          <form className={classes.formContainer} onSubmit={handleSubmit}>
-            <FileInputComponent
-              labelText=""
-              labelStyle={{ display: 'none' }}
-              multiple={false}
-              callbackFunction={(file) => {
-                handleSelectFile(file);
-              }}
-              imagePreview={false}
-              buttonComponent={
-                <Button variant="outlined" color="primary">
-                  Upload
-                </Button>
-              }
-              accept="image/*"
-              parentStyle={{ textAlign: 'center', margin: '10px' }}
-            />
-            {recipeFormFields.map((field, fieldIdx) => (
-              <Input
-                key={`recipe-update-form-${field.name}-${fieldIdx}`}
-                name={field.name}
-                label={field.label}
-                value={recipeForm[field.name].toString()}
-                handleChange={handleChange}
-                error={errors[field.name]}
-                type={field.type ? field.type : 'text'}
-                required={field.required}
+          <>
+            <form
+              className={classes.formContainer}
+              onSubmit={handleSubmitUpdateRecipe}
+            >
+              <FileInputComponent
+                labelText=""
+                labelStyle={{ display: 'none' }}
+                multiple={false}
+                callbackFunction={(file) => {
+                  handleSelectFile(file);
+                }}
+                imagePreview={false}
+                buttonComponent={
+                  <Button variant="outlined" color="primary">
+                    Upload
+                  </Button>
+                }
+                accept="image/*"
+                parentStyle={{ textAlign: 'center', margin: '10px' }}
               />
-            ))}
-            <BlockButton type="submit" fullWidth>
-              Submit
-            </BlockButton>
-          </form>
+              {recipeFormFields.map((field, fieldIdx) => (
+                <Input
+                  key={`recipe-update-form-${field.name}-${fieldIdx}`}
+                  name={field.name}
+                  label={field.label}
+                  value={recipeForm[field.name].toString()}
+                  handleChange={handleChange}
+                  error={errors[field.name]}
+                  type={field.type ? field.type : 'text'}
+                  required={field.required}
+                />
+              ))}
+              <BlockButton type="submit" fullWidth>
+                Submit
+              </BlockButton>
+            </form>
+          </>
         )}
       </CardContent>
     </Card>

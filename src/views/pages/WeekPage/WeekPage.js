@@ -6,7 +6,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import WeekCard from '../../components/WeekCard/WeekCard';
 import { getAllWeeks, createWeek } from '../../../redux/actions/weekActions';
 import SearchIcon from '@material-ui/icons/Search';
-import ExploreIcon from '@material-ui/icons/Explore';
+import ExploreOutlinedIcon from '@material-ui/icons/ExploreOutlined';
 import AddBoxOutlinedIcon from '@material-ui/icons/AddBoxOutlined';
 import Input from '../../common/Input/Input';
 import Spinner from '../../common/Spinner/Spinner';
@@ -116,7 +116,6 @@ const WeekPage = () => {
               >
                 <SearchIcon fontSize="small" /> Search
               </Button>
-              {/* <div className={classes.sectionDesktop}> */}
               {loggedInUser && (
                 <>
                   <Button
@@ -132,7 +131,8 @@ const WeekPage = () => {
                     color="primary"
                     onClick={handleChangeMode}
                   >
-                    <ExploreIcon fontSize="small" /> Explore
+                    <ExploreOutlinedIcon fontSize="small" />
+                    Explore
                   </Button>
                 </>
               )}

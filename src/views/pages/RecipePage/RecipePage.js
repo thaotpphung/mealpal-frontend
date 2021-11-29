@@ -78,7 +78,7 @@ const RecipePage = () => {
     9,
     (value) =>
       dispatch(getAllRecipes(buildQuery(value), isInExploreMode, userId)),
-    '&fields=userId,recipeName,recipeDescription,recipeDiet,calories,servings,time,servingSize,recipeImage,updatedTime'
+    '&fields=userId,recipeName,recipeDescription,recipeDiet,calories,servings,time,servingSize,updatedTime'
   );
 
   // explore mode
@@ -132,7 +132,8 @@ const RecipePage = () => {
                     color="primary"
                     onClick={handleChangeMode}
                   >
-                    <ExploreOutlinedIcon fontSize="small" /> Explore
+                    <ExploreOutlinedIcon fontSize="small" />
+                    Explore
                   </Button>
                 </>
               )}
