@@ -212,8 +212,8 @@ const WeekCard = ({ week }) => {
               </Grid>
               <Grid item xs={12} lg={6}>
                 <Typography>
-                  <strong>Plan Tag: </strong>
-                  {week.planTag}
+                  <strong>Tags: </strong>
+                  {week.tags}
                 </Typography>
               </Grid>
               <Grid item xs={12} lg={6}>

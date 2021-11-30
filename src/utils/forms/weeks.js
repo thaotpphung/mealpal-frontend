@@ -22,8 +22,8 @@ export const weekFormFields = [
     required: false,
   },
   {
-    name: 'planTag',
-    label: 'Plan Tag',
+    name: 'tags',
+    label: 'Tags',
     required: false,
   },
 ];
@@ -34,6 +34,6 @@ export const getInitialWeekForm = (isPrefilled, week = {}) => {
     weekDescription: isPrefilled ? week.weekDescription : '',
     caloGoal: isPrefilled ? week.caloGoal : 0,
     weekDiet: isPrefilled ? week.weekDiet : '',
-    planTag: isPrefilled ? week.planTag : '',
+    tags: isPrefilled ? week.tags : [],
   };
 };

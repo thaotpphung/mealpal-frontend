@@ -60,7 +60,7 @@ const WeekPage = () => {
       );
     },
     validate,
-    ['weekDescription', 'planTag', 'weekDiet']
+    ['weekDescription', 'tags', 'weekDiet']
   );
 
   // pagination & filtering
@@ -77,7 +77,7 @@ const WeekPage = () => {
     9,
     (value) =>
       dispatch(getAllWeeks(buildQuery(value), isInExploreMode, userId)),
-    '&fields=userId,weekName,weekDescription,weekDiet,caloGoal,planTag,updatedTime'
+    '&fields=userId,weekName,weekDescription,weekDiet,caloGoal,tags,updatedTime'
   );
 
   // explore mode

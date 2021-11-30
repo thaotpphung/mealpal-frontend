@@ -1,23 +1,22 @@
 import React from 'react';
 import useStyles from '../../../app/styles';
 import { styles } from './styles';
-import { Typography, Grid, Paper } from '@material-ui/core';
+import { Typography, Grid, Paper, Tooltip } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import useArray from '../../../utils/hooks/useArray';
 import useEditMode from '../../../utils/hooks/useEditMode';
 import useForm from '../../../utils/hooks/useForm';
 import Input from '../../common/Input/Input';
-import AutocompleteField from '../../common/AutocompleteField/AutocompleteField';
 import PopupDialog from '../../common/PopupDialog/PopupDialog';
+import IconWithTooltip from '../../common/IconWithTooltip/IconWithTooltip';
 import RoundButton from '../../common/Buttons/RoundButton';
+import AutocompleteField from '../../common/AutocompleteField/AutocompleteField';
 import CardHeader from '../../common/CardHeader/CardHeader';
 import CardBody from '../../common/CardBody/CardBody';
 import { validate } from '../../../utils/validations/validate';
 import { validateArray } from '../../../utils/validations/validateFunctions';
-import { formatMixedNumber } from '../../../utils/mixedNumber';
 import { updateRecipe } from '../../../redux/actions/recipeActions';
 import unitOptions from '../../../constants/units';
-import { simplifyMixedNumber } from '../../../utils/mixedNumber';
 
 const IngredientCard = ({ recipe }) => {
   const classes = useStyles();
@@ -30,9 +29,11 @@ const IngredientCard = ({ recipe }) => {
       whole: 0,
       numer: 0,
       denom: 1,
+      toString: '',
     },
     unit: { label: 'none' },
     ingredientName: '',
+    calPerUnit: 0,
   };
   const {
     array: ingredients,
@@ -84,20 +85,30 @@ const IngredientCard = ({ recipe }) => {
 
   const handleSubmitUpdateRecipe = (event) => {
     const errors = {};
+    const regex = /^\d{1,3}(?: [1-9]\d{0,2}\/[1-9]\d{0,2})?$/;
     validateArray('ingredients', ingredients, errors, (item) => {
       return (
-        !String(item.amount.whole) ||
-        !String(item.amount.numer) ||
-        !String(item.amount.denom) ||
-        item.amount.denom == 0 ||
+        !item.amount.toString.trim() ||
+        !regex.test(item.amount.toString.trim()) ||
         !item.unit.label ||
         !item.ingredientName ||
         item.ingredientName.trim() === ''
       );
     });
-    if (!errors) {
+    if (Object.keys(errors).length === 0) {
       ingredients.forEach((ingredient, idx) => {
-        ingredients[idx].amount = simplifyMixedNumber(ingredient.amount);
+        let amount = {
+          whole: ingredient.amount.toString.split(' ')[0],
+          numer: 0,
+          denom: 1,
+          toString: ingredient.amount.toString.split(' ')[0],
+        };
+        if (ingredient.amount.toString.split(' ').length > 1) {
+          amount.numer = ingredient.amount.toString.split(' ')[1].split('/')[0];
+          amount.denom = ingredient.amount.toString.split(' ')[1].split('/')[1];
+          amount.toString = `${amount.whole} ${amount.numer}/${amount.denom}`;
+        }
+        ingredients[idx].amount = amount;
       });
     }
     handleSubmit(event, errors);
@@ -168,7 +179,8 @@ const IngredientCard = ({ recipe }) => {
                     {!openEditMode ? (
                       <>
                         <Typography>
-                          {formatMixedNumber(item.amount)}
+                          {/* {formatMixedNumber(item.amount)} */}
+                          {item.amount.toString}
                           {'\u00A0'}
                           {item.unit.label !== 'none' && item.unit.label}{' '}
                           <strong>{item.ingredientName}</strong>
@@ -177,88 +189,33 @@ const IngredientCard = ({ recipe }) => {
                     ) : (
                       <>
                         <Grid container spacing={2} alignItems="center">
-                          <Grid item xs={4} lg={2}>
+                          <Grid item xs={8} lg={4}>
                             <Input
-                              label="Whole"
-                              type="number"
-                              step={1}
-                              value={item.amount.whole}
-                              handleChange={(event) => {
-                                const { value } = event.target;
-                                if (
-                                  value % 1 === 0 &&
-                                  value >= 0 &&
-                                  value <= 100000
-                                ) {
-                                  handleChangeIngredientEntry(
-                                    itemIdx,
-                                    item,
-                                    'amount',
-                                    {
-                                      ...item.amount,
-                                      ['whole']: value,
-                                    }
-                                  );
-                                }
+                              InputLabelProps={{
+                                style: { pointerEvents: 'auto' },
                               }}
-                              error={
-                                errors.ingredients &&
-                                errors.ingredients[itemIdx]
+                              label={
+                                <div
+                                  style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                  }}
+                                >
+                                  Amount&nbsp;
+                                  <IconWithTooltip title="Format: Number (Ex: 1) or Number Fraction (ex: 1 1/2)" />
+                                </div>
                               }
-                            />
-                          </Grid>
-                          <Grid item xs={4} lg={2}>
-                            <Input
-                              label="Numer"
-                              type="number"
-                              step={1}
-                              value={item.amount.numer}
+                              value={item.amount.toString}
                               handleChange={(event) => {
-                                const { value } = event.target;
-                                if (
-                                  value % 1 === 0 &&
-                                  value >= 0 &&
-                                  value <= 100000
-                                ) {
-                                  handleChangeIngredientEntry(
-                                    itemIdx,
-                                    item,
-                                    'amount',
-                                    {
-                                      ...item.amount,
-                                      ['numer']: value,
-                                    }
-                                  );
-                                }
-                              }}
-                              error={
-                                errors.ingredients &&
-                                errors.ingredients[itemIdx]
-                              }
-                            />
-                            <hr />
-                            <Input
-                              label="Denom"
-                              type="number"
-                              value={item.amount.denom}
-                              step={1}
-                              handleChange={(event) => {
-                                const { value } = event.target;
-                                if (
-                                  value % 1 === 0 &&
-                                  value >= 0 &&
-                                  value <= 100000
-                                ) {
-                                  handleChangeIngredientEntry(
-                                    itemIdx,
-                                    item,
-                                    'amount',
-                                    {
-                                      ...item.amount,
-                                      ['denom']: value,
-                                    }
-                                  );
-                                }
+                                handleChangeIngredientEntry(
+                                  itemIdx,
+                                  item,
+                                  'amount',
+                                  {
+                                    ...item.amount,
+                                    ['toString']: event.target.value,
+                                  }
+                                );
                               }}
                               error={
                                 errors.ingredients &&
@@ -296,6 +253,33 @@ const IngredientCard = ({ recipe }) => {
                                   event.target.value
                                 )
                               }
+                              error={
+                                errors.ingredients &&
+                                errors.ingredients[itemIdx]
+                              }
+                            />
+                          </Grid>
+                          <Grid item xs={12} lg={5}>
+                            <Input
+                              label="Calories/Unit"
+                              type="numer"
+                              step={1}
+                              value={item.calPerUnit}
+                              handleChange={(event) => {
+                                const { value } = event.target;
+                                if (
+                                  value % 1 === 0 &&
+                                  value >= 0 &&
+                                  value <= 100000
+                                ) {
+                                  handleChangeIngredientEntry(
+                                    itemIdx,
+                                    item,
+                                    'calPerUnit',
+                                    value
+                                  );
+                                }
+                              }}
                               error={
                                 errors.ingredients &&
                                 errors.ingredients[itemIdx]

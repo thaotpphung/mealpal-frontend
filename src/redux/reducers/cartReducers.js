@@ -15,7 +15,7 @@ const INITIAL_STATE = {
 
 const addOne = (recipe, cart) => {
   recipe?.ingredients.forEach((ingredient) => {
-    if (ingredient.unit.label !== '') {
+    if (ingredient.amount.toString !== '') {
       // initialize food
       cart[ingredient.ingredientName] = cart[ingredient.ingredientName]
         ? cart[ingredient.ingredientName]
