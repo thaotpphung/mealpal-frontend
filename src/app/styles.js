@@ -42,6 +42,10 @@ export default makeStyles((theme) => ({
   menuContainer: {
     marginBottom: theme.spacing(3),
   },
+  recipeItem: {
+    display: 'flex',
+    cursor: 'pointer',
+  },
   formContainer: {
     padding: theme.spacing(2),
   },

@@ -1,4 +1,4 @@
-import { validateField } from './validateFunctions';
+import { validateField, validateArray } from './validateFunctions';
 
 const validate = (values, optionalFields = []) => {
   let errors = {};
@@ -27,4 +27,18 @@ const validateAuth = (values, isRegister = false) => {
   return errors;
 };
 
-export { validate, validateAuth };
+const validateIngredients = (ingredients, errors) => {
+  const regex = /^\d{1,3}(?: [1-9]\d{0,2}\/[1-9]\d{0,2})?$/;
+  validateArray('ingredients', ingredients, errors, (item) => {
+    return (
+      !item.amount.toString.trim() ||
+      !regex.test(item.amount.toString.trim()) ||
+      !item.unit.label ||
+      !item.ingredientName ||
+      item.ingredientName.trim() === ''
+    );
+  });
+  return errors;
+};
+
+export { validate, validateAuth, validateIngredients };

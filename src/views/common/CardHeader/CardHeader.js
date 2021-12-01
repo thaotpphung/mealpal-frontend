@@ -11,6 +11,7 @@ const CardHeader = ({
   showEdit = false,
   handleOpenEdit = () => {},
   handleCloseEdit = () => {},
+  handleDoneEdit,
 }) => {
   const classes = useStyles();
   return (
@@ -23,7 +24,12 @@ const CardHeader = ({
         {useEditMode && useEditCondition && (
           <>
             {showEdit ? (
-              <RoundButton type={'cancel'} handleClick={handleCloseEdit} />
+              <>
+                <RoundButton type="cancel" handleClick={handleCloseEdit} />
+                {handleDoneEdit && (
+                  <RoundButton type="done" handleClick={handleDoneEdit} />
+                )}
+              </>
             ) : (
               <RoundButton type={'edit'} handleClick={handleOpenEdit} />
             )}

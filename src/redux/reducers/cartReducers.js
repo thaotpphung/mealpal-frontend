@@ -55,7 +55,7 @@ const cartReducer = (state = INITIAL_STATE, action) => {
       if (updatedCart === undefined) updatedCart = {};
       week.days.forEach((day) => {
         day.meals.forEach((meal) => {
-          meal.food.forEach((recipe) => {
+          meal.recipes.forEach((recipe) => {
             addOne(recipe, updatedCart);
           });
         });
@@ -70,7 +70,7 @@ const cartReducer = (state = INITIAL_STATE, action) => {
       let updatedCart = cloneDeep(state.cart);
       if (updatedCart === undefined) updatedCart = {};
       day.meals.forEach((meal) => {
-        meal.food.forEach((recipe) => {
+        meal.recipes.forEach((recipe) => {
           addOne(recipe, updatedCart);
         });
       });
@@ -83,7 +83,7 @@ const cartReducer = (state = INITIAL_STATE, action) => {
       const meal = action.payload;
       let updatedCart = cloneDeep(state.cart);
       if (updatedCart === undefined) updatedCart = {};
-      meal.food.forEach((recipe) => {
+      meal.recipes.forEach((recipe) => {
         addOne(recipe, updatedCart);
       });
       return {
