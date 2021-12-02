@@ -9,7 +9,6 @@ import useArray from '../../../utils/hooks/useArray';
 import useEditMode from '../../../utils/hooks/useEditMode';
 import useForm from '../../../utils/hooks/useForm';
 import { processIngredients } from '../../../utils/forms/ingredients';
-import { validateIngredients } from '../../../utils/validations/validate';
 import { updateRecipe } from '../../../redux/actions/recipeActions';
 
 const RecipeDetails = ({ recipe }) => {
@@ -78,7 +77,27 @@ const RecipeDetails = ({ recipe }) => {
   const handleSubmitUpdateRecipe = (event) => {
     // validate
     const errors = {};
-    validateIngredients(ingredients, errors);
+    // validate ingredients
+    const regex = /^\d{1,3}(?: [1-9]\d{0,2}\/[1-9]\d{0,2})?$/;
+    ingredients.forEach((item, itemIdx) => {
+      const { amount, ingredientName } = item;
+      if (
+        (!amount.toString || amount.toString.trim() === '') &&
+        itemIdx === 0
+      ) {
+        return;
+      }
+      if (
+        !amount.toString ||
+        amount.toString.trim() === '' ||
+        !regex.test(amount.toString.trim())
+      ) {
+        errors[`${itemIdx}amount`] = '';
+      }
+      if (!ingredientName || ingredientName.trim() === '') {
+        errors[`${itemIdx}ingredientName`] = '';
+      }
+    });
     // process
     if (Object.keys(errors).length === 0) {
       processIngredients(ingredients);
@@ -106,7 +125,7 @@ const RecipeDetails = ({ recipe }) => {
           openEditMode={openEditMode}
           handleAddIngredient={handleAddIngredient}
           handleChangeIngredientEntry={handleChangeIngredientEntry}
-          errors={errors.ingredients}
+          errors={errors}
           initialIngredient={initialIngredient}
           handleDeleteIngredient={handleDeleteIngredient}
         />

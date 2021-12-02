@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams, Link, useHistory } from 'react-router-dom';
 import useStyles from '../../../app/styles';
 import { styles } from './styles';
-import { Paper, Typography, Grid } from '@material-ui/core';
+import { Paper, Typography, Grid, Button } from '@material-ui/core';
 import RestaurantMenuIcon from '@material-ui/icons/RestaurantMenu';
 import CardHeader from '../../common/CardHeader/CardHeader';
 import CardBody from '../../common/CardBody/CardBody';
@@ -25,6 +25,8 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import FastfoodIcon from '@material-ui/icons/Fastfood';
 import { validate } from '../../../utils/validations/validate';
 import unitOptions from '../../../constants/units';
+import { processIngredients } from '../../../utils/forms/ingredients';
+import { convertMixedToNum } from '../../../utils/mixedNumber';
 
 const DayList = ({ days, recipes, userId }) => {
   const classes = useStyles();
@@ -45,6 +47,28 @@ const DayList = ({ days, recipes, userId }) => {
       ingredients: recipe.ingredients,
     };
   });
+  const initialRecipe = {
+    recipeName: '',
+    _id: '',
+    calories: 0,
+  };
+  const initialFood = {
+    amount: {
+      whole: 0,
+      numer: 0,
+      denom: 1,
+      toString: '',
+    },
+    unit: { label: 'none' },
+    ingredientName: '',
+    calPerUnit: 0,
+  };
+  const initialMeal = {
+    mealName: '[Meal Name]',
+    recipes: [{ ...initialRecipe }],
+    food: [{ ...initialFood }],
+    calories: 0,
+  };
 
   // calculate calories
   useEffect(() => {
@@ -52,13 +76,13 @@ const DayList = ({ days, recipes, userId }) => {
     updatedDays.forEach((day) => {
       let dayTotalCalories = 0;
       day.meals.forEach((meal) => {
-        let mealTotalCalories = meal.recipes.reduce((acc, recipe) => {
-          return acc + recipe.calories;
-        }, 0);
+        let mealTotalCalories = 0;
+        mealTotalCalories += calculateRecipesCalories(meal.recipes);
+        mealTotalCalories += calculateFoodCalories(meal.food);
         meal.calories = mealTotalCalories;
         dayTotalCalories += mealTotalCalories;
       });
-      day.calories = dayTotalCalories.toFixed(2);
+      day.calories = dayTotalCalories;
     });
     setDaysWithCalories(updatedDays);
   }, []);
@@ -69,26 +93,45 @@ const DayList = ({ days, recipes, userId }) => {
     return Number.isNaN(dayTotalCalories) ? 0 : dayTotalCalories;
   };
   const calculateMealCalories = (meal) => {
-    const mealTotalCalories = meal.recipes.reduce(function (acc, recipe) {
+    let mealTotalCalories = 0;
+    mealTotalCalories += calculateRecipesCalories(meal.recipes);
+    mealTotalCalories += calculateFoodCalories(meal.food);
+    return Number.isNaN(mealTotalCalories) ? 0 : mealTotalCalories;
+  };
+  const calculateRecipesCalories = (recipes) => {
+    const calculatedCalories = recipes.reduce(function (acc, recipe) {
       return acc + recipe.calories;
     }, 0);
-    return Number.isNaN(mealTotalCalories) ? 0 : mealTotalCalories;
+    return calculatedCalories;
+  };
+  const calculateFoodCalories = (food) => {
+    const calculatedCalories = food.reduce(function (acc, ingredient) {
+      return acc + ingredient.calPerUnit * convertMixedToNum(ingredient.amount);
+    }, 0);
+    return calculatedCalories;
   };
 
   // edit day mode
   const handleEnableEditDayMode = (dayIdx) => {
     const modes = [...defaultEditDayMode];
     modes[dayIdx] = true;
+    // copy current day
     const day = { ...daysWithCalories[dayIdx] };
+    // if there is no meal, set an initial meal value
     if (day.meals.length === 0) {
       day.meals[0] = {
-        mealName: '[PlaceHolder]',
-        food: [{ ...initialRecipe }],
-        calories: 0,
+        ...initialMeal,
       };
     }
     day.meals.forEach((meal) => {
-      if (meal.recipes.length === 0) meal.recipes = [{ ...initialRecipe }];
+      // if in a meal, there is no recipe, then set initial recipes
+      if (meal.recipes.length === 0) {
+        meal.recipes = [{ ...initialRecipe }];
+      }
+      // if in a meal, there is no food, then set initial food
+      if (meal.food.length === 0) {
+        meal.food = [{ ...initialFood }];
+      }
     });
     setDayForm(day);
     setIsInEditDayMode(modes);
@@ -106,16 +149,61 @@ const DayList = ({ days, recipes, userId }) => {
   const handleSubmitUpdateDay = (event, dayIdx) => {
     // validate
     let currentErrors = {};
+    // if the only meal is the default meal, remove the meal
     dayForm.meals.forEach((meal, mealIdx) => {
       // validate meal
-      if (meal.mealName.trim() === '') currentErrors[`meal${mealIdx}`] = '';
+      if (meal.mealName.trim() === '' && mealIdx !== 0) {
+        currentErrors[`meal${mealIdx}`] = '';
+      }
       // validate recipes
       meal.recipes.forEach((recipe, recipeIdx) => {
-        if (recipe.recipeName.trim() === '')
-          currentErrors[`meal${mealIdx}food${recipeIdx}`] = '';
+        if (recipe.recipeName.trim() === '' && recipeIdx !== 0) {
+          currentErrors[`meal${mealIdx}recipes${recipeIdx}`] = '';
+        }
       });
       // validate food
+      const regex = /^\d{1,3}(?: [1-9]\d{0,2}\/[1-9]\d{0,2})?$/;
+      meal.food.forEach((item, itemIdx) => {
+        const { amount, ingredientName, calPerUnit } = item;
+        if (
+          (!amount.toString || amount.toString.trim() === '') &&
+          itemIdx === 0
+        ) {
+          return;
+        }
+        if (
+          !amount.toString ||
+          amount.toString.trim() === '' ||
+          !regex.test(amount.toString.trim())
+        ) {
+          currentErrors[`meal${mealIdx}food${itemIdx}amount`] = '';
+        }
+        if (!ingredientName || ingredientName.trim() === '') {
+          currentErrors[`meal${mealIdx}food${itemIdx}ingredientName`] = '';
+        }
+        if (calPerUnit < 0 || calPerUnit > 10000) {
+          currentErrors[`meal${mealIdx}food${itemIdx}calPerUnit`] = '';
+        }
+      });
     });
+    // process
+    if (Object.keys(currentErrors).length === 0) {
+      if (dayForm.meals.length === 1 && dayForm.meals[0]._id === '') {
+        dayForm.meals = [];
+      } else {
+        dayForm.meals.forEach((meal) => {
+          // if the only recipe is the default recipe, remove the recipe
+          if (meal.recipes.length === 1 && meal.recipes[0]._id === '') {
+            meal.recipes = [];
+          }
+          // if the only food is the default food, remove the food
+          if (meal.food.length === 1 && meal.food[0].amount.toString === '') {
+            meal.food = [];
+          }
+          processIngredients(meal.food);
+        });
+      }
+    }
     // submit
     handleSubmit(event, currentErrors, [dayIdx]);
   };
@@ -128,11 +216,7 @@ const DayList = ({ days, recipes, userId }) => {
   };
   const handleAddMeal = (mealIdx) => {
     const updatedDays = cloneDeep(dayForm);
-    updatedDays.meals.splice(mealIdx + 1, 0, {
-      mealName: '[Meal Name]',
-      food: [{ ...initialRecipe }],
-      calories: 0,
-    });
+    updatedDays.meals.splice(mealIdx + 1, 0, { ...initialMeal });
     setDayForm(updatedDays);
   };
   const handleChangeMeal = (event, mealIdx) => {
@@ -150,13 +234,7 @@ const DayList = ({ days, recipes, userId }) => {
   };
 
   // meal.recipes
-  const initialRecipe = {
-    recipeName: '',
-    _id: '',
-    calories: 0,
-  };
   const handleChangeRecipe = (mealIdx, recipeIdx, newValue) => {
-    console.log('change', mealIdx, recipeIdx, newValue);
     const updatedDay = cloneDeep(dayForm);
     updatedDay.meals[mealIdx].recipes[recipeIdx] = newValue;
     updatedDay.meals[mealIdx].calories = calculateMealCalories(
@@ -211,17 +289,6 @@ const DayList = ({ days, recipes, userId }) => {
   );
 
   // meal.food
-  const initialFood = {
-    amount: {
-      whole: 0,
-      numer: 0,
-      denom: 1,
-      toString: '',
-    },
-    unit: { label: 'none' },
-    ingredientName: '',
-    calPerUnit: 0,
-  };
   const handleChangeFood = (mealIdx, itemIdx, newValue) => {
     const updatedDay = cloneDeep(dayForm);
     updatedDay.meals[mealIdx].food[itemIdx] = newValue;
@@ -234,8 +301,9 @@ const DayList = ({ days, recipes, userId }) => {
   const handleDeleteFood = (mealIdx, itemIdx, item) => {
     const updatedDays = cloneDeep(dayForm);
     updatedDays.meals[mealIdx].food.splice(itemIdx, 1);
-    updatedDays.meals[mealIdx].calories -= item.calories;
-    updatedDays.calories -= item.calories;
+    const changedCalories = item.calPerUnit * convertMixedToNum(item.amount);
+    updatedDays.meals[mealIdx].calories -= changedCalories;
+    updatedDays.calories -= changedCalories;
     setDayForm(updatedDays);
   };
   const handleAddFood = (mealIdx, itemIdx) => {
@@ -392,7 +460,7 @@ const DayList = ({ days, recipes, userId }) => {
                         <Typography>
                           <strong>{meal.mealName}</strong>
                         </Typography>
-                        <Typography>{meal.calories} kCal</Typography>
+                        <Typography>{meal.calories.toFixed(2)} kCal</Typography>
                       </Grid>
                       <Grid item xs={6} sm={8}>
                         <ul className={localClasses.menuContent}>
@@ -429,7 +497,8 @@ const DayList = ({ days, recipes, userId }) => {
                                     <Typography>
                                       {ingredient.amount.toString}
                                       {'\u00A0'}
-                                      {ingredient.unit.label}
+                                      {ingredient.unit.label !== 'none' &&
+                                        ingredient.unit.label}
                                       {'\u00A0'}
                                       <strong>
                                         {ingredient.ingredientName}
@@ -466,7 +535,7 @@ const DayList = ({ days, recipes, userId }) => {
                   );
                 })}
                 <Typography className={localClasses.total}>
-                  <strong>Total:</strong> {day.calories} kCal
+                  <strong>Total:</strong> {day.calories.toFixed(2)} kCal
                 </Typography>
               </>
             )}
@@ -480,7 +549,7 @@ const DayList = ({ days, recipes, userId }) => {
                           return (
                             <Draggable
                               key={`meal-in-field-${meal._id}-${mealIdx}`}
-                              draggableId={meal._id}
+                              draggableId={`meal-in-field-${meal._id}-${mealIdx}`}
                               index={mealIdx}
                             >
                               {(provided) => (
@@ -501,10 +570,24 @@ const DayList = ({ days, recipes, userId }) => {
                                       required
                                     />
                                     <Typography>
-                                      {meal.calories} kCal
+                                      {meal.calories.toFixed(2)} kCal
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={12} sm={8}>
+                                    {meal.recipes.length === 0 && (
+                                      <div className={localClasses.addButton}>
+                                        <RestaurantMenuIcon />
+                                        <Button
+                                          color="primary"
+                                          variant="contained"
+                                          onClick={() =>
+                                            handleAddRecipe(mealIdx, 0)
+                                          }
+                                        >
+                                          Add Recipe
+                                        </Button>
+                                      </div>
+                                    )}
                                     <ul className={localClasses.menuContent}>
                                       {meal.recipes.map((recipe, recipeIdx) => (
                                         <li
@@ -539,7 +622,7 @@ const DayList = ({ days, recipes, userId }) => {
                                                 ]}
                                                 error={
                                                   errors[
-                                                    `meal${mealIdx}food${recipeIdx}`
+                                                    `meal${mealIdx}recipes${recipeIdx}`
                                                   ]
                                                 }
                                                 required
@@ -575,10 +658,22 @@ const DayList = ({ days, recipes, userId }) => {
                                           </Grid>
                                         </li>
                                       ))}
+                                      {meal.food.length === 0 && (
+                                        <div className={localClasses.addButton}>
+                                          <FastfoodIcon />
+                                          <Button
+                                            color="primary"
+                                            variant="contained"
+                                            onClick={() =>
+                                              handleAddFood(mealIdx, 0)
+                                            }
+                                          >
+                                            Add Food
+                                          </Button>
+                                        </div>
+                                      )}
                                       {meal.food.map((item, itemIdx) => (
-                                        <li
-                                          key={`food-field-${item._id}-${itemIdx}`}
-                                        >
+                                        <li key={`food-field-${itemIdx}`}>
                                           <FastfoodIcon
                                             className={localClasses.foodIcon}
                                           />
@@ -589,7 +684,7 @@ const DayList = ({ days, recipes, userId }) => {
                                                 spacing={1}
                                                 alignItems="center"
                                               >
-                                                <Grid item xs={8} lg={3}>
+                                                <Grid item xs={8} md={6} lg={3}>
                                                   <Input
                                                     InputLabelProps={{
                                                       style: {
@@ -603,7 +698,7 @@ const DayList = ({ days, recipes, userId }) => {
                                                           alignItems: 'center',
                                                         }}
                                                       >
-                                                        Amount&nbsp;
+                                                        Amt&nbsp;
                                                         <IconWithTooltip title="Format: Number (Ex: 1) or Number Fraction (ex: 1 1/2)" />
                                                       </div>
                                                     }
@@ -622,16 +717,18 @@ const DayList = ({ days, recipes, userId }) => {
                                                       );
                                                     }}
                                                     error={
-                                                      errors && errors[itemIdx]
+                                                      errors[
+                                                        `meal${mealIdx}food${itemIdx}amount`
+                                                      ]
                                                     }
                                                   />
                                                 </Grid>
-                                                <Grid item xs={4} lg={2}>
+                                                <Grid item xs={4} md={6} lg={3}>
                                                   <AutocompleteField
                                                     label="Unit"
                                                     value={item.unit.label}
                                                     toggleOpen={() => {
-                                                      toggleOpenNewUnitDialog;
+                                                      toggleOpenNewUnitDialog();
                                                       setNewUnitParams([
                                                         mealIdx,
                                                         itemIdx,
@@ -651,12 +748,9 @@ const DayList = ({ days, recipes, userId }) => {
                                                       item,
                                                       'unit',
                                                     ]}
-                                                    error={
-                                                      errors && errors[itemIdx]
-                                                    }
                                                   />
                                                 </Grid>
-                                                <Grid item xs={12} lg={4}>
+                                                <Grid item xs={8} md={6} lg={3}>
                                                   <Input
                                                     label="Food"
                                                     required
@@ -671,13 +765,16 @@ const DayList = ({ days, recipes, userId }) => {
                                                       )
                                                     }
                                                     error={
-                                                      errors && errors[itemIdx]
+                                                      errors[
+                                                        `meal${mealIdx}food${itemIdx}ingredientName`
+                                                      ]
                                                     }
                                                   />
                                                 </Grid>
-                                                <Grid item xs={12} lg={3}>
+                                                <Grid item xs={4} md={6} lg={3}>
                                                   <Input
-                                                    label="Cal/Unit"
+                                                    label="kCal/Unit"
+                                                    type="number"
                                                     value={item.calPerUnit}
                                                     handleChange={(event) =>
                                                       handleChangeIngredientEntry(
@@ -689,7 +786,9 @@ const DayList = ({ days, recipes, userId }) => {
                                                       )
                                                     }
                                                     error={
-                                                      errors && errors[itemIdx]
+                                                      errors[
+                                                        `meal${mealIdx}food${itemIdx}calPerUnit`
+                                                      ]
                                                     }
                                                   />
                                                 </Grid>

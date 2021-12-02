@@ -24,6 +24,15 @@ const styles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'end',
   },
+  addButton: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    '& svg': {
+      marginRight: theme.spacing(1),
+    },
+    marginBottom: theme.spacing(1.5),
+  },
 }));
 
 export { styles };

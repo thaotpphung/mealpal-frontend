@@ -124,7 +124,7 @@ const IngredientCard = ({
                                   }
                                 );
                               }}
-                              error={errors && errors[itemIdx]}
+                              error={errors && errors[`${itemIdx}amount`]}
                             />
                           </Grid>
                           <Grid item xs={4} lg={3}>
@@ -142,7 +142,6 @@ const IngredientCard = ({
                               param="label"
                               options={unitOptions}
                               changedParams={[itemIdx, item, 'unit']}
-                              error={errors && errors[itemIdx]}
                             />
                           </Grid>
                           <Grid item xs={12} lg={6}>
@@ -158,7 +157,9 @@ const IngredientCard = ({
                                   event.target.value
                                 )
                               }
-                              error={errors && errors[itemIdx]}
+                              error={
+                                errors && errors[`${itemIdx}ingredientName`]
+                              }
                             />
                           </Grid>
                         </Grid>
