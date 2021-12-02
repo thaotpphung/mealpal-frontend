@@ -151,12 +151,6 @@ const Navbar = () => {
                 className={classes.logo}
                 onClick={() => history.push('/')}
               />
-              <Chip
-                variant="outlined"
-                size="small"
-                label="Beta"
-                color="primary"
-              />
             </div>
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>

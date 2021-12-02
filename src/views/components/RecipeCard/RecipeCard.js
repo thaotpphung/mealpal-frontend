@@ -13,12 +13,15 @@ import {
   Typography,
   Menu,
   MenuItem,
+  Chip,
 } from '@material-ui/core';
 import FileInputComponent from 'react-file-input-previews-base64';
 import Input from '../../common/Input/Input';
+import InputWithTooltip from '../../common/InputWithTooltip/InputWithTooltip';
 import RoundButton from '../../common/Buttons/RoundButton';
 import BlockButton from '../../common/Buttons/BlockButton';
 import useEditMode from '../../../utils/hooks/useEditMode';
+import useInput from '../../../utils/hooks/useInput';
 import { formatTime } from '../../../utils/time';
 import useForm from '../../../utils/hooks/useForm';
 import {
@@ -39,11 +42,18 @@ const RecipeCard = ({ recipe }) => {
   const { loggedInUser } = useSelector((state) => state.user);
   const history = useHistory();
   const { openEditMode, toggleOpenEditMode, handleCloseEditMode } = useEditMode(
-    () => reset()
+    () => {
+      reset();
+      resetTags();
+    }
   );
   const initialForm = {
     ...getInitialRecipeForm(true, recipe),
   };
+
+  const [tags, handleChangeTags, resetTags] = useInput(
+    recipe.tags.join(', ').replace(/, ([^,]*)$/, ', $1')
+  );
 
   const {
     values: recipeForm,
@@ -53,7 +63,12 @@ const RecipeCard = ({ recipe }) => {
     errors,
     reset,
   } = useForm(initialForm, () => {
-    dispatch(updateRecipe(recipe._id, recipeForm));
+    dispatch(
+      updateRecipe(recipe._id, {
+        ...recipeForm,
+        tags: tags !== '' ? tags.split(',').map((tag) => tag.trim()) : [],
+      })
+    );
     toggleOpenEditMode(false);
   });
 
@@ -174,9 +189,14 @@ const RecipeCard = ({ recipe }) => {
           </>
         }
         title={
-          <Link to={{ pathname: `/recipes/${recipe._id}` }}>
-            <Typography>{recipe.recipeName}</Typography>
-          </Link>
+          <Typography
+            className={classes.clickable}
+            onClick={() =>
+              history.push(`/users/${recipe.userId._id}/recipes/${recipe._id}`)
+            }
+          >
+            {recipe.name}
+          </Typography>
         }
         subheader={`Last Updated ${formatTime(recipe.updatedTime)}`}
       />
@@ -190,7 +210,7 @@ const RecipeCard = ({ recipe }) => {
             ? recipe.recipeImage.url
             : 'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'
         }
-        alt={recipe.recipeName}
+        alt={recipe.name}
       />
 
       <CardContent>
@@ -198,8 +218,8 @@ const RecipeCard = ({ recipe }) => {
           <div>
             <Grid container spacing={1} alignItems="stretch">
               <Grid item xs={12} lg={12}>
-                <Typography>
-                  <strong>Description:</strong> {recipe?.recipeDescription}
+                <Typography className={classes.wordBreak}>
+                  <strong>Description:</strong> {recipe?.description}
                 </Typography>
               </Grid>
               <Grid item xs={12} lg={6}>
@@ -214,7 +234,7 @@ const RecipeCard = ({ recipe }) => {
               </Grid>
               <Grid item xs={12} lg={6}>
                 <Typography>
-                  <strong>Diet:</strong> {recipe?.recipeDiet}
+                  <strong>Time (mins):</strong> {recipe?.time}
                 </Typography>
               </Grid>
               <Grid item xs={12} lg={6}>
@@ -223,19 +243,31 @@ const RecipeCard = ({ recipe }) => {
                 </Typography>
               </Grid>
               <Grid item xs={12} lg={6}>
-                <Typography>
-                  <strong>Time (mins):</strong> {recipe?.time}
-                </Typography>
-              </Grid>
-              <Grid item xs={12} lg={6}>
                 <Typography component="span">
                   <strong>Creator: </strong>
-                  <Link
-                    to={{ pathname: `/users/${recipe.userId._id}/profile` }}
-                  >
-                    {recipe.userId.username}
-                  </Link>
                 </Typography>
+                <Typography
+                  component="span"
+                  className={classes.clickable}
+                  onClick={() =>
+                    history.push(`/users/${recipe.userId._id}/profile`)
+                  }
+                >
+                  {recipe.userId.username}
+                </Typography>
+              </Grid>
+              <Grid item xs={12} lg={12}>
+                <Typography component="span">
+                  <strong>Tags: </strong>
+                </Typography>
+                {recipe.tags.map((tag, tagIdx) => (
+                  <Chip
+                    size="small"
+                    key={`tag-${tagIdx}`}
+                    label={tag}
+                    className={classes.tag}
+                  />
+                ))}
               </Grid>
             </Grid>
           </div>
@@ -272,8 +304,18 @@ const RecipeCard = ({ recipe }) => {
                   error={errors[field.name]}
                   type={field.type ? field.type : 'text'}
                   required={field.required}
+                  multiline
+                  minRows={field.name === 'description' ? 4 : 0}
                 />
               ))}
+              <InputWithTooltip
+                label="Tags"
+                tooltip='Separated by comma, Ex: "Main Course, Chicken, Keto"'
+                multiline
+                minRows={4}
+                value={tags}
+                handleChange={handleChangeTags}
+              />
               <BlockButton type="submit" fullWidth>
                 Submit
               </BlockButton>

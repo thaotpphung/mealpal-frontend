@@ -142,4 +142,16 @@ export default makeStyles((theme) => ({
       display: 'none !important',
     },
   },
+  wordBreak: {
+    overflowWrap: 'break-word',
+    wordWrap: 'break-word',
+  },
+  tag: {
+    margin: theme.spacing(0, 1, 1, 0),
+  },
+  clickable: {
+    cursor: 'pointer',
+    textDecoration: 'underline',
+    color: theme.palette.primary.main,
+  },
 }));

@@ -3,17 +3,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Button } from '@material-ui/core';
 import useStyles from '../../../app/styles';
 import { useHistory, useParams } from 'react-router-dom';
-import WeekCard from '../../components/WeekCard/WeekCard';
 import { getAllWeeks, createWeek } from '../../../redux/actions/weekActions';
 import SearchIcon from '@material-ui/icons/Search';
 import ExploreOutlinedIcon from '@material-ui/icons/ExploreOutlined';
 import AddBoxOutlinedIcon from '@material-ui/icons/AddBoxOutlined';
+import InputWithTooltip from '../../common/InputWithTooltip/InputWithTooltip';
 import Input from '../../common/Input/Input';
 import Spinner from '../../common/Spinner/Spinner';
 import PageNav from '../../common/PageNav/PageNav';
 import EmptyMessage from '../../common/EmptyMessage/EmptyMessage';
 import PopupDialog from '../../common/PopupDialog/PopupDialog';
+import WeekList from '../../components/WeekList/WeekList';
 import usePagination from '../../../utils/hooks/usePagination';
+import useInput from '../../../utils/hooks/useInput';
 import useEditMode from '../../../utils/hooks/useEditMode';
 import useForm from '../../../utils/hooks/useForm';
 import useToggle from '../../../utils/hooks/useToggle';
@@ -26,6 +28,7 @@ const WeekPage = () => {
   const { userId } = useParams();
   const history = useHistory();
   const { loggedInUser } = useSelector((state) => state.user);
+
   const {
     loading,
     weeks,
@@ -43,8 +46,12 @@ const WeekPage = () => {
   }, [weekCount]);
 
   // create week dialog
+  const [tags, handleChangeTags, resetTags] = useInput();
   const { openEditMode, toggleOpenEditMode, handleCloseEditMode } = useEditMode(
-    () => reset()
+    () => {
+      reset();
+      resetTags();
+    }
   );
   const {
     values: dialogValue,
@@ -56,11 +63,18 @@ const WeekPage = () => {
     getInitialWeekForm(false),
     () => {
       dispatch(
-        createWeek({ ...dialogValue, userId: loggedInUser._id }, history)
+        createWeek(
+          {
+            ...dialogValue,
+            tags: tags !== '' ? tags.split(',').map((tag) => tag.trim()) : [],
+            userId: loggedInUser._id,
+          },
+          history
+        )
       );
     },
     validate,
-    ['weekDescription', 'tags', 'weekDiet']
+    ['description', 'tags', 'weekDiet']
   );
 
   // pagination & filtering
@@ -72,12 +86,14 @@ const WeekPage = () => {
     handleChangePage,
     handleChangeQueryField,
     setPageCount,
+    queryFields,
   } = usePagination(
-    { ...getInitialWeekForm(false) },
+    { name: '', description: '', calories: '', tags: '' },
     9,
-    (value) =>
-      dispatch(getAllWeeks(buildQuery(value), isInExploreMode, userId)),
-    '&fields=userId,weekName,weekDescription,weekDiet,caloGoal,tags,updatedTime'
+    (value) => {
+      dispatch(getAllWeeks(buildQuery(value), isInExploreMode, userId));
+    },
+    '&fields=userId,name,description,calories,tags,updatedTime'
   );
 
   // explore mode
@@ -92,19 +108,37 @@ const WeekPage = () => {
   if (!loading && weeks.length >= 0)
     return (
       <div>
+        {/* Change View */}
+        {/* search bar and action */}
         <Grid container spacing={3}>
           <Grid item sm={12} md={12} lg={9}>
             <div className={classes.utilsFields}>
-              {weekFormFields.map((field, fieldIdx) => (
-                <Input
-                  key={`weekfieldform-${field.name}-${fieldIdx}`}
-                  name={field.name}
-                  label={field.label}
-                  handleChange={handleChangeQueryField}
-                  type={field.type ? field.type : 'text'}
-                  step={field.step}
-                />
-              ))}
+              <Input
+                value={queryFields.name}
+                name="name"
+                label="Name"
+                handleChange={handleChangeQueryField}
+              />
+              <Input
+                value={queryFields.description}
+                name="description"
+                label="Description"
+                handleChange={handleChangeQueryField}
+              />
+              <InputWithTooltip
+                value={queryFields.calories}
+                name="calories"
+                label="Calories Range"
+                tooltip='Exact match, Ex: "2000", or separated by comma to search by range, Ex: "0, 2000" or "0," or ",2000"'
+                handleChange={handleChangeQueryField}
+              />
+              <InputWithTooltip
+                value={queryFields.tags}
+                label="Tags"
+                name="tags"
+                tooltip='Separated by comma, Ex: "Weight Loss Program, Keto, Vegan"'
+                handleChange={handleChangeQueryField}
+              />
             </div>
           </Grid>
           <Grid item sm={12} md={12} lg={3}>
@@ -139,36 +173,15 @@ const WeekPage = () => {
             </div>
           </Grid>
         </Grid>
-        {weeks.length === 0 ? (
-          <EmptyMessage />
-        ) : (
-          <>
-            <Grid
-              container
-              alignItems="stretch"
-              spacing={3}
-              className={classes.listContainer}
-            >
-              {weeks.map((week, weekIdx) => (
-                <Grid
-                  key={`{'explore-page-${week._id}-${weekIdx}`}
-                  item
-                  xs={12}
-                  md={6}
-                  lg={4}
-                  xl={3}
-                >
-                  <WeekCard week={week} />
-                </Grid>
-              ))}
-            </Grid>
-            <PageNav
-              count={count}
-              page={page}
-              handleChangePage={handleChangePage}
-              className={classes.pagination}
-            />
-          </>
+        {/* weeks */}
+        <WeekList weeks={weeks} />
+        {weeks.length !== 0 && (
+          <PageNav
+            count={count}
+            page={page}
+            handleChangePage={handleChangePage}
+            className={classes.pagination}
+          />
         )}
         <PopupDialog
           open={openEditMode}
@@ -190,6 +203,14 @@ const WeekPage = () => {
                   step={field.step}
                 />
               ))}
+              <InputWithTooltip
+                label="Tags"
+                tooltip='Separated by comma, Ex: "Main Course, Chicken, Keto"'
+                multiline
+                minRows={4}
+                value={tags}
+                handleChange={handleChangeTags}
+              />
             </div>
           }
         />

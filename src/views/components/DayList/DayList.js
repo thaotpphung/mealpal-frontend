@@ -7,7 +7,7 @@ import { Paper, Typography, Grid, Button } from '@material-ui/core';
 import RestaurantMenuIcon from '@material-ui/icons/RestaurantMenu';
 import CardHeader from '../../common/CardHeader/CardHeader';
 import CardBody from '../../common/CardBody/CardBody';
-import IconWithTooltip from '../../common/IconWithTooltip/IconWithTooltip';
+import InputWithTooltip from '../../common/InputWithTooltip/InputWithTooltip';
 import RoundButton from '../../common/Buttons/RoundButton';
 import useForm from '../../../utils/hooks/useForm';
 import useEditMode from '../../../utils/hooks/useEditMode';
@@ -41,14 +41,14 @@ const DayList = ({ days, recipes, userId }) => {
   const [daysWithCalories, setDaysWithCalories] = useState([]);
   const extractedFieldsForAutoComplete = recipes.map((recipe) => {
     return {
-      recipeName: recipe.recipeName,
+      name: recipe.name,
       _id: recipe._id,
       calories: recipe.calories,
       ingredients: recipe.ingredients,
     };
   });
   const initialRecipe = {
-    recipeName: '',
+    name: '',
     _id: '',
     calories: 0,
   };
@@ -157,12 +157,12 @@ const DayList = ({ days, recipes, userId }) => {
       }
       // validate recipes
       meal.recipes.forEach((recipe, recipeIdx) => {
-        if (recipe.recipeName.trim() === '' && recipeIdx !== 0) {
+        if (recipe.name.trim() === '' && recipeIdx !== 0) {
           currentErrors[`meal${mealIdx}recipes${recipeIdx}`] = '';
         }
       });
       // validate food
-      const regex = /^\d{1,3}(?: [1-9]\d{0,2}\/[1-9]\d{0,2})?$/;
+      const regex = /^\d{1,5}(?: [1-9]\d{0,2}\/[1-9]\d{0,2})?$/;
       meal.food.forEach((item, itemIdx) => {
         const { amount, ingredientName, calPerUnit } = item;
         if (
@@ -274,7 +274,7 @@ const DayList = ({ days, recipes, userId }) => {
     errors: newRecipeErrors,
   } = useForm(
     {
-      recipeName: '',
+      name: '',
       calories: 0,
     },
     () => {
@@ -352,11 +352,11 @@ const DayList = ({ days, recipes, userId }) => {
         content={
           <div className={classes.formPaper}>
             <Input
-              name="recipeName"
+              name="name"
               label="Recipe Name"
               handleChange={handleChangeNewRecipe}
-              value={newRecipe.recipeName}
-              error={newRecipeErrors.recipeName}
+              value={newRecipe.name}
+              error={newRecipeErrors.name}
               required
             />
             <Input
@@ -479,9 +479,7 @@ const DayList = ({ days, recipes, userId }) => {
                                         pathname: `/recipes/${recipe._id}`,
                                       }}
                                     >
-                                      <Typography>
-                                        {recipe.recipeName}
-                                      </Typography>
+                                      <Typography>{recipe.name}</Typography>
                                     </Link>
                                   </li>
                                 );
@@ -612,7 +610,7 @@ const DayList = ({ days, recipes, userId }) => {
                                                 handleChangeAutocompleteField={
                                                   handleChangeRecipe
                                                 }
-                                                param="recipeName"
+                                                param="name"
                                                 options={
                                                   extractedFieldsForAutoComplete
                                                 }
@@ -685,23 +683,9 @@ const DayList = ({ days, recipes, userId }) => {
                                                 alignItems="center"
                                               >
                                                 <Grid item xs={8} md={6} lg={3}>
-                                                  <Input
-                                                    InputLabelProps={{
-                                                      style: {
-                                                        pointerEvents: 'auto',
-                                                      },
-                                                    }}
-                                                    label={
-                                                      <div
-                                                        style={{
-                                                          display: 'flex',
-                                                          alignItems: 'center',
-                                                        }}
-                                                      >
-                                                        Amt&nbsp;
-                                                        <IconWithTooltip title="Format: Number (Ex: 1) or Number Fraction (ex: 1 1/2)" />
-                                                      </div>
-                                                    }
+                                                  <InputWithTooltip
+                                                    label="Amt"
+                                                    tooltip="Number (Ex: 1) or Number Fraction (ex: 1 1/2)"
                                                     value={item.amount.toString}
                                                     handleChange={(event) => {
                                                       handleChangeIngredientEntry(

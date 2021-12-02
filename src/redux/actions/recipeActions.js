@@ -14,10 +14,20 @@ import {
   RECIPE_UPDATE_REQUEST,
   RECIPE_UPDATE_SUCCESS,
   RECIPE_UPDATE_FAIL,
+  RECIPE_SEARCH_LIST_REQUEST,
+  RECIPE_SEARCH_LIST_SUCCESS,
+  RECIPE_SEARCH_LIST_FAIL,
 } from '../constants/recipeConstants';
 import { addAlertWithTimeout } from '../actions/alertActions';
 import * as api from '../../api/index';
-export { getAllRecipes, createRecipe, deleteRecipe, updateRecipe, getRecipe };
+export {
+  getAllRecipes,
+  createRecipe,
+  deleteRecipe,
+  updateRecipe,
+  getRecipe,
+  getAllRecipesForSearching,
+};
 
 // recipe list
 const getAllRecipes =
@@ -34,6 +44,26 @@ const getAllRecipes =
     } catch (error) {
       dispatch({
         type: RECIPE_LIST_FAIL,
+        payload: error?.response.data.message,
+      });
+      dispatch(addAlertWithTimeout('error', error?.response.data.message));
+    }
+  };
+
+const getAllRecipesForSearching =
+  (
+    query = '',
+    isInExploreMode = false,
+    userId = JSON.parse(localStorage.getItem('loggedInUser'))?._id
+  ) =>
+  async (dispatch) => {
+    try {
+      dispatch({ type: RECIPE_SEARCH_LIST_REQUEST });
+      const { data } = await api.getRecipes(query, isInExploreMode, userId);
+      dispatch({ type: RECIPE_SEARCH_LIST_SUCCESS, payload: data.data });
+    } catch (error) {
+      dispatch({
+        type: RECIPE_SEARCH_LIST_FAIL,
         payload: error?.response.data.message,
       });
       dispatch(addAlertWithTimeout('error', error?.response.data.message));

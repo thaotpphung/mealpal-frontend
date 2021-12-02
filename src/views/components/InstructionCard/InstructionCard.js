@@ -68,7 +68,7 @@ const InstructionCard = ({
                               label="Step"
                               value={item}
                               multiline
-                              rows={4}
+                              minRows={4}
                               handleChange={(event) =>
                                 handleChangeInstruction(
                                   itemIdx,

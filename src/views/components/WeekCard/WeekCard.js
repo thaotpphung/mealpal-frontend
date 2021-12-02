@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Grid,
@@ -10,6 +10,7 @@ import {
   Typography,
   Menu,
   MenuItem,
+  Chip,
 } from '@material-ui/core/';
 import useStyles from '../../../app/styles';
 import {
@@ -23,10 +24,12 @@ import { addAlertWithTimeout } from '../../../redux/actions/alertActions';
 import Input from '../../common/Input/Input';
 import useEditMode from '../../../utils/hooks/useEditMode';
 import useForm from '../../../utils/hooks/useForm';
+import useInput from '../../../utils/hooks/useInput';
 import { formatTime } from '../../../utils/time';
 import { getInitialWeekForm, weekFormFields } from '../../../utils/forms/weeks';
 import RoundButton from '../../common/Buttons/RoundButton';
 import BlockButton from '../../common/Buttons/BlockButton';
+import InputWithTooltip from '../../common/InputWithTooltip/InputWithTooltip';
 
 const WeekCard = ({ week }) => {
   const classes = useStyles();
@@ -35,8 +38,16 @@ const WeekCard = ({ week }) => {
   const { weekId } = useParams();
   const { loggedInUser } = useSelector((state) => state.user);
   const { openEditMode, toggleOpenEditMode, handleCloseEditMode } = useEditMode(
-    () => reset()
+    () => {
+      reset();
+      resetTags();
+    }
   );
+
+  const [tags, handleChangeTags, resetTags] = useInput(
+    week.tags.join(', ').replace(/, ([^,]*)$/, ', $1')
+  );
+
   const {
     values: weekForm,
     handleSubmit,
@@ -44,7 +55,12 @@ const WeekCard = ({ week }) => {
     errors,
     reset,
   } = useForm({ ...getInitialWeekForm(true, week) }, () => {
-    dispatch(updateWeek(week._id, weekForm));
+    dispatch(
+      updateWeek(week._id, {
+        ...weekForm,
+        tags: tags !== '' ? tags.split(',').map((tag) => tag.trim()) : [],
+      })
+    );
     toggleOpenEditMode(false);
   });
 
@@ -182,12 +198,18 @@ const WeekCard = ({ week }) => {
           </>
         }
         title={
-          <Link to={{ pathname: `/weeks/${week._id}` }}>
-            <Typography>{week.weekName}</Typography>
-          </Link>
+          <Typography
+            className={classes.clickable}
+            onClick={() =>
+              history.push(`/users/${week.userId._id}/weeks/${week._id}`)
+            }
+          >
+            {week.name}
+          </Typography>
         }
         subheader={`Updated ${formatTime(week.updatedTime)}`}
       />
+
       <CardContent>
         {!openEditMode && (
           <div>
@@ -195,34 +217,41 @@ const WeekCard = ({ week }) => {
               <Grid item xs={12} lg={12}>
                 <Typography>
                   <strong>Description: </strong>
-                  {week.weekDescription}
+                  {week.description}
                 </Typography>
               </Grid>
               <Grid item xs={12} lg={6}>
                 <Typography>
-                  <strong>Calo Goal: </strong>
-                  {week.caloGoal} kCal
-                </Typography>
-              </Grid>
-              <Grid item xs={12} lg={6}>
-                <Typography>
-                  <strong>Diet: </strong>
-                  {week.weekDiet}
-                </Typography>
-              </Grid>
-              <Grid item xs={12} lg={6}>
-                <Typography>
-                  <strong>Tags: </strong>
-                  {week.tags}
+                  <strong>Calories/Day: </strong>
+                  {week.calories} kCal
                 </Typography>
               </Grid>
               <Grid item xs={12} lg={6}>
                 <Typography component="span">
                   <strong>Creator: </strong>
-                  <Link to={{ pathname: `/users/${week.userId._id}/profile` }}>
-                    {week.userId.username}
-                  </Link>
                 </Typography>
+                <Typography
+                  component="span"
+                  className={classes.clickable}
+                  onClick={() =>
+                    history.push(`/users/${week.userId._id}/profile`)
+                  }
+                >
+                  {week.userId.username}
+                </Typography>
+              </Grid>
+              <Grid item xs={12} lg={12}>
+                <Typography component="span">
+                  <strong>Tags: </strong>
+                </Typography>
+                {week.tags.map((tag, tagIdx) => (
+                  <Chip
+                    size="small"
+                    key={`tag-${tagIdx}`}
+                    label={tag}
+                    className={classes.tag}
+                  />
+                ))}
               </Grid>
             </Grid>
           </div>
@@ -240,8 +269,18 @@ const WeekCard = ({ week }) => {
                 error={errors[field.name]}
                 required={field.required}
                 step={field.step}
+                multiline
+                minRows={field.name === 'description' ? 4 : 0}
               />
             ))}
+            <InputWithTooltip
+              label="tags"
+              tooltip='Separated by comma, Ex: "Weight Loss Program, Keto, Vegan"'
+              multiline
+              minRows={4}
+              value={tags}
+              handleChange={handleChangeTags}
+            />
             <BlockButton type="submit" fullWidth>
               Submit
             </BlockButton>

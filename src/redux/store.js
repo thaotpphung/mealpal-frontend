@@ -11,6 +11,7 @@ import { weekListReducer, weekDetailsReducer } from './reducers/weekReducers';
 import {
   recipeListReducer,
   recipeDetailsReducer,
+  recipeSearchListReducer,
 } from './reducers/recipeReducers';
 import { getEnvVars } from '../utils/envs';
 const env = getEnvVars(window.location.host);
@@ -32,6 +33,7 @@ const rootReducer = combineReducers({
   weekList: weekListReducer,
   week: weekDetailsReducer,
   recipeList: recipeListReducer,
+  recipeSearchList: recipeSearchListReducer,
   recipe: recipeDetailsReducer,
   alertList: alertListReducer,
   cart: cartReducer,

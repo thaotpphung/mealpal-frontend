@@ -31,8 +31,7 @@ const addOne = (recipe, cart) => {
         current = { whole: 0, numer: 0, denom: 1 };
       const result = addMixedNumber(current, ingredient.amount);
       cart[ingredient.ingredientName].units[ingredient.unit.label] = result;
-      cart[ingredient.ingredientName].recipes[recipe.recipeName] =
-        recipe.recipeName;
+      cart[ingredient.ingredientName].recipes[recipe.name] = recipe.name;
     }
   });
   return cart;

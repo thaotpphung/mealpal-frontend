@@ -1,11 +1,13 @@
+import IconWithTooltip from '../../views/common/IconWithTooltip/IconWithTooltip';
+
 export const recipeFormFields = [
   {
-    name: 'recipeName',
+    name: 'name',
     label: 'Name',
     required: true,
   },
   {
-    name: 'recipeDescription',
+    name: 'description',
     label: 'Description',
     required: false,
   },
@@ -14,12 +16,6 @@ export const recipeFormFields = [
     label: 'Calories',
     required: true,
     type: 'number',
-    step: 0.01,
-  },
-  {
-    name: 'recipeDiet',
-    label: 'Diet',
-    required: false,
   },
   {
     name: 'time',
@@ -31,6 +27,7 @@ export const recipeFormFields = [
     label: 'Servings',
     required: false,
     type: 'number',
+    step: 1,
   },
   {
     name: 'servingSize',
@@ -41,10 +38,9 @@ export const recipeFormFields = [
 
 export const getInitialRecipeForm = (isPrefilled, recipe = {}) => {
   return {
-    recipeName: isPrefilled ? recipe.recipeName : '',
-    recipeDescription: isPrefilled ? recipe.recipeDescription : '',
-    calories: isPrefilled ? recipe.calories : '',
-    recipeDiet: isPrefilled ? recipe.recipeDiet : '',
+    name: isPrefilled ? recipe.name : '',
+    description: isPrefilled ? recipe.description : '',
+    calories: isPrefilled ? recipe.calories : 0,
     time: isPrefilled ? recipe.time : '',
     servings: isPrefilled ? recipe.servings : 0,
     servingSize: isPrefilled ? recipe.servingSize : '',

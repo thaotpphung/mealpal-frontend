@@ -181,12 +181,12 @@ const CartPage = () => {
                                 style={{ margin: '10px 10px 10px 0' }}
                               />
                               {Object.keys(value.recipes).map(
-                                (recipeName, recipeIdx, recipes) => (
+                                (name, recipeIdx, recipes) => (
                                   <Typography
-                                    key={`recipe-name-${recipeName}-${recipeIdx}`}
+                                    key={`recipe-name-${name}-${recipeIdx}`}
                                     component="span"
                                   >
-                                    {recipeName}
+                                    {name}
                                     {recipeIdx < recipes.length - 1 &&
                                       ', \u00A0'}
                                   </Typography>

@@ -78,7 +78,7 @@ const RecipeDetails = ({ recipe }) => {
     // validate
     const errors = {};
     // validate ingredients
-    const regex = /^\d{1,3}(?: [1-9]\d{0,2}\/[1-9]\d{0,2})?$/;
+    const regex = /^\d{1,5}(?: [1-9]\d{0,2}\/[1-9]\d{0,2})?$/;
     ingredients.forEach((item, itemIdx) => {
       const { amount, ingredientName } = item;
       if (

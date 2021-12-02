@@ -14,6 +14,9 @@ import {
   RECIPE_UPDATE_REQUEST,
   RECIPE_UPDATE_SUCCESS,
   RECIPE_UPDATE_FAIL,
+  RECIPE_SEARCH_LIST_REQUEST,
+  RECIPE_SEARCH_LIST_SUCCESS,
+  RECIPE_SEARCH_LIST_FAIL,
 } from '../constants/recipeConstants';
 
 const RECIPE_LIST_INITIAL_STATE = {
@@ -59,6 +62,28 @@ const recipeListReducer = (state = RECIPE_LIST_INITIAL_STATE, action) => {
   }
 };
 
+const recipeSearchListReducer = (state = RECIPE_LIST_INITIAL_STATE, action) => {
+  switch (action.type) {
+    case RECIPE_SEARCH_LIST_REQUEST:
+      return { ...state, loading: true, error: '' };
+
+    case RECIPE_SEARCH_LIST_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        recipes: action.payload.data,
+        error: '',
+      };
+    }
+
+    case RECIPE_SEARCH_LIST_FAIL:
+      return { ...state, loading: false, error: action.payload };
+
+    default:
+      return state;
+  }
+};
+
 const RECIPE_DETAILS_INITIAL_STATE = {
   recipe: {},
   loading: false,
@@ -96,4 +121,4 @@ const recipeDetailsReducer = (state = RECIPE_DETAILS_INITIAL_STATE, action) => {
   }
 };
 
-export { recipeListReducer, recipeDetailsReducer };
+export { recipeListReducer, recipeDetailsReducer, recipeSearchListReducer };

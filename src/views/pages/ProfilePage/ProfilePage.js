@@ -119,7 +119,7 @@ const ProfilePage = () => {
       lastName: loggedInUser?.lastName,
       bio: loggedInUser?.bio,
       avatar: loggedInUser?.avatar,
-      caloGoal: loggedInUser?.caloGoal,
+      calories: loggedInUser?.calories,
       preferredDiet: loggedInUser?.preferredDiet,
     },
     () => {
@@ -127,7 +127,7 @@ const ProfilePage = () => {
       handleCloseEditProfile();
     },
     validate,
-    ['bio', 'avatar', 'caloGoal', 'preferredDiet']
+    ['bio', 'avatar', 'calories', 'preferredDiet']
   );
 
   // password
@@ -361,14 +361,14 @@ const ProfilePage = () => {
                         disabled={!openEditProfile}
                       />
                       <Input
-                        name="caloGoal"
+                        name="calories"
                         label="Calories Goal"
                         type="number"
                         step={0.01}
                         value={
                           !openEditProfile
-                            ? currentUser.caloGoal
-                            : userForm.caloGoal
+                            ? currentUser.calories
+                            : userForm.calories
                         }
                         handleChange={handleChangeProfile}
                         disabled={!openEditProfile}
@@ -380,7 +380,7 @@ const ProfilePage = () => {
                           !openEditProfile ? currentUser.bio : userForm.bio
                         }
                         multiline
-                        rows={4}
+                        minRows={4}
                         handleChange={handleChangeProfile}
                         disabled={!openEditProfile}
                       />

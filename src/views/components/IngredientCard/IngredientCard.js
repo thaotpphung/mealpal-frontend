@@ -7,6 +7,7 @@ import useForm from '../../../utils/hooks/useForm';
 import Input from '../../common/Input/Input';
 import PopupDialog from '../../common/PopupDialog/PopupDialog';
 import IconWithTooltip from '../../common/IconWithTooltip/IconWithTooltip';
+import InputWithTooltip from '../../common/InputWithTooltip/InputWithTooltip';
 import RoundButton from '../../common/Buttons/RoundButton';
 import AutocompleteField from '../../common/AutocompleteField/AutocompleteField';
 import CardBody from '../../common/CardBody/CardBody';
@@ -97,21 +98,9 @@ const IngredientCard = ({
                       <>
                         <Grid container spacing={2} alignItems="center">
                           <Grid item xs={8} lg={3}>
-                            <Input
-                              InputLabelProps={{
-                                style: { pointerEvents: 'auto' },
-                              }}
-                              label={
-                                <div
-                                  style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                  }}
-                                >
-                                  Amount&nbsp;
-                                  <IconWithTooltip title="Format: Number (Ex: 1) or Number Fraction (ex: 1 1/2)" />
-                                </div>
-                              }
+                            <InputWithTooltip
+                              label="Amount"
+                              tooltip="Number (Ex: 1) or Number Fraction (ex: 1 1/2)"
                               value={item.amount.toString}
                               handleChange={(event) => {
                                 handleChangeIngredientEntry(

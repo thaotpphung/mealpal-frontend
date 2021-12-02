@@ -11,9 +11,13 @@ import PopupDialog from '../../common/PopupDialog/PopupDialog';
 import PageNav from '../../common/PageNav/PageNav';
 import Input from '../../common/Input/Input';
 import Spinner from '../../common/Spinner/Spinner';
+import IconWithTooltip from '../../common/IconWithTooltip/IconWithTooltip';
+import InputWithTooltip from '../../common/InputWithTooltip/InputWithTooltip';
 import EmptyMessage from '../../common/EmptyMessage/EmptyMessage';
+import RecipeList from '../../components/RecipeList/RecipeList';
 import useEditMode from '../../../utils/hooks/useEditMode';
 import useForm from '../../../utils/hooks/useForm';
+import useInput from '../../../utils/hooks/useInput';
 import useToggle from '../../../utils/hooks/useToggle';
 import usePagination from '../../../utils/hooks/usePagination';
 import {
@@ -49,8 +53,13 @@ const RecipePage = () => {
   }, [recipeCount]);
 
   // create recipe dialog
+  const [tags, handleChangeTags, resetTags] = useInput();
+
   const { openEditMode, toggleOpenEditMode, handleCloseEditMode } = useEditMode(
-    () => reset()
+    () => {
+      reset();
+      resetTags();
+    }
   );
   const {
     values: dialogValue,
@@ -60,7 +69,14 @@ const RecipePage = () => {
     errors,
   } = useForm(getInitialRecipeForm(false), () => {
     dispatch(
-      createRecipe({ ...dialogValue, userId: loggedInUser._id }, history)
+      createRecipe(
+        {
+          ...dialogValue,
+          tags: tags !== '' ? tags.split(',').map((tag) => tag.trim()) : [],
+          userId: loggedInUser._id,
+        },
+        history
+      )
     );
   });
 
@@ -73,12 +89,13 @@ const RecipePage = () => {
     handleChangePage,
     handleChangeQueryField,
     setPageCount,
+    queryFields,
   } = usePagination(
-    getInitialRecipeForm(false),
+    { name: '', description: '', calories: '', tags: '', ingredients: '' },
     9,
     (value) =>
       dispatch(getAllRecipes(buildQuery(value), isInExploreMode, userId)),
-    '&fields=userId,recipeName,recipeDescription,recipeDiet,calories,servings,time,servingSize,updatedTime'
+    '&fields=userId,name,description,tags,calories,servings,time,servingSize,updatedTime,recipeImage'
   );
 
   // explore mode
@@ -96,16 +113,39 @@ const RecipePage = () => {
         <Grid container spacing={3}>
           <Grid item sm={12} md={12} lg={9}>
             <div className={classes.utilsFields}>
-              {recipeFormFields.map((field, fieldIdx) => (
-                <Input
-                  className={classes.utilField}
-                  key={`recipe-utils-${field.name}-${fieldIdx}`}
-                  name={field.name}
-                  label={field.label}
-                  handleChange={handleChangeQueryField}
-                  type={field.type ? field.type : 'text'}
-                />
-              ))}
+              <Input
+                value={queryFields.name}
+                name="name"
+                label="Name"
+                handleChange={handleChangeQueryField}
+              />
+              <Input
+                value={queryFields.description}
+                name="description"
+                label="Description"
+                handleChange={handleChangeQueryField}
+              />
+              <InputWithTooltip
+                value={queryFields.calories}
+                name="calories"
+                label="Calories Range"
+                tooltip='Exact match, Ex: "2000", or separated by comma to search by range, Ex: "0, 2000" or "0," or ",2000"'
+                handleChange={handleChangeQueryField}
+              />
+              <InputWithTooltip
+                value={queryFields.tags}
+                label="Tags"
+                name="tags"
+                tooltip='Separated by comma, Ex: "Main Course, Keto"'
+                handleChange={handleChangeQueryField}
+              />
+              <InputWithTooltip
+                value={queryFields.ingredients}
+                label="Ingredients"
+                name="ingredients"
+                tooltip='Separated by comma, Ex: "Milk, Banana"'
+                handleChange={handleChangeQueryField}
+              />
             </div>
           </Grid>
           <Grid item sm={12} md={12} lg={3}>
@@ -140,31 +180,14 @@ const RecipePage = () => {
             </div>
           </Grid>
         </Grid>
-
-        {recipes.length === 0 ? (
-          <EmptyMessage />
-        ) : (
-          <>
-            <Grid
-              className={classes.listContainer}
-              container
-              alignItems="stretch"
-              spacing={3}
-            >
-              {recipes.map((recipe) => (
-                <Grid key={recipe._id} item xs={12} md={6} lg={4} xl={3}>
-                  <RecipeCard recipe={recipe} />
-                </Grid>
-              ))}
-            </Grid>
-            <PageNav
-              count={count}
-              page={page}
-              handleChangePage={handleChangePage}
-            />
-          </>
+        <RecipeList recipes={recipes} />
+        {recipes.length !== 0 && (
+          <PageNav
+            count={count}
+            page={page}
+            handleChangePage={handleChangePage}
+          />
         )}
-
         <PopupDialog
           open={openEditMode}
           title="Add a new recipe"
@@ -182,8 +205,27 @@ const RecipePage = () => {
                   error={errors[field.name]}
                   type={field.type ? field.type : 'text'}
                   required={field.required}
+                  step={field.step}
                 />
               ))}
+              <Input
+                InputLabelProps={{
+                  style: { pointerEvents: 'auto' },
+                }}
+                label={
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                    }}
+                  >
+                    Tags&nbsp;
+                    <IconWithTooltip title='Separated by comma, Ex: "Main Course, Keto"' />
+                  </div>
+                }
+                value={tags}
+                handleChange={handleChangeTags}
+              />
             </div>
           }
         />
