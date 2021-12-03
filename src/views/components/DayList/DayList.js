@@ -64,7 +64,7 @@ const DayList = ({ days, recipes, userId }) => {
     calPerUnit: 0,
   };
   const initialMeal = {
-    mealName: '[Meal Name]',
+    name: '[Meal Name]',
     recipes: [{ ...initialRecipe }],
     food: [{ ...initialFood }],
     calories: 0,
@@ -152,7 +152,7 @@ const DayList = ({ days, recipes, userId }) => {
     // if the only meal is the default meal, remove the meal
     dayForm.meals.forEach((meal, mealIdx) => {
       // validate meal
-      if (meal.mealName.trim() === '' && mealIdx !== 0) {
+      if (meal.name.trim() === '' && mealIdx !== 0) {
         currentErrors[`meal${mealIdx}`] = '';
       }
       // validate recipes
@@ -165,8 +165,11 @@ const DayList = ({ days, recipes, userId }) => {
       const regex = /^\d{1,5}(?: [1-9]\d{0,2}\/[1-9]\d{0,2})?$/;
       meal.food.forEach((item, itemIdx) => {
         const { amount, ingredientName, calPerUnit } = item;
+        // if the first row is the default row, then skip validation
         if (
-          (!amount.toString || amount.toString.trim() === '') &&
+          amount.toString.trim() === '' &&
+          ingredientName.trim() === '' &&
+          calPerUnit === 0 &&
           itemIdx === 0
         ) {
           return;
@@ -181,7 +184,7 @@ const DayList = ({ days, recipes, userId }) => {
         if (!ingredientName || ingredientName.trim() === '') {
           currentErrors[`meal${mealIdx}food${itemIdx}ingredientName`] = '';
         }
-        if (calPerUnit < 0 || calPerUnit > 10000) {
+        if (calPerUnit === '' || calPerUnit < 0 || calPerUnit > 10000) {
           currentErrors[`meal${mealIdx}food${itemIdx}calPerUnit`] = '';
         }
       });
@@ -221,7 +224,7 @@ const DayList = ({ days, recipes, userId }) => {
   };
   const handleChangeMeal = (event, mealIdx) => {
     const updatedDays = cloneDeep(dayForm);
-    updatedDays.meals[mealIdx].mealName = event.target.value;
+    updatedDays.meals[mealIdx].name = event.target.value;
     setDayForm(updatedDays);
   };
   // drag meal
@@ -395,7 +398,7 @@ const DayList = ({ days, recipes, userId }) => {
       {daysWithCalories.map((day, dayIdx) => (
         <Paper key={`day-card-${day._id}-${dayIdx}`}>
           <CardHeader
-            title={`${day.dayName}`}
+            title={`${day.name}`}
             action={
               <>
                 {!!loggedInUser && loggedInUser._id === userId._id && (
@@ -458,7 +461,7 @@ const DayList = ({ days, recipes, userId }) => {
                     >
                       <Grid item xs={4} sm={2}>
                         <Typography>
-                          <strong>{meal.mealName}</strong>
+                          <strong>{meal.name}</strong>
                         </Typography>
                         <Typography>{meal.calories.toFixed(2)} kCal</Typography>
                       </Grid>
@@ -560,7 +563,7 @@ const DayList = ({ days, recipes, userId }) => {
                                 >
                                   <Grid item xs={12} sm={2}>
                                     <Input
-                                      value={meal.mealName}
+                                      value={meal.name}
                                       handleChange={(e) =>
                                         handleChangeMeal(e, mealIdx)
                                       }

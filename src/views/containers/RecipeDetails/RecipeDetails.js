@@ -81,8 +81,10 @@ const RecipeDetails = ({ recipe }) => {
     const regex = /^\d{1,5}(?: [1-9]\d{0,2}\/[1-9]\d{0,2})?$/;
     ingredients.forEach((item, itemIdx) => {
       const { amount, ingredientName } = item;
+      // if the first row is the default row, then skip validation
       if (
-        (!amount.toString || amount.toString.trim() === '') &&
+        amount.toString.trim() === '' &&
+        ingredientName.trim() === '' &&
         itemIdx === 0
       ) {
         return;
