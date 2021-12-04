@@ -1,20 +1,19 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
-import { Grid, Button } from '@material-ui/core';
+import { Grid, Button, Tooltip } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import AddBoxOutlinedIcon from '@material-ui/icons/AddBoxOutlined';
 import ExploreOutlinedIcon from '@material-ui/icons/ExploreOutlined';
 import useStyles from '../../../app/styles';
-import RecipeCard from '../../components/RecipeCard/RecipeCard';
 import PopupDialog from '../../common/PopupDialog/PopupDialog';
-import PageNav from '../../common/PageNav/PageNav';
 import Input from '../../common/Input/Input';
 import Spinner from '../../common/Spinner/Spinner';
-import IconWithTooltip from '../../common/IconWithTooltip/IconWithTooltip';
-import InputWithTooltip from '../../common/InputWithTooltip/InputWithTooltip';
+import RoundButton from '../../common/Buttons/RoundButton';
 import EmptyMessage from '../../common/EmptyMessage/EmptyMessage';
-import RecipeList from '../../components/RecipeList/RecipeList';
+import InputWithTooltip from '../../common/InputWithTooltip/InputWithTooltip';
+import RecipeList from '../../containers/RecipeList/RecipeList';
+import PaginatedTable from '../../containers/PaginatedTable/PaginatedTable';
 import useEditMode from '../../../utils/hooks/useEditMode';
 import useForm from '../../../utils/hooks/useForm';
 import useInput from '../../../utils/hooks/useInput';
@@ -24,10 +23,13 @@ import {
   createRecipe,
   getAllRecipes,
 } from '../../../redux/actions/recipeActions';
+import { updateUser } from '../../../redux/actions/userActions';
 import {
   getInitialRecipeForm,
   recipeFormFields,
 } from '../../../utils/forms/recipes';
+import ViewModuleIcon from '@material-ui/icons/ViewModule';
+import ViewListIcon from '@material-ui/icons/ViewList';
 
 const RecipePage = () => {
   const classes = useStyles();
@@ -43,18 +45,18 @@ const RecipePage = () => {
     error,
   } = useSelector((state) => state.recipeList);
 
-  // get initial weeks
+  // get initial recipes
   useEffect(() => {
     dispatch(getAllRecipes(buildQuery(), isInExploreMode, userId));
   }, []);
 
+  // set count for pagination when recipes have been loaded
   useEffect(() => {
-    setPageCount(recipeCount);
+    handleChangePageCount(recipeCount);
   }, [recipeCount]);
 
   // create recipe dialog
   const [tags, handleChangeTags, resetTags] = useInput();
-
   const { openEditMode, toggleOpenEditMode, handleCloseEditMode } = useEditMode(
     () => {
       reset();
@@ -82,13 +84,16 @@ const RecipePage = () => {
 
   // pagination & filtering
   const {
+    pageCount,
     count,
     page,
+    limit,
     buildQuery,
     handleSubmitFilter,
     handleChangePage,
+    handleChangeLimit,
     handleChangeQueryField,
-    setPageCount,
+    handleChangePageCount,
     queryFields,
   } = usePagination(
     { name: '', description: '', calories: '', tags: '', ingredients: '' },
@@ -101,8 +106,31 @@ const RecipePage = () => {
   // explore mode
   const [isInExploreMode, toggleIsInExploreMode] = useToggle(false);
   const handleChangeMode = () => {
-    dispatch(getAllRecipes(buildQuery(undefined), !isInExploreMode, userId));
+    dispatch(getAllRecipes(buildQuery(), !isInExploreMode, userId));
     toggleIsInExploreMode();
+  };
+
+  // view
+  const defaultView = loggedInUser ? loggedInUser.recipeView : 'board';
+  const [view, toggleView] = useToggle(defaultView === 'board' ? false : true); // initially the view is board view
+  useEffect(() => {
+    if (view) {
+      // change to table view
+      handleChangeLimit(5);
+      handleChangePage(undefined, 0);
+    } else {
+      // change to card view
+      handleChangeLimit(9);
+      handleChangePage(undefined, 1);
+    }
+  }, [view]);
+  const handleChangeView = () => {
+    toggleView();
+  };
+  const handleSetDefaultView = () => {
+    dispatch(
+      updateUser(loggedInUser._id, { recipeView: view ? 'table' : 'board' })
+    );
   };
 
   if (!loading && error) return <EmptyMessage />;
@@ -110,7 +138,36 @@ const RecipePage = () => {
   if (!loading && recipes.length >= 0)
     return (
       <div>
-        <Grid container spacing={3}>
+        {/* Change View */}
+        <div style={{ float: 'right' }}>
+          {loggedInUser && (
+            <Tooltip
+              style={{ marginRight: '8px' }}
+              title="Set current view as default"
+              placement="top"
+            >
+              <span>
+                <RoundButton
+                  type="default"
+                  handleClick={handleSetDefaultView}
+                />
+              </span>
+            </Tooltip>
+          )}
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleChangeView}
+          >
+            {view ? (
+              <ViewModuleIcon fontSize="small" />
+            ) : (
+              <ViewListIcon fontSize="small" />
+            )}
+            &nbsp;{view ? 'Board' : 'Table'} View
+          </Button>
+        </div>
+        <Grid container spacing={3} style={{ marginBottom: '12px' }}>
           <Grid item sm={12} md={12} lg={9}>
             <div className={classes.utilsFields}>
               <Input
@@ -128,7 +185,7 @@ const RecipePage = () => {
               <InputWithTooltip
                 value={queryFields.calories}
                 name="calories"
-                label="Calories Range"
+                label="Calories"
                 tooltip='Exact match, Ex: "2000", or separated by comma to search by range, Ex: "0, 2000" or "0," or ",2000"'
                 handleChange={handleChangeQueryField}
               />
@@ -180,12 +237,23 @@ const RecipePage = () => {
             </div>
           </Grid>
         </Grid>
-        <RecipeList recipes={recipes} />
-        {recipes.length !== 0 && (
-          <PageNav
-            count={count}
+        {/* recipes */}
+        {!view ? (
+          <RecipeList
+            recipes={recipes}
+            count={pageCount}
             page={page}
             handleChangePage={handleChangePage}
+          />
+        ) : (
+          <PaginatedTable
+            title="recipes"
+            data={recipes}
+            count={count}
+            limit={limit}
+            page={page}
+            handleChangePage={handleChangePage}
+            handleChangeLimit={handleChangeLimit}
           />
         )}
         <PopupDialog
@@ -208,21 +276,9 @@ const RecipePage = () => {
                   step={field.step}
                 />
               ))}
-              <Input
-                InputLabelProps={{
-                  style: { pointerEvents: 'auto' },
-                }}
-                label={
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                    }}
-                  >
-                    Tags&nbsp;
-                    <IconWithTooltip title='Separated by comma, Ex: "Main Course, Keto"' />
-                  </div>
-                }
+              <InputWithTooltip
+                label="Tags"
+                tooltip='Separated by comma, Ex: "Main Course, Keto"'
                 value={tags}
                 handleChange={handleChangeTags}
               />

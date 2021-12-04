@@ -1,5 +1,3 @@
-import IconWithTooltip from '../../views/common/IconWithTooltip/IconWithTooltip';
-
 export const recipeFormFields = [
   {
     name: 'name',

@@ -2,7 +2,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   delete: {
-    color: theme.palette.secondary.dark,
+    color: theme.palette.error.dark,
   },
   blockButton: {
     color: theme.palette.primary.contrastText,

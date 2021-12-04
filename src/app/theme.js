@@ -4,7 +4,9 @@ import 'lato-font';
 export const theme = createTheme({
   palette: {
     primary: {
-      // main: deepPurple[300],
+      main: '#666AF6',
+    },
+    secondary: {
       main: '#666AF6',
     },
   },

@@ -11,7 +11,7 @@ import Footer from '../views/common/Footer/Footer';
 import FlashMessage from '../views/common/FlashMessage/FlashMessage';
 import WeekDetailsPage from '../views/pages/WeekDetailsPage/WeekDetailsPage';
 import WeekPage from '../views/pages/WeekPage/WeekPage';
-import HomePage from '../views/pages/HomePage/HomePage';
+import LandingPage from '../views/pages/LandingPage/LandingPage';
 import CartPage from '../views/pages/CartPage/CartPage';
 import AuthPage from '../views/pages/AuthPage/AuthPage';
 import ProfilePage from '../views/pages/ProfilePage/ProfilePage';
@@ -32,7 +32,15 @@ function App() {
         <FlashMessage />
         <div className={classes.container}>
           <Switch>
-            <Route path="/" exact component={HomePage} />
+            <Route
+              path="/"
+              exact
+              component={
+                !loggedInUser
+                  ? LandingPage
+                  : () => <WeekDetailsPage id={loggedInUser.currentWeek} />
+              }
+            />
             {['/users/:userId/weeks', '/weeks'].map((route) => (
               <Route key={route} path={route} exact component={WeekPage} />
             ))}

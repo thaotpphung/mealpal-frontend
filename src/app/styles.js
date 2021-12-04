@@ -92,9 +92,7 @@ export default makeStyles((theme) => ({
     marginTop: theme.spacing(2),
   },
   utilsBar: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginBottom: theme.spacing(3),
+    marginBottom: theme.spacing(2),
   },
   avatar: {
     backgroundColor: 'white',
@@ -114,7 +112,6 @@ export default makeStyles((theme) => ({
       display: 'block',
     },
     justifyContent: 'end',
-    marginRight: theme.spacing(1),
     alignItems: 'center',
     '& div': {
       display: 'flex',
@@ -123,13 +120,12 @@ export default makeStyles((theme) => ({
     '& > button': {
       textAlign: 'center',
       minWidth: '90px',
-      margin: theme.spacing(1, 0.6),
+      margin: theme.spacing(1, 0.5),
     },
   },
   foodIcon: {
     marginRight: theme.spacing(1),
   },
-
   sectionDesktop: {
     display: 'none',
     [theme.breakpoints.up('md')]: {
@@ -153,5 +149,32 @@ export default makeStyles((theme) => ({
     cursor: 'pointer',
     textDecoration: 'underline',
     color: theme.palette.primary.main,
+  },
+  tableRoot: {
+    width: '100%',
+  },
+  tablePaper: {
+    width: '100%',
+    marginBottom: theme.spacing(2),
+  },
+  table: {
+    minWidth: 750,
+  },
+  tableCellOverflow: {
+    overflow: 'hidden',
+    maxWidth: '150px',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+  visuallyHidden: {
+    border: 0,
+    clip: 'rect(0 0 0 0)',
+    height: 1,
+    margin: -1,
+    overflow: 'hidden',
+    padding: 0,
+    position: 'absolute',
+    top: 20,
+    width: 1,
   },
 }));

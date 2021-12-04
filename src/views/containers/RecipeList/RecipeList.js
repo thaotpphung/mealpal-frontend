@@ -2,9 +2,10 @@ import React from 'react';
 import { Grid } from '@material-ui/core';
 import useStyles from '../../../app/styles';
 import EmptyMessage from '../../common/EmptyMessage/EmptyMessage';
-import RecipeCard from '../RecipeCard/RecipeCard';
+import RecipeCard from '../../components/RecipeCard/RecipeCard';
+import PageNav from '../../common/PageNav/PageNav';
 
-const RecipeList = ({ recipes }) => {
+const RecipeList = ({ recipes, count, page, handleChangePage }) => {
   const classes = useStyles();
 
   return (
@@ -32,6 +33,12 @@ const RecipeList = ({ recipes }) => {
               </Grid>
             ))}
           </Grid>
+          <PageNav
+            count={count}
+            page={page}
+            handleChangePage={handleChangePage}
+            className={classes.pagination}
+          />
         </>
       )}
     </>

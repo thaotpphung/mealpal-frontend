@@ -287,9 +287,6 @@ const WeekCard = ({ week }) => {
           </form>
         )}
       </CardContent>
-      {/* <CardActions disableSpacing>
-        <RoundButton type="like" />
-      </CardActions> */}
     </Card>
   );
 };

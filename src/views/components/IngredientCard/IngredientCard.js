@@ -6,7 +6,6 @@ import useEditMode from '../../../utils/hooks/useEditMode';
 import useForm from '../../../utils/hooks/useForm';
 import Input from '../../common/Input/Input';
 import PopupDialog from '../../common/PopupDialog/PopupDialog';
-import IconWithTooltip from '../../common/IconWithTooltip/IconWithTooltip';
 import InputWithTooltip from '../../common/InputWithTooltip/InputWithTooltip';
 import RoundButton from '../../common/Buttons/RoundButton';
 import AutocompleteField from '../../common/AutocompleteField/AutocompleteField';

@@ -96,10 +96,6 @@ const RecipeCard = ({ recipe }) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
-  const handleSubmitUpdateRecipe = (event) => {
-    handleSubmit(event);
-  };
-
   const renderMobileMenu = (
     <Menu
       anchorEl={mobileMoreAnchorEl}
@@ -274,10 +270,7 @@ const RecipeCard = ({ recipe }) => {
         )}
         {openEditMode && (
           <>
-            <form
-              className={classes.formContainer}
-              onSubmit={handleSubmitUpdateRecipe}
-            >
+            <form className={classes.formContainer} onSubmit={handleSubmit}>
               <FileInputComponent
                 labelText=""
                 labelStyle={{ display: 'none' }}
