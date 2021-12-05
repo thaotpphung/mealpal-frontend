@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Button, Tooltip } from '@material-ui/core';
 import useStyles from '../../../app/styles';
@@ -58,8 +58,12 @@ const WeekPage = () => {
     { name: '', description: '', calories: '', tags: '' },
     loggedInUser.weekView === 'table' ? 0 : 1,
     loggedInUser.weekView === 'table' ? 5 : 9,
-    (page, limit) => {
-      dispatch(getAllWeeks(buildQuery(page, limit), isInExploreMode, userId));
+    (page = 0, newLimit = limit) => {
+      let newPage = view ? page + 1 : page;
+      console.log('call call back', newPage, newLimit);
+      dispatch(
+        getAllWeeks(buildQuery(newPage, newLimit), isInExploreMode, userId)
+      );
     },
     '&fields=userId,name,description,calories,tags,updatedTime'
   );
@@ -72,21 +76,22 @@ const WeekPage = () => {
     table: {
       value: true,
       defaultLimit: 5,
-      defaultPage: 0,
+      offset: 0,
     },
     board: {
       value: false,
       defaultLimit: 9,
-      defaultPage: 1,
+      offset: 1,
     },
   };
+
   const handleChangeView = () => {
     if (view) {
-      handleChangePageAndLimit(1, 9);
+      handleChangePageAndLimit(1, 9, true);
       dispatch(getAllWeeks(buildQuery(1, 9), isInExploreMode, userId));
       handleChangePageCount(weekCount, 9);
     } else {
-      handleChangePageAndLimit(0, 5);
+      handleChangePageAndLimit(0, 5, true);
       dispatch(getAllWeeks(buildQuery(1, 5), isInExploreMode, userId));
       handleChangePageCount(weekCount, 5);
     }
@@ -105,11 +110,18 @@ const WeekPage = () => {
       handleChangePageAndLimit(0, 5);
     }
     console.log('get all weeks in use effect');
-    dispatch(getAllWeeks(buildQuery(0, 5), isInExploreMode, userId));
+    dispatch(
+      getAllWeeks(
+        buildQuery(1, loggedInUser.weekView === 'table' ? 5 : 9),
+        isInExploreMode,
+        userId
+      )
+    );
   }, []);
 
   // set count for pagination when weeks have been loaded or a query has been submitted
   useEffect(() => {
+    console.log('week count change', weekCount);
     handleChangePageCount(weekCount, loggedInUser.weekView === 'table' ? 5 : 9);
   }, [weekCount]);
 
@@ -121,6 +133,7 @@ const WeekPage = () => {
       resetTags();
     }
   );
+
   const {
     values: dialogValue,
     handleSubmit,
@@ -149,7 +162,9 @@ const WeekPage = () => {
   const [isInExploreMode, toggleIsInExploreMode] = useToggle(false);
 
   const handleChangeMode = () => {
-    dispatch(getAllWeeks(buildQuery(), !isInExploreMode, userId));
+    dispatch(
+      getAllWeeks(buildQuery(1, view ? 5 : 9), !isInExploreMode, userId)
+    );
     toggleIsInExploreMode();
   };
 
@@ -188,70 +203,72 @@ const WeekPage = () => {
           </Button>
         </div>
         {/* search bar and action */}
-        <Grid container spacing={3} style={{ marginBottom: '12px' }}>
-          <Grid item sm={12} md={12} lg={9}>
-            <div className={classes.utilsFields}>
-              <Input
-                value={queryFields.name}
-                name="name"
-                label="Name"
-                handleChange={handleChangeQueryField}
-              />
-              <Input
-                value={queryFields.description}
-                name="description"
-                label="Description"
-                handleChange={handleChangeQueryField}
-              />
-              <InputWithTooltip
-                value={queryFields.calories}
-                name="calories"
-                label="Calories"
-                tooltip='Exact match, Ex: "2000", or separated by comma to search by range, Ex: "0, 2000" or "0," or ",2000"'
-                handleChange={handleChangeQueryField}
-              />
-              <InputWithTooltip
-                value={queryFields.tags}
-                label="Tags"
-                name="tags"
-                tooltip='Separated by comma, Ex: "Weight Loss Program, Keto, Vegan"'
-                handleChange={handleChangeQueryField}
-              />
-            </div>
+        <form onSubmit={() => {}}>
+          <Grid container spacing={3} style={{ marginBottom: '12px' }}>
+            <Grid item sm={12} md={12} lg={9}>
+              <div className={classes.utilsFields}>
+                <Input
+                  value={queryFields.name}
+                  name="name"
+                  label="Name"
+                  handleChange={handleChangeQueryField}
+                />
+                <Input
+                  value={queryFields.description}
+                  name="description"
+                  label="Description"
+                  handleChange={handleChangeQueryField}
+                />
+                <InputWithTooltip
+                  value={queryFields.calories}
+                  name="calories"
+                  label="Calories"
+                  tooltip='Exact match, Ex: "2000", or separated by comma to search by range, Ex: "0, 2000" or "0," or ",2000"'
+                  handleChange={handleChangeQueryField}
+                />
+                <InputWithTooltip
+                  value={queryFields.tags}
+                  label="Tags"
+                  name="tags"
+                  tooltip='Separated by comma, Ex: "Weight Loss Program, Keto, Vegan"'
+                  handleChange={handleChangeQueryField}
+                />
+              </div>
+            </Grid>
+            <Grid item sm={12} md={12} lg={3}>
+              <div className={classes.utilsActions}>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={() => handleSubmitFilter(currentCount)}
+                >
+                  <SearchIcon fontSize="small" />
+                  &nbsp;Search
+                </Button>
+                {loggedInUser && (
+                  <>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={toggleOpenEditMode}
+                    >
+                      <AddBoxOutlinedIcon fontSize="small" />
+                      &nbsp;Week
+                    </Button>
+                    <Button
+                      variant={isInExploreMode ? 'contained' : 'outlined'}
+                      color="primary"
+                      onClick={handleChangeMode}
+                    >
+                      <ExploreOutlinedIcon fontSize="small" />
+                      &nbsp;Explore
+                    </Button>
+                  </>
+                )}
+              </div>
+            </Grid>
           </Grid>
-          <Grid item sm={12} md={12} lg={3}>
-            <div className={classes.utilsActions}>
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={() => handleSubmitFilter(currentCount)}
-              >
-                <SearchIcon fontSize="small" />
-                &nbsp;Search
-              </Button>
-              {loggedInUser && (
-                <>
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    onClick={toggleOpenEditMode}
-                  >
-                    <AddBoxOutlinedIcon fontSize="small" />
-                    &nbsp;Week
-                  </Button>
-                  <Button
-                    variant={isInExploreMode ? 'contained' : 'outlined'}
-                    color="primary"
-                    onClick={handleChangeMode}
-                  >
-                    <ExploreOutlinedIcon fontSize="small" />
-                    &nbsp;Explore
-                  </Button>
-                </>
-              )}
-            </div>
-          </Grid>
-        </Grid>
+        </form>
         {/* weeks */}
         {!view ? (
           <WeekList
