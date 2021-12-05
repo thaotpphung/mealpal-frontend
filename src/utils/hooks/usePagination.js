@@ -64,11 +64,11 @@ const usePagination = (
     callBack(newPage, limit);
   };
 
-  const handleChangeLimit = (newLimit) => {
-    setPage(initialPage);
+  const handleChangeLimit = (newLimit, defaultPage) => {
+    setPage(defaultPage);
     console.log('change limit');
     setLimit(newLimit);
-    callBack(page, newLimit);
+    callBack(defaultPage, newLimit);
   };
 
   const handleChangePageAndLimit = (

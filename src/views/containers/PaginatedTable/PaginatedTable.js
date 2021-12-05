@@ -96,7 +96,7 @@ const WeekTable = ({
   };
 
   const handleChangeRowsPerPage = (event) => {
-    handleChangeLimit(parseInt(event.target.value, 10));
+    handleChangeLimit(parseInt(event.target.value, 10), 0);
   };
 
   const handleChangeDense = (event) => {
@@ -104,8 +104,6 @@ const WeekTable = ({
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
-
-  const emptyRows = limit - Math.min(limit, data.length - page * limit);
 
   return (
     <div className={classes.tableRoot}>
@@ -178,11 +176,6 @@ const WeekTable = ({
                   </TableRow>
                 );
               })}
-              {/* {emptyRows > 0 && (
-                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )} */}
             </TableBody>
           </Table>
         </TableContainer>
