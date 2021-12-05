@@ -36,7 +36,6 @@ const WeekPage = () => {
     loading,
     weeks,
     count: weekCount,
-    currentCount,
     error,
   } = useSelector((state) => state.weekList);
 
@@ -56,8 +55,8 @@ const WeekPage = () => {
     queryFields,
   } = usePagination(
     { name: '', description: '', calories: '', tags: '' },
-    loggedInUser.weekView === 'table' ? 0 : 1,
-    loggedInUser.weekView === 'table' ? 5 : 9,
+    (loggedInUser ? loggedInUser.weekView : 'board') === 'table' ? 0 : 1,
+    (loggedInUser ? loggedInUser.weekView : 'board') === 'table' ? 5 : 9,
     (page = 0, newLimit = limit) => {
       let newPage = view ? page + 1 : page;
       dispatch(
@@ -70,7 +69,6 @@ const WeekPage = () => {
   // view
   const defaultView = loggedInUser ? loggedInUser.weekView : 'board';
   const [view, toggleView] = useToggle(defaultView === 'board' ? false : true); // initially the view is board view
-
   const handleChangeView = () => {
     if (view) {
       handleChangePageAndLimit(1, 9, true);
@@ -83,7 +81,6 @@ const WeekPage = () => {
     }
     toggleView();
   };
-
   const handleSetDefaultView = () => {
     dispatch(
       updateUser(loggedInUser._id, { weekView: view ? 'table' : 'board' })
@@ -92,12 +89,15 @@ const WeekPage = () => {
 
   // get initial weeks
   useEffect(() => {
-    if (loggedInUser.weekView === 'table') {
+    if ((loggedInUser ? loggedInUser.weekView : 'board') === 'table') {
       handleChangePageAndLimit(0, 5);
     }
     dispatch(
       getAllWeeks(
-        buildQuery(1, loggedInUser.weekView === 'table' ? 5 : 9),
+        buildQuery(
+          1,
+          (loggedInUser ? loggedInUser.weekView : 'board') === 'table' ? 5 : 9
+        ),
         isInExploreMode,
         userId
       )
@@ -106,7 +106,10 @@ const WeekPage = () => {
 
   // set count for pagination when weeks have been loaded or a query has been submitted
   useEffect(() => {
-    handleChangePageCount(weekCount, loggedInUser.weekView === 'table' ? 5 : 9);
+    handleChangePageCount(
+      weekCount,
+      (loggedInUser ? loggedInUser.weekView : 'board') === 'table' ? 5 : 9
+    );
   }, [weekCount]);
 
   // create week dialog
@@ -144,7 +147,6 @@ const WeekPage = () => {
 
   // explore mode
   const [isInExploreMode, toggleIsInExploreMode] = useToggle(false);
-
   const handleChangeMode = () => {
     dispatch(
       getAllWeeks(buildQuery(1, view ? 5 : 9), !isInExploreMode, userId)
