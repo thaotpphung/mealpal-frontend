@@ -13,12 +13,7 @@ const usePagination = (
   const [limit, setLimit] = useState(initialLimit); // number of documents per page
   const [count, setCount] = useState(0);
 
-  useEffect(() => {
-    console.log('debug - page', page);
-  }, [page]);
-
   const buildQuery = (newPage = initialPage, newLimit = initialLimit) => {
-    console.log('build query', newPage, newLimit);
     let filterQuery = '?';
     filterQuery += `limit=${newLimit}&page=${newPage}`;
     filterQuery += initialQuery;
@@ -33,25 +28,12 @@ const usePagination = (
     setQueryFields({ ...queryFields, [name]: value });
   };
 
-  const handleSubmitFilter = (newCount) => {
-    console.log('handleSubmitfilter');
-    // console.log('handleSubmitFilter', newCount);
-    // handleChangePageCount(newCount);
+  const handleSubmitFilter = () => {
     callBack(0, limit);
   };
 
   const handleChangePageCount = (newCount, newLimit) => {
     const newPageCount = newCount / newLimit;
-    console.log(
-      'change page count',
-      newCount,
-      'new limit',
-      newLimit,
-      'limit',
-      limit,
-      'set new page count to ',
-      newPageCount !== 1 ? Math.floor(newPageCount) + 1 : newPageCount
-    );
     setCount(newCount);
     setPageCount(
       newPageCount !== 1 ? Math.floor(newPageCount) + 1 : newPageCount
@@ -59,14 +41,12 @@ const usePagination = (
   };
 
   const handleChangePage = (event, newPage) => {
-    console.log('change page', newPage);
     setPage(newPage);
     callBack(newPage, limit);
   };
 
   const handleChangeLimit = (newLimit, defaultPage) => {
     setPage(defaultPage);
-    console.log('change limit');
     setLimit(newLimit);
     callBack(defaultPage, newLimit);
   };
@@ -76,7 +56,6 @@ const usePagination = (
     newLimit,
     withCallback = false
   ) => {
-    console.log('change page and limit', newPage, newLimit);
     setPage(newPage);
     setLimit(newLimit);
     if (withCallback) callBack(newPage, newLimit);

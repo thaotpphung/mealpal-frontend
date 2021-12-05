@@ -60,7 +60,6 @@ const WeekPage = () => {
     loggedInUser.weekView === 'table' ? 5 : 9,
     (page = 0, newLimit = limit) => {
       let newPage = view ? page + 1 : page;
-      console.log('call call back', newPage, newLimit);
       dispatch(
         getAllWeeks(buildQuery(newPage, newLimit), isInExploreMode, userId)
       );
@@ -71,19 +70,6 @@ const WeekPage = () => {
   // view
   const defaultView = loggedInUser ? loggedInUser.weekView : 'board';
   const [view, toggleView] = useToggle(defaultView === 'board' ? false : true); // initially the view is board view
-
-  const viewOptions = {
-    table: {
-      value: true,
-      defaultLimit: 5,
-      offset: 0,
-    },
-    board: {
-      value: false,
-      defaultLimit: 9,
-      offset: 1,
-    },
-  };
 
   const handleChangeView = () => {
     if (view) {
@@ -109,7 +95,6 @@ const WeekPage = () => {
     if (loggedInUser.weekView === 'table') {
       handleChangePageAndLimit(0, 5);
     }
-    console.log('get all weeks in use effect');
     dispatch(
       getAllWeeks(
         buildQuery(1, loggedInUser.weekView === 'table' ? 5 : 9),
@@ -121,7 +106,6 @@ const WeekPage = () => {
 
   // set count for pagination when weeks have been loaded or a query has been submitted
   useEffect(() => {
-    console.log('week count change', weekCount);
     handleChangePageCount(weekCount, loggedInUser.weekView === 'table' ? 5 : 9);
   }, [weekCount]);
 
@@ -240,7 +224,7 @@ const WeekPage = () => {
                 <Button
                   variant="outlined"
                   color="primary"
-                  onClick={() => handleSubmitFilter(currentCount)}
+                  onClick={() => handleSubmitFilter()}
                 >
                   <SearchIcon fontSize="small" />
                   &nbsp;Search
