@@ -142,6 +142,15 @@ const WeekCard = ({ week }) => {
           <Typography>Save</Typography>
         </MenuItem>
       )}
+      {loggedInUser && week?.userId._id === loggedInUser._id && (
+        <MenuItem
+          key="duplicateWeek"
+          onClick={() => handleDuplicateWeek(week._id)}
+        >
+          <RoundButton type="duplicate" />
+          <Typography>Duplicate</Typography>
+        </MenuItem>
+      )}
     </Menu>
   );
 

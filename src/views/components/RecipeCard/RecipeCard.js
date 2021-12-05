@@ -127,11 +127,10 @@ const RecipeCard = ({ recipe }) => {
             <Typography>Delete</Typography>
           </MenuItem>,
         ]}
-
       {loggedInUser && recipe?.userId._id !== loggedInUser._id && (
         <MenuItem
-          key="saveWeek"
-          onClick={() => handleDuplicateRecipe(recipeId)}
+          key="saveRecipe"
+          onClick={() => handleDuplicateRecipe(recipe._id)}
         >
           <RoundButton type="save" />
           <Typography>Save</Typography>

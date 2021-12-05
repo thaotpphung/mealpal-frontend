@@ -44,7 +44,7 @@ const headCells = [
   },
 ];
 
-const WeekTable = ({
+const PaginatedTable = ({
   data,
   count,
   page,
@@ -197,4 +197,4 @@ const WeekTable = ({
   );
 };
 
-export default WeekTable;
+export default PaginatedTable;

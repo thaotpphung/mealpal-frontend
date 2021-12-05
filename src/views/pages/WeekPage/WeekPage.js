@@ -71,11 +71,11 @@ const WeekPage = () => {
   const [view, toggleView] = useToggle(defaultView === 'board' ? false : true); // initially the view is board view
   const handleChangeView = () => {
     if (view) {
-      handleChangePageAndLimit(1, 9, true);
+      handleChangePageAndLimit(1, 9);
       dispatch(getAllWeeks(buildQuery(1, 9), isInExploreMode, userId));
       handleChangePageCount(weekCount, 9);
     } else {
-      handleChangePageAndLimit(0, 5, true);
+      handleChangePageAndLimit(0, 5);
       dispatch(getAllWeeks(buildQuery(1, 5), isInExploreMode, userId));
       handleChangePageCount(weekCount, 5);
     }
@@ -120,7 +120,6 @@ const WeekPage = () => {
       resetTags();
     }
   );
-
   const {
     values: dialogValue,
     handleSubmit,

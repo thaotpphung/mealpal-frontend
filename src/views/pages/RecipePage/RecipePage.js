@@ -45,14 +45,77 @@ const RecipePage = () => {
     error,
   } = useSelector((state) => state.recipeList);
 
+  // pagination & filtering
+  const {
+    pageCount,
+    count,
+    page,
+    limit,
+    buildQuery,
+    handleSubmitFilter,
+    handleChangePage,
+    handleChangeLimit,
+    handleChangeQueryField,
+    handleChangePageCount,
+    handleChangePageAndLimit,
+    queryFields,
+  } = usePagination(
+    { name: '', description: '', calories: '', tags: '', ingredients: '' },
+    (loggedInUser ? loggedInUser.recipeView : 'board') === 'table' ? 0 : 1,
+    (loggedInUser ? loggedInUser.recipeView : 'board') === 'table' ? 5 : 9,
+    (page = 0, newLimit = limit) => {
+      let newPage = view ? page + 1 : page;
+      dispatch(
+        getAllRecipes(buildQuery(newPage, newLimit), isInExploreMode, userId)
+      );
+    },
+    '&fields=userId,name,description,tags,calories,servings,time,servingSize,updatedTime,recipeImage'
+  );
+
+  // view
+  const defaultView = loggedInUser ? loggedInUser.recipeView : 'board';
+  const [view, toggleView] = useToggle(defaultView === 'board' ? false : true); // initially the view is board view
+  const handleChangeView = () => {
+    if (view) {
+      handleChangePageAndLimit(1, 9);
+      dispatch(getAllRecipes(buildQuery(1, 9), isInExploreMode, userId));
+      handleChangePageCount(recipeCount, 9);
+    } else {
+      handleChangePageAndLimit(0, 5);
+      dispatch(getAllRecipes(buildQuery(1, 5), isInExploreMode, userId));
+      handleChangePageCount(recipeCount, 5);
+    }
+    toggleView();
+  };
+  const handleSetDefaultView = () => {
+    dispatch(
+      updateUser(loggedInUser._id, { recipeView: view ? 'table' : 'board' })
+    );
+  };
+
   // get initial recipes
   useEffect(() => {
-    dispatch(getAllRecipes(buildQuery(), isInExploreMode, userId));
+    if ((loggedInUser ? loggedInUser.recipeView : 'board') === 'table') {
+      handleChangePageAndLimit(0, 5);
+    }
+    dispatch(
+      getAllRecipes(
+        buildQuery(
+          1,
+          (loggedInUser ? loggedInUser.recipeView : 'board') === 'table' ? 5 : 9
+        ),
+        isInExploreMode,
+        userId
+      )
+    );
   }, []);
 
-  // set count for pagination when recipes have been loaded
+  // set count for pagination when recipes have been loaded or a query has been submitted
   useEffect(() => {
-    handleChangePageCount(recipeCount);
+    handleChangePageCount(
+      recipeCount,
+      (loggedInUser ? loggedInUser.recipeView : 'board') === 'table' ? 5 : 9
+    );
   }, [recipeCount]);
 
   // create recipe dialog
@@ -82,55 +145,13 @@ const RecipePage = () => {
     );
   });
 
-  // pagination & filtering
-  const {
-    pageCount,
-    count,
-    page,
-    limit,
-    buildQuery,
-    handleSubmitFilter,
-    handleChangePage,
-    handleChangeLimit,
-    handleChangeQueryField,
-    handleChangePageCount,
-    queryFields,
-  } = usePagination(
-    { name: '', description: '', calories: '', tags: '', ingredients: '' },
-    9,
-    (value) =>
-      dispatch(getAllRecipes(buildQuery(value), isInExploreMode, userId)),
-    '&fields=userId,name,description,tags,calories,servings,time,servingSize,updatedTime,recipeImage'
-  );
-
   // explore mode
   const [isInExploreMode, toggleIsInExploreMode] = useToggle(false);
   const handleChangeMode = () => {
-    dispatch(getAllRecipes(buildQuery(), !isInExploreMode, userId));
-    toggleIsInExploreMode();
-  };
-
-  // view
-  const defaultView = loggedInUser ? loggedInUser.recipeView : 'board';
-  const [view, toggleView] = useToggle(defaultView === 'board' ? false : true); // initially the view is board view
-  useEffect(() => {
-    if (view) {
-      // change to table view
-      handleChangeLimit(5);
-      handleChangePage(undefined, 0);
-    } else {
-      // change to card view
-      handleChangeLimit(9);
-      handleChangePage(undefined, 1);
-    }
-  }, [view]);
-  const handleChangeView = () => {
-    toggleView();
-  };
-  const handleSetDefaultView = () => {
     dispatch(
-      updateUser(loggedInUser._id, { recipeView: view ? 'table' : 'board' })
+      getAllRecipes(buildQuery(1, view ? 5 : 9), !isInExploreMode, userId)
     );
+    toggleIsInExploreMode();
   };
 
   if (!loading && error) return <EmptyMessage />;
