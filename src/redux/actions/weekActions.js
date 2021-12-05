@@ -47,22 +47,28 @@ const getAllWeeks =
   };
 
 // week details
-const createWeek = (week, router) => async (dispatch) => {
-  try {
-    dispatch({ type: WEEK_CREATE_REQUEST, payload: week });
-    const { data } = await api.createWeek(week);
-    dispatch({ type: WEEK_CREATE_SUCCESS, payload: data.data });
-    router.push({
-      pathname: `/weeks/${data.data._id}`,
-      isRedirect: true,
-      data: data.data,
-    });
-    dispatch(addAlertWithTimeout('success', data.message));
-  } catch (error) {
-    dispatch({ type: WEEK_CREATE_FAIL, payload: error?.response.data.message });
-    dispatch(addAlertWithTimeout('error', error?.response.data.message));
-  }
-};
+const createWeek =
+  (week, router, recipes = []) =>
+  async (dispatch) => {
+    try {
+      dispatch({ type: WEEK_CREATE_REQUEST, payload: week });
+      const { data } = await api.createWeek(week);
+      dispatch({ type: WEEK_CREATE_SUCCESS, payload: data.data });
+      router.push({
+        pathname: `/users/${week.userId}/weeks/${data.data._id}`,
+        isRedirect: true,
+        data: data.data,
+        recipes: recipes,
+      });
+      dispatch(addAlertWithTimeout('success', data.message));
+    } catch (error) {
+      dispatch({
+        type: WEEK_CREATE_FAIL,
+        payload: error?.response.data.message,
+      });
+      dispatch(addAlertWithTimeout('error', error?.response.data.message));
+    }
+  };
 
 const getWeek = (weekId) => async (dispatch) => {
   try {

@@ -20,10 +20,14 @@ const WeekDetailsPage = ({ id = '' }) => {
 
   useEffect(() => {
     if (!location.isRedirect) {
+      console.log('get week not redirect');
       dispatch(getWeek(weekId ? weekId : id));
     }
+    console.log('get recipe list');
     dispatch(getAllRecipesForSearching('?fields=name,calories,ingredients'));
   }, []);
+
+  console.log('location', location.recipes);
 
   if (!loading && error) return <EmptyMessage />;
   if (!loading && week.days.length > 0 && recipes.length >= 0)
@@ -36,10 +40,14 @@ const WeekDetailsPage = ({ id = '' }) => {
         className={classes.weekContainer}
       >
         <Grid item xs={12} md={4} className={classes.leftColumn}>
-          <WeekCard week={week} />
+          <WeekCard week={week} recipes={recipes} />
         </Grid>
         <Grid item xs={12} md={8}>
-          <DayList days={week.days} recipes={recipes} userId={week.userId} />
+          <DayList
+            days={week.days}
+            recipes={location.recipes ? location.recipes : recipes}
+            userId={week.userId}
+          />
         </Grid>
       </Grid>
     );

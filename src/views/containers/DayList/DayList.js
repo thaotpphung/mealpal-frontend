@@ -29,6 +29,8 @@ import { processIngredients } from '../../../utils/forms/ingredients';
 import { convertMixedToNum } from '../../../utils/mixedNumber';
 
 const DayList = ({ days, recipes, userId }) => {
+  console.log('recipes in daylist', recipes);
+
   const classes = useStyles();
   const { weekId } = useParams();
   const history = useHistory();

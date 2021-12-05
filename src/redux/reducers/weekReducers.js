@@ -66,7 +66,7 @@ function weekDetailsReducer(
     case WEEK_DETAILS_SUCCESS:
       return {
         loading: false,
-        week: action.payload,
+        week: { ...state.week, ...action.payload },
         error: '',
       };
 

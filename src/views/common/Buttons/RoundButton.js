@@ -11,7 +11,6 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import StarOutlineIcon from '@material-ui/icons/StarOutline';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import ControlPointDuplicateIcon from '@material-ui/icons/ControlPointDuplicate';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -19,6 +18,7 @@ import SendIcon from '@material-ui/icons/Send';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import BookmarkIcon from '@material-ui/icons/Bookmarks';
 import MenuIcon from '@material-ui/icons/Menu';
+import LibraryAddIcon from '@material-ui/icons/LibraryAdd';
 
 import useStyles from './styles';
 
@@ -37,7 +37,7 @@ const RoundButton = ({ type, handleClick, loading, ...props }) => {
     add: <AddCircleIcon />,
     cancel: <CancelIcon />,
     shoppingCart: <ShoppingCartIcon />,
-    duplicate: <ControlPointDuplicateIcon />,
+    duplicate: <LibraryAddIcon />,
     avatar: <AccountCircleIcon />,
     expandLess: <ExpandLessIcon />,
     expandMore: <ExpandMoreIcon />,

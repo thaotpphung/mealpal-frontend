@@ -15,6 +15,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import PaginatedTableHead from './PaginatedTableHead';
 import PaginatedTableToolbar from './PaginatedTableToolbar';
+import StarIcon from '@material-ui/icons/Star';
 
 const headCells = [
   {
@@ -41,6 +42,12 @@ const headCells = [
     numeric: false,
     disablePadding: false,
     label: 'Last Updated',
+  },
+  {
+    id: 'username',
+    numeric: false,
+    disablePadding: false,
+    label: 'Username',
   },
 ];
 
@@ -173,6 +180,14 @@ const PaginatedTable = ({
                       ))}
                     </TableCell>
                     <TableCell>{formatTime(row.updatedTime)}</TableCell>
+                    <TableCell
+                      className={classes.clickable}
+                      onClick={() =>
+                        history.push(`/users/${row.userId._id}/profile`)
+                      }
+                    >
+                      {row.userId.username}
+                    </TableCell>
                   </TableRow>
                 );
               })}

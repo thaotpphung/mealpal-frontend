@@ -80,7 +80,7 @@ const createRecipe =
       dispatch({ type: RECIPE_CREATE_SUCCESS, payload: data.data });
       if (router) {
         router.push({
-          pathname: `/recipes/${data.data._id}`,
+          pathname: `/users/${recipe.userId}/recipes/${data.data._id}`,
           isRedirect: true,
           data: data.data,
         });

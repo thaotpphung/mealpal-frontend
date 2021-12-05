@@ -31,7 +31,7 @@ import RoundButton from '../../common/Buttons/RoundButton';
 import BlockButton from '../../common/Buttons/BlockButton';
 import InputWithTooltip from '../../common/InputWithTooltip/InputWithTooltip';
 
-const WeekCard = ({ week }) => {
+const WeekCard = ({ week, recipes = [] }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -82,7 +82,9 @@ const WeekCard = ({ week }) => {
   };
 
   const handleDuplicateWeek = (weekId) => {
-    dispatch(createWeek({ weekId }, history));
+    dispatch(
+      createWeek({ weekId, userId: loggedInUser._id }, history, recipes)
+    );
   };
 
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
