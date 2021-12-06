@@ -20,14 +20,10 @@ const WeekDetailsPage = ({ id = '' }) => {
 
   useEffect(() => {
     if (!location.isRedirect) {
-      console.log('get week not redirect');
       dispatch(getWeek(weekId ? weekId : id));
     }
-    console.log('get recipe list');
     dispatch(getAllRecipesForSearching('?fields=name,calories,ingredients'));
   }, []);
-
-  console.log('location', location.recipes);
 
   if (!loading && error) return <EmptyMessage />;
   if (!loading && week.days.length > 0 && recipes.length >= 0)

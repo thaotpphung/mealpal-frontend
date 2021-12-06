@@ -15,7 +15,6 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import PaginatedTableHead from './PaginatedTableHead';
 import PaginatedTableToolbar from './PaginatedTableToolbar';
-import StarIcon from '@material-ui/icons/Star';
 
 const headCells = [
   {

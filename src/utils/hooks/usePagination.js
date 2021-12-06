@@ -1,19 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 const usePagination = (
   initialState,
-  initialPage,
   initialLimit,
-  callBack,
+  callback,
   initialQuery = ''
 ) => {
-  const [page, setPage] = useState(initialPage);
+  const [page, setPage] = useState(0);
   const [pageCount, setPageCount] = useState(1); // number of total page on load -> pageCount
   const [queryFields, setQueryFields] = useState(initialState);
   const [limit, setLimit] = useState(initialLimit); // number of documents per page
   const [count, setCount] = useState(0);
 
-  const buildQuery = (newPage = initialPage, newLimit = initialLimit) => {
+  const buildQuery = (newLimit = initialLimit, newPage = 0) => {
     let filterQuery = '?';
     filterQuery += `limit=${newLimit}&page=${newPage}`;
     filterQuery += initialQuery;
@@ -29,11 +28,11 @@ const usePagination = (
   };
 
   const handleSubmitFilter = () => {
-    callBack(0, limit);
+    callback(limit);
   };
 
-  const handleChangePageCount = (newCount, newLimit) => {
-    const newPageCount = newCount / newLimit;
+  const handleChangePageCount = (newCount) => {
+    const newPageCount = newCount / limit;
     setCount(newCount);
     setPageCount(
       newPageCount !== 1 ? Math.floor(newPageCount) + 1 : newPageCount
@@ -42,23 +41,13 @@ const usePagination = (
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
-    callBack(newPage, limit);
+    callback(limit, newPage);
   };
 
-  const handleChangeLimit = (newLimit, defaultPage) => {
-    setPage(defaultPage);
+  const handleChangeLimit = (newLimit) => {
+    setPage(0);
     setLimit(newLimit);
-    callBack(defaultPage, newLimit);
-  };
-
-  const handleChangePageAndLimit = (
-    newPage,
-    newLimit,
-    withCallback = false
-  ) => {
-    setPage(newPage);
-    setLimit(newLimit);
-    if (withCallback) callBack(newPage, newLimit);
+    callback(newLimit);
   };
 
   return {
@@ -73,7 +62,6 @@ const usePagination = (
     handleChangeLimit,
     handleChangeQueryField,
     handleChangePageCount,
-    handleChangePageAndLimit,
   };
 };
 

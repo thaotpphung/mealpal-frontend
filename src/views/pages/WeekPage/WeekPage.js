@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useRef, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Button, Tooltip } from '@material-ui/core';
 import useStyles from '../../../app/styles';
@@ -39,6 +39,19 @@ const WeekPage = () => {
     error,
   } = useSelector((state) => state.weekList);
 
+  const views = {
+    board: {
+      limit: 9,
+      icon: <ViewListIcon fontSize="small" />,
+      label: 'Table',
+    },
+    table: {
+      limit: 5,
+      icon: <ViewModuleIcon fontSize="small" />,
+      label: 'Board',
+    },
+  };
+
   // pagination & filtering
   const {
     pageCount,
@@ -51,66 +64,54 @@ const WeekPage = () => {
     handleChangeLimit,
     handleChangeQueryField,
     handleChangePageCount,
-    handleChangePageAndLimit,
     queryFields,
   } = usePagination(
     { name: '', description: '', calories: '', tags: '' },
-    (loggedInUser ? loggedInUser.weekView : 'board') === 'table' ? 0 : 1,
-    (loggedInUser ? loggedInUser.weekView : 'board') === 'table' ? 5 : 9,
-    (page = 0, newLimit = limit) => {
-      let newPage = view ? page + 1 : page;
+    views[loggedInUser ? loggedInUser.weekView : 'board'].limit,
+    (newLimit, newPage = 0) => {
       dispatch(
-        getAllWeeks(buildQuery(newPage, newLimit), isInExploreMode, userId)
+        getAllWeeks(buildQuery(newLimit, newPage), isInExploreMode, userId)
       );
     },
     '&fields=userId,name,description,calories,tags,updatedTime'
   );
 
+  // set count for pagination when weeks have been loaded
+  useEffect(() => {
+    handleChangePageCount(weekCount);
+  }, [weekCount]);
+
+  // infinite strolling
+  const observer = useRef();
+  const lastElementRef = useCallback(
+    (node) => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          console.log('get more', page);
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [loading]
+  );
+
   // view
-  const defaultView = loggedInUser ? loggedInUser.weekView : 'board';
-  const [view, toggleView] = useToggle(defaultView === 'board' ? false : true); // initially the view is board view
+  const [view, setView] = useState(
+    loggedInUser ? loggedInUser.weekView : 'board'
+  );
   const handleChangeView = () => {
-    if (view) {
-      handleChangePageAndLimit(1, 9);
-      dispatch(getAllWeeks(buildQuery(1, 9), isInExploreMode, userId));
-      handleChangePageCount(weekCount, 9);
-    } else {
-      handleChangePageAndLimit(0, 5);
-      dispatch(getAllWeeks(buildQuery(1, 5), isInExploreMode, userId));
-      handleChangePageCount(weekCount, 5);
-    }
-    toggleView();
+    setView(view === 'board' ? 'table' : 'board');
   };
+  useEffect(() => {
+    handleChangeLimit(views[view].limit);
+  }, [view]);
   const handleSetDefaultView = () => {
     dispatch(
       updateUser(loggedInUser._id, { weekView: view ? 'table' : 'board' })
     );
   };
-
-  // get initial weeks
-  useEffect(() => {
-    if ((loggedInUser ? loggedInUser.weekView : 'board') === 'table') {
-      handleChangePageAndLimit(0, 5);
-    }
-    dispatch(
-      getAllWeeks(
-        buildQuery(
-          1,
-          (loggedInUser ? loggedInUser.weekView : 'board') === 'table' ? 5 : 9
-        ),
-        isInExploreMode,
-        userId
-      )
-    );
-  }, []);
-
-  // set count for pagination when weeks have been loaded or a query has been submitted
-  useEffect(() => {
-    handleChangePageCount(
-      weekCount,
-      (loggedInUser ? loggedInUser.weekView : 'board') === 'table' ? 5 : 9
-    );
-  }, [weekCount]);
 
   // create week dialog
   const [tags, handleChangeTags, resetTags] = useInput();
@@ -147,14 +148,11 @@ const WeekPage = () => {
   // explore mode
   const [isInExploreMode, toggleIsInExploreMode] = useToggle(false);
   const handleChangeMode = () => {
-    dispatch(
-      getAllWeeks(buildQuery(1, view ? 5 : 9), !isInExploreMode, userId)
-    );
+    dispatch(getAllWeeks(buildQuery(view ? 5 : 9), !isInExploreMode, userId));
     toggleIsInExploreMode();
   };
 
   if (!loading && error) return <EmptyMessage />;
-
   if (!loading && weeks.length >= 0)
     return (
       <div>
@@ -179,18 +177,18 @@ const WeekPage = () => {
             color="primary"
             onClick={handleChangeView}
           >
-            {view ? (
-              <ViewModuleIcon fontSize="small" />
-            ) : (
-              <ViewListIcon fontSize="small" />
-            )}
-            &nbsp;{view ? 'Board' : 'Table'} View
+            {views[view].icon}
+            &nbsp;{views[view].label} View
           </Button>
         </div>
         {/* search bar and action */}
-        <form onSubmit={() => {}}>
-          <Grid container spacing={3} style={{ marginBottom: '12px' }}>
-            <Grid item sm={12} md={12} lg={9}>
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+          }}
+        >
+          <Grid container spacing={3} style={{ marginBottom: '9px' }}>
+            <Grid item sm={9} md={9} lg={9}>
               <div className={classes.utilsFields}>
                 <Input
                   value={queryFields.name}
@@ -220,7 +218,7 @@ const WeekPage = () => {
                 />
               </div>
             </Grid>
-            <Grid item sm={12} md={12} lg={3}>
+            <Grid item sm={9} md={9} lg={3}>
               <div className={classes.utilsActions}>
                 <Button
                   variant="outlined"
@@ -255,8 +253,9 @@ const WeekPage = () => {
           </Grid>
         </form>
         {/* weeks */}
-        {!view ? (
+        {view === 'board' ? (
           <WeekList
+            lastElementRef={lastElementRef}
             weeks={weeks}
             count={pageCount}
             page={page}
