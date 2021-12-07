@@ -2,12 +2,21 @@ import React from 'react';
 import { Grid } from '@material-ui/core';
 import useStyles from '../../../app/styles';
 import WeekCard from '../../components/WeekCard/WeekCard';
-import PageNav from '../../common/PageNav/PageNav';
 import Spinner from '../../common/Spinner/Spinner';
 import EmptyMessage from '../../common/EmptyMessage/EmptyMessage';
 
-const WeekList = ({ loadingMore, loading, error, lastElementRef, weeks }) => {
+const ListItem = () => <></>;
+
+const WeekList = ({
+  component,
+  loadingMore,
+  loading,
+  error,
+  lastElementRef,
+  weeks,
+}) => {
   const classes = useStyles();
+  const Component = component;
 
   if (!loading && error) return <EmptyMessage />;
   if (!loading && weeks.length >= 0)
@@ -36,6 +45,7 @@ const WeekList = ({ loadingMore, loading, error, lastElementRef, weeks }) => {
                       xl={3}
                     >
                       <WeekCard week={week} />
+                      <Component week={week} />
                     </Grid>
                   );
                 } else {

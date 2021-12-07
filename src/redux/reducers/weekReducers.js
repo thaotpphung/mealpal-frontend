@@ -42,6 +42,7 @@ function weekListReducer(state = INITIAL_STATE, action) {
 
     case WEEK_LIST_SUCCESS: {
       return {
+        ...state,
         loading: false,
         weeks: action.payload.data,
         count: action.payload.count,
@@ -55,8 +56,8 @@ function weekListReducer(state = INITIAL_STATE, action) {
       action.payload.data.forEach((item) => {
         updatedWeeks.push(item);
       });
-
       return {
+        ...state,
         loadingMore: false,
         weeks: updatedWeeks,
         count: action.payload.count,
@@ -67,8 +68,10 @@ function weekListReducer(state = INITIAL_STATE, action) {
 
     case WEEK_LIST_FAIL:
       return { ...state, loading: false, error: action.payload };
+
     case WEEK_LIST_APPEND_FAIL:
       return { ...state, loadingMore: false, error: action.payload };
+
     default:
       return state;
   }

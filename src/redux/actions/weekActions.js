@@ -33,13 +33,6 @@ export {
   getWeek,
   updateWeekByDay,
   getAllWeeksInfinite,
-  setWeeks,
-};
-
-const setWeeks = (weeks) => {
-  async (dispatch) => {
-    dispatch({ type: WEEK_LIST_SUCCESS, payload: weeks });
-  };
 };
 
 // week list

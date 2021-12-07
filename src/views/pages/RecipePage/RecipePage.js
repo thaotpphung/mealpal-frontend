@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { Grid, Button, Tooltip } from '@material-ui/core';
@@ -8,19 +8,21 @@ import ExploreOutlinedIcon from '@material-ui/icons/ExploreOutlined';
 import useStyles from '../../../app/styles';
 import PopupDialog from '../../common/PopupDialog/PopupDialog';
 import Input from '../../common/Input/Input';
-import Spinner from '../../common/Spinner/Spinner';
 import RoundButton from '../../common/Buttons/RoundButton';
 import InputWithTooltip from '../../common/InputWithTooltip/InputWithTooltip';
-import RecipeList from '../../containers/RecipeList/RecipeList';
+import CardList from '../../containers/CardList/CardList';
+import RecipeCard from '../../components/RecipeCard/RecipeCard';
 import PaginatedTable from '../../containers/PaginatedTable/PaginatedTable';
 import useEditMode from '../../../utils/hooks/useEditMode';
 import useForm from '../../../utils/hooks/useForm';
 import useInput from '../../../utils/hooks/useInput';
 import useToggle from '../../../utils/hooks/useToggle';
 import usePagination from '../../../utils/hooks/usePagination';
+import { validate } from '../../../utils/validations/validate';
 import {
   createRecipe,
   getAllRecipes,
+  getAllRecipesInfinite,
 } from '../../../redux/actions/recipeActions';
 import { updateUser } from '../../../redux/actions/userActions';
 import {
@@ -36,6 +38,7 @@ const RecipePage = () => {
   const dispatch = useDispatch();
   const { loggedInUser } = useSelector((state) => state.user);
   const {
+    loadingMore,
     loading,
     recipes,
     count: recipeCount,
@@ -51,33 +54,39 @@ const RecipePage = () => {
     limit,
     buildQuery,
     handleSubmitFilter,
-    handleChangePage,
-    handleChangeLimit,
     handleChangeQueryField,
     handleChangePageCount,
+    handleChangeLimitAndPage,
     queryFields,
   } = usePagination(
     { name: '', description: '', calories: '', tags: '', ingredients: '' },
     views[loggedInUser ? loggedInUser.weekView : 'board'].limit,
     (newLimit, newPage = 0) => {
-      dispatch(
-        getAllRecipes(buildQuery(newLimit, newPage), isInExploreMode, userId)
-      );
+      if (view === 'board') {
+        dispatch(
+          getAllRecipesInfinite(
+            buildQuery(limit, page),
+            isInExploreMode,
+            userId
+          )
+        );
+      } else {
+        dispatch(
+          getAllRecipes(buildQuery(newLimit, newPage), isInExploreMode, userId)
+        );
+      }
     },
     '&fields=userId,name,description,tags,calories,servings,time,servingSize,updatedTime,recipeImage'
   );
 
   // view
-  const [view, setView] = useState(
-    loggedInUser ? loggedInUser.weekView : 'board'
-  );
+  const defaultView = loggedInUser ? loggedInUser.recipeView : 'board';
+  const [view, setView] = useState(defaultView);
   const handleChangeView = () => {
     setView(view === 'board' ? 'table' : 'board');
   };
   const handleSetDefaultView = () => {
-    dispatch(
-      updateUser(loggedInUser._id, { weekView: view ? 'table' : 'board' })
-    );
+    dispatch(updateUser(loggedInUser._id, { recipeView: view }));
   };
 
   // explore mode
@@ -89,11 +98,42 @@ const RecipePage = () => {
   // set count for pagination when weeks have been loaded
   useEffect(() => {
     handleChangePageCount(recipeCount);
+    setHasMore(recipes.length < recipeCount);
   }, [recipeCount]);
 
   useEffect(() => {
-    handleChangeLimit(views[view].limit);
+    setHasMore(currentCount !== 0);
+  }, [recipes]);
+
+  const firstUpdate = useRef(true);
+  useEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
+    }
+    if (!firstUpdate.current) {
+      const newLimit = views[view].limit;
+      handleChangeLimitAndPage(newLimit, 0, false);
+      dispatch(getAllRecipes(buildQuery(newLimit), isInExploreMode, userId));
+    }
   }, [view, isInExploreMode]);
+
+  // infinite strolling
+  const [hasMore, setHasMore] = useState(false);
+  const observer = useRef();
+  const lastElementRef = useCallback(
+    (node) => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          handleChangeLimitAndPage(limit, 'next');
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [loading, hasMore]
+  );
 
   // create recipe dialog
   const [tags, handleChangeTags, resetTags] = useInput();
@@ -109,18 +149,23 @@ const RecipePage = () => {
     handleChange,
     reset,
     errors,
-  } = useForm(getInitialRecipeForm(false), () => {
-    dispatch(
-      createRecipe(
-        {
-          ...dialogValue,
-          tags: tags !== '' ? tags.split(',').map((tag) => tag.trim()) : [],
-          userId: loggedInUser._id,
-        },
-        history
-      )
-    );
-  });
+  } = useForm(
+    getInitialRecipeForm(false),
+    () => {
+      dispatch(
+        createRecipe(
+          {
+            ...dialogValue,
+            tags: tags !== '' ? tags.split(',').map((tag) => tag.trim()) : [],
+            userId: loggedInUser._id,
+          },
+          history
+        )
+      );
+    },
+    validate,
+    ['description', 'tags']
+  );
 
   return (
     <div>
@@ -143,7 +188,7 @@ const RecipePage = () => {
         </Button>
       </div>
       <Grid container spacing={3} style={{ marginBottom: '12px' }}>
-        <Grid item sm={12} md={12} lg={9}>
+        <Grid item xs={12} lg={9}>
           <div className={classes.utilsFields}>
             <Input
               value={queryFields.name}
@@ -180,14 +225,16 @@ const RecipePage = () => {
             />
           </div>
         </Grid>
-        <Grid item sm={12} md={12} lg={3}>
+        <Grid item xs={12} lg={3}>
           <div className={classes.utilsActions}>
             <Button
+              type="submit"
               variant="outlined"
               color="primary"
               onClick={() => handleSubmitFilter(currentCount)}
             >
-              <SearchIcon fontSize="small" /> Search
+              <SearchIcon fontSize="small" />
+              &nbsp;Search
             </Button>
             {loggedInUser && (
               <>
@@ -214,16 +261,19 @@ const RecipePage = () => {
       </Grid>
       {/* recipes */}
       {view === 'board' ? (
-        <RecipeList
+        <CardList
+          component={RecipeCard}
           loading={loading}
           error={error}
-          recipes={recipes}
+          lastElementRef={lastElementRef}
+          data={recipes}
           count={pageCount}
           page={page}
-          handleChangePage={handleChangePage}
+          handleChangeLimitAndPage={handleChangeLimitAndPage}
         />
       ) : (
         <PaginatedTable
+          loadingMore={loadingMore}
           loading={loading}
           error={error}
           title="recipes"
@@ -231,8 +281,7 @@ const RecipePage = () => {
           count={count}
           limit={limit}
           page={page}
-          handleChangePage={handleChangePage}
-          handleChangeLimit={handleChangeLimit}
+          handleChangeLimitAndPage={handleChangeLimitAndPage}
         />
       )}
       <PopupDialog
@@ -266,7 +315,6 @@ const RecipePage = () => {
       />
     </div>
   );
-  return <Spinner />;
 };
 
 export default RecipePage;

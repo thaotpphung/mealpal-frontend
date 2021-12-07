@@ -5,6 +5,9 @@ import {
   RECIPE_LIST_REQUEST,
   RECIPE_LIST_SUCCESS,
   RECIPE_LIST_FAIL,
+  RECIPE_LIST_APPEND_REQUEST,
+  RECIPE_LIST_APPEND_SUCCESS,
+  RECIPE_LIST_APPEND_FAIL,
   RECIPE_DETAILS_REQUEST,
   RECIPE_DETAILS_SUCCESS,
   RECIPE_DETAILS_FAIL,
@@ -29,6 +32,7 @@ export {
   updateRecipe,
   getRecipe,
   getAllRecipesForSearching,
+  getAllRecipesInfinite,
 };
 
 // recipe list
@@ -57,6 +61,30 @@ const getAllRecipes =
     }
   };
 
+const getAllRecipesInfinite =
+  (
+    query = '',
+    isInExploreMode = false,
+    userId = JSON.parse(localStorage.getItem('loggedInUser'))?._id
+  ) =>
+  async (dispatch) => {
+    try {
+      dispatch({ type: RECIPE_LIST_APPEND_REQUEST });
+      const { data } = await api.getRecipes(query, isInExploreMode, userId);
+      dispatch({ type: RECIPE_LIST_APPEND_SUCCESS, payload: data.data });
+    } catch (error) {
+      dispatch({
+        type: RECIPE_LIST_APPEND_FAIL,
+        payload: error,
+      });
+      dispatch(
+        addAlertWithTimeout(
+          'error',
+          error.response ? error.response.data.message : errorMessage
+        )
+      );
+    }
+  };
 const getAllRecipesForSearching =
   (
     query = '',

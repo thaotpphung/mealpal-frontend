@@ -10,7 +10,8 @@ import InputWithTooltip from '../../common/InputWithTooltip/InputWithTooltip';
 import Input from '../../common/Input/Input';
 import RoundButton from '../../common/Buttons/RoundButton';
 import PopupDialog from '../../common/PopupDialog/PopupDialog';
-import WeekList from '../../containers/WeekList/WeekList';
+import WeekCard from '../../components/WeekCard/WeekCard';
+import CardList from '../../containers/CardList/CardList';
 import PaginatedTable from '../../containers/PaginatedTable/PaginatedTable';
 import usePagination from '../../../utils/hooks/usePagination';
 import useInput from '../../../utils/hooks/useInput';
@@ -25,7 +26,6 @@ import {
   getAllWeeks,
   createWeek,
   getAllWeeksInfinite,
-  setWeeks,
 } from '../../../redux/actions/weekActions';
 
 const WeekPage = () => {
@@ -59,7 +59,6 @@ const WeekPage = () => {
     { name: '', description: '', calories: '', tags: '' },
     views[loggedInUser ? loggedInUser.weekView : 'board'].limit,
     (newLimit, newPage = 0) => {
-      console.log('call call back', newLimit, newPage);
       if (view === 'board') {
         dispatch(
           getAllWeeksInfinite(buildQuery(limit, page), isInExploreMode, userId)
@@ -76,7 +75,6 @@ const WeekPage = () => {
   // view
   const defaultView = loggedInUser ? loggedInUser.weekView : 'board';
   const [view, setView] = useState(defaultView);
-
   const handleChangeView = () => {
     setView(view === 'board' ? 'table' : 'board');
   };
@@ -102,12 +100,10 @@ const WeekPage = () => {
 
   const firstUpdate = useRef(true);
   useEffect(() => {
-    setWeeks([]);
     if (firstUpdate.current) {
       firstUpdate.current = false;
       return;
     }
-    console.log('use effect - change view or is explore mode');
     if (!firstUpdate.current) {
       const newLimit = views[view].limit;
       handleChangeLimitAndPage(newLimit, 0, false);
@@ -140,7 +136,6 @@ const WeekPage = () => {
       resetTags();
     }
   );
-
   const {
     values: dialogValue,
     handleSubmit,
@@ -192,7 +187,7 @@ const WeekPage = () => {
           handleSubmitFilter();
         }}
       >
-        <Grid container spacing={3} style={{ marginBottom: '9px' }}>
+        <Grid container spacing={3} style={{ marginBottom: '12px' }}>
           <Grid item xs={12} lg={9}>
             <div className={classes.utilsFields}>
               <Input
@@ -260,11 +255,12 @@ const WeekPage = () => {
       </form>
       {/* weeks */}
       {view === 'board' ? (
-        <WeekList
+        <CardList
+          component={WeekCard}
           loading={loading}
           error={error}
           lastElementRef={lastElementRef}
-          weeks={weeks}
+          data={weeks}
           count={pageCount}
           page={page}
           handleChangeLimitAndPage={handleChangeLimitAndPage}

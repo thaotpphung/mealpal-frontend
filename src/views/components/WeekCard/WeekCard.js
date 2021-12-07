@@ -31,7 +31,7 @@ import RoundButton from '../../common/Buttons/RoundButton';
 import BlockButton from '../../common/Buttons/BlockButton';
 import InputWithTooltip from '../../common/InputWithTooltip/InputWithTooltip';
 
-const WeekCard = ({ week, recipes = [] }) => {
+const WeekCard = ({ data, recipes = [] }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -45,7 +45,7 @@ const WeekCard = ({ week, recipes = [] }) => {
   );
 
   const [tags, handleChangeTags, resetTags] = useInput(
-    week.tags.join(', ').replace(/, ([^,]*)$/, ', $1')
+    data.tags.join(', ').replace(/, ([^,]*)$/, ', $1')
   );
 
   const {
@@ -54,9 +54,9 @@ const WeekCard = ({ week, recipes = [] }) => {
     handleChange,
     errors,
     reset,
-  } = useForm({ ...getInitialWeekForm(true, week) }, () => {
+  } = useForm({ ...getInitialWeekForm(true, data) }, () => {
     dispatch(
-      updateWeek(week._id, {
+      updateWeek(data._id, {
         ...weekForm,
         tags: tags !== '' ? tags.split(',').map((tag) => tag.trim()) : [],
       })
@@ -110,7 +110,7 @@ const WeekCard = ({ week, recipes = [] }) => {
       onClose={handleMobileMenuClose}
     >
       {loggedInUser &&
-        week?.userId._id === loggedInUser._id &&
+        data?.userId._id === loggedInUser._id &&
         weekId !== loggedInUser.currentWeek && (
           <MenuItem onClick={handleSetCurrentWeek}>
             <RoundButton type="default" />
@@ -118,11 +118,11 @@ const WeekCard = ({ week, recipes = [] }) => {
           </MenuItem>
         )}
       {loggedInUser &&
-        week?.userId._id === loggedInUser._id && [
+        data?.userId._id === loggedInUser._id && [
           <MenuItem
             key="addCart"
             onClick={() => {
-              dispatch(addToCartByWeek(week, history));
+              dispatch(addToCartByWeek(data, history));
             }}
           >
             <RoundButton type="shoppingCart" />
@@ -131,23 +131,23 @@ const WeekCard = ({ week, recipes = [] }) => {
           <MenuItem
             key="deleteCart"
             onClick={() => {
-              handleDeleteWeek(week?._id);
+              handleDeleteWeek(data?._id);
             }}
           >
             <RoundButton type="delete" />
             <Typography>Delete</Typography>
           </MenuItem>,
         ]}
-      {loggedInUser && week?.userId._id !== loggedInUser._id && (
+      {loggedInUser && data?.userId._id !== loggedInUser._id && (
         <MenuItem key="saveWeek" onClick={() => handleDuplicateWeek(weekId)}>
           <RoundButton type="save" />
           <Typography>Save</Typography>
         </MenuItem>
       )}
-      {loggedInUser && week?.userId._id === loggedInUser._id && (
+      {loggedInUser && data?.userId._id === loggedInUser._id && (
         <MenuItem
           key="duplicateWeek"
-          onClick={() => handleDuplicateWeek(week._id)}
+          onClick={() => handleDuplicateWeek(data._id)}
         >
           <RoundButton type="duplicate" />
           <Typography>Duplicate</Typography>
@@ -163,7 +163,7 @@ const WeekCard = ({ week, recipes = [] }) => {
           <Avatar
             aria-label="userAvatar"
             className={classes.avatar}
-            src={week.userId?.avatar}
+            src={data.userId?.avatar}
           />
         }
         action={
@@ -171,7 +171,7 @@ const WeekCard = ({ week, recipes = [] }) => {
             {!!loggedInUser && (
               <>
                 {/* all week view */}
-                {!weekId && week._id === loggedInUser.currentWeek && (
+                {!weekId && data._id === loggedInUser.currentWeek && (
                   <>
                     <RoundButton type="default" />
                   </>
@@ -179,7 +179,7 @@ const WeekCard = ({ week, recipes = [] }) => {
                 {/* single week view*/}
                 {weekId && (
                   <>
-                    {loggedInUser._id === week.userId._id && (
+                    {loggedInUser._id === data.userId._id && (
                       <>
                         {openEditMode ? (
                           <RoundButton
@@ -212,13 +212,13 @@ const WeekCard = ({ week, recipes = [] }) => {
           <Typography
             className={classes.clickable}
             onClick={() =>
-              history.push(`/users/${week.userId._id}/weeks/${week._id}`)
+              history.push(`/users/${data.userId._id}/weeks/${data._id}`)
             }
           >
-            {week.name}
+            {data.name}
           </Typography>
         }
-        subheader={`Updated ${formatTime(week.updatedTime)}`}
+        subheader={`Updated ${formatTime(data.updatedTime)}`}
       />
 
       <CardContent>
@@ -228,13 +228,13 @@ const WeekCard = ({ week, recipes = [] }) => {
               <Grid item xs={12} lg={12}>
                 <Typography>
                   <strong>Description: </strong>
-                  {week.description}
+                  {data.description}
                 </Typography>
               </Grid>
               <Grid item xs={12} lg={6}>
                 <Typography>
                   <strong>Calories/Day: </strong>
-                  {week.calories} kCal
+                  {data.calories} kCal
                 </Typography>
               </Grid>
               <Grid item xs={12} lg={6}>
@@ -245,17 +245,17 @@ const WeekCard = ({ week, recipes = [] }) => {
                   component="span"
                   className={classes.clickable}
                   onClick={() =>
-                    history.push(`/users/${week.userId._id}/profile`)
+                    history.push(`/users/${data.userId._id}/profile`)
                   }
                 >
-                  {week.userId.username}
+                  {data.userId.username}
                 </Typography>
               </Grid>
               <Grid item xs={12} lg={12}>
                 <Typography component="span">
                   <strong>Tags: </strong>
                 </Typography>
-                {week.tags.map((tag, tagIdx) => (
+                {data.tags.map((tag, tagIdx) => (
                   <Chip
                     size="small"
                     key={`tag-${tagIdx}`}

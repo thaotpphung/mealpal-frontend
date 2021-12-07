@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import useStyles from '../../../app/styles';
 import {
@@ -35,7 +35,7 @@ import {
   recipeFormFields,
 } from '../../../utils/forms/recipes';
 
-const RecipeCard = ({ recipe }) => {
+const RecipeCard = ({ data }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { recipeId } = useParams();
@@ -48,11 +48,11 @@ const RecipeCard = ({ recipe }) => {
     }
   );
   const initialForm = {
-    ...getInitialRecipeForm(true, recipe),
+    ...getInitialRecipeForm(true, data),
   };
 
   const [tags, handleChangeTags, resetTags] = useInput(
-    recipe.tags.join(', ').replace(/, ([^,]*)$/, ', $1')
+    data.tags.join(', ').replace(/, ([^,]*)$/, ', $1')
   );
 
   const {
@@ -64,7 +64,7 @@ const RecipeCard = ({ recipe }) => {
     reset,
   } = useForm(initialForm, () => {
     dispatch(
-      updateRecipe(recipe._id, {
+      updateRecipe(data._id, {
         ...recipeForm,
         tags: tags !== '' ? tags.split(',').map((tag) => tag.trim()) : [],
       })
@@ -107,11 +107,11 @@ const RecipeCard = ({ recipe }) => {
       onClose={handleMobileMenuClose}
     >
       {loggedInUser &&
-        recipe?.userId._id === loggedInUser._id && [
+        data?.userId._id === loggedInUser._id && [
           <MenuItem
             key="addCart"
             onClick={() => {
-              dispatch(addToCartByRecipe(recipe, history));
+              dispatch(addToCartByRecipe(data, history));
             }}
           >
             <RoundButton type="shoppingCart" />
@@ -120,17 +120,17 @@ const RecipeCard = ({ recipe }) => {
           <MenuItem
             key="deleteCart"
             onClick={() => {
-              handleDeleteRecipe(recipe._id);
+              handleDeleteRecipe(data._id);
             }}
           >
             <RoundButton type="delete" />
             <Typography>Delete</Typography>
           </MenuItem>,
         ]}
-      {loggedInUser && recipe?.userId._id !== loggedInUser._id && (
+      {loggedInUser && data?.userId._id !== loggedInUser._id && (
         <MenuItem
           key="saveRecipe"
-          onClick={() => handleDuplicateRecipe(recipe._id)}
+          onClick={() => handleDuplicateRecipe(data._id)}
         >
           <RoundButton type="save" />
           <Typography>Save</Typography>
@@ -146,7 +146,7 @@ const RecipeCard = ({ recipe }) => {
           <Avatar
             aria-label="recipe"
             className={classes.avatar}
-            src={recipe.userId?.avatar}
+            src={data.userId?.avatar}
           />
         }
         action={
@@ -154,7 +154,7 @@ const RecipeCard = ({ recipe }) => {
             {/* single recipe view*/}
             {loggedInUser && recipeId && (
               <>
-                {recipe.userId._id === loggedInUser._id && (
+                {data.userId._id === loggedInUser._id && (
                   <>
                     <>
                       {openEditMode ? (
@@ -187,13 +187,13 @@ const RecipeCard = ({ recipe }) => {
           <Typography
             className={classes.clickable}
             onClick={() =>
-              history.push(`/users/${recipe.userId._id}/recipes/${recipe._id}`)
+              history.push(`/users/${data.userId._id}/recipes/${data._id}`)
             }
           >
-            {recipe.name}
+            {data.name}
           </Typography>
         }
-        subheader={`Last Updated ${formatTime(recipe.updatedTime)}`}
+        subheader={`Last Updated ${formatTime(data.updatedTime)}`}
       />
       <CardMedia
         component="img"
@@ -201,11 +201,11 @@ const RecipeCard = ({ recipe }) => {
         image={
           recipeForm.recipeImage
             ? recipeForm.recipeImage
-            : recipe.recipeImage?.url
-            ? recipe.recipeImage.url
+            : data.recipeImage?.url
+            ? data.recipeImage.url
             : 'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'
         }
-        alt={recipe.name}
+        alt={data.name}
       />
 
       <CardContent>
@@ -214,27 +214,27 @@ const RecipeCard = ({ recipe }) => {
             <Grid container spacing={1} alignItems="stretch">
               <Grid item xs={12} lg={12}>
                 <Typography className={classes.wordBreak}>
-                  <strong>Description:</strong> {recipe?.description}
+                  <strong>Description:</strong> {data?.description}
                 </Typography>
               </Grid>
               <Grid item xs={12} lg={6}>
                 <Typography>
-                  <strong>Calories:</strong> {recipe?.calories} kCal
+                  <strong>Calories:</strong> {data?.calories} kCal
                 </Typography>
               </Grid>
               <Grid item xs={12} lg={6}>
                 <Typography>
-                  <strong>Servings:</strong> {recipe?.servings}
+                  <strong>Servings:</strong> {data?.servings}
                 </Typography>
               </Grid>
               <Grid item xs={12} lg={6}>
                 <Typography>
-                  <strong>Time (mins):</strong> {recipe?.time}
+                  <strong>Time (mins):</strong> {data?.time}
                 </Typography>
               </Grid>
               <Grid item xs={12} lg={6}>
                 <Typography>
-                  <strong>Serving Size:</strong> {recipe?.servingSize}
+                  <strong>Serving Size:</strong> {data?.servingSize}
                 </Typography>
               </Grid>
               <Grid item xs={12} lg={6}>
@@ -245,17 +245,17 @@ const RecipeCard = ({ recipe }) => {
                   component="span"
                   className={classes.clickable}
                   onClick={() =>
-                    history.push(`/users/${recipe.userId._id}/profile`)
+                    history.push(`/users/${data.userId._id}/profile`)
                   }
                 >
-                  {recipe.userId.username}
+                  {data.userId.username}
                 </Typography>
               </Grid>
               <Grid item xs={12} lg={12}>
                 <Typography component="span">
                   <strong>Tags: </strong>
                 </Typography>
-                {recipe.tags.map((tag, tagIdx) => (
+                {data.tags.map((tag, tagIdx) => (
                   <Chip
                     size="small"
                     key={`tag-${tagIdx}`}
