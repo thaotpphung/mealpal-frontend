@@ -76,7 +76,7 @@ const RecipePage = () => {
         );
       }
     },
-    '&fields=userId,name,description,tags,calories,servings,time,servingSize,updatedTime,recipeImage'
+    '&fields=userId,name,description,tags,calories,servings,time,servingSize,updatedTime,recipeImage,ingredients'
   );
 
   // view

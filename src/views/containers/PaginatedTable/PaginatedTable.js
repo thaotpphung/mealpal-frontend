@@ -3,6 +3,7 @@ import useStyles from '../../../app/styles';
 import { formatTime } from '../../../utils/time';
 import { useHistory } from 'react-router-dom';
 import Chip from '@material-ui/core/Chip';
+import Tooltip from '@material-ui/core/Tooltip';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -17,40 +18,7 @@ import PaginatedTableHead from './PaginatedTableHead';
 import PaginatedTableToolbar from './PaginatedTableToolbar';
 import Spinner from '../../common/Spinner/Spinner';
 import EmptyMessage from '../../common/EmptyMessage/EmptyMessage';
-
-const headCells = [
-  {
-    id: 'name',
-    numeric: false,
-    disablePadding: true,
-    label: 'Name',
-  },
-  {
-    id: 'description',
-    numeric: false,
-    disablePadding: false,
-    label: 'Description',
-  },
-  { id: 'calories', numeric: true, disablePadding: false, label: 'Calories' },
-  {
-    id: 'tags',
-    numeric: false,
-    disablePadding: false,
-    label: 'Tags',
-  },
-  {
-    id: 'updatedTime',
-    numeric: false,
-    disablePadding: false,
-    label: 'Last Updated',
-  },
-  {
-    id: 'username',
-    numeric: false,
-    disablePadding: false,
-    label: 'Username',
-  },
-];
+import TagList from '../../containers/TagList/TagList';
 
 const PaginatedTable = ({
   loading,
@@ -68,6 +36,46 @@ const PaginatedTable = ({
   const [orderBy, setOrderBy] = useState('calories');
   const [selected, setSelected] = useState([]);
   const [dense, setDense] = useState(false);
+
+  const headCells = [
+    {
+      id: 'name',
+      numeric: false,
+      disablePadding: true,
+      label: 'Name',
+    },
+    {
+      id: 'description',
+      numeric: false,
+      disablePadding: false,
+      label: 'Description',
+    },
+    { id: 'calories', numeric: true, disablePadding: false, label: 'Calories' },
+    {
+      id: 'tags',
+      numeric: false,
+      disablePadding: false,
+      label: 'Tags',
+    },
+    title === 'recipes' && {
+      id: 'ingredients',
+      numeric: false,
+      disablePadding: false,
+      label: 'Ingredients',
+    },
+    {
+      id: 'updatedTime',
+      numeric: false,
+      disablePadding: false,
+      label: 'Last Updated',
+    },
+    {
+      id: 'username',
+      numeric: false,
+      disablePadding: false,
+      label: 'Username',
+    },
+  ];
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -179,15 +187,37 @@ const PaginatedTable = ({
                         {row.description}
                       </TableCell>
                       <TableCell align="right">{row.calories}</TableCell>
-                      <TableCell className={classes.tableCellOverflow}>
-                        {row.tags.map((tag, tagIdx) => (
-                          <Chip
-                            key={`tag-${tagIdx}`}
-                            label={tag}
-                            className={classes.tag}
+                      <Tooltip title={row.tags.join(', ')} placement="top">
+                        <TableCell className={classes.tableCellOverflow}>
+                          <TagList
+                            data={row.tags}
+                            title={`itemTags-${index}`}
                           />
-                        ))}
-                      </TableCell>
+                        </TableCell>
+                      </Tooltip>
+                      {title === 'recipes' && (
+                        <Tooltip
+                          title={row.ingredients
+                            .map((ingredient) => ingredient.ingredientName)
+                            .join(', ')}
+                          placement="top"
+                        >
+                          <TableCell className={classes.tableCellOverflow}>
+                            {row.ingredients.map(
+                              (ingredient, ingredientIdx) => (
+                                <span key={`row-${index}-tag-${ingredientIdx}`}>
+                                  {ingredient.ingredientName !== '' && (
+                                    <Chip
+                                      label={ingredient.ingredientName}
+                                      className={classes.tag}
+                                    />
+                                  )}
+                                </span>
+                              )
+                            )}
+                          </TableCell>
+                        </Tooltip>
+                      )}
                       <TableCell>{formatTime(row.updatedTime)}</TableCell>
                       <TableCell
                         className={classes.clickable}

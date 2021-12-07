@@ -36,7 +36,7 @@ const WeekDetailsPage = ({ id = '' }) => {
         className={classes.weekContainer}
       >
         <Grid item xs={12} md={4} className={classes.leftColumn}>
-          <WeekCard week={week} recipes={recipes} />
+          <WeekCard data={week} recipes={recipes} />
         </Grid>
         <Grid item xs={12} md={8}>
           <DayList

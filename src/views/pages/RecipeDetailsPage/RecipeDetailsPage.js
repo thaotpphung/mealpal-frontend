@@ -33,7 +33,7 @@ const RecipeDetailsPage = () => {
           spacing={7}
         >
           <Grid item xs={12} md={5} lg={4}>
-            <RecipeCard recipe={recipe} />
+            <RecipeCard data={recipe} />
           </Grid>
           <Grid item xs={12} md={7} lg={8} className={classes.rightColumn}>
             <RecipeDetails recipe={recipe} />
