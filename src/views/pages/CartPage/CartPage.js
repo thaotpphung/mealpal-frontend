@@ -177,7 +177,7 @@ const CartPage = () => {
                             unmountOnExit
                           >
                             <div className={localClasses.nested}>
-                              {value.recipes.map((name, recipeIdx, recipes) => (
+                              {value.recipes.map((name, recipeIdx) => (
                                 <Chip
                                   key={`recipe-name-${name}-${recipeIdx}`}
                                   className={classes.tag}

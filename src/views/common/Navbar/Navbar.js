@@ -14,7 +14,6 @@ import ProfileIcon from '@material-ui/icons/AccountCircle';
 import LogoutIcon from '@material-ui/icons/ExitToApp';
 import Button from '@material-ui/core/Button';
 import Link from '@material-ui/core/Link';
-import Chip from '@material-ui/core/Chip';
 import { NavLink as RouterLink } from 'react-router-dom';
 import useStyles from './styles';
 import { useHistory } from 'react-router-dom';

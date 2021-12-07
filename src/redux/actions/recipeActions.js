@@ -20,6 +20,8 @@ import {
 } from '../constants/recipeConstants';
 import { addAlertWithTimeout } from '../actions/alertActions';
 import * as api from '../../api/index';
+import { errorMessage } from '../../constants/messages';
+
 export {
   getAllRecipes,
   createRecipe,
@@ -44,9 +46,14 @@ const getAllRecipes =
     } catch (error) {
       dispatch({
         type: RECIPE_LIST_FAIL,
-        payload: error?.response.data.message,
+        payload: error,
       });
-      dispatch(addAlertWithTimeout('error', error?.response.data.message));
+      dispatch(
+        addAlertWithTimeout(
+          'error',
+          error.response ? error.response.data.message : errorMessage
+        )
+      );
     }
   };
 
@@ -64,9 +71,14 @@ const getAllRecipesForSearching =
     } catch (error) {
       dispatch({
         type: RECIPE_SEARCH_LIST_FAIL,
-        payload: error?.response.data.message,
+        payload: error,
       });
-      dispatch(addAlertWithTimeout('error', error?.response.data.message));
+      dispatch(
+        addAlertWithTimeout(
+          'error',
+          error.response ? error.response.data.message : errorMessage
+        )
+      );
     }
   };
 
@@ -89,9 +101,14 @@ const createRecipe =
     } catch (error) {
       dispatch({
         type: RECIPE_CREATE_FAIL,
-        payload: error?.response.data.message,
+        payload: error,
       });
-      dispatch(addAlertWithTimeout('error', error?.response.data.message));
+      dispatch(
+        addAlertWithTimeout(
+          'error',
+          error.response ? error.response.data.message : errorMessage
+        )
+      );
     }
   };
 
@@ -103,9 +120,14 @@ const getRecipe = (recipeId) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: RECIPE_DETAILS_FAIL,
-      payload: error?.response.data.message,
+      payload: error,
     });
-    dispatch(addAlertWithTimeout('error', error?.response.data.message));
+    dispatch(
+      addAlertWithTimeout(
+        'error',
+        error.response ? error.response.data.message : errorMessage
+      )
+    );
   }
 };
 
@@ -119,9 +141,14 @@ const deleteRecipe = (recipeId, router) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: RECIPE_DELETE_FAIL,
-      payload: error?.response.data.message,
+      payload: error,
     });
-    dispatch(addAlertWithTimeout('error', error?.response.data.message));
+    dispatch(
+      addAlertWithTimeout(
+        'error',
+        error.response ? error.response.data.message : errorMessage
+      )
+    );
   }
 };
 
@@ -135,8 +162,13 @@ const updateRecipe = (recipeId, recipe) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: RECIPE_UPDATE_FAIL,
-      payload: error?.response.data.message,
+      payload: error,
     });
-    dispatch(addAlertWithTimeout('error', error?.response.data.message));
+    dispatch(
+      addAlertWithTimeout(
+        'error',
+        error.response ? error.response.data.message : errorMessage
+      )
+    );
   }
 };

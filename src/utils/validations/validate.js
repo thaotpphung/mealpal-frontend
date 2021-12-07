@@ -1,4 +1,4 @@
-import { validateField, validateArray } from './validateFunctions';
+import { validateField } from './validateFunctions';
 
 const validate = (values, optionalFields = []) => {
   let errors = {};

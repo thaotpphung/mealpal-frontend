@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const usePagination = (
   initialState,
@@ -11,6 +11,7 @@ const usePagination = (
   const [queryFields, setQueryFields] = useState(initialState);
   const [limit, setLimit] = useState(initialLimit); // number of documents per page
   const [count, setCount] = useState(0);
+  const [withCallback, setWithCallback] = useState(true);
 
   const buildQuery = (newLimit = initialLimit, newPage = 0) => {
     let filterQuery = '?';
@@ -39,15 +40,24 @@ const usePagination = (
     );
   };
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-    callback(limit, newPage);
-  };
+  useEffect(() => {
+    if (withCallback) {
+      callback(limit, page);
+    }
+  }, [page, limit, withCallback]);
 
-  const handleChangeLimit = (newLimit) => {
-    setPage(0);
+  const handleChangeLimitAndPage = (
+    newLimit = initialLimit,
+    newPage = 0,
+    newWithCallback = true
+  ) => {
+    if (newPage === 'next') {
+      setPage((prevPage) => prevPage + 1);
+    } else {
+      setPage(newPage);
+    }
+    setWithCallback(newWithCallback);
     setLimit(newLimit);
-    callback(newLimit);
   };
 
   return {
@@ -58,10 +68,9 @@ const usePagination = (
     count,
     buildQuery,
     handleSubmitFilter,
-    handleChangePage,
-    handleChangeLimit,
     handleChangeQueryField,
     handleChangePageCount,
+    handleChangeLimitAndPage,
   };
 };
 

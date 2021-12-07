@@ -5,6 +5,9 @@ import {
   WEEK_LIST_REQUEST,
   WEEK_LIST_SUCCESS,
   WEEK_LIST_FAIL,
+  WEEK_LIST_APPEND_REQUEST,
+  WEEK_LIST_APPEND_SUCCESS,
+  WEEK_LIST_APPEND_FAIL,
   WEEK_DELETE_REQUEST,
   WEEK_DELETE_SUCCESS,
   WEEK_DELETE_FAIL,
@@ -17,10 +20,10 @@ import {
   WEEK_UPDATE_BY_DAY_REQUEST,
   WEEK_UPDATE_BY_DAY_SUCCESS,
   WEEK_UPDATE_BY_DAY_FAIL,
-  WEEK_UPDATE_FRONTEND,
 } from '../constants/weekConstants';
 import { addAlertWithTimeout } from '../actions/alertActions';
 import * as api from '../../api/index';
+import { errorMessage } from '../../constants/messages';
 
 export {
   createWeek,
@@ -29,7 +32,14 @@ export {
   updateWeek,
   getWeek,
   updateWeekByDay,
-  updateWeekFrontend,
+  getAllWeeksInfinite,
+  setWeeks,
+};
+
+const setWeeks = (weeks) => {
+  async (dispatch) => {
+    dispatch({ type: WEEK_LIST_SUCCESS, payload: weeks });
+  };
 };
 
 // week list
@@ -41,8 +51,32 @@ const getAllWeeks =
       const { data } = await api.getWeeks(query, isInExploreMode, userId);
       dispatch({ type: WEEK_LIST_SUCCESS, payload: data.data });
     } catch (error) {
-      dispatch({ type: WEEK_LIST_FAIL, payload: error?.response.data.message });
-      dispatch(addAlertWithTimeout('error', error?.response.data.message));
+      dispatch({ type: WEEK_LIST_FAIL, payload: error });
+      dispatch(
+        addAlertWithTimeout(
+          'error',
+          error.response ? error.response.data.message : errorMessage
+        )
+      );
+    }
+  };
+
+// week list infinite
+const getAllWeeksInfinite =
+  (query = '', isInExploreMode, userId) =>
+  async (dispatch) => {
+    try {
+      dispatch({ type: WEEK_LIST_APPEND_REQUEST });
+      const { data } = await api.getWeeks(query, isInExploreMode, userId);
+      dispatch({ type: WEEK_LIST_APPEND_SUCCESS, payload: data.data });
+    } catch (error) {
+      dispatch({ type: WEEK_LIST_APPEND_FAIL, payload: error });
+      dispatch(
+        addAlertWithTimeout(
+          'error',
+          error.response ? error.response.data.message : errorMessage
+        )
+      );
     }
   };
 
@@ -64,9 +98,14 @@ const createWeek =
     } catch (error) {
       dispatch({
         type: WEEK_CREATE_FAIL,
-        payload: error?.response.data.message,
+        payload: error,
       });
-      dispatch(addAlertWithTimeout('error', error?.response.data.message));
+      dispatch(
+        addAlertWithTimeout(
+          'error',
+          error.response ? error.response.data.message : errorMessage
+        )
+      );
     }
   };
 
@@ -78,9 +117,14 @@ const getWeek = (weekId) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: WEEK_DETAILS_FAIL,
-      payload: error?.response.data.message,
+      payload: error,
     });
-    dispatch(addAlertWithTimeout('error', error?.response.data.message));
+    dispatch(
+      addAlertWithTimeout(
+        'error',
+        error.response ? error.response.data.message : errorMessage
+      )
+    );
   }
 };
 
@@ -92,8 +136,13 @@ const deleteWeek = (weekId, user, router) => async (dispatch) => {
     router.push(`/users/${user._id}/weeks`);
     dispatch(addAlertWithTimeout('success', data.message));
   } catch (error) {
-    dispatch({ type: WEEK_DELETE_FAIL, payload: error?.response.data.message });
-    dispatch(addAlertWithTimeout('error', error?.response.data.message));
+    dispatch({ type: WEEK_DELETE_FAIL, payload: error });
+    dispatch(
+      addAlertWithTimeout(
+        'error',
+        error.response ? error.response.data.message : errorMessage
+      )
+    );
   }
 };
 
@@ -104,8 +153,13 @@ const updateWeek = (weekId, week) => async (dispatch) => {
     dispatch({ type: WEEK_UPDATE_SUCCESS, payload: week });
     dispatch(addAlertWithTimeout('success', data.message));
   } catch (error) {
-    dispatch({ type: WEEK_UPDATE_FAIL, payload: error?.response.data.message });
-    dispatch(addAlertWithTimeout('error', error?.response.data.message));
+    dispatch({ type: WEEK_UPDATE_FAIL, payload: error });
+    dispatch(
+      addAlertWithTimeout(
+        'error',
+        error.response ? error.response.data.message : errorMessage
+      )
+    );
   }
 };
 
@@ -118,12 +172,13 @@ const updateWeekByDay = (weekId, dayIdx, day) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: WEEK_UPDATE_BY_DAY_FAIL,
-      payload: error?.response.data.message,
+      payload: error,
     });
-    dispatch(addAlertWithTimeout('error', error?.response.data.message));
+    dispatch(
+      addAlertWithTimeout(
+        'error',
+        error.response ? error.response.data.message : errorMessage
+      )
+    );
   }
-};
-
-const updateWeekFrontend = (weekId, week) => async (dispatch) => {
-  dispatch({ type: WEEK_UPDATE_FRONTEND, payload: week });
 };

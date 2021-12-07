@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { Grid, Button, Tooltip } from '@material-ui/core';
@@ -10,7 +10,6 @@ import PopupDialog from '../../common/PopupDialog/PopupDialog';
 import Input from '../../common/Input/Input';
 import Spinner from '../../common/Spinner/Spinner';
 import RoundButton from '../../common/Buttons/RoundButton';
-import EmptyMessage from '../../common/EmptyMessage/EmptyMessage';
 import InputWithTooltip from '../../common/InputWithTooltip/InputWithTooltip';
 import RecipeList from '../../containers/RecipeList/RecipeList';
 import PaginatedTable from '../../containers/PaginatedTable/PaginatedTable';
@@ -28,8 +27,7 @@ import {
   getInitialRecipeForm,
   recipeFormFields,
 } from '../../../utils/forms/recipes';
-import ViewModuleIcon from '@material-ui/icons/ViewModule';
-import ViewListIcon from '@material-ui/icons/ViewList';
+import views from '../../../constants/views';
 
 const RecipePage = () => {
   const classes = useStyles();
@@ -57,66 +55,45 @@ const RecipePage = () => {
     handleChangeLimit,
     handleChangeQueryField,
     handleChangePageCount,
-    handleChangePageAndLimit,
     queryFields,
   } = usePagination(
     { name: '', description: '', calories: '', tags: '', ingredients: '' },
-    (loggedInUser ? loggedInUser.recipeView : 'board') === 'table' ? 0 : 1,
-    (loggedInUser ? loggedInUser.recipeView : 'board') === 'table' ? 5 : 9,
-    (page = 0, newLimit = limit) => {
-      let newPage = view ? page + 1 : page;
+    views[loggedInUser ? loggedInUser.weekView : 'board'].limit,
+    (newLimit, newPage = 0) => {
       dispatch(
-        getAllRecipes(buildQuery(newPage, newLimit), isInExploreMode, userId)
+        getAllRecipes(buildQuery(newLimit, newPage), isInExploreMode, userId)
       );
     },
     '&fields=userId,name,description,tags,calories,servings,time,servingSize,updatedTime,recipeImage'
   );
 
   // view
-  const defaultView = loggedInUser ? loggedInUser.recipeView : 'board';
-  const [view, toggleView] = useToggle(defaultView === 'board' ? false : true); // initially the view is board view
+  const [view, setView] = useState(
+    loggedInUser ? loggedInUser.weekView : 'board'
+  );
   const handleChangeView = () => {
-    if (view) {
-      handleChangePageAndLimit(1, 9);
-      dispatch(getAllRecipes(buildQuery(1, 9), isInExploreMode, userId));
-      handleChangePageCount(recipeCount, 9);
-    } else {
-      handleChangePageAndLimit(0, 5);
-      dispatch(getAllRecipes(buildQuery(1, 5), isInExploreMode, userId));
-      handleChangePageCount(recipeCount, 5);
-    }
-    toggleView();
+    setView(view === 'board' ? 'table' : 'board');
   };
   const handleSetDefaultView = () => {
     dispatch(
-      updateUser(loggedInUser._id, { recipeView: view ? 'table' : 'board' })
+      updateUser(loggedInUser._id, { weekView: view ? 'table' : 'board' })
     );
   };
 
-  // get initial recipes
-  useEffect(() => {
-    if ((loggedInUser ? loggedInUser.recipeView : 'board') === 'table') {
-      handleChangePageAndLimit(0, 5);
-    }
-    dispatch(
-      getAllRecipes(
-        buildQuery(
-          1,
-          (loggedInUser ? loggedInUser.recipeView : 'board') === 'table' ? 5 : 9
-        ),
-        isInExploreMode,
-        userId
-      )
-    );
-  }, []);
+  // explore mode
+  const [isInExploreMode, toggleIsInExploreMode] = useToggle(false);
+  const handleChangeMode = () => {
+    toggleIsInExploreMode();
+  };
 
-  // set count for pagination when recipes have been loaded or a query has been submitted
+  // set count for pagination when weeks have been loaded
   useEffect(() => {
-    handleChangePageCount(
-      recipeCount,
-      (loggedInUser ? loggedInUser.recipeView : 'board') === 'table' ? 5 : 9
-    );
+    handleChangePageCount(recipeCount);
   }, [recipeCount]);
+
+  useEffect(() => {
+    handleChangeLimit(views[view].limit);
+  }, [view, isInExploreMode]);
 
   // create recipe dialog
   const [tags, handleChangeTags, resetTags] = useInput();
@@ -145,169 +122,150 @@ const RecipePage = () => {
     );
   });
 
-  // explore mode
-  const [isInExploreMode, toggleIsInExploreMode] = useToggle(false);
-  const handleChangeMode = () => {
-    dispatch(
-      getAllRecipes(buildQuery(1, view ? 5 : 9), !isInExploreMode, userId)
-    );
-    toggleIsInExploreMode();
-  };
-
-  if (!loading && error) return <EmptyMessage />;
-
-  if (!loading && recipes.length >= 0)
-    return (
-      <div>
-        {/* Change View */}
-        <div style={{ float: 'right' }}>
-          {loggedInUser && (
-            <Tooltip
-              style={{ marginRight: '8px' }}
-              title="Set current view as default"
-              placement="top"
-            >
-              <span>
-                <RoundButton
-                  type="default"
-                  handleClick={handleSetDefaultView}
-                />
-              </span>
-            </Tooltip>
-          )}
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleChangeView}
+  return (
+    <div>
+      {/* Change View */}
+      <div style={{ float: 'right' }}>
+        {loggedInUser && (
+          <Tooltip
+            style={{ marginRight: '8px' }}
+            title="Set current view as default"
+            placement="top"
           >
-            {view ? (
-              <ViewModuleIcon fontSize="small" />
-            ) : (
-              <ViewListIcon fontSize="small" />
-            )}
-            &nbsp;{view ? 'Board' : 'Table'} View
-          </Button>
-        </div>
-        <Grid container spacing={3} style={{ marginBottom: '12px' }}>
-          <Grid item sm={12} md={12} lg={9}>
-            <div className={classes.utilsFields}>
-              <Input
-                value={queryFields.name}
-                name="name"
-                label="Name"
-                handleChange={handleChangeQueryField}
-              />
-              <Input
-                value={queryFields.description}
-                name="description"
-                label="Description"
-                handleChange={handleChangeQueryField}
-              />
-              <InputWithTooltip
-                value={queryFields.calories}
-                name="calories"
-                label="Calories"
-                tooltip='Exact match, Ex: "2000", or separated by comma to search by range, Ex: "0, 2000" or "0," or ",2000"'
-                handleChange={handleChangeQueryField}
-              />
-              <InputWithTooltip
-                value={queryFields.tags}
-                label="Tags"
-                name="tags"
-                tooltip='Separated by comma, Ex: "Main Course, Keto"'
-                handleChange={handleChangeQueryField}
-              />
-              <InputWithTooltip
-                value={queryFields.ingredients}
-                label="Ingredients"
-                name="ingredients"
-                tooltip='Separated by comma, Ex: "Milk, Banana"'
-                handleChange={handleChangeQueryField}
-              />
-            </div>
-          </Grid>
-          <Grid item sm={12} md={12} lg={3}>
-            <div className={classes.utilsActions}>
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={() => handleSubmitFilter(currentCount)}
-              >
-                <SearchIcon fontSize="small" /> Search
-              </Button>
-              {loggedInUser && (
-                <>
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    onClick={() => toggleOpenEditMode(true)}
-                  >
-                    <AddBoxOutlinedIcon fontSize="small" />
-                    &nbsp;Recipe
-                  </Button>
-                  <Button
-                    variant={isInExploreMode ? 'contained' : 'outlined'}
-                    color="primary"
-                    onClick={handleChangeMode}
-                  >
-                    <ExploreOutlinedIcon fontSize="small" />
-                    Explore
-                  </Button>
-                </>
-              )}
-            </div>
-          </Grid>
-        </Grid>
-        {/* recipes */}
-        {!view ? (
-          <RecipeList
-            recipes={recipes}
-            count={pageCount}
-            page={page}
-            handleChangePage={handleChangePage}
-          />
-        ) : (
-          <PaginatedTable
-            title="recipes"
-            data={recipes}
-            count={count}
-            limit={limit}
-            page={page}
-            handleChangePage={handleChangePage}
-            handleChangeLimit={handleChangeLimit}
-          />
+            <span>
+              <RoundButton type="default" handleClick={handleSetDefaultView} />
+            </span>
+          </Tooltip>
         )}
-        <PopupDialog
-          open={openEditMode}
-          title="Add a new recipe"
-          handleClose={handleCloseEditMode}
-          handleSubmit={handleSubmit}
-          content={
-            <div>
-              {recipeFormFields.map((field, fieldIdx) => (
-                <Input
-                  key={`new-recipe-form-${field.name}-${fieldIdx}`}
-                  value={dialogValue[field.name]}
-                  handleChange={handleChange}
-                  name={field.name}
-                  label={field.label}
-                  error={errors[field.name]}
-                  type={field.type ? field.type : 'text'}
-                  required={field.required}
-                  step={field.step}
-                />
-              ))}
-              <InputWithTooltip
-                label="Tags"
-                tooltip='Separated by comma, Ex: "Main Course, Keto"'
-                value={tags}
-                handleChange={handleChangeTags}
-              />
-            </div>
-          }
-        />
+        <Button variant="contained" color="primary" onClick={handleChangeView}>
+          {views[view].icon}
+          &nbsp;{views[view].label} View
+        </Button>
       </div>
-    );
+      <Grid container spacing={3} style={{ marginBottom: '12px' }}>
+        <Grid item sm={12} md={12} lg={9}>
+          <div className={classes.utilsFields}>
+            <Input
+              value={queryFields.name}
+              name="name"
+              label="Name"
+              handleChange={handleChangeQueryField}
+            />
+            <Input
+              value={queryFields.description}
+              name="description"
+              label="Description"
+              handleChange={handleChangeQueryField}
+            />
+            <InputWithTooltip
+              value={queryFields.calories}
+              name="calories"
+              label="Calories"
+              tooltip='Exact match, Ex: "2000", or separated by comma to search by range, Ex: "0, 2000" or "0," or ",2000"'
+              handleChange={handleChangeQueryField}
+            />
+            <InputWithTooltip
+              value={queryFields.tags}
+              label="Tags"
+              name="tags"
+              tooltip='Separated by comma, Ex: "Main Course, Keto"'
+              handleChange={handleChangeQueryField}
+            />
+            <InputWithTooltip
+              value={queryFields.ingredients}
+              label="Ingredients"
+              name="ingredients"
+              tooltip='Separated by comma, Ex: "Milk, Banana"'
+              handleChange={handleChangeQueryField}
+            />
+          </div>
+        </Grid>
+        <Grid item sm={12} md={12} lg={3}>
+          <div className={classes.utilsActions}>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={() => handleSubmitFilter(currentCount)}
+            >
+              <SearchIcon fontSize="small" /> Search
+            </Button>
+            {loggedInUser && (
+              <>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={() => toggleOpenEditMode(true)}
+                >
+                  <AddBoxOutlinedIcon fontSize="small" />
+                  &nbsp;Recipe
+                </Button>
+                <Button
+                  variant={isInExploreMode ? 'contained' : 'outlined'}
+                  color="primary"
+                  onClick={handleChangeMode}
+                >
+                  <ExploreOutlinedIcon fontSize="small" />
+                  Explore
+                </Button>
+              </>
+            )}
+          </div>
+        </Grid>
+      </Grid>
+      {/* recipes */}
+      {view === 'board' ? (
+        <RecipeList
+          loading={loading}
+          error={error}
+          recipes={recipes}
+          count={pageCount}
+          page={page}
+          handleChangePage={handleChangePage}
+        />
+      ) : (
+        <PaginatedTable
+          loading={loading}
+          error={error}
+          title="recipes"
+          data={recipes}
+          count={count}
+          limit={limit}
+          page={page}
+          handleChangePage={handleChangePage}
+          handleChangeLimit={handleChangeLimit}
+        />
+      )}
+      <PopupDialog
+        open={openEditMode}
+        title="Add a new recipe"
+        handleClose={handleCloseEditMode}
+        handleSubmit={handleSubmit}
+        content={
+          <div>
+            {recipeFormFields.map((field, fieldIdx) => (
+              <Input
+                key={`new-recipe-form-${field.name}-${fieldIdx}`}
+                value={dialogValue[field.name]}
+                handleChange={handleChange}
+                name={field.name}
+                label={field.label}
+                error={errors[field.name]}
+                type={field.type ? field.type : 'text'}
+                required={field.required}
+                step={field.step}
+              />
+            ))}
+            <InputWithTooltip
+              label="Tags"
+              tooltip='Separated by comma, Ex: "Main Course, Keto"'
+              value={tags}
+              handleChange={handleChangeTags}
+            />
+          </div>
+        }
+      />
+    </div>
+  );
   return <Spinner />;
 };
 

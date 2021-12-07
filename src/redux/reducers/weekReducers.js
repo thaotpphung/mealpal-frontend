@@ -2,6 +2,9 @@ import {
   WEEK_LIST_REQUEST,
   WEEK_LIST_SUCCESS,
   WEEK_LIST_FAIL,
+  WEEK_LIST_APPEND_REQUEST,
+  WEEK_LIST_APPEND_SUCCESS,
+  WEEK_LIST_APPEND_FAIL,
   WEEK_CREATE_REQUEST,
   WEEK_CREATE_SUCCESS,
   WEEK_CREATE_FAIL,
@@ -17,13 +20,13 @@ import {
   WEEK_UPDATE_BY_DAY_REQUEST,
   WEEK_UPDATE_BY_DAY_SUCCESS,
   WEEK_UPDATE_BY_DAY_FAIL,
-  WEEK_UPDATE_FRONTEND,
 } from '../constants/weekConstants';
 import cloneDeep from 'lodash/cloneDeep';
 
 const INITIAL_STATE = {
   weeks: [],
   loading: false,
+  loadingMore: false,
   count: 0,
   currentCount: 0,
   error: '',
@@ -31,9 +34,12 @@ const INITIAL_STATE = {
 
 function weekListReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
-    case WEEK_LIST_REQUEST: {
+    case WEEK_LIST_REQUEST:
       return { ...state, loading: true, error: '' };
-    }
+
+    case WEEK_LIST_APPEND_REQUEST:
+      return { ...state, loadingMore: true, error: '' };
+
     case WEEK_LIST_SUCCESS: {
       return {
         loading: false,
@@ -43,8 +49,26 @@ function weekListReducer(state = INITIAL_STATE, action) {
         error: '',
       };
     }
+
+    case WEEK_LIST_APPEND_SUCCESS: {
+      let updatedWeeks = cloneDeep(state.weeks);
+      action.payload.data.forEach((item) => {
+        updatedWeeks.push(item);
+      });
+
+      return {
+        loadingMore: false,
+        weeks: updatedWeeks,
+        count: action.payload.count,
+        currentCount: action.payload.currentCount,
+        error: '',
+      };
+    }
+
     case WEEK_LIST_FAIL:
       return { ...state, loading: false, error: action.payload };
+    case WEEK_LIST_APPEND_FAIL:
+      return { ...state, loadingMore: false, error: action.payload };
     default:
       return state;
   }
@@ -91,9 +115,6 @@ function weekDetailsReducer(
 
     case WEEK_DELETE_SUCCESS:
       return { ...state, loading: false, error: '' };
-
-    case WEEK_UPDATE_FRONTEND:
-      return { ...state, week: action.payload };
 
     case WEEK_CREATE_FAIL:
     case WEEK_DETAILS_FAIL:
