@@ -37,7 +37,7 @@ const PaginatedTable = ({
   const [selected, setSelected] = useState([]);
   const [dense, setDense] = useState(false);
 
-  const headCells = [
+  let headCells = [
     {
       id: 'name',
       numeric: false,
@@ -57,12 +57,6 @@ const PaginatedTable = ({
       disablePadding: false,
       label: 'Tags',
     },
-    title === 'recipes' && {
-      id: 'ingredients',
-      numeric: false,
-      disablePadding: false,
-      label: 'Ingredients',
-    },
     {
       id: 'updatedTime',
       numeric: false,
@@ -76,6 +70,15 @@ const PaginatedTable = ({
       label: 'Username',
     },
   ];
+
+  if (title === 'recipes') {
+    headCells.splice(4, 0, {
+      id: 'ingredients',
+      numeric: false,
+      disablePadding: false,
+      label: 'Ingredients',
+    });
+  }
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';

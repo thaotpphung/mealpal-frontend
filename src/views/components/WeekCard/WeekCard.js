@@ -10,7 +10,6 @@ import {
   Typography,
   Menu,
   MenuItem,
-  Chip,
 } from '@material-ui/core/';
 import useStyles from '../../../app/styles';
 import {
@@ -21,7 +20,6 @@ import {
 import { updateUser } from '../../../redux/actions/userActions';
 import { addToCartByWeek } from '../../../redux/actions/cartActions';
 import { addAlertWithTimeout } from '../../../redux/actions/alertActions';
-import Input from '../../common/Input/Input';
 import useEditMode from '../../../utils/hooks/useEditMode';
 import useForm from '../../../utils/hooks/useForm';
 import useInput from '../../../utils/hooks/useInput';
@@ -30,8 +28,10 @@ import { getInitialWeekForm, weekFormFields } from '../../../utils/forms/weeks';
 import RoundButton from '../../common/Buttons/RoundButton';
 import BlockButton from '../../common/Buttons/BlockButton';
 import InputWithTooltip from '../../common/InputWithTooltip/InputWithTooltip';
+import Input from '../../common/Input/Input';
+import TagList from '../../containers/TagList/TagList';
 
-const WeekCard = ({ data, recipes = [] }) => {
+const WeekCard = ({ data }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -43,7 +43,7 @@ const WeekCard = ({ data, recipes = [] }) => {
       resetTags();
     }
   );
-
+  const { recipes } = useSelector((state) => state.recipeSearchList);
   const [tags, handleChangeTags, resetTags] = useInput(
     data.tags.join(', ').replace(/, ([^,]*)$/, ', $1')
   );
@@ -255,14 +255,7 @@ const WeekCard = ({ data, recipes = [] }) => {
                 <Typography component="span">
                   <strong>Tags: </strong>
                 </Typography>
-                {data.tags.map((tag, tagIdx) => (
-                  <Chip
-                    size="small"
-                    key={`tag-${tagIdx}`}
-                    label={tag}
-                    className={classes.tag}
-                  />
-                ))}
+                <TagList data={data.tags} title="weekCard" />
               </Grid>
             </Grid>
           </div>

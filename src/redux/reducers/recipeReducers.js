@@ -93,6 +93,8 @@ const recipeSearchListReducer = (state = RECIPE_LIST_INITIAL_STATE, action) => {
     }
 
     case RECIPE_CREATE_SUCCESS: {
+      let updatedRecipes = cloneDeep(state.recipes);
+      updatedRecipes.push(action.payload);
       return {
         ...state,
         loading: false,

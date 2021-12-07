@@ -9,6 +9,7 @@ import useArray from '../../../utils/hooks/useArray';
 import useEditMode from '../../../utils/hooks/useEditMode';
 import useForm from '../../../utils/hooks/useForm';
 import { processIngredients } from '../../../utils/forms/ingredients';
+import { validateAmount } from '../../../utils/validations/validate';
 import { updateRecipe } from '../../../redux/actions/recipeActions';
 
 const RecipeDetails = ({ recipe }) => {
@@ -39,7 +40,7 @@ const RecipeDetails = ({ recipe }) => {
       whole: 0,
       numer: 0,
       denom: 1,
-      toString: '',
+      toString: '0',
     },
     unit: { label: 'none' },
     ingredientName: '',
@@ -78,7 +79,6 @@ const RecipeDetails = ({ recipe }) => {
     // validate
     const errors = {};
     // validate ingredients
-    const regex = /^\d{1,5}(?: [1-9]\d{0,2}\/[1-9]\d{0,2})?$/;
     ingredients.forEach((item, itemIdx) => {
       const { amount, ingredientName } = item;
       // if the first row is the default row, then skip validation
@@ -92,7 +92,7 @@ const RecipeDetails = ({ recipe }) => {
       if (
         !amount.toString ||
         amount.toString.trim() === '' ||
-        !regex.test(amount.toString.trim())
+        !validateAmount(amount.toString.trim())
       ) {
         errors[`${itemIdx}amount`] = '';
       }

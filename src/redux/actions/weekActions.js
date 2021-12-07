@@ -78,7 +78,7 @@ const createWeek =
   (week, router, recipes = []) =>
   async (dispatch) => {
     try {
-      dispatch({ type: WEEK_CREATE_REQUEST, payload: week });
+      dispatch({ type: WEEK_CREATE_REQUEST, payload: { week, recipes } });
       const { data } = await api.createWeek(week);
       dispatch({ type: WEEK_CREATE_SUCCESS, payload: data.data });
       router.push({
@@ -123,7 +123,7 @@ const getWeek = (weekId) => async (dispatch) => {
 
 const deleteWeek = (weekId, user, router) => async (dispatch) => {
   try {
-    dispatch({ type: WEEK_DELETE_REQUEST });
+    dispatch({ type: WEEK_DELETE_REQUEST, payload: { weekId, user } });
     const { data } = await api.deleteWeek(weekId);
     dispatch({ type: WEEK_DELETE_SUCCESS, payload: weekId });
     router.push(`/users/${user._id}/weeks`);
@@ -141,7 +141,7 @@ const deleteWeek = (weekId, user, router) => async (dispatch) => {
 
 const updateWeek = (weekId, week) => async (dispatch) => {
   try {
-    dispatch({ type: WEEK_UPDATE_REQUEST });
+    dispatch({ type: WEEK_UPDATE_REQUEST, payload: { weekId, week } });
     const { data } = await api.updateWeek(weekId, week);
     dispatch({ type: WEEK_UPDATE_SUCCESS, payload: week });
     dispatch(addAlertWithTimeout('success', data.message));
@@ -158,7 +158,10 @@ const updateWeek = (weekId, week) => async (dispatch) => {
 
 const updateWeekByDay = (weekId, dayIdx, day) => async (dispatch) => {
   try {
-    dispatch({ type: WEEK_UPDATE_BY_DAY_REQUEST });
+    dispatch({
+      type: WEEK_UPDATE_BY_DAY_REQUEST,
+      payload: { weekId, dayIdx, day },
+    });
     const { data } = await api.updateWeekByDay(weekId, dayIdx, day);
     dispatch({ type: WEEK_UPDATE_BY_DAY_SUCCESS, payload: { dayIdx, day } });
     dispatch(addAlertWithTimeout('success', data.message));

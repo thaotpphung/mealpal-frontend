@@ -9,7 +9,9 @@ const TagList = ({ data, title }) => {
     <>
       {data.map((item, itemIdx) => (
         <span key={`${title}-${item}-${itemIdx}`}>
-          {item !== '' && <Chip label={item} className={classes.tag} />}
+          {item !== '' && (
+            <Chip size="small" label={item} className={classes.tag} />
+          )}
         </span>
       ))}
     </>

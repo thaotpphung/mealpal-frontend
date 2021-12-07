@@ -16,7 +16,6 @@ const WeekDetailsPage = ({ id = '' }) => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const { week, loading, error } = useSelector((state) => state.week);
-  const { recipes } = useSelector((state) => state.recipeSearchList);
 
   useEffect(() => {
     if (!location.isRedirect) {
@@ -26,7 +25,7 @@ const WeekDetailsPage = ({ id = '' }) => {
   }, []);
 
   if (!loading && error) return <EmptyMessage />;
-  if (!loading && week.days.length > 0 && recipes.length >= 0)
+  if (!loading && week.days.length)
     return (
       <Grid
         container
@@ -36,14 +35,10 @@ const WeekDetailsPage = ({ id = '' }) => {
         className={classes.weekContainer}
       >
         <Grid item xs={12} md={4} className={classes.leftColumn}>
-          <WeekCard data={week} recipes={recipes} />
+          <WeekCard data={week} />
         </Grid>
         <Grid item xs={12} md={8}>
-          <DayList
-            days={week.days}
-            recipes={location.recipes ? location.recipes : recipes}
-            userId={week.userId}
-          />
+          <DayList days={week.days} userId={week.userId} />
         </Grid>
       </Grid>
     );

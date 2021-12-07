@@ -39,6 +39,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import { getUser, sendConfirmationEmail } from '../../../api/index';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const ProfilePage = () => {
   const { loading, loggedInUser } = useSelector((state) => state.user);
@@ -518,12 +519,34 @@ const ProfilePage = () => {
                             reset token
                           </Typography>
                         </Alert>
-                        <BlockButton
-                          handleClick={handleSendConfirmationEmail}
-                          disabled={isSendingEmail}
+
+                        <div
+                          className={classes.wrapper}
+                          style={{
+                            margin: '8px',
+                            position: 'relative',
+                          }}
                         >
-                          {isSendingEmail ? <Spinner /> : 'Send Confirmation'}
-                        </BlockButton>
+                          <BlockButton
+                            handleClick={handleSendConfirmationEmail}
+                            disabled={isSendingEmail}
+                          >
+                            {isSendingEmail && (
+                              <CircularProgress
+                                size={24}
+                                className={classes.buttonProgress}
+                                style={{
+                                  position: 'absolute',
+                                  top: '50%',
+                                  left: '50%',
+                                  marginTop: -12,
+                                  marginLeft: -12,
+                                }}
+                              />
+                            )}
+                            Send Confirmation
+                          </BlockButton>
+                        </div>
                       </>
                     )}
                   </div>

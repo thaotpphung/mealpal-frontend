@@ -161,7 +161,7 @@ const getRecipe = (recipeId) => async (dispatch) => {
 
 const deleteRecipe = (recipeId, router) => async (dispatch) => {
   try {
-    dispatch({ type: RECIPE_DELETE_REQUEST });
+    dispatch({ type: RECIPE_DELETE_REQUEST, payload: recipeId });
     const { data } = await api.deleteRecipe(recipeId);
     dispatch({ type: RECIPE_DELETE_SUCCESS, payload: recipeId });
     router.push('/recipes');
@@ -182,7 +182,7 @@ const deleteRecipe = (recipeId, router) => async (dispatch) => {
 
 const updateRecipe = (recipeId, recipe) => async (dispatch) => {
   try {
-    dispatch({ type: RECIPE_UPDATE_REQUEST });
+    dispatch({ type: RECIPE_UPDATE_REQUEST, payload: { recipeId, recipe } });
     const { data } = await api.updateRecipe(recipeId, recipe);
     const payload = { ...recipe, ...data.data };
     dispatch({ type: RECIPE_UPDATE_SUCCESS, payload: payload });

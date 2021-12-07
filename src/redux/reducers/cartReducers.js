@@ -14,7 +14,10 @@ const INITIAL_STATE = {
 };
 
 const addName = (ingredient, name, cart) => {
-  if (cart[ingredient.ingredientName].recipes.indexOf(name) === -1) {
+  if (
+    cart[ingredient.ingredientName]?.recipes &&
+    cart[ingredient.ingredientName].recipes.indexOf(name) === -1
+  ) {
     cart[ingredient.ingredientName].recipes.push(name);
   }
 };
@@ -35,7 +38,9 @@ const addIngredient = (ingredient, cart, name = '') => {
       current = { whole: 0, numer: 0, denom: 1 };
     let result = addMixedNumber(current, ingredient.amount);
     cart[ingredient.ingredientName].units[ingredient.unit.label] = result;
-    if (name !== '') addName(ingredient, name, cart);
+    if (name !== '') {
+      addName(ingredient, name, cart);
+    }
   }
 };
 
@@ -46,7 +51,9 @@ const addRecipe = (recipe, cart, name = '') => {
     // add recipe name
     addIngredient(ingredient, cart, recipe.name);
     // add meal/day/week name if provided
-    if (name !== '') addName(ingredient, name, cart);
+    if (name !== '') {
+      addName(ingredient, name, cart);
+    }
   });
 };
 

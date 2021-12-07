@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, Link, useHistory } from 'react-router-dom';
 import useStyles from '../../../app/styles';
@@ -14,6 +14,7 @@ import useEditMode from '../../../utils/hooks/useEditMode';
 import AutocompleteField from '../../common/AutocompleteField/AutocompleteField';
 import PopupDialog from '../../common/PopupDialog/PopupDialog';
 import Input from '../../common/Input/Input';
+import DayCard from '../../components/DayCard/DayCard';
 import { createRecipe } from '../../../redux/actions/recipeActions';
 import { updateWeekByDay } from '../../../redux/actions/weekActions';
 import {
@@ -28,17 +29,23 @@ import unitOptions from '../../../constants/units';
 import { processIngredients } from '../../../utils/forms/ingredients';
 import { convertMixedToNum } from '../../../utils/mixedNumber';
 
-const DayList = ({ days, recipes, userId }) => {
+const DayList = ({ days, userId }) => {
   const classes = useStyles();
   const { weekId } = useParams();
   const history = useHistory();
   const localClasses = styles();
+  const { loading: loadingRecipeSearchList, recipes } = useSelector(
+    (state) => state.recipeSearchList
+  );
+  const { loading: loadingCreateNewRecipe, recipe } = useSelector(
+    (state) => state.recipe
+  );
   const { loggedInUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [isInEditDayMode, setIsInEditDayMode] = useState([]);
   const defaultEditDayMode = new Array(days.length).fill(false);
-  const [dayForm, setDayForm] = useState({});
   const [daysWithCalories, setDaysWithCalories] = useState([]);
+  const [dayForm, setDayForm] = useState({});
   const extractedFieldsForAutoComplete = recipes.map((recipe) => {
     return {
       name: recipe.name,
@@ -287,9 +294,20 @@ const DayList = ({ days, recipes, userId }) => {
         })
       );
       handleCloseNewRecipeDialog();
-      handleChangeRecipe(...newRecipeParams, newRecipe);
+      // handleChangeRecipe(...newRecipeParams, newRecipe);
     }
   );
+
+  const firstUpdate = useRef(true);
+  useEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
+    }
+    if (!firstUpdate.current) {
+      handleChangeRecipe(...newRecipeParams, recipe);
+    }
+  }, [recipe]);
 
   // meal.food
   const handleChangeFood = (mealIdx, itemIdx, newValue) => {
@@ -395,6 +413,7 @@ const DayList = ({ days, recipes, userId }) => {
         open={openNewUnitDialog}
         handleClose={handleCloseNewUnitDialog}
       />
+
       {daysWithCalories.map((day, dayIdx) => (
         <Paper key={`day-card-${day._id}-${dayIdx}`}>
           <CardHeader

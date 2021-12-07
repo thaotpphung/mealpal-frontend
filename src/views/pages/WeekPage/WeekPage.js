@@ -187,7 +187,7 @@ const WeekPage = () => {
           handleSubmitFilter();
         }}
       >
-        <Grid container spacing={3} style={{ marginBottom: '12px' }}>
+        <Grid container spacing={3} style={{ marginBottom: '8px' }}>
           <Grid item xs={12} lg={9}>
             <div className={classes.utilsFields}>
               <Input

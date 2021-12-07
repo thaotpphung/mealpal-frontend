@@ -13,13 +13,13 @@ import {
   Typography,
   Menu,
   MenuItem,
-  Chip,
 } from '@material-ui/core';
 import FileInputComponent from 'react-file-input-previews-base64';
 import Input from '../../common/Input/Input';
 import InputWithTooltip from '../../common/InputWithTooltip/InputWithTooltip';
 import RoundButton from '../../common/Buttons/RoundButton';
 import BlockButton from '../../common/Buttons/BlockButton';
+import TagList from '../../containers/TagList/TagList';
 import useEditMode from '../../../utils/hooks/useEditMode';
 import useInput from '../../../utils/hooks/useInput';
 import { formatTime } from '../../../utils/time';
@@ -255,14 +255,7 @@ const RecipeCard = ({ data }) => {
                 <Typography component="span">
                   <strong>Tags: </strong>
                 </Typography>
-                {data.tags.map((tag, tagIdx) => (
-                  <Chip
-                    size="small"
-                    key={`tag-${tagIdx}`}
-                    label={tag}
-                    className={classes.tag}
-                  />
-                ))}
+                <TagList data={data.tags} title="recipeCard" />
               </Grid>
             </Grid>
           </div>

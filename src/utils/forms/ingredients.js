@@ -6,6 +6,11 @@ export const processIngredients = (ingredients) => {
       denom: 1,
       toString: ingredient.amount.toString.split(' ')[0],
     };
+    if (amount.whole.includes('/')) {
+      amount.numer = amount.whole.split('/')[0];
+      amount.denom = amount.whole.split('/')[1];
+      amount.whole = 0;
+    }
     if (ingredient.amount.toString.split(' ').length > 1) {
       amount.numer = ingredient.amount.toString.split(' ')[1].split('/')[0];
       amount.denom = ingredient.amount.toString.split(' ')[1].split('/')[1];

@@ -27,4 +27,9 @@ const validateAuth = (values, isRegister = false) => {
   return errors;
 };
 
-export { validate, validateAuth };
+const validateAmount = (amount) => {
+  const regex = /^(\d{1,5})(?: [1-9]\d{0,2}\/[1-9]\d{0,2})?$/;
+  const regex2 = /^[1-9]\d{0,2}\/[1-9]\d{0,2}$/;
+  return regex.test(amount) || regex2.test(amount);
+};
+export { validate, validateAuth, validateAmount };
