@@ -37,8 +37,8 @@ export const getUser = (userId, query = '') => {
 export const getWeeks = (query, isInExploreMode, userId) => {
   const url = `api/${
     isInExploreMode || !userId ? '' : `users/${userId}/`
-  }weeks${query}`;
-  return API.get(url);
+  }weeks`;
+  return API.get(url, { params: query });
 };
 export const getWeek = (weekId) => API.get(`api/weeks/${weekId}`);
 export const createWeek = (newWeek) => API.post('api/weeks', newWeek);
@@ -47,6 +47,8 @@ export const updateWeek = (weekId, updatedWeek) =>
   API.patch(`api/weeks/${weekId}`, updatedWeek);
 export const updateWeekByDay = (weekId, dayIdx, day) =>
   API.patch(`api/weeks/${weekId}/days/${dayIdx}`, day);
+export const deleteWeeks = (selected, query) =>
+  API.post(`api/weeks/deletes`, { selected, query });
 
 // recipes
 export const getRecipes = (query, isInExploreMode, userId) => {

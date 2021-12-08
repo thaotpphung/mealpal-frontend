@@ -5,6 +5,9 @@ import {
   WEEK_LIST_REQUEST,
   WEEK_LIST_SUCCESS,
   WEEK_LIST_FAIL,
+  WEEK_LIST_DELETE_REQUEST,
+  WEEK_LIST_DELETE_SUCCESS,
+  WEEK_LIST_DELETE_FAIL,
   WEEK_LIST_APPEND_REQUEST,
   WEEK_LIST_APPEND_SUCCESS,
   WEEK_LIST_APPEND_FAIL,
@@ -33,11 +36,12 @@ export {
   getWeek,
   updateWeekByDay,
   getAllWeeksInfinite,
+  deleteWeeks,
 };
 
 // week list
 const getAllWeeks =
-  (query = '', isInExploreMode, userId) =>
+  (query = {}, isInExploreMode, userId) =>
   async (dispatch) => {
     try {
       dispatch({ type: WEEK_LIST_REQUEST });
@@ -56,7 +60,7 @@ const getAllWeeks =
 
 // week list infinite
 const getAllWeeksInfinite =
-  (query = '', isInExploreMode, userId) =>
+  (query = {}, isInExploreMode, userId) =>
   async (dispatch) => {
     try {
       dispatch({ type: WEEK_LIST_APPEND_REQUEST });
@@ -130,6 +134,26 @@ const deleteWeek = (weekId, user, router) => async (dispatch) => {
     dispatch(addAlertWithTimeout('success', data.message));
   } catch (error) {
     dispatch({ type: WEEK_DELETE_FAIL, payload: error });
+    dispatch(
+      addAlertWithTimeout(
+        'error',
+        error.response ? error.response.data.message : errorMessage
+      )
+    );
+  }
+};
+
+const deleteWeeks = (selected, user, query) => async (dispatch) => {
+  try {
+    dispatch({
+      type: WEEK_LIST_DELETE_REQUEST,
+      payload: { selected, user, query },
+    });
+    const { data } = await api.deleteWeeks(selected, query);
+    dispatch({ type: WEEK_LIST_DELETE_SUCCESS, payload: data.data });
+    dispatch(addAlertWithTimeout('success', data.message));
+  } catch (error) {
+    dispatch({ type: WEEK_LIST_DELETE_FAIL, payload: error });
     dispatch(
       addAlertWithTimeout(
         'error',

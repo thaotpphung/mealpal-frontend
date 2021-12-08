@@ -1,26 +1,43 @@
 import { useState, useEffect } from 'react';
 
 const usePagination = (
-  initialState,
+  initialQuery,
   initialLimit,
   callback,
-  initialQuery = ''
+  fields,
+  queryTypes
 ) => {
   const [page, setPage] = useState(0);
   const [pageCount, setPageCount] = useState(1); // number of total page on load -> pageCount
-  const [queryFields, setQueryFields] = useState(initialState);
+  const [queryFields, setQueryFields] = useState({
+    ...initialQuery,
+    page: 0,
+    limit: initialLimit,
+    fields,
+    queryTypes,
+  });
   const [limit, setLimit] = useState(initialLimit); // number of documents per page
   const [count, setCount] = useState(0);
   const [withCallback, setWithCallback] = useState(true);
+  const [sort, setSort] = useState('updatedTime');
+  const [sortOrder, setSortOder] = useState('asc');
 
-  const buildQuery = (newLimit = initialLimit, newPage = 0) => {
-    let filterQuery = '?';
-    filterQuery += `limit=${newLimit}&page=${newPage}`;
-    filterQuery += initialQuery;
-    Object.entries(queryFields).map(([key, value]) => {
-      if (value !== '' && value !== 0) filterQuery += `&${key}=${value}`;
+  const buildQuery = (
+    newLimit = initialLimit,
+    newPage = 0,
+    newSort = '',
+    newSortOrder = ''
+  ) => {
+    let query = { ...queryFields };
+    Object.entries(query).map(([key, value]) => {
+      if (value === '') delete query[key];
     });
-    return filterQuery;
+    query.limit = newLimit;
+    query.page = newPage;
+    if (newSort !== '') {
+      query.sort = `${newSortOrder === 'desc' && '-'}${newSort}`;
+    }
+    return query;
   };
 
   const handleChangeQueryField = (event) => {
@@ -46,6 +63,12 @@ const usePagination = (
     }
   }, [page, limit, withCallback]);
 
+  const handleChangeSort = (newSort, newSortOrder) => {
+    setSort(newSort);
+    setSortOder(newSortOrder);
+    callback(limit, page, newSort, newSortOrder);
+  };
+
   const handleChangeLimitAndPage = (
     newLimit = initialLimit,
     newPage = 0,
@@ -67,10 +90,13 @@ const usePagination = (
     page,
     count,
     buildQuery,
+    sort,
+    sortOrder,
     handleSubmitFilter,
     handleChangeQueryField,
     handleChangePageCount,
     handleChangeLimitAndPage,
+    handleChangeSort,
   };
 };
 

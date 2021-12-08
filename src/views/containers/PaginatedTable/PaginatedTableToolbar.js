@@ -7,8 +7,9 @@ import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { useToolbarStyles } from './styles';
 
-const PaginatedTableToolbar = ({ numSelected, title }) => {
+const PaginatedTableToolbar = ({ title, selected, handleClickDelete }) => {
   const classes = useToolbarStyles();
+  const numSelected = selected.length;
 
   return (
     <Toolbar
@@ -38,7 +39,10 @@ const PaginatedTableToolbar = ({ numSelected, title }) => {
 
       {numSelected > 0 && (
         <Tooltip title="Delete">
-          <IconButton aria-label="delete">
+          <IconButton
+            aria-label="delete"
+            onClick={() => handleClickDelete(selected)}
+          >
             <DeleteIcon />
           </IconButton>
         </Tooltip>

@@ -9,8 +9,8 @@ import Checkbox from '@material-ui/core/Checkbox';
 const PaginatedTableHead = ({
   headCells,
   onSelectAllClick,
-  order,
-  orderBy,
+  sort,
+  sortOrder,
   numSelected,
   rowCount,
   onRequestSort,
@@ -35,17 +35,19 @@ const PaginatedTableHead = ({
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
             padding={headCell.disablePadding ? 'none' : 'normal'}
-            sortDirection={orderBy === headCell.id ? order : false}
+            sortDirection={sort === headCell.id ? sortOrder : false}
           >
             <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
+              active={sort === headCell.id}
+              direction={sort === headCell.id ? sortOrder : 'asc'}
               onClick={createSortHandler(headCell.id)}
             >
               {headCell.label}
-              {orderBy === headCell.id ? (
+              {sort === headCell.id ? (
                 <span className={classes.visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                  {sortOrder === 'desc'
+                    ? 'sorted descending'
+                    : 'sorted ascending'}
                 </span>
               ) : null}
             </TableSortLabel>

@@ -73,6 +73,12 @@ const ProfilePage = () => {
     }
   }, []);
 
+  // when user is updated or avatar is done updated, update state
+  useEffect(() => {
+    setCurrentUser(loggedInUser);
+    setAvatarUrl(loggedInUser.avatar);
+  }, [loggedInUser]);
+
   // menu
   const components = [
     {
@@ -125,7 +131,7 @@ const ProfilePage = () => {
     },
     () => {
       dispatch(updateUser(loggedInUser._id, userForm));
-      handleCloseEditProfile();
+      toggleEditProfile(false);
     },
     validate,
     ['bio', 'avatar', 'calories', 'preferredDiet']
@@ -167,7 +173,7 @@ const ProfilePage = () => {
     },
     () => {
       dispatch(updatePassword(loggedInUser._id, passwordForm));
-      handleCloseEditPassword();
+      toggleEditPassword(false);
     },
     validate
   );
@@ -194,7 +200,7 @@ const ProfilePage = () => {
     },
     () => {
       dispatch(updateUser(loggedInUser._id, emailForm));
-      handleCloseEditEmail();
+      toggleEditEmail(false);
     },
     validate
   );
@@ -240,7 +246,7 @@ const ProfilePage = () => {
   const handleSubmitChangeAvatar = (event) => {
     event.preventDefault();
     dispatch(updateUser(loggedInUser._id, { avatar: avatarUrl }));
-    handleCloseEditAvatar();
+    toggleEditAvatar(false);
   };
 
   if (!loadingCurrentUser && !loading && Object.keys(currentUser).length > 0)
@@ -390,7 +396,6 @@ const ProfilePage = () => {
                 </Paper>
               </>
             )}
-
             {isShowComponent['Password'] && (
               <>
                 <CardHeader

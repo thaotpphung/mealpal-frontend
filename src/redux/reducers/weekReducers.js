@@ -2,6 +2,9 @@ import {
   WEEK_LIST_REQUEST,
   WEEK_LIST_SUCCESS,
   WEEK_LIST_FAIL,
+  WEEK_LIST_DELETE_REQUEST,
+  WEEK_LIST_DELETE_SUCCESS,
+  WEEK_LIST_DELETE_FAIL,
   WEEK_LIST_APPEND_REQUEST,
   WEEK_LIST_APPEND_SUCCESS,
   WEEK_LIST_APPEND_FAIL,
@@ -35,11 +38,13 @@ const INITIAL_STATE = {
 function weekListReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case WEEK_LIST_REQUEST:
+    case WEEK_LIST_DELETE_REQUEST:
       return { ...state, loading: true, error: '' };
 
     case WEEK_LIST_APPEND_REQUEST:
       return { ...state, loadingMore: true, error: '' };
 
+    case WEEK_LIST_DELETE_SUCCESS:
     case WEEK_LIST_SUCCESS: {
       return {
         ...state,
@@ -67,6 +72,7 @@ function weekListReducer(state = INITIAL_STATE, action) {
     }
 
     case WEEK_LIST_FAIL:
+    case WEEK_LIST_DELETE_FAIL:
       return { ...state, loading: false, error: action.payload };
 
     case WEEK_LIST_APPEND_FAIL:

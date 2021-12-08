@@ -294,7 +294,6 @@ const DayList = ({ days, userId }) => {
         })
       );
       handleCloseNewRecipeDialog();
-      // handleChangeRecipe(...newRecipeParams, newRecipe);
     }
   );
 

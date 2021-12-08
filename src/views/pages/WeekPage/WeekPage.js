@@ -26,6 +26,7 @@ import {
   getAllWeeks,
   createWeek,
   getAllWeeksInfinite,
+  deleteWeeks,
 } from '../../../redux/actions/weekActions';
 
 const WeekPage = () => {
@@ -55,21 +56,38 @@ const WeekPage = () => {
     handleChangePageCount,
     handleChangeLimitAndPage,
     queryFields,
+    sort,
+    sortOrder,
+    handleChangeSort,
   } = usePagination(
-    { name: '', description: '', calories: '', tags: '' },
+    { name: '', description: '', tags: '', calories: '' },
     views[loggedInUser ? loggedInUser.weekView : 'board'].limit,
-    (newLimit, newPage = 0) => {
+    (newLimit, newPage = 0, newSort = '', newSortOrder = '') => {
       if (view === 'board') {
         dispatch(
-          getAllWeeksInfinite(buildQuery(limit, page), isInExploreMode, userId)
+          getAllWeeksInfinite(
+            buildQuery(limit, page, newSort, newSortOrder),
+            isInExploreMode,
+            userId
+          )
         );
       } else {
         dispatch(
-          getAllWeeks(buildQuery(newLimit, newPage), isInExploreMode, userId)
+          getAllWeeks(
+            buildQuery(newLimit, newPage, newSort, newSortOrder),
+            isInExploreMode,
+            userId
+          )
         );
       }
     },
-    '&fields=userId,name,description,calories,tags,updatedTime'
+    'userId,name,description,calories,tags,updatedTime',
+    {
+      name: 'string',
+      description: 'string',
+      tags: 'array',
+      calories: 'number',
+    }
   );
 
   // view
@@ -159,6 +177,11 @@ const WeekPage = () => {
     validate,
     ['description', 'tags']
   );
+
+  // delete weeks
+  const handleClickDelete = (selected) => {
+    dispatch(deleteWeeks(selected, loggedInUser, buildQuery(limit)));
+  };
 
   return (
     <div>
@@ -267,6 +290,7 @@ const WeekPage = () => {
         />
       ) : (
         <PaginatedTable
+          handleClickDelete={handleClickDelete}
           loadingMore={loadingMore}
           loading={loading}
           error={error}
@@ -276,6 +300,9 @@ const WeekPage = () => {
           limit={limit}
           page={page}
           handleChangeLimitAndPage={handleChangeLimitAndPage}
+          sort={sort}
+          sortOrder={sortOrder}
+          handleChangeSort={handleChangeSort}
         />
       )}
       <PopupDialog

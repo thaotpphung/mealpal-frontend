@@ -21,19 +21,21 @@ import EmptyMessage from '../../common/EmptyMessage/EmptyMessage';
 import TagList from '../../containers/TagList/TagList';
 
 const PaginatedTable = ({
+  handleClickDelete,
   loading,
   error,
   data,
   count,
   page,
+  sort,
+  sortOrder,
   limit,
   handleChangeLimitAndPage,
+  handleChangeSort,
   title,
 }) => {
   const classes = useStyles();
   const history = useHistory();
-  const [order, setOrder] = useState('asc');
-  const [orderBy, setOrderBy] = useState('calories');
   const [selected, setSelected] = useState([]);
   const [dense, setDense] = useState(false);
 
@@ -81,9 +83,8 @@ const PaginatedTable = ({
   }
 
   const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
+    const isAsc = sort === property && sortOrder === 'asc';
+    handleChangeSort(property, isAsc ? 'desc' : 'asc');
   };
 
   const handleSelectAllClick = (event) => {
@@ -128,6 +129,11 @@ const PaginatedTable = ({
     setDense(event.target.checked);
   };
 
+  const handleDelete = () => {
+    handleClickDelete(selected);
+    setSelected([]);
+  };
+
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   if (!loading && error) return <EmptyMessage />;
@@ -135,7 +141,11 @@ const PaginatedTable = ({
     return (
       <div className={classes.tableRoot}>
         <Paper className={classes.tablePaper}>
-          <PaginatedTableToolbar numSelected={selected.length} title={title} />
+          <PaginatedTableToolbar
+            title={title}
+            selected={selected}
+            handleClickDelete={handleDelete}
+          />
           <TableContainer>
             <Table
               className={classes.table}
@@ -145,8 +155,8 @@ const PaginatedTable = ({
             >
               <PaginatedTableHead
                 numSelected={selected.length}
-                order={order}
-                orderBy={orderBy}
+                sort={sort}
+                sortOrder={sortOrder}
                 onSelectAllClick={handleSelectAllClick}
                 onRequestSort={handleRequestSort}
                 rowCount={data.length}
