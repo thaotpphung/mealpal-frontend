@@ -5,6 +5,9 @@ import {
   RECIPE_LIST_REQUEST,
   RECIPE_LIST_SUCCESS,
   RECIPE_LIST_FAIL,
+  RECIPE_LIST_DELETE_REQUEST,
+  RECIPE_LIST_DELETE_SUCCESS,
+  RECIPE_LIST_DELETE_FAIL,
   RECIPE_LIST_APPEND_REQUEST,
   RECIPE_LIST_APPEND_SUCCESS,
   RECIPE_LIST_APPEND_FAIL,
@@ -33,12 +36,13 @@ export {
   getRecipe,
   getAllRecipesForSearching,
   getAllRecipesInfinite,
+  deleteRecipes,
 };
 
 // recipe list
 const getAllRecipes =
   (
-    query = '',
+    query = {},
     isInExploreMode = false,
     userId = JSON.parse(localStorage.getItem('loggedInUser'))?._id
   ) =>
@@ -63,7 +67,7 @@ const getAllRecipes =
 
 const getAllRecipesInfinite =
   (
-    query = '',
+    query = {},
     isInExploreMode = false,
     userId = JSON.parse(localStorage.getItem('loggedInUser'))?._id
   ) =>
@@ -85,6 +89,7 @@ const getAllRecipesInfinite =
       );
     }
   };
+
 const getAllRecipesForSearching =
   (
     query = '',
@@ -171,6 +176,26 @@ const deleteRecipe = (recipeId, router) => async (dispatch) => {
       type: RECIPE_DELETE_FAIL,
       payload: error,
     });
+    dispatch(
+      addAlertWithTimeout(
+        'error',
+        error.response ? error.response.data.message : errorMessage
+      )
+    );
+  }
+};
+
+const deleteRecipes = (selected, user, query) => async (dispatch) => {
+  try {
+    dispatch({
+      type: RECIPE_LIST_DELETE_REQUEST,
+      payload: { selected, user, query },
+    });
+    const { data } = await api.deleteRecipes(selected, query);
+    dispatch({ type: RECIPE_LIST_DELETE_SUCCESS, payload: data.data });
+    dispatch(addAlertWithTimeout('success', data.message));
+  } catch (error) {
+    dispatch({ type: RECIPE_LIST_DELETE_FAIL, payload: error });
     dispatch(
       addAlertWithTimeout(
         'error',

@@ -5,6 +5,9 @@ import {
   RECIPE_LIST_REQUEST,
   RECIPE_LIST_SUCCESS,
   RECIPE_LIST_FAIL,
+  RECIPE_LIST_DELETE_REQUEST,
+  RECIPE_LIST_DELETE_SUCCESS,
+  RECIPE_LIST_DELETE_FAIL,
   RECIPE_LIST_APPEND_REQUEST,
   RECIPE_LIST_APPEND_SUCCESS,
   RECIPE_LIST_APPEND_FAIL,
@@ -35,11 +38,13 @@ const RECIPE_LIST_INITIAL_STATE = {
 const recipeListReducer = (state = RECIPE_LIST_INITIAL_STATE, action) => {
   switch (action.type) {
     case RECIPE_LIST_REQUEST:
+    case RECIPE_LIST_DELETE_REQUEST:
       return { ...state, loading: true, error: '' };
 
     case RECIPE_LIST_APPEND_REQUEST:
       return { ...state, loadingMore: true, error: '' };
 
+    case RECIPE_LIST_DELETE_SUCCESS:
     case RECIPE_LIST_SUCCESS: {
       return {
         ...state,
@@ -67,6 +72,7 @@ const recipeListReducer = (state = RECIPE_LIST_INITIAL_STATE, action) => {
     }
 
     case RECIPE_LIST_FAIL:
+    case RECIPE_LIST_DELETE_FAIL:
       return { ...state, loading: false, error: action.payload };
 
     case RECIPE_LIST_APPEND_FAIL:

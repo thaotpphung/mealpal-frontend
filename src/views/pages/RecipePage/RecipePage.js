@@ -1,49 +1,50 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, useParams } from 'react-router-dom';
 import { Grid, Button, Tooltip } from '@material-ui/core';
-import SearchIcon from '@material-ui/icons/Search';
-import AddBoxOutlinedIcon from '@material-ui/icons/AddBoxOutlined';
-import ExploreOutlinedIcon from '@material-ui/icons/ExploreOutlined';
 import useStyles from '../../../app/styles';
-import PopupDialog from '../../common/PopupDialog/PopupDialog';
+import { useHistory, useParams } from 'react-router-dom';
+import SearchIcon from '@material-ui/icons/Search';
+import ExploreOutlinedIcon from '@material-ui/icons/ExploreOutlined';
+import AddBoxOutlinedIcon from '@material-ui/icons/AddBoxOutlined';
+import InputWithTooltip from '../../common/InputWithTooltip/InputWithTooltip';
 import Input from '../../common/Input/Input';
 import RoundButton from '../../common/Buttons/RoundButton';
-import InputWithTooltip from '../../common/InputWithTooltip/InputWithTooltip';
-import CardList from '../../containers/CardList/CardList';
+import PopupDialog from '../../common/PopupDialog/PopupDialog';
 import RecipeCard from '../../components/RecipeCard/RecipeCard';
+import CardList from '../../containers/CardList/CardList';
 import PaginatedTable from '../../containers/PaginatedTable/PaginatedTable';
+import usePagination from '../../../utils/hooks/usePagination';
+import useInput from '../../../utils/hooks/useInput';
 import useEditMode from '../../../utils/hooks/useEditMode';
 import useForm from '../../../utils/hooks/useForm';
-import useInput from '../../../utils/hooks/useInput';
 import useToggle from '../../../utils/hooks/useToggle';
-import usePagination from '../../../utils/hooks/usePagination';
 import { validate } from '../../../utils/validations/validate';
-import {
-  createRecipe,
-  getAllRecipes,
-  getAllRecipesInfinite,
-} from '../../../redux/actions/recipeActions';
-import { updateUser } from '../../../redux/actions/userActions';
 import {
   getInitialRecipeForm,
   recipeFormFields,
 } from '../../../utils/forms/recipes';
 import views from '../../../constants/views';
+import { updateUser } from '../../../redux/actions/userActions';
+import {
+  getAllRecipes,
+  createRecipe,
+  getAllRecipesInfinite,
+  deleteRecipes,
+} from '../../../redux/actions/recipeActions';
 
 const RecipePage = () => {
   const classes = useStyles();
-  const history = useHistory();
-  const { userId } = useParams();
   const dispatch = useDispatch();
+  const { userId } = useParams();
+  const history = useHistory();
   const { loggedInUser } = useSelector((state) => state.user);
   const {
     loadingMore,
     loading,
     recipes,
     count: recipeCount,
-    currentCount,
     error,
+    currentCount,
   } = useSelector((state) => state.recipeList);
 
   // pagination & filtering
@@ -58,35 +59,45 @@ const RecipePage = () => {
     handleChangePageCount,
     handleChangeLimitAndPage,
     queryFields,
+    sort,
+    sortOrder,
+    handleChangeSort,
   } = usePagination(
     { name: '', description: '', calories: '', tags: '', ingredients: '' },
-    views[loggedInUser ? loggedInUser.weekView : 'board'].limit,
-    (newLimit, newPage = 0) => {
+    views[loggedInUser ? loggedInUser.recipeView : 'board'].limit,
+    (newLimit, newPage = 0, newSort = sort, newSortOrder = sortOrder) => {
       if (view === 'board') {
         dispatch(
           getAllRecipesInfinite(
-            buildQuery(limit, page),
+            buildQuery(limit, newPage, newSort, newSortOrder),
             isInExploreMode,
             userId
           )
         );
       } else {
         dispatch(
-          getAllRecipes(buildQuery(newLimit, newPage), isInExploreMode, userId)
+          getAllRecipes(
+            buildQuery(newLimit, newPage, newSort, newSortOrder),
+            isInExploreMode,
+            userId
+          )
         );
       }
     },
-    '&fields=userId,name,description,tags,calories,servings,time,servingSize,updatedTime,recipeImage,ingredients'
+    '&fields=userId,name,description,tags,calories,servings,time,servingSize,updatedTime,recipeImage,ingredients',
+    {
+      tags: 'array',
+      calories: 'number',
+      ingredients: 'array',
+    }
   );
 
   // view
   const defaultView = loggedInUser ? loggedInUser.recipeView : 'board';
   const [view, setView] = useState(defaultView);
   const handleChangeView = () => {
-    setView(view === 'board' ? 'table' : 'board');
-  };
-  const handleSetDefaultView = () => {
-    dispatch(updateUser(loggedInUser._id, { recipeView: view }));
+    const newView = view === 'board' ? 'table' : 'board';
+    setView(newView);
   };
 
   // explore mode
@@ -95,27 +106,28 @@ const RecipePage = () => {
     toggleIsInExploreMode();
   };
 
-  // set count for pagination when weeks have been loaded
+  // set count for pagination when recipe list are updated
   useEffect(() => {
     handleChangePageCount(recipeCount);
     setHasMore(recipes.length < recipeCount);
   }, [recipeCount]);
 
+  // set hasMore when recipe list are updated
   useEffect(() => {
     setHasMore(currentCount !== 0);
   }, [recipes]);
 
-  const firstUpdate = useRef(true);
+  // when changing view or isInExploreMode, make an api call to get recipe list with page 0 and new limit
   useEffect(() => {
-    if (firstUpdate.current) {
-      firstUpdate.current = false;
-      return;
-    }
-    if (!firstUpdate.current) {
-      const newLimit = views[view].limit;
-      handleChangeLimitAndPage(newLimit, 0, false);
-      dispatch(getAllRecipes(buildQuery(newLimit), isInExploreMode, userId));
-    }
+    const newLimit = views[view].limit;
+    handleChangeLimitAndPage(newLimit, 0, false);
+    dispatch(
+      getAllRecipes(
+        buildQuery(newLimit, 0, sort, sortOrder),
+        isInExploreMode,
+        userId
+      )
+    );
   }, [view, isInExploreMode]);
 
   // infinite strolling
@@ -134,6 +146,11 @@ const RecipePage = () => {
     },
     [loading, hasMore]
   );
+
+  // set user default view
+  const handleSetDefaultView = () => {
+    dispatch(updateUser(loggedInUser._id, { recipeView: view }));
+  };
 
   // create recipe dialog
   const [tags, handleChangeTags, resetTags] = useInput();
@@ -164,8 +181,19 @@ const RecipePage = () => {
       );
     },
     validate,
-    ['description', 'tags']
+    ['description', 'tags', 'time', 'servings', 'servingSize']
   );
+
+  // delete recipes
+  const handleClickDelete = (selected) => {
+    dispatch(
+      deleteRecipes(
+        selected,
+        loggedInUser,
+        buildQuery(limit, 0, sort, sortOrder)
+      )
+    );
+  };
 
   return (
     <div>
@@ -173,9 +201,9 @@ const RecipePage = () => {
       <div style={{ float: 'right' }}>
         {loggedInUser && (
           <Tooltip
-            style={{ marginRight: '8px' }}
             title="Set current view as default"
             placement="top"
+            style={{ marginRight: '8px' }}
           >
             <span>
               <RoundButton type="default" handleClick={handleSetDefaultView} />
@@ -187,78 +215,86 @@ const RecipePage = () => {
           &nbsp;{views[view].label} View
         </Button>
       </div>
-      <Grid container spacing={3} style={{ marginBottom: '8px' }}>
-        <Grid item xs={12} lg={9}>
-          <div className={classes.utilsFields}>
-            <Input
-              value={queryFields.name}
-              name="name"
-              label="Name"
-              handleChange={handleChangeQueryField}
-            />
-            <Input
-              value={queryFields.description}
-              name="description"
-              label="Description"
-              handleChange={handleChangeQueryField}
-            />
-            <InputWithTooltip
-              value={queryFields.calories}
-              name="calories"
-              label="Calories"
-              tooltip='Exact match, Ex: "2000", or separated by comma to search by range, Ex: "0, 2000" or "0," or ",2000"'
-              handleChange={handleChangeQueryField}
-            />
-            <InputWithTooltip
-              value={queryFields.tags}
-              label="Tags"
-              name="tags"
-              tooltip='Separated by comma, Ex: "Main Course, Keto"'
-              handleChange={handleChangeQueryField}
-            />
-            <InputWithTooltip
-              value={queryFields.ingredients}
-              label="Ingredients"
-              name="ingredients"
-              tooltip='Separated by comma, Ex: "Milk, Banana"'
-              handleChange={handleChangeQueryField}
-            />
-          </div>
+      {/* search bar and action */}
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          handleSubmitFilter();
+        }}
+      >
+        <Grid container spacing={3} style={{ marginBottom: '8px' }}>
+          <Grid item xs={12} lg={9}>
+            <div className={classes.utilsFields}>
+              <Input
+                value={queryFields.name}
+                name="name"
+                label="Name"
+                handleChange={handleChangeQueryField}
+              />
+              <Input
+                value={queryFields.description}
+                name="description"
+                label="Description"
+                handleChange={handleChangeQueryField}
+              />
+              <InputWithTooltip
+                value={queryFields.calories}
+                name="calories"
+                label="Calories"
+                tooltip='Exact match, Ex: "2000", or separated by comma to search by range, Ex: "0, 2000" or "0," or ",2000"'
+                handleChange={handleChangeQueryField}
+              />
+              <InputWithTooltip
+                value={queryFields.tags}
+                label="Tags"
+                name="tags"
+                tooltip='Separated by comma, Ex: "Main Course, Keto"'
+                handleChange={handleChangeQueryField}
+              />
+              <InputWithTooltip
+                value={queryFields.ingredients}
+                label="Ingredients"
+                name="ingredients"
+                tooltip='Separated by comma, Ex: "Milk, Banana"'
+                handleChange={handleChangeQueryField}
+              />
+            </div>
+          </Grid>
+          <Grid item xs={12} lg={3}>
+            <div className={classes.utilsActions}>
+              <Button
+                type="submit"
+                variant="outlined"
+                color="primary"
+                onClick={() => handleSubmitFilter()}
+              >
+                <SearchIcon fontSize="small" />
+                &nbsp;Search
+              </Button>
+              {loggedInUser && (
+                <>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={toggleOpenEditMode}
+                  >
+                    <AddBoxOutlinedIcon fontSize="small" />
+                    &nbsp;Recipe
+                  </Button>
+                  <Button
+                    variant={isInExploreMode ? 'contained' : 'outlined'}
+                    color="primary"
+                    onClick={handleChangeMode}
+                  >
+                    <ExploreOutlinedIcon fontSize="small" />
+                    &nbsp;Explore
+                  </Button>
+                </>
+              )}
+            </div>
+          </Grid>
         </Grid>
-        <Grid item xs={12} lg={3}>
-          <div className={classes.utilsActions}>
-            <Button
-              type="submit"
-              variant="outlined"
-              color="primary"
-              onClick={() => handleSubmitFilter(currentCount)}
-            >
-              <SearchIcon fontSize="small" />
-              &nbsp;Search
-            </Button>
-            {loggedInUser && (
-              <>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  onClick={() => toggleOpenEditMode(true)}
-                >
-                  <AddBoxOutlinedIcon fontSize="small" />
-                  &nbsp;Recipe
-                </Button>
-                <Button
-                  variant={isInExploreMode ? 'contained' : 'outlined'}
-                  color="primary"
-                  onClick={handleChangeMode}
-                >
-                  <ExploreOutlinedIcon fontSize="small" />
-                  Explore
-                </Button>
-              </>
-            )}
-          </div>
-        </Grid>
-      </Grid>
+      </form>
       {/* recipes */}
       {view === 'board' ? (
         <CardList
@@ -273,6 +309,7 @@ const RecipePage = () => {
         />
       ) : (
         <PaginatedTable
+          handleClickDelete={handleClickDelete}
           loadingMore={loadingMore}
           loading={loading}
           error={error}
@@ -282,6 +319,9 @@ const RecipePage = () => {
           limit={limit}
           page={page}
           handleChangeLimitAndPage={handleChangeLimitAndPage}
+          sort={sort}
+          sortOrder={sortOrder}
+          handleChangeSort={handleChangeSort}
         />
       )}
       <PopupDialog
@@ -293,20 +333,22 @@ const RecipePage = () => {
           <div>
             {recipeFormFields.map((field, fieldIdx) => (
               <Input
-                key={`new-recipe-form-${field.name}-${fieldIdx}`}
-                value={dialogValue[field.name]}
-                handleChange={handleChange}
+                key={`new-recipe-form-field-${field.name}-${fieldIdx}`}
                 name={field.name}
                 label={field.label}
+                value={dialogValue[field.name].toString()}
+                handleChange={handleChange}
                 error={errors[field.name]}
-                type={field.type ? field.type : 'text'}
                 required={field.required}
+                type={field.type ? field.type : 'text'}
                 step={field.step}
               />
             ))}
             <InputWithTooltip
               label="Tags"
-              tooltip='Separated by comma, Ex: "Main Course, Keto"'
+              tooltip='Separated by comma, Ex: "Main Course, Chicken, Keto"'
+              multiline
+              minRows={4}
               value={tags}
               handleChange={handleChangeTags}
             />

@@ -18,9 +18,9 @@ const usePagination = (
   });
   const [limit, setLimit] = useState(initialLimit); // number of documents per page
   const [count, setCount] = useState(0);
-  const [withCallback, setWithCallback] = useState(true);
   const [sort, setSort] = useState('updatedTime');
   const [sortOrder, setSortOder] = useState('desc');
+  const [withCallback, setWithCallback] = useState(true);
 
   const buildQuery = (newLimit, newPage, newSort, newSortOrder) => {
     let query = { ...queryFields };
@@ -50,17 +50,15 @@ const usePagination = (
     );
   };
 
-  useEffect(() => {
-    if (withCallback) {
-      callback(limit, page);
-    }
-  }, [page, limit, withCallback]);
-
   const handleChangeSort = (newSort, newSortOrder) => {
     setSort(newSort);
     setSortOder(newSortOrder);
     callback(limit, page, newSort, newSortOrder);
   };
+
+  useEffect(() => {
+    if (withCallback) callback(limit, page);
+  }, [page, limit, withCallback]);
 
   const handleChangeLimitAndPage = (
     newLimit = initialLimit,
@@ -72,8 +70,8 @@ const usePagination = (
     } else {
       setPage(newPage);
     }
-    setWithCallback(newWithCallback);
     setLimit(newLimit);
+    setWithCallback(newWithCallback);
   };
 
   return {

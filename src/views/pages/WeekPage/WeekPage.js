@@ -18,7 +18,6 @@ import useInput from '../../../utils/hooks/useInput';
 import useEditMode from '../../../utils/hooks/useEditMode';
 import useForm from '../../../utils/hooks/useForm';
 import useToggle from '../../../utils/hooks/useToggle';
-import useDidMountEffect from '../../../utils/hooks/useDidMountEffect';
 import { validate } from '../../../utils/validations/validate';
 import { getInitialWeekForm, weekFormFields } from '../../../utils/forms/weeks';
 import views from '../../../constants/views';
@@ -67,7 +66,7 @@ const WeekPage = () => {
       if (view === 'board') {
         dispatch(
           getAllWeeksInfinite(
-            buildQuery(limit, page, newSort, newSortOrder),
+            buildQuery(limit, newPage, newSort, newSortOrder),
             isInExploreMode,
             userId
           )
@@ -93,10 +92,8 @@ const WeekPage = () => {
   const defaultView = loggedInUser ? loggedInUser.weekView : 'board';
   const [view, setView] = useState(defaultView);
   const handleChangeView = () => {
-    setView(view === 'board' ? 'table' : 'board');
-  };
-  const handleSetDefaultView = () => {
-    dispatch(updateUser(loggedInUser._id, { weekView: view }));
+    const newView = view === 'board' ? 'table' : 'board';
+    setView(newView);
   };
 
   // explore mode
@@ -117,10 +114,16 @@ const WeekPage = () => {
   }, [weeks]);
 
   // when changing view or isInExploreMode, make an api call to get week list with page 0 and new limit
-  useDidMountEffect(() => {
+  useEffect(() => {
     const newLimit = views[view].limit;
     handleChangeLimitAndPage(newLimit, 0, false);
-    dispatch(getAllWeeks(buildQuery(newLimit), isInExploreMode, userId));
+    dispatch(
+      getAllWeeks(
+        buildQuery(newLimit, 0, sort, sortOrder),
+        isInExploreMode,
+        userId
+      )
+    );
   }, [view, isInExploreMode]);
 
   // infinite strolling
@@ -139,6 +142,11 @@ const WeekPage = () => {
     },
     [loading, hasMore]
   );
+
+  // set user default view
+  const handleSetDefaultView = () => {
+    dispatch(updateUser(loggedInUser._id, { weekView: view }));
+  };
 
   // create week dialog
   const [tags, handleChangeTags, resetTags] = useInput();
@@ -174,7 +182,9 @@ const WeekPage = () => {
 
   // delete weeks
   const handleClickDelete = (selected) => {
-    dispatch(deleteWeeks(selected, loggedInUser, buildQuery(limit)));
+    dispatch(
+      deleteWeeks(selected, loggedInUser, buildQuery(limit, 0, sort, sortOrder))
+    );
   };
 
   return (

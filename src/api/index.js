@@ -54,11 +54,13 @@ export const deleteWeeks = (selected, query) =>
 export const getRecipes = (query, isInExploreMode, userId) => {
   const url = `api/${
     isInExploreMode || !userId ? '' : `users/${userId}/`
-  }recipes${query}`;
-  return API.get(url);
+  }recipes`;
+  return API.get(url, { params: query });
 };
 export const createRecipe = (newRecipe) => API.post('api/recipes', newRecipe);
 export const getRecipe = (recipeId) => API.get(`api/recipes/${recipeId}`);
 export const deleteRecipe = (recipeId) => API.delete(`api/recipes/${recipeId}`);
 export const updateRecipe = (recipeId, updatedRecipe) =>
   API.patch(`api/recipes/${recipeId}`, updatedRecipe);
+export const deleteRecipes = (selected, query) =>
+  API.post(`api/recipes/deletes`, { selected, query });
