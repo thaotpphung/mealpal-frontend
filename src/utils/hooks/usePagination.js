@@ -20,23 +20,16 @@ const usePagination = (
   const [count, setCount] = useState(0);
   const [withCallback, setWithCallback] = useState(true);
   const [sort, setSort] = useState('updatedTime');
-  const [sortOrder, setSortOder] = useState('asc');
+  const [sortOrder, setSortOder] = useState('desc');
 
-  const buildQuery = (
-    newLimit = initialLimit,
-    newPage = 0,
-    newSort = '',
-    newSortOrder = ''
-  ) => {
+  const buildQuery = (newLimit, newPage, newSort, newSortOrder) => {
     let query = { ...queryFields };
     Object.entries(query).map(([key, value]) => {
       if (value === '') delete query[key];
     });
     query.limit = newLimit;
     query.page = newPage;
-    if (newSort !== '') {
-      query.sort = `${newSortOrder === 'desc' && '-'}${newSort}`;
-    }
+    query.sort = `${newSortOrder === 'desc' ? '-' : ''}${newSort}`;
     return query;
   };
 

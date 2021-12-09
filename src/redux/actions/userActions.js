@@ -34,7 +34,7 @@ const signin = (formData) => async (dispatch) => {
     );
     dispatch(addAlertWithTimeout('success', 'Welcome back!'));
   } catch (error) {
-    dispatch({ type: USER_SIGNIN_FAIL });
+    dispatch({ type: USER_SIGNIN_FAIL, payload: error });
     dispatch(
       addAlertWithTimeout(
         'error',
@@ -58,7 +58,7 @@ const register = (formData) => async (dispatch) => {
     );
     dispatch(addAlertWithTimeout('success', 'Welcome to MealPal!'));
   } catch (error) {
-    dispatch({ type: USER_REGISTER_FAIL });
+    dispatch({ type: USER_REGISTER_FAIL, payload: error });
     dispatch(
       addAlertWithTimeout(
         'error',
@@ -82,7 +82,7 @@ const updateUser = (userId, formData) => async (dispatch) => {
     dispatch({ type: USER_UPDATE_SUCCESS, payload: data.data });
     dispatch(addAlertWithTimeout('success', 'Successfully updated user!'));
   } catch (error) {
-    dispatch({ type: USER_UPDATE_FAIL });
+    dispatch({ type: USER_UPDATE_FAIL, payload: error });
     dispatch(
       addAlertWithTimeout(
         'error',
@@ -99,7 +99,7 @@ const updatePassword = (userId, formData) => async (dispatch) => {
     dispatch({ type: USER_UPDATE_PASSWORD_SUCCESS, payload: data });
     dispatch(addAlertWithTimeout('success', data.message));
   } catch (error) {
-    dispatch({ type: USER_UPDATE_PASSWORD_FAIL });
+    dispatch({ type: USER_UPDATE_PASSWORD_FAIL, payload: error });
     dispatch(
       addAlertWithTimeout(
         'error',

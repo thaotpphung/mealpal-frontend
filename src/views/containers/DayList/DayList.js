@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams, Link, useHistory } from 'react-router-dom';
 import useStyles from '../../../app/styles';
@@ -10,11 +10,11 @@ import CardBody from '../../common/CardBody/CardBody';
 import InputWithTooltip from '../../common/InputWithTooltip/InputWithTooltip';
 import RoundButton from '../../common/Buttons/RoundButton';
 import useForm from '../../../utils/hooks/useForm';
+import useDidMountEffect from '../../../utils/hooks/useDidMountEffect';
 import useEditMode from '../../../utils/hooks/useEditMode';
 import AutocompleteField from '../../common/AutocompleteField/AutocompleteField';
 import PopupDialog from '../../common/PopupDialog/PopupDialog';
 import Input from '../../common/Input/Input';
-import DayCard from '../../components/DayCard/DayCard';
 import { createRecipe } from '../../../redux/actions/recipeActions';
 import { updateWeekByDay } from '../../../redux/actions/weekActions';
 import {
@@ -297,15 +297,19 @@ const DayList = ({ days, userId }) => {
     }
   );
 
-  const firstUpdate = useRef(true);
-  useEffect(() => {
-    if (firstUpdate.current) {
-      firstUpdate.current = false;
-      return;
-    }
-    if (!firstUpdate.current) {
-      handleChangeRecipe(...newRecipeParams, recipe);
-    }
+  // const firstUpdate = useRef(true);
+  // useDidMountEffect(() => {
+  //   if (firstUpdate.current) {
+  //     firstUpdate.current = false;
+  //     return;
+  //   }
+  //   if (!firstUpdate.current) {
+  //     handleChangeRecipe(...newRecipeParams, recipe);
+  //   }
+  // }, [recipe]);
+
+  useDidMountEffect(() => {
+    handleChangeRecipe(...newRecipeParams, recipe);
   }, [recipe]);
 
   // meal.food

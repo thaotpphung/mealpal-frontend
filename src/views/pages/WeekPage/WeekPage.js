@@ -18,6 +18,7 @@ import useInput from '../../../utils/hooks/useInput';
 import useEditMode from '../../../utils/hooks/useEditMode';
 import useForm from '../../../utils/hooks/useForm';
 import useToggle from '../../../utils/hooks/useToggle';
+import useDidMountEffect from '../../../utils/hooks/useDidMountEffect';
 import { validate } from '../../../utils/validations/validate';
 import { getInitialWeekForm, weekFormFields } from '../../../utils/forms/weeks';
 import views from '../../../constants/views';
@@ -62,7 +63,7 @@ const WeekPage = () => {
   } = usePagination(
     { name: '', description: '', tags: '', calories: '' },
     views[loggedInUser ? loggedInUser.weekView : 'board'].limit,
-    (newLimit, newPage = 0, newSort = '', newSortOrder = '') => {
+    (newLimit, newPage = 0, newSort = sort, newSortOrder = sortOrder) => {
       if (view === 'board') {
         dispatch(
           getAllWeeksInfinite(
@@ -83,8 +84,6 @@ const WeekPage = () => {
     },
     'userId,name,description,calories,tags,updatedTime',
     {
-      name: 'string',
-      description: 'string',
       tags: 'array',
       calories: 'number',
     }
@@ -106,27 +105,22 @@ const WeekPage = () => {
     toggleIsInExploreMode();
   };
 
-  // set count for pagination when weeks have been loaded
+  // set count for pagination when week list are updated
   useEffect(() => {
     handleChangePageCount(weekCount);
     setHasMore(weeks.length < weekCount);
   }, [weekCount]);
 
+  // set hasMore when week list are updated
   useEffect(() => {
     setHasMore(currentCount !== 0);
   }, [weeks]);
 
-  const firstUpdate = useRef(true);
-  useEffect(() => {
-    if (firstUpdate.current) {
-      firstUpdate.current = false;
-      return;
-    }
-    if (!firstUpdate.current) {
-      const newLimit = views[view].limit;
-      handleChangeLimitAndPage(newLimit, 0, false);
-      dispatch(getAllWeeks(buildQuery(newLimit), isInExploreMode, userId));
-    }
+  // when changing view or isInExploreMode, make an api call to get week list with page 0 and new limit
+  useDidMountEffect(() => {
+    const newLimit = views[view].limit;
+    handleChangeLimitAndPage(newLimit, 0, false);
+    dispatch(getAllWeeks(buildQuery(newLimit), isInExploreMode, userId));
   }, [view, isInExploreMode]);
 
   // infinite strolling

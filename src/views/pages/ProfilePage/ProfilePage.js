@@ -42,7 +42,7 @@ import { getUser, sendConfirmationEmail } from '../../../api/index';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 const ProfilePage = () => {
-  const { loading, loggedInUser } = useSelector((state) => state.user);
+  const { loading, loggedInUser, error } = useSelector((state) => state.user);
   const { userId } = useParams();
   const history = useHistory();
   const dispatch = useDispatch();
@@ -72,12 +72,6 @@ const ProfilePage = () => {
       setAvatarUrl(loggedInUser.avatar);
     }
   }, []);
-
-  // when user is updated or avatar is done updated, update state
-  useEffect(() => {
-    setCurrentUser(loggedInUser);
-    setAvatarUrl(loggedInUser.avatar);
-  }, [loggedInUser]);
 
   // menu
   const components = [
@@ -216,6 +210,17 @@ const ProfilePage = () => {
       })
       .finally(() => setIsSendingEmail(false));
   };
+
+  // when user is updated or avatar is done updated, update state
+  useEffect(() => {
+    if (error === '') {
+      setCurrentUser(loggedInUser);
+      setAvatarUrl(loggedInUser.avatar);
+    } else {
+      resetEmailForm();
+      resetProfileForm();
+    }
+  }, [loggedInUser, error]);
 
   // avatar
   const {
@@ -555,7 +560,6 @@ const ProfilePage = () => {
                       </>
                     )}
                   </div>
-
                   <form onSubmit={handleSubmitChangeEmail}>
                     {loggedInUser && userId === loggedInUser._id && (
                       <Input

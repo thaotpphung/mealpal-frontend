@@ -18,6 +18,7 @@ import {
 const INITIAL_STATE = {
   loggedInUser: null,
   loading: false,
+  error: '',
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
@@ -26,7 +27,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
     case USER_REGISTER_REQUEST:
     case USER_UPDATE_REQUEST:
     case USER_UPDATE_PASSWORD_REQUEST:
-      return { ...state, loading: true };
+      return { ...state, loading: true, error: '' };
 
     case USER_SIGNIN_SUCCESS:
     case USER_REGISTER_SUCCESS: {
@@ -34,6 +35,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
         ...state,
         loading: false,
         loggedInUser: action.payload.data.result,
+        error: '',
       };
     }
 
@@ -45,6 +47,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
         ...state,
         loading: false,
         loggedInUser: { ...state.loggedInUser, ...action.payload },
+        error: '',
       };
     }
 
@@ -52,6 +55,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loggedInUser: { ...state.loggedInUser, ...action.payload },
+        error: '',
       };
     }
 
@@ -60,7 +64,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
     case USER_SIGNIN_FAIL:
     case USER_UPDATE_FAIL:
     case USER_UPDATE_PASSWORD_FAIL: {
-      return { ...state, loading: false };
+      return { ...state, loading: false, error: action.payload };
     }
 
     default:

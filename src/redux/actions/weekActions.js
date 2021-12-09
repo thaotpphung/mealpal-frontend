@@ -44,7 +44,7 @@ const getAllWeeks =
   (query = {}, isInExploreMode, userId) =>
   async (dispatch) => {
     try {
-      dispatch({ type: WEEK_LIST_REQUEST });
+      dispatch({ type: WEEK_LIST_REQUEST, payload: query });
       const { data } = await api.getWeeks(query, isInExploreMode, userId);
       dispatch({ type: WEEK_LIST_SUCCESS, payload: data.data });
     } catch (error) {
@@ -63,7 +63,7 @@ const getAllWeeksInfinite =
   (query = {}, isInExploreMode, userId) =>
   async (dispatch) => {
     try {
-      dispatch({ type: WEEK_LIST_APPEND_REQUEST });
+      dispatch({ type: WEEK_LIST_APPEND_REQUEST, payload: query });
       const { data } = await api.getWeeks(query, isInExploreMode, userId);
       dispatch({ type: WEEK_LIST_APPEND_SUCCESS, payload: data.data });
     } catch (error) {
