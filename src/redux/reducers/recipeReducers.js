@@ -127,16 +127,18 @@ const RECIPE_DETAILS_INITIAL_STATE = {
 const recipeDetailsReducer = (state = RECIPE_DETAILS_INITIAL_STATE, action) => {
   switch (action.type) {
     case RECIPE_DETAILS_REQUEST:
-    case RECIPE_UPDATE_REQUEST:
     case RECIPE_DELETE_REQUEST:
     case RECIPE_CREATE_REQUEST:
       return { ...state, loading: true, error: '' };
+    case RECIPE_UPDATE_REQUEST:
+      return { ...state, loadingUpdate: true, error: '' };
 
     case RECIPE_DETAILS_SUCCESS:
     case RECIPE_CREATE_SUCCESS:
     case RECIPE_UPDATE_SUCCESS: {
       return {
         loading: false,
+        loadingUpdate: false,
         recipe: { ...state.recipe, ...action.payload },
         error: '',
       };
@@ -145,10 +147,11 @@ const recipeDetailsReducer = (state = RECIPE_DETAILS_INITIAL_STATE, action) => {
       return { ...state, loading: false, error: '' };
 
     case RECIPE_DETAILS_FAIL:
-    case RECIPE_UPDATE_FAIL:
     case RECIPE_DELETE_FAIL:
     case RECIPE_CREATE_FAIL:
       return { ...state, loading: false, error: action.payload };
+    case RECIPE_UPDATE_FAIL:
+      return { ...state, loadingUpdate: false, error: action.payload };
 
     default:
       return state;

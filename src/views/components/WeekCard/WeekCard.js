@@ -37,6 +37,7 @@ const WeekCard = ({ data }) => {
   const history = useHistory();
   const { weekId } = useParams();
   const { loggedInUser } = useSelector((state) => state.user);
+  const { loadingUpdate } = useSelector((state) => state.week);
   const { openEditMode, toggleOpenEditMode, handleCloseEditMode } = useEditMode(
     () => {
       reset();
@@ -285,7 +286,7 @@ const WeekCard = ({ data }) => {
               value={tags}
               handleChange={handleChangeTags}
             />
-            <BlockButton type="submit" fullWidth>
+            <BlockButton type="submit" fullWidth loading={loadingUpdate}>
               Submit
             </BlockButton>
           </form>

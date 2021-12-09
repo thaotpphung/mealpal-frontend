@@ -39,6 +39,7 @@ const RecipeCard = ({ data }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { recipeId } = useParams();
+  const { loadingUpdate } = useSelector((state) => state.recipe);
   const { loggedInUser } = useSelector((state) => state.user);
   const history = useHistory();
   const { openEditMode, toggleOpenEditMode, handleCloseEditMode } = useEditMode(
@@ -301,7 +302,7 @@ const RecipeCard = ({ data }) => {
                 value={tags}
                 handleChange={handleChangeTags}
               />
-              <BlockButton type="submit" fullWidth>
+              <BlockButton type="submit" fullWidth loading={loadingUpdate}>
                 Submit
               </BlockButton>
             </form>

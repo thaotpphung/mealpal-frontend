@@ -4,6 +4,7 @@ import { Typography } from '@material-ui/core';
 import RoundButton from '../Buttons/RoundButton';
 
 const CardHeader = ({
+  loading = false,
   title,
   action,
   useEditMode = false,
@@ -27,7 +28,11 @@ const CardHeader = ({
               <>
                 <RoundButton type="cancel" handleClick={handleCloseEdit} />
                 {handleDoneEdit && (
-                  <RoundButton type="done" handleClick={handleDoneEdit} />
+                  <RoundButton
+                    type="done"
+                    handleClick={handleDoneEdit}
+                    loading={loading}
+                  />
                 )}
               </>
             ) : (

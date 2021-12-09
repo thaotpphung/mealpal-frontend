@@ -76,7 +76,6 @@ const AuthPage = () => {
   return (
     <Container component="main" maxWidth="xs">
       <Paper className={localClasses.paper} elevation={3}>
-        <div>{loading && <Spinner />}</div>
         <Avatar className={localClasses.avatar}>
           <LockOutlinedIcon />
         </Avatar>
@@ -145,7 +144,7 @@ const AuthPage = () => {
               />
             )}
           </Grid>
-          <BlockButton type="submit" fullWidth>
+          <BlockButton type="submit" fullWidth loading={loading}>
             {isRegister ? 'Sign Up' : 'Sign In'}
           </BlockButton>
           <Grid container justifyContent="flex-end">

@@ -17,6 +17,7 @@ import usePagination from '../../../utils/hooks/usePagination';
 import useInput from '../../../utils/hooks/useInput';
 import useEditMode from '../../../utils/hooks/useEditMode';
 import useForm from '../../../utils/hooks/useForm';
+import useDidMountEffect from '../../../utils/hooks/useDidMountEffect';
 import useToggle from '../../../utils/hooks/useToggle';
 import { validate } from '../../../utils/validations/validate';
 import { getInitialWeekForm, weekFormFields } from '../../../utils/forms/weeks';
@@ -34,7 +35,7 @@ const WeekPage = () => {
   const dispatch = useDispatch();
   const { userId } = useParams();
   const history = useHistory();
-  const { loggedInUser } = useSelector((state) => state.user);
+  const { loggedInUser, loadingUpdate } = useSelector((state) => state.user);
   const {
     loadingMore,
     loading,
@@ -114,7 +115,7 @@ const WeekPage = () => {
   }, [weeks]);
 
   // when changing view or isInExploreMode, make an api call to get week list with page 0 and new limit
-  useEffect(() => {
+  useDidMountEffect(() => {
     const newLimit = views[view].limit;
     handleChangeLimitAndPage(newLimit, 0, false);
     dispatch(
@@ -198,7 +199,11 @@ const WeekPage = () => {
             style={{ marginRight: '8px' }}
           >
             <span>
-              <RoundButton type="default" handleClick={handleSetDefaultView} />
+              <RoundButton
+                type="default"
+                handleClick={handleSetDefaultView}
+                loading={loadingUpdate}
+              />
             </span>
           </Tooltip>
         )}

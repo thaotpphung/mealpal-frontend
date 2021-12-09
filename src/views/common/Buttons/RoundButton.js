@@ -19,10 +19,18 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import BookmarkIcon from '@material-ui/icons/Bookmarks';
 import MenuIcon from '@material-ui/icons/Menu';
 import LibraryAddIcon from '@material-ui/icons/LibraryAdd';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import useStyles from './styles';
 
-const RoundButton = ({ type, handleClick, loading, ...props }) => {
+const RoundButton = ({
+  type,
+  handleClick,
+  loading = false,
+  tooltip = '',
+  ...props
+}) => {
   const classes = useStyles();
 
   const roundButtonTypes = {
@@ -47,15 +55,30 @@ const RoundButton = ({ type, handleClick, loading, ...props }) => {
     menu: <MenuIcon />,
   };
 
-  return (
+  const renderIcon = () => (
     <IconButton
       {...props}
       onClick={handleClick}
       disabled={loading}
       className={`${classes.roundButton}`}
     >
-      {roundButtonTypes[type]}
+      {loading ? (
+        <CircularProgress size={24} style={{ color: 'white' }} />
+      ) : (
+        roundButtonTypes[type]
+      )}
     </IconButton>
+  );
+  return (
+    <>
+      {tooltip === '' ? (
+        renderIcon()
+      ) : (
+        <Tooltip title={tooltip} placement="top">
+          {renderIcon()}
+        </Tooltip>
+      )}
+    </>
   );
 };
 

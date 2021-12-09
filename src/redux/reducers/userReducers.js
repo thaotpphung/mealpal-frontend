@@ -23,11 +23,23 @@ const INITIAL_STATE = {
 
 const userReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case USER_SET: {
+      return {
+        ...state,
+        loggedInUser: { ...state.loggedInUser, ...action.payload },
+        error: '',
+      };
+    }
+    case USER_LOGOUT:
+      return {};
+
     case USER_SIGNIN_REQUEST:
     case USER_REGISTER_REQUEST:
+      return { ...state, loading: true, error: '' };
+
     case USER_UPDATE_REQUEST:
     case USER_UPDATE_PASSWORD_REQUEST:
-      return { ...state, loading: true, error: '' };
+      return { ...state, loadingUpdate: true, error: '' };
 
     case USER_SIGNIN_SUCCESS:
     case USER_REGISTER_SUCCESS: {
@@ -39,33 +51,24 @@ const userReducer = (state = INITIAL_STATE, action) => {
       };
     }
 
-    case USER_LOGOUT:
-      return {};
-
     case USER_UPDATE_SUCCESS: {
       return {
         ...state,
-        loading: false,
+        loadingUpdate: false,
         loggedInUser: { ...state.loggedInUser, ...action.payload },
         error: '',
       };
     }
-
-    case USER_SET: {
-      return {
-        ...state,
-        loggedInUser: { ...state.loggedInUser, ...action.payload },
-        error: '',
-      };
-    }
-
     case USER_UPDATE_PASSWORD_SUCCESS:
+      return { ...state, loadingUpdate: false, error: action.payload };
+
     case USER_REGISTER_FAIL:
     case USER_SIGNIN_FAIL:
-    case USER_UPDATE_FAIL:
-    case USER_UPDATE_PASSWORD_FAIL: {
       return { ...state, loading: false, error: action.payload };
-    }
+
+    case USER_UPDATE_FAIL:
+    case USER_UPDATE_PASSWORD_FAIL:
+      return { ...state, loadingUpdate: false, error: action.payload };
 
     default:
       return state;

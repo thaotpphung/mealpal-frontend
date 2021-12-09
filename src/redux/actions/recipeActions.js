@@ -92,7 +92,7 @@ const getAllRecipesInfinite =
 
 const getAllRecipesForSearching =
   (
-    query = '',
+    query = {},
     isInExploreMode = false,
     userId = JSON.parse(localStorage.getItem('loggedInUser'))?._id
   ) =>

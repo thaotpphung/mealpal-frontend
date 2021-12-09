@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { styles } from './styles';
 import useStyles from '../../../app/styles';
 import List from '@material-ui/core/List';
+import Tooltip from '@material-ui/core/Tooltip';
 import Chip from '@material-ui/core/Chip';
 import Typography from '@material-ui/core/Typography';
 import ListItem from '@material-ui/core/ListItem';
@@ -11,7 +12,6 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Collapse from '@material-ui/core/Collapse';
 import Checkbox from '@material-ui/core/Checkbox';
 import Paper from '@material-ui/core/Paper';
-import Spinner from '../../common/Spinner/Spinner';
 import CardHeader from '../../common/CardHeader/CardHeader';
 import CardBody from '../../common/CardBody/CardBody';
 import EmptyMessage from '../../common/EmptyMessage/EmptyMessage';
@@ -87,16 +87,16 @@ const CartPage = () => {
 
   return (
     <>
-      {isSending && <Spinner />}
       <Paper className={localClasses.root}>
         <CardHeader
           title="Shopping Cart"
           action={
             <>
               <RoundButton
+                tooltip="Send cart to your email"
                 type="send"
-                handleClick={handleSendEmail}
                 loading={isSending}
+                handleClick={handleSendEmail}
               />
               <RoundButton type="delete" handleClick={handleClickDeleteCart} />
               {openEditMode ? (
@@ -112,7 +112,6 @@ const CartPage = () => {
                 </>
               ) : (
                 <></>
-                // TODO <RoundButton type="edit" handleClick={toggleOpenEditMode} />
               )}
             </>
           }

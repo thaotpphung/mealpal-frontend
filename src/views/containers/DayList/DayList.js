@@ -451,6 +451,7 @@ const DayList = ({ days, userId }) => {
                               }
                             />
                             <RoundButton
+                              tooltip="Add to cart"
                               type="shoppingCart"
                               handleClick={() =>
                                 dispatch(
@@ -542,6 +543,7 @@ const DayList = ({ days, userId }) => {
                           className={localClasses.rowAction}
                         >
                           <RoundButton
+                            tooltip="Add to cart"
                             type="shoppingCart"
                             handleClick={() => {
                               dispatch(
@@ -659,6 +661,7 @@ const DayList = ({ days, userId }) => {
                                               }
                                             >
                                               <RoundButton
+                                                tooltip="Add recipe"
                                                 type="addField"
                                                 handleClick={() =>
                                                   handleAddRecipe(
@@ -668,6 +671,7 @@ const DayList = ({ days, userId }) => {
                                                 }
                                               />
                                               <RoundButton
+                                                tooltip="Delete recipe"
                                                 type="deleteField"
                                                 handleClick={() =>
                                                   handleDeleteRecipe(
@@ -811,6 +815,7 @@ const DayList = ({ days, userId }) => {
                                               }
                                             >
                                               <RoundButton
+                                                tooltip="Add food"
                                                 type="addField"
                                                 handleClick={() =>
                                                   handleAddFood(
@@ -820,6 +825,7 @@ const DayList = ({ days, userId }) => {
                                                 }
                                               />
                                               <RoundButton
+                                                tooltip="Delete food"
                                                 type="deleteField"
                                                 handleClick={() =>
                                                   handleDeleteFood(
@@ -842,10 +848,12 @@ const DayList = ({ days, userId }) => {
                                     className={localClasses.rowAction}
                                   >
                                     <RoundButton
+                                      tooltip="Add meal"
                                       type="add"
                                       handleClick={() => handleAddMeal(mealIdx)}
                                     />
                                     <RoundButton
+                                      tooltip="Delete meal"
                                       type="delete"
                                       handleClick={() =>
                                         handleDeleteMeal(mealIdx)

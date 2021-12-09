@@ -39,10 +39,11 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import { getUser, sendConfirmationEmail } from '../../../api/index';
-import CircularProgress from '@material-ui/core/CircularProgress';
 
 const ProfilePage = () => {
-  const { loading, loggedInUser, error } = useSelector((state) => state.user);
+  const { loading, loadingUpdate, loggedInUser, error } = useSelector(
+    (state) => state.user
+  );
   const { userId } = useParams();
   const history = useHistory();
   const dispatch = useDispatch();
@@ -314,6 +315,7 @@ const ProfilePage = () => {
             {isShowComponent['Profile'] && (
               <>
                 <CardHeader
+                  loading={loadingUpdate}
                   title={Object.keys(isShowComponent)[0]}
                   useEditMode={true}
                   useEditCondition={loggedInUser && userId === loggedInUser._id}
@@ -529,34 +531,12 @@ const ProfilePage = () => {
                             reset token
                           </Typography>
                         </Alert>
-
-                        <div
-                          className={classes.wrapper}
-                          style={{
-                            margin: '8px',
-                            position: 'relative',
-                          }}
+                        <BlockButton
+                          handleClick={handleSendConfirmationEmail}
+                          loading={isSendingEmail}
                         >
-                          <BlockButton
-                            handleClick={handleSendConfirmationEmail}
-                            disabled={isSendingEmail}
-                          >
-                            {isSendingEmail && (
-                              <CircularProgress
-                                size={24}
-                                className={classes.buttonProgress}
-                                style={{
-                                  position: 'absolute',
-                                  top: '50%',
-                                  left: '50%',
-                                  marginTop: -12,
-                                  marginLeft: -12,
-                                }}
-                              />
-                            )}
-                            Send Confirmation
-                          </BlockButton>
-                        </div>
+                          Send Confirmation
+                        </BlockButton>
                       </>
                     )}
                   </div>
@@ -572,7 +552,11 @@ const ProfilePage = () => {
                       />
                     )}
                     {openEditEmail && (
-                      <BlockButton type="submit" fullWidth>
+                      <BlockButton
+                        type="submit"
+                        fullWidth
+                        loading={loadingUpdate}
+                      >
                         Submit
                       </BlockButton>
                     )}

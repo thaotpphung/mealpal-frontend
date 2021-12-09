@@ -15,17 +15,21 @@ const WeekDetailsPage = ({ id = '' }) => {
   const location = useLocation();
   const dispatch = useDispatch();
   const classes = useStyles();
-  const { week, loading, error } = useSelector((state) => state.week);
+  const { week, loading, loadingUpdate, error } = useSelector(
+    (state) => state.week
+  );
 
   useEffect(() => {
     if (!location.isRedirect) {
       dispatch(getWeek(weekId ? weekId : id));
     }
-    dispatch(getAllRecipesForSearching('?fields=name,calories,ingredients'));
+    dispatch(
+      getAllRecipesForSearching({ fields: 'name,calories,ingredients' })
+    );
   }, []);
 
   if (!loading && error) return <EmptyMessage />;
-  if (!loading && week.days.length)
+  if (!loading && !loadingUpdate && week.days.length)
     return (
       <Grid
         container

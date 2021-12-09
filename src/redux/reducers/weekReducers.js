@@ -90,14 +90,17 @@ function weekDetailsReducer(
   switch (action.type) {
     case WEEK_CREATE_REQUEST:
     case WEEK_DETAILS_REQUEST:
-    case WEEK_UPDATE_REQUEST:
-    case WEEK_UPDATE_BY_DAY_REQUEST:
     case WEEK_DELETE_REQUEST:
       return { ...state, loading: true, error: '' };
+
+    case WEEK_UPDATE_REQUEST:
+    case WEEK_UPDATE_BY_DAY_REQUEST:
+      return { ...state, loadingUpdate: true, error: '' };
 
     case WEEK_CREATE_SUCCESS:
     case WEEK_DETAILS_SUCCESS:
       return {
+        ...state,
         loading: false,
         week: { ...state.week, ...action.payload },
         error: '',
@@ -105,7 +108,8 @@ function weekDetailsReducer(
 
     case WEEK_UPDATE_SUCCESS: {
       return {
-        loading: false,
+        ...state,
+        loadingUpdate: false,
         week: { ...state.week, ...action.payload },
         error: '',
       };
@@ -116,7 +120,8 @@ function weekDetailsReducer(
       let updatedWeek = cloneDeep(state.week);
       updatedWeek.days[dayIdx] = day;
       return {
-        loading: false,
+        ...state,
+        loadingUpdate: false,
         week: updatedWeek,
         error: '',
       };
@@ -127,10 +132,12 @@ function weekDetailsReducer(
 
     case WEEK_CREATE_FAIL:
     case WEEK_DETAILS_FAIL:
-    case WEEK_UPDATE_FAIL:
     case WEEK_UPDATE_BY_DAY_FAIL:
     case WEEK_DELETE_FAIL:
       return { ...state, loading: false, error: action.payload };
+
+    case WEEK_UPDATE_FAIL:
+      return { ...state, loadingUpdate: false, error: action.payload };
 
     default:
       return state;

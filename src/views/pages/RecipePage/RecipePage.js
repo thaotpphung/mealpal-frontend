@@ -37,7 +37,7 @@ const RecipePage = () => {
   const dispatch = useDispatch();
   const { userId } = useParams();
   const history = useHistory();
-  const { loggedInUser } = useSelector((state) => state.user);
+  const { loggedInUser, loadingUpdate } = useSelector((state) => state.user);
   const {
     loadingMore,
     loading,
@@ -206,7 +206,11 @@ const RecipePage = () => {
             style={{ marginRight: '8px' }}
           >
             <span>
-              <RoundButton type="default" handleClick={handleSetDefaultView} />
+              <RoundButton
+                type="default"
+                handleClick={handleSetDefaultView}
+                loading={loadingUpdate}
+              />
             </span>
           </Tooltip>
         )}
