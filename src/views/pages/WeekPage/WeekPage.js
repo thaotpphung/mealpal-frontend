@@ -89,6 +89,16 @@ const WeekPage = () => {
     }
   );
 
+  useEffect(() => {
+    dispatch(
+      getAllWeeks(
+        buildQuery(limit, page, sort, sortOrder),
+        isInExploreMode,
+        userId
+      )
+    );
+  }, []);
+
   // view
   const defaultView = loggedInUser ? loggedInUser.weekView : 'board';
   const [view, setView] = useState(defaultView);
@@ -106,7 +116,6 @@ const WeekPage = () => {
   // set count for pagination when week list are updated
   useEffect(() => {
     handleChangePageCount(weekCount);
-    setHasMore(weeks.length < weekCount);
   }, [weekCount]);
 
   // set hasMore when week list are updated
@@ -136,7 +145,7 @@ const WeekPage = () => {
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
-          handleChangeLimitAndPage(limit, 'next');
+          if (weeks.length >= limit) handleChangeLimitAndPage(limit, 'next');
         }
       });
       if (node) observer.current.observe(node);

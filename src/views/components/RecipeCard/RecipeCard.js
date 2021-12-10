@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import useStyles from '../../../app/styles';
@@ -39,7 +39,7 @@ const RecipeCard = ({ data }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { recipeId } = useParams();
-  const { loadingUpdate } = useSelector((state) => state.recipe);
+  const { loadingUpdate, recipe, error } = useSelector((state) => state.recipe);
   const { loggedInUser } = useSelector((state) => state.user);
   const history = useHistory();
   const { openEditMode, toggleOpenEditMode, handleCloseEditMode } = useEditMode(
@@ -70,8 +70,11 @@ const RecipeCard = ({ data }) => {
         tags: tags !== '' ? tags.split(',').map((tag) => tag.trim()) : [],
       })
     );
-    toggleOpenEditMode(false);
   });
+
+  useEffect(() => {
+    if (error === '') toggleOpenEditMode(false);
+  }, [recipe]);
 
   const handleSelectFile = (file) => {
     setRecipeForm('recipeImage', file.base64);

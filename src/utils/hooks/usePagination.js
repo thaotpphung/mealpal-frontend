@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import useDidMountEffect from './useDidMountEffect';
 
 const usePagination = (
   initialQuery,
@@ -56,7 +57,7 @@ const usePagination = (
     callback(limit, page, newSort, newSortOrder);
   };
 
-  useEffect(() => {
+  useDidMountEffect(() => {
     if (withCallback) callback(limit, page);
   }, [page, limit, withCallback]);
 

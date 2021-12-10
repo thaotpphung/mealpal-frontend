@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -37,7 +37,7 @@ const WeekCard = ({ data }) => {
   const history = useHistory();
   const { weekId } = useParams();
   const { loggedInUser } = useSelector((state) => state.user);
-  const { loadingUpdate } = useSelector((state) => state.week);
+  const { loadingUpdate, error, week } = useSelector((state) => state.week);
   const { openEditMode, toggleOpenEditMode, handleCloseEditMode } = useEditMode(
     () => {
       reset();
@@ -48,6 +48,10 @@ const WeekCard = ({ data }) => {
   const [tags, handleChangeTags, resetTags] = useInput(
     data.tags.join(', ').replace(/, ([^,]*)$/, ', $1')
   );
+
+  useEffect(() => {
+    if (error === '') toggleOpenEditMode(false);
+  }, [week]);
 
   const {
     values: weekForm,
@@ -62,7 +66,6 @@ const WeekCard = ({ data }) => {
         tags: tags !== '' ? tags.split(',').map((tag) => tag.trim()) : [],
       })
     );
-    toggleOpenEditMode(false);
   });
 
   const handleDeleteWeek = (weekId) => {

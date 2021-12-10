@@ -92,6 +92,16 @@ const RecipePage = () => {
     }
   );
 
+  useEffect(() => {
+    dispatch(
+      getAllRecipes(
+        buildQuery(limit, page, sort, sortOrder),
+        isInExploreMode,
+        userId
+      )
+    );
+  }, []);
+
   // view
   const defaultView = loggedInUser ? loggedInUser.recipeView : 'board';
   const [view, setView] = useState(defaultView);
@@ -109,7 +119,6 @@ const RecipePage = () => {
   // set count for pagination when recipe list are updated
   useEffect(() => {
     handleChangePageCount(recipeCount);
-    setHasMore(recipes.length < recipeCount);
   }, [recipeCount]);
 
   // set hasMore when recipe list are updated
@@ -139,7 +148,7 @@ const RecipePage = () => {
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasMore) {
-          handleChangeLimitAndPage(limit, 'next');
+          if (recipes.length >= limit) handleChangeLimitAndPage(limit, 'next');
         }
       });
       if (node) observer.current.observe(node);
