@@ -4,8 +4,7 @@ import { Grid } from '@material-ui/core';
 import useStyles from './styles';
 import { useParams, useLocation } from 'react-router-dom';
 import RecipeCard from '../../components/RecipeCard/RecipeCard';
-import InstructionCard from '../../components/InstructionCard/InstructionCard';
-import IngredientCard from '../../components/IngredientCard/IngredientCard';
+import RecipeDetails from '../../containers/RecipeDetails/RecipeDetails';
 import { getRecipe } from '../../../redux/actions/recipeActions';
 import Spinner from '../../common/Spinner/Spinner';
 import EmptyMessage from '../../common/EmptyMessage/EmptyMessage';
@@ -34,11 +33,10 @@ const RecipeDetailsPage = () => {
           spacing={7}
         >
           <Grid item xs={12} md={5} lg={4}>
-            <RecipeCard recipe={recipe} />
+            <RecipeCard data={recipe} />
           </Grid>
           <Grid item xs={12} md={7} lg={8} className={classes.rightColumn}>
-            <IngredientCard recipe={recipe} />
-            <InstructionCard recipe={recipe} />
+            <RecipeDetails recipe={recipe} />
           </Grid>
         </Grid>
       </div>

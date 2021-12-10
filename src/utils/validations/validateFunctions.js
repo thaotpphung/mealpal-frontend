@@ -26,24 +26,4 @@ const validateField = (name, value, errors, password = null) => {
   return errors;
 };
 
-const validateArray = (
-  name,
-  value,
-  errors,
-  condition = (item) => {
-    return item.trim() === '';
-  }
-) => {
-  const currentErrors = {};
-  let hasError = false;
-  value.map((item, idx) => {
-    if (condition(item)) {
-      currentErrors[idx] = '';
-      hasError = true;
-    }
-  });
-  hasError ? (errors[name] = currentErrors) : void 0;
-  return errors;
-};
-
-export { validateArray, validateField };
+export { validateField };

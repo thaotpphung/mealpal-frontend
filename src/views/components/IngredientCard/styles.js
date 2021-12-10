@@ -1,9 +1,8 @@
 import { makeStyles } from '@material-ui/core/styles';
 
 const styles = makeStyles(() => ({
-  notePaperItem: {
+  recipeItem: {
     display: 'flex',
-    alignItems: 'center',
     cursor: 'pointer',
   },
   itemContent: {

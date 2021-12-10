@@ -47,4 +47,13 @@ const addMixedNumber = (
   return simplifyMixedNumber({ whole: 0, numer: numer3, denom: denom3 });
 };
 
-export { formatMixedNumber, addMixedNumber, simplifyMixedNumber };
+const convertMixedToNum = ({ whole, numer, denom }) => {
+  return (whole * denom + numer) / denom;
+};
+
+export {
+  formatMixedNumber,
+  addMixedNumber,
+  simplifyMixedNumber,
+  convertMixedToNum,
+};

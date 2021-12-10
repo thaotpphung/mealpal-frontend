@@ -41,7 +41,9 @@ import Select from '@material-ui/core/Select';
 import { getUser, sendConfirmationEmail } from '../../../api/index';
 
 const ProfilePage = () => {
-  const { loading, loggedInUser } = useSelector((state) => state.user);
+  const { loading, loadingUpdate, loggedInUser, error } = useSelector(
+    (state) => state.user
+  );
   const { userId } = useParams();
   const history = useHistory();
   const dispatch = useDispatch();
@@ -49,40 +51,10 @@ const ProfilePage = () => {
   const localClasses = styles();
   const [isShowComponent, setIsShowComponent] = useState({ Profile: true });
   const [showPassword, toggleShowPassword] = useToggle(false);
-
-  const {
-    openEditMode: openEditProfile,
-    toggleOpenEditMode: toggleEditProfile,
-    handleCloseEditMode: handleCloseEditProfile,
-  } = useEditMode(() => {
-    resetProfileForm();
-  });
-
-  const {
-    openEditMode: openEditAvatar,
-    toggleOpenEditMode: toggleEditAvatar,
-    handleCloseEditMode: handleCloseEditAvatar,
-  } = useEditMode(() => {
-    handleCancelChangeAvatar();
-  });
-
-  const {
-    openEditMode: openEditPassword,
-    toggleOpenEditMode: toggleEditPassword,
-    handleCloseEditMode: handleCloseEditPassword,
-  } = useEditMode(() => {});
-
-  const {
-    openEditMode: openEditEmail,
-    toggleOpenEditMode: toggleEditEmail,
-    handleCloseEditMode: handleCloseEditEmail,
-  } = useEditMode(() => {
-    resetEmailForm();
-  });
-
   const [currentUser, setCurrentUser] = useState({});
   const [loadingCurrentUser, setLoadingCurrentUser] = useState(false);
 
+  // fetch data
   useEffect(() => {
     if ((loggedInUser && loggedInUser._id !== userId) || !loggedInUser) {
       setLoadingCurrentUser(true);
@@ -102,74 +74,7 @@ const ProfilePage = () => {
     }
   }, []);
 
-  const {
-    handleChange,
-    handleSubmit,
-    values: userForm,
-    errors,
-    reset: resetProfileForm,
-  } = useForm(
-    {
-      firstName: loggedInUser?.firstName,
-      lastName: loggedInUser?.lastName,
-      bio: loggedInUser?.bio,
-      avatar: loggedInUser?.avatar,
-      caloGoal: loggedInUser?.caloGoal,
-      preferredDiet: loggedInUser?.preferredDiet,
-    },
-    () => {
-      dispatch(updateUser(loggedInUser._id, userForm));
-    }
-  );
-
-  const passwordFields = [
-    {
-      name: 'oldPassword',
-      label: 'Current Password',
-    },
-    {
-      name: 'password',
-      label: 'New Password',
-    },
-    {
-      name: 'confirmPassword',
-      label: 'Confirm New Password',
-    },
-  ];
-
-  const {
-    handleChange: handleChangePassword,
-    handleSubmit: handleSubmitChangePassword,
-    values: passwordForm,
-    errors: passwordErrors,
-  } = useForm(
-    {
-      oldPassword: '',
-      password: '',
-      confirmPassword: '',
-    },
-    () => {
-      dispatch(updatePassword(loggedInUser._id, passwordForm));
-    },
-    validate
-  );
-
-  const {
-    handleChange: handleChangeEmail,
-    handleSubmit: handleSubmitChangeEmail,
-    values: emailForm,
-    errors: emailErrors,
-    reset: resetEmailForm,
-  } = useForm(
-    {
-      email: loggedInUser?.email,
-    },
-    () => {
-      dispatch(updateUser(loggedInUser._id, emailForm));
-    },
-    validate
-  );
-
+  // menu
   const components = [
     {
       name: 'Profile',
@@ -194,33 +99,106 @@ const ProfilePage = () => {
     setIsShowComponent({ [param]: true });
   };
 
-  const [avatarForm, setAvatarForm] = useState(initialAvatarForm);
-  const [avatarUrl, setAvatarUrl] = useState('');
+  // profile
+  const {
+    openEditMode: openEditProfile,
+    toggleOpenEditMode: toggleEditProfile,
+    handleCloseEditMode: handleCloseEditProfile,
+  } = useEditMode(() => {
+    resetProfileForm();
+    resetProfileErrors();
+  });
+  const {
+    handleChange: handleChangeProfile,
+    handleSubmit: handleSubmitChangeProfile,
+    values: userForm,
+    errors: profileErrors,
+    reset: resetProfileForm,
+    resetErrors: resetProfileErrors,
+  } = useForm(
+    {
+      firstName: loggedInUser?.firstName,
+      lastName: loggedInUser?.lastName,
+      bio: loggedInUser?.bio,
+      avatar: loggedInUser?.avatar,
+      calories: loggedInUser?.calories,
+      preferredDiet: loggedInUser?.preferredDiet,
+    },
+    () => {
+      dispatch(updateUser(loggedInUser._id, userForm));
+      toggleEditProfile(false);
+    },
+    validate,
+    ['bio', 'avatar', 'calories', 'preferredDiet']
+  );
 
-  const makeAvatarUrl = (updatedAvatarForm) => {
-    let url = `https://avatars.dicebear.com/api/miniavs/${loggedInUser._id}.svg?`;
-    Object.entries(updatedAvatarForm).forEach(([key, value]) => {
-      if (value !== 'none') url += `${key}=${value}&`;
-    });
-    setAvatarUrl(url);
-  };
+  // password
+  const {
+    openEditMode: openEditPassword,
+    toggleOpenEditMode: toggleEditPassword,
+    handleCloseEditMode: handleCloseEditPassword,
+  } = useEditMode(() => {
+    resetPasswordErrors();
+  });
+  const passwordFields = [
+    {
+      name: 'oldPassword',
+      label: 'Current Password',
+    },
+    {
+      name: 'password',
+      label: 'New Password',
+    },
+    {
+      name: 'confirmPassword',
+      label: 'Confirm New Password',
+    },
+  ];
+  const {
+    handleChange: handleChangePassword,
+    handleSubmit: handleSubmitChangePassword,
+    values: passwordForm,
+    errors: passwordErrors,
+    resetErrors: resetPasswordErrors,
+  } = useForm(
+    {
+      oldPassword: '',
+      password: '',
+      confirmPassword: '',
+    },
+    () => {
+      dispatch(updatePassword(passwordForm));
+      toggleEditPassword(false);
+    },
+    validate
+  );
 
-  const handleChangeAvatar = (key, value) => {
-    const updatedAvatarForm = { ...avatarForm, [key]: value };
-    setAvatarForm(updatedAvatarForm);
-    makeAvatarUrl(updatedAvatarForm);
-  };
-
-  const handleCancelChangeAvatar = () => {
-    setAvatarUrl(loggedInUser.avatar);
-    setAvatarForm(initialAvatarForm);
-  };
-
-  const handleSubmitChangeAvatar = (event) => {
-    event.preventDefault();
-    dispatch(updateUser(loggedInUser._id, { avatar: avatarUrl }));
-  };
-
+  // email
+  const {
+    openEditMode: openEditEmail,
+    toggleOpenEditMode: toggleEditEmail,
+    handleCloseEditMode: handleCloseEditEmail,
+  } = useEditMode(() => {
+    resetEmailForm();
+    resetEmailErrors();
+  });
+  const {
+    handleChange: handleChangeEmail,
+    handleSubmit: handleSubmitChangeEmail,
+    values: emailForm,
+    errors: emailErrors,
+    reset: resetEmailForm,
+    resetErrors: resetEmailErrors,
+  } = useForm(
+    {
+      email: loggedInUser?.email,
+    },
+    () => {
+      dispatch(updateUser(loggedInUser._id, emailForm));
+      toggleEditEmail(false);
+    },
+    validate
+  );
   const [isSendingEmail, setIsSendingEmail] = useState(false);
   const handleSendConfirmationEmail = () => {
     setIsSendingEmail(true);
@@ -232,6 +210,49 @@ const ProfilePage = () => {
         dispatch(addAlertWithTimeout('error', error.response.data.message));
       })
       .finally(() => setIsSendingEmail(false));
+  };
+
+  // when user is updated or avatar is done updated, update state
+  useEffect(() => {
+    if (error === '') {
+      setCurrentUser(loggedInUser);
+      setAvatarUrl(loggedInUser.avatar);
+    } else {
+      resetEmailForm();
+      resetProfileForm();
+    }
+  }, [loggedInUser, error]);
+
+  // avatar
+  const {
+    openEditMode: openEditAvatar,
+    toggleOpenEditMode: toggleEditAvatar,
+    handleCloseEditMode: handleCloseEditAvatar,
+  } = useEditMode(() => {
+    handleCancelChangeAvatar();
+  });
+  const [avatarForm, setAvatarForm] = useState(initialAvatarForm);
+  const [avatarUrl, setAvatarUrl] = useState('');
+  const makeAvatarUrl = (updatedAvatarForm) => {
+    let url = `https://avatars.dicebear.com/api/miniavs/${loggedInUser._id}.svg?`;
+    Object.entries(updatedAvatarForm).forEach(([key, value]) => {
+      if (value !== 'none') url += `${key}=${value}&`;
+    });
+    setAvatarUrl(url);
+  };
+  const handleChangeAvatar = (key, value) => {
+    const updatedAvatarForm = { ...avatarForm, [key]: value };
+    setAvatarForm(updatedAvatarForm);
+    makeAvatarUrl(updatedAvatarForm);
+  };
+  const handleCancelChangeAvatar = () => {
+    setAvatarUrl(loggedInUser.avatar);
+    setAvatarForm(initialAvatarForm);
+  };
+  const handleSubmitChangeAvatar = (event) => {
+    event.preventDefault();
+    dispatch(updateUser(loggedInUser._id, { avatar: avatarUrl }));
+    toggleEditAvatar(false);
   };
 
   if (!loadingCurrentUser && !loading && Object.keys(currentUser).length > 0)
@@ -294,18 +315,17 @@ const ProfilePage = () => {
             {isShowComponent['Profile'] && (
               <>
                 <CardHeader
+                  loading={loadingUpdate}
                   title={Object.keys(isShowComponent)[0]}
                   useEditMode={true}
                   useEditCondition={loggedInUser && userId === loggedInUser._id}
                   showEdit={openEditProfile}
                   handleOpenEdit={toggleEditProfile}
                   handleCloseEdit={handleCloseEditProfile}
+                  handleDoneEdit={handleSubmitChangeProfile}
                 />
                 <Paper className={localClasses.form}>
-                  <form
-                    className={classes.formContainer}
-                    onSubmit={handleSubmit}
-                  >
+                  <form className={classes.formContainer}>
                     <Grid container spacing={2}>
                       <Input
                         name="username"
@@ -327,8 +347,8 @@ const ProfilePage = () => {
                             required
                             half
                             value={userForm.firstName}
-                            handleChange={handleChange}
-                            errors={errors?.firstName}
+                            handleChange={handleChangeProfile}
+                            error={profileErrors?.firstName}
                             disabled={!openEditProfile}
                           />
                           <Input
@@ -337,8 +357,8 @@ const ProfilePage = () => {
                             required
                             half
                             value={userForm.lastName}
-                            handleChange={handleChange}
-                            errors={errors?.lastName}
+                            handleChange={handleChangeProfile}
+                            error={profileErrors?.lastName}
                             disabled={!openEditProfile}
                           />
                         </>
@@ -351,22 +371,20 @@ const ProfilePage = () => {
                             ? currentUser.preferredDiet
                             : userForm.preferredDiet
                         }
-                        handleChange={handleChange}
-                        errors={errors?.preferredDiet}
+                        handleChange={handleChangeProfile}
                         disabled={!openEditProfile}
                       />
                       <Input
-                        name="caloGoal"
+                        name="calories"
                         label="Calories Goal"
                         type="number"
                         step={0.01}
                         value={
                           !openEditProfile
-                            ? currentUser.caloGoal
-                            : userForm.caloGoal
+                            ? currentUser.calories
+                            : userForm.calories
                         }
-                        handleChange={handleChange}
-                        errors={errors?.caloGoal}
+                        handleChange={handleChangeProfile}
                         disabled={!openEditProfile}
                       />
                       <Input
@@ -376,22 +394,15 @@ const ProfilePage = () => {
                           !openEditProfile ? currentUser.bio : userForm.bio
                         }
                         multiline
-                        rows={4}
-                        handleChange={handleChange}
-                        errors={errors?.bio}
+                        minRows={4}
+                        handleChange={handleChangeProfile}
                         disabled={!openEditProfile}
                       />
-                      {openEditProfile && (
-                        <BlockButton type="submit" fullWidth>
-                          Submit
-                        </BlockButton>
-                      )}
                     </Grid>
                   </form>
                 </Paper>
               </>
             )}
-
             {isShowComponent['Password'] && (
               <>
                 <CardHeader
@@ -401,12 +412,10 @@ const ProfilePage = () => {
                   showEdit={openEditPassword}
                   handleOpenEdit={toggleEditPassword}
                   handleCloseEdit={handleCloseEditPassword}
+                  handleDoneEdit={handleSubmitChangePassword}
                 />
                 <Paper className={localClasses.form}>
-                  <form
-                    className={classes.formContainer}
-                    onSubmit={handleSubmitChangePassword}
-                  >
+                  <form className={classes.formContainer}>
                     <Grid container spacing={2}>
                       {passwordFields.map((field, fieldIdx) => (
                         <Input
@@ -430,11 +439,6 @@ const ProfilePage = () => {
                           }
                         />
                       ))}
-                      {openEditPassword && (
-                        <BlockButton type="submit" fullWidth>
-                          Submit
-                        </BlockButton>
-                      )}
                     </Grid>
                   </form>
                 </Paper>
@@ -449,12 +453,10 @@ const ProfilePage = () => {
                   showEdit={openEditAvatar}
                   handleOpenEdit={toggleEditAvatar}
                   handleCloseEdit={handleCloseEditAvatar}
+                  handleDoneEdit={handleSubmitChangeAvatar}
                 />
                 <Paper className={localClasses.form}>
-                  <form
-                    className={classes.formContainer}
-                    onSubmit={handleSubmitChangeAvatar}
-                  >
+                  <form className={classes.formContainer}>
                     <Grid container spacing={2}>
                       {Object.entries(avatarOptions).map(
                         ([key, value], idx) => (
@@ -499,11 +501,6 @@ const ProfilePage = () => {
                           </Grid>
                         )
                       )}
-                      {openEditAvatar && (
-                        <BlockButton type="submit" fullWidth>
-                          Submit
-                        </BlockButton>
-                      )}
                     </Grid>
                   </form>
                 </Paper>
@@ -536,14 +533,13 @@ const ProfilePage = () => {
                         </Alert>
                         <BlockButton
                           handleClick={handleSendConfirmationEmail}
-                          disabled={isSendingEmail}
+                          loading={isSendingEmail}
                         >
-                          {isSendingEmail ? <Spinner /> : 'Send Confirmation'}
+                          Send Confirmation
                         </BlockButton>
                       </>
                     )}
                   </div>
-
                   <form onSubmit={handleSubmitChangeEmail}>
                     {loggedInUser && userId === loggedInUser._id && (
                       <Input
@@ -556,7 +552,11 @@ const ProfilePage = () => {
                       />
                     )}
                     {openEditEmail && (
-                      <BlockButton type="submit" fullWidth>
+                      <BlockButton
+                        type="submit"
+                        fullWidth
+                        loading={loadingUpdate}
+                      >
                         Submit
                       </BlockButton>
                     )}

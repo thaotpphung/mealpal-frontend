@@ -14,7 +14,6 @@ import ProfileIcon from '@material-ui/icons/AccountCircle';
 import LogoutIcon from '@material-ui/icons/ExitToApp';
 import Button from '@material-ui/core/Button';
 import Link from '@material-ui/core/Link';
-import Chip from '@material-ui/core/Chip';
 import { NavLink as RouterLink } from 'react-router-dom';
 import useStyles from './styles';
 import { useHistory } from 'react-router-dom';
@@ -30,7 +29,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     dispatch(logout());
-    history.push('/auth');
+    history.push('/signin');
   };
 
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
@@ -123,7 +122,7 @@ const Navbar = () => {
       ) : (
         <MenuItem
           onClick={() => {
-            history.push('/auth');
+            history.push('/signin');
           }}
         >
           <IconButton color="inherit">
@@ -150,12 +149,6 @@ const Navbar = () => {
                 src={Logo}
                 className={classes.logo}
                 onClick={() => history.push('/')}
-              />
-              <Chip
-                variant="outlined"
-                size="small"
-                label="Beta"
-                color="primary"
               />
             </div>
             <div className={classes.grow} />
@@ -224,7 +217,7 @@ const Navbar = () => {
                     </Link>
                     <Button
                       component={RouterLink}
-                      to="/auth"
+                      to="/signin"
                       color="primary"
                       variant="outlined"
                       className={classes.link}
@@ -236,7 +229,7 @@ const Navbar = () => {
                 ) : (
                   <Button
                     component={RouterLink}
-                    to={'/auth'}
+                    to={'/signin'}
                     color="primary"
                     variant="outlined"
                     className={classes.link}

@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-export default makeStyles((theme) => ({
+const styles = makeStyles((theme) => ({
   root: {
     width: '80%',
     margin: '0 auto',
@@ -22,3 +22,5 @@ export default makeStyles((theme) => ({
     paddingTop: theme.spacing(3),
   },
 }));
+
+export { styles };
