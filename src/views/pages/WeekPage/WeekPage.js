@@ -225,7 +225,13 @@ const WeekPage = () => {
       <form
         onSubmit={(event) => {
           event.preventDefault();
-          handleSubmitFilter();
+          dispatch(
+            getAllWeeks(
+              buildQuery(limit, page, sort, sortOrder),
+              isInExploreMode,
+              userId
+            )
+          );
         }}
       >
         <Grid container spacing={3} style={{ marginBottom: '8px' }}>
@@ -247,14 +253,14 @@ const WeekPage = () => {
                 value={queryFields.calories}
                 name="calories"
                 label="Calories"
-                tooltip='Exact match, Ex: "2000", or separated by comma to search by range, Ex: "0, 2000" or "0," or ",2000"'
+                tooltip='Ex: "2000", or "0, 2000" or "0," or ",2000"'
                 handleChange={handleChangeQueryField}
               />
               <InputWithTooltip
                 value={queryFields.tags}
                 label="Tags"
                 name="tags"
-                tooltip='Separated by comma, Ex: "Weight Loss Program, Keto, Vegan"'
+                tooltip='Ex: "Weight Loss Program, Keto, Vegan"'
                 handleChange={handleChangeQueryField}
               />
             </div>
@@ -345,7 +351,7 @@ const WeekPage = () => {
             ))}
             <InputWithTooltip
               label="Tags"
-              tooltip='Separated by comma, Ex: "Main Course, Chicken, Keto"'
+              tooltip='Ex: "Main Course, Chicken, Keto"'
               multiline
               minRows={4}
               value={tags}

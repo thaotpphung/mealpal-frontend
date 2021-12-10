@@ -299,7 +299,7 @@ const RecipeCard = ({ data }) => {
               ))}
               <InputWithTooltip
                 label="Tags"
-                tooltip='Separated by comma, Ex: "Main Course, Chicken, Keto"'
+                tooltip='Ex: "Main Course, Chicken, Keto"'
                 multiline
                 minRows={4}
                 value={tags}

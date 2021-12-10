@@ -232,7 +232,13 @@ const RecipePage = () => {
       <form
         onSubmit={(event) => {
           event.preventDefault();
-          handleSubmitFilter();
+          dispatch(
+            getAllRecipes(
+              buildQuery(limit, page, sort, sortOrder),
+              isInExploreMode,
+              userId
+            )
+          );
         }}
       >
         <Grid container spacing={3} style={{ marginBottom: '8px' }}>
@@ -254,21 +260,21 @@ const RecipePage = () => {
                 value={queryFields.calories}
                 name="calories"
                 label="Calories"
-                tooltip='Exact match, Ex: "2000", or separated by comma to search by range, Ex: "0, 2000" or "0," or ",2000"'
+                tooltip='Ex: "2000", or "0, 2000" or "0," or ",2000"'
                 handleChange={handleChangeQueryField}
               />
               <InputWithTooltip
                 value={queryFields.tags}
                 label="Tags"
                 name="tags"
-                tooltip='Separated by comma, Ex: "Main Course, Keto"'
+                tooltip='Ex: "Main Course, Keto"'
                 handleChange={handleChangeQueryField}
               />
               <InputWithTooltip
                 value={queryFields.ingredients}
                 label="Ingredients"
                 name="ingredients"
-                tooltip='Separated by comma, Ex: "Milk, Banana"'
+                tooltip='Ex: "Milk, Banana"'
                 handleChange={handleChangeQueryField}
               />
             </div>
@@ -359,7 +365,7 @@ const RecipePage = () => {
             ))}
             <InputWithTooltip
               label="Tags"
-              tooltip='Separated by comma, Ex: "Main Course, Chicken, Keto"'
+              tooltip='Ex: "Main Course, Chicken, Keto"'
               multiline
               minRows={4}
               value={tags}

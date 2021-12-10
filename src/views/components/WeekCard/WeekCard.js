@@ -283,7 +283,7 @@ const WeekCard = ({ data }) => {
             ))}
             <InputWithTooltip
               label="tags"
-              tooltip='Separated by comma, Ex: "Weight Loss Program, Keto, Vegan"'
+              tooltip='Ex: "Weight Loss Program, Keto, Vegan"'
               multiline
               minRows={4}
               value={tags}
