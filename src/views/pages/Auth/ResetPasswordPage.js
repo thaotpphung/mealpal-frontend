@@ -1,24 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { styles } from './styles';
-import {
-  Avatar,
-  Paper,
-  Grid,
-  Typography,
-  Container,
-  IconButton,
-} from '@material-ui/core';
+import { Grid, IconButton } from '@material-ui/core';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Input from '../../common/Input/Input';
 import BlockButton from '../../common/Buttons/BlockButton';
 import useForm from '../../../utils/hooks/useForm';
 import useToggle from '../../../utils/hooks/useToggle';
 import { validate } from '../../../utils/validations/validate';
 import { resetPassword } from '../../../redux/actions/userActions';
+import AuthCardContainer from './AuthCardContainer';
 
 const initialState = {
   password: '',
@@ -55,47 +48,39 @@ const ResetPasswordPage = () => {
   }, [loggedInUser]);
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Paper className={localClasses.paper} elevation={3}>
-        <Avatar className={localClasses.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          New Password
-        </Typography>
-        <form className={localClasses.form} onSubmit={handleSubmit}>
-          <Grid container spacing={2}>
-            <Input
-              name="password"
-              label="Password"
-              handleChange={handleChange}
-              type={showPassword ? 'text' : 'password'}
-              endAction={
-                <IconButton onClick={toggleShowPassword}>
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              }
-              error={errors?.password}
-            />
-            <Input
-              name="confirmPassword"
-              label="Repeat Password"
-              handleChange={handleChange}
-              type={showPassword ? 'text' : 'password'}
-              endAction={
-                <IconButton onClick={toggleShowPassword}>
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              }
-              error={errors?.confirmPassword}
-            />
-          </Grid>
-          <BlockButton type="submit" fullWidth loading={loading}>
-            Submit
-          </BlockButton>
-        </form>
-      </Paper>
-    </Container>
+    <AuthCardContainer title="Reset Password">
+      <form className={localClasses.form} onSubmit={handleSubmit}>
+        <Grid container spacing={2}>
+          <Input
+            name="password"
+            label="Password"
+            handleChange={handleChange}
+            type={showPassword ? 'text' : 'password'}
+            endAction={
+              <IconButton onClick={toggleShowPassword}>
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            }
+            error={errors?.password}
+          />
+          <Input
+            name="confirmPassword"
+            label="Repeat Password"
+            handleChange={handleChange}
+            type={showPassword ? 'text' : 'password'}
+            endAction={
+              <IconButton onClick={toggleShowPassword}>
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            }
+            error={errors?.confirmPassword}
+          />
+        </Grid>
+        <BlockButton type="submit" fullWidth loading={loading}>
+          Submit
+        </BlockButton>
+      </form>
+    </AuthCardContainer>
   );
 };
 
