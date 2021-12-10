@@ -13,17 +13,18 @@ API.interceptors.request.use((req) => {
   return req;
 });
 
-// cart
-export const sendCart = (userId, cart) =>
-  API.post(`api/users/${userId}/cart`, cart);
-
 // auth
-export const signin = (formData) => API.post('api/users/signin', formData);
-export const register = (formData) => API.post('api/users/register', formData);
-export const updatePassword = (formData) =>
-  API.patch(`api/users/changepassword`, formData);
+export const signin = (formData) => API.post('api/signin', formData);
+export const register = (formData) => API.post('api/register', formData);
+export const updatePassword = (formData) => API.patch(`api/password`, formData);
+// confirm email
 export const sendConfirmationEmail = (formData) =>
-  API.patch(`api/users/email/confirm`, formData);
+  API.post(`api/email/confirm`, formData);
+// forgot password
+export const forgotPassword = (formData) =>
+  API.post(`api/password/reset`, formData);
+export const resetPassword = (formData, token) =>
+  API.patch(`api/password/reset/${token}`, formData);
 
 // users
 export const updateUser = (userId, formData) =>
@@ -32,13 +33,16 @@ export const getUser = (userId, query = '') => {
   const url = `api/users/${userId}${query}`;
   return API.get(url);
 };
+// cart
+export const sendCart = (userId, cart) =>
+  API.post(`api/users/${userId}/cart`, cart);
 
 // weeks
 export const getWeeks = (query, isInExploreMode, userId) => {
   const url = `api/${
     isInExploreMode || !userId ? '' : `users/${userId}/`
-  }weeks${query}`;
-  return API.get(url);
+  }weeks`;
+  return API.get(url, { params: query });
 };
 export const getWeek = (weekId) => API.get(`api/weeks/${weekId}`);
 export const createWeek = (newWeek) => API.post('api/weeks', newWeek);
@@ -47,16 +51,20 @@ export const updateWeek = (weekId, updatedWeek) =>
   API.patch(`api/weeks/${weekId}`, updatedWeek);
 export const updateWeekByDay = (weekId, dayIdx, day) =>
   API.patch(`api/weeks/${weekId}/days/${dayIdx}`, day);
+export const deleteWeeks = (selected, query) =>
+  API.post(`api/weeks/deletes`, { selected, query });
 
 // recipes
 export const getRecipes = (query, isInExploreMode, userId) => {
   const url = `api/${
     isInExploreMode || !userId ? '' : `users/${userId}/`
-  }recipes${query}`;
-  return API.get(url);
+  }recipes`;
+  return API.get(url, { params: query });
 };
 export const createRecipe = (newRecipe) => API.post('api/recipes', newRecipe);
 export const getRecipe = (recipeId) => API.get(`api/recipes/${recipeId}`);
 export const deleteRecipe = (recipeId) => API.delete(`api/recipes/${recipeId}`);
 export const updateRecipe = (recipeId, updatedRecipe) =>
   API.patch(`api/recipes/${recipeId}`, updatedRecipe);
+export const deleteRecipes = (selected, query) =>
+  API.post(`api/recipes/deletes`, { selected, query });

@@ -1,24 +1,37 @@
 import { useState } from 'react';
+import useDidMountEffect from './useDidMountEffect';
 
 const usePagination = (
-  initialState,
+  initialQuery,
   initialLimit,
-  callBack,
-  initialQuery = ''
+  callback,
+  fields,
+  queryTypes
 ) => {
-  const [page, setPage] = useState(1);
-  const [count, setCount] = useState(1); // number of total page on load
-  const [queryFields, setQueryFields] = useState(initialState);
+  const [page, setPage] = useState(0);
+  const [pageCount, setPageCount] = useState(1); // number of total page on load -> pageCount
+  const [queryFields, setQueryFields] = useState({
+    ...initialQuery,
+    page: 0,
+    limit: initialLimit,
+    fields,
+    queryTypes,
+  });
+  const [limit, setLimit] = useState(initialLimit); // number of documents per page
+  const [count, setCount] = useState(0);
+  const [sort, setSort] = useState('updatedTime');
+  const [sortOrder, setSortOder] = useState('desc');
+  const [withCallback, setWithCallback] = useState(true);
 
-  const buildQuery = (page = 1, additionalQuery = '') => {
-    let filterQuery = '?';
-    filterQuery += `limit=${initialLimit}&page=${page}`;
-    filterQuery += initialQuery;
-    Object.entries(queryFields).map(([key, value]) => {
-      if (value !== '' && value !== 0) filterQuery += `&${key}=${value}`;
+  const buildQuery = (newLimit, newPage, newSort, newSortOrder) => {
+    let query = { ...queryFields };
+    Object.entries(query).map(([key, value]) => {
+      if (value === '') delete query[key];
     });
-    filterQuery += additionalQuery;
-    return filterQuery;
+    query.limit = newLimit;
+    query.page = newPage;
+    query.sort = `${newSortOrder === 'desc' ? '-' : ''}${newSort}`;
+    return query;
   };
 
   const handleChangeQueryField = (event) => {
@@ -26,30 +39,56 @@ const usePagination = (
     setQueryFields({ ...queryFields, [name]: value });
   };
 
-  const handleChangePage = (event, value) => {
-    setPage(value);
-    callBack(value);
+  const handleSubmitFilter = () => {
+    callback(limit);
   };
 
-  const handleSubmitFilter = (newCount) => {
-    callBack();
-    setPageCount(newCount);
+  const handleChangePageCount = (newCount) => {
+    const newPageCount = newCount / limit;
+    setCount(newCount);
+    setPageCount(
+      newPageCount !== 1 ? Math.floor(newPageCount) + 1 : newPageCount
+    );
   };
 
-  const setPageCount = (newCount) => {
-    const pageCount = newCount / initialLimit;
-    setCount(pageCount !== 1 ? Math.floor(pageCount) + 1 : pageCount);
+  const handleChangeSort = (newSort, newSortOrder) => {
+    setSort(newSort);
+    setSortOder(newSortOrder);
+    callback(limit, page, newSort, newSortOrder);
+  };
+
+  useDidMountEffect(() => {
+    if (withCallback) callback(limit, page);
+  }, [page, limit, withCallback]);
+
+  const handleChangeLimitAndPage = (
+    newLimit = initialLimit,
+    newPage = 0,
+    newWithCallback = true
+  ) => {
+    if (newPage === 'next') {
+      setPage((prevPage) => prevPage + 1);
+    } else {
+      setPage(newPage);
+    }
+    setLimit(newLimit);
+    setWithCallback(newWithCallback);
   };
 
   return {
     queryFields,
-    count,
+    limit,
+    pageCount,
     page,
+    count,
     buildQuery,
+    sort,
+    sortOrder,
     handleSubmitFilter,
-    handleChangePage,
     handleChangeQueryField,
-    setPageCount,
+    handleChangePageCount,
+    handleChangeLimitAndPage,
+    handleChangeSort,
   };
 };
 

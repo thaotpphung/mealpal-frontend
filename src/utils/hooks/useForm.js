@@ -43,10 +43,15 @@ const useForm = (
     setValues(initialState);
   };
 
+  const resetErrors = () => {
+    setErrors({});
+  };
+
   useEffect(() => {
     if (Object.keys(errors).length === 0 && isSubmitting) {
       callback(...callBackParams);
     }
+    setIsSubmitting(false);
   }, [errors, callBackParams]);
 
   return {
@@ -59,6 +64,7 @@ const useForm = (
     setErrors,
     setValues,
     setError,
+    resetErrors,
   };
 };
 

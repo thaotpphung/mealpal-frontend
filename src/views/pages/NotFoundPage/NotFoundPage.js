@@ -16,7 +16,6 @@ const NotFoundPage = () => {
   return (
     <div className={classes.root}>
       <div className={classes.leftColumn}>
-        {/* <Typography variant="h1">404</Typography> */}
         <img src={NotFoundLogo} alt="Not Found Logo" className={classes.logo} />
       </div>
       <div className={classes.rightColumn}>

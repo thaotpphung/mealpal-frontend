@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Grid,
@@ -20,32 +20,52 @@ import {
 import { updateUser } from '../../../redux/actions/userActions';
 import { addToCartByWeek } from '../../../redux/actions/cartActions';
 import { addAlertWithTimeout } from '../../../redux/actions/alertActions';
-import Input from '../../common/Input/Input';
 import useEditMode from '../../../utils/hooks/useEditMode';
 import useForm from '../../../utils/hooks/useForm';
+import useInput from '../../../utils/hooks/useInput';
 import { formatTime } from '../../../utils/time';
 import { getInitialWeekForm, weekFormFields } from '../../../utils/forms/weeks';
 import RoundButton from '../../common/Buttons/RoundButton';
 import BlockButton from '../../common/Buttons/BlockButton';
+import InputWithTooltip from '../../common/InputWithTooltip/InputWithTooltip';
+import Input from '../../common/Input/Input';
+import TagList from '../../containers/TagList/TagList';
 
-const WeekCard = ({ week }) => {
+const WeekCard = ({ data }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
   const { weekId } = useParams();
   const { loggedInUser } = useSelector((state) => state.user);
+  const { loadingUpdate, error, week } = useSelector((state) => state.week);
   const { openEditMode, toggleOpenEditMode, handleCloseEditMode } = useEditMode(
-    () => reset()
+    () => {
+      reset();
+      resetTags();
+    }
   );
+  const { recipes } = useSelector((state) => state.recipeSearchList);
+  const [tags, handleChangeTags, resetTags] = useInput(
+    data.tags.join(', ').replace(/, ([^,]*)$/, ', $1')
+  );
+
+  useEffect(() => {
+    if (error === '') toggleOpenEditMode(false);
+  }, [week]);
+
   const {
     values: weekForm,
     handleSubmit,
     handleChange,
     errors,
     reset,
-  } = useForm({ ...getInitialWeekForm(true, week) }, () => {
-    dispatch(updateWeek(week._id, weekForm));
-    toggleOpenEditMode(false);
+  } = useForm({ ...getInitialWeekForm(true, data) }, () => {
+    dispatch(
+      updateWeek(data._id, {
+        ...weekForm,
+        tags: tags !== '' ? tags.split(',').map((tag) => tag.trim()) : [],
+      })
+    );
   });
 
   const handleDeleteWeek = (weekId) => {
@@ -66,7 +86,9 @@ const WeekCard = ({ week }) => {
   };
 
   const handleDuplicateWeek = (weekId) => {
-    dispatch(createWeek({ weekId }, history));
+    dispatch(
+      createWeek({ weekId, userId: loggedInUser._id }, history, recipes)
+    );
   };
 
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
@@ -92,7 +114,7 @@ const WeekCard = ({ week }) => {
       onClose={handleMobileMenuClose}
     >
       {loggedInUser &&
-        week?.userId._id === loggedInUser._id &&
+        data?.userId._id === loggedInUser._id &&
         weekId !== loggedInUser.currentWeek && (
           <MenuItem onClick={handleSetCurrentWeek}>
             <RoundButton type="default" />
@@ -100,11 +122,11 @@ const WeekCard = ({ week }) => {
           </MenuItem>
         )}
       {loggedInUser &&
-        week?.userId._id === loggedInUser._id && [
+        data?.userId._id === loggedInUser._id && [
           <MenuItem
             key="addCart"
             onClick={() => {
-              dispatch(addToCartByWeek(week, history));
+              dispatch(addToCartByWeek(data, history));
             }}
           >
             <RoundButton type="shoppingCart" />
@@ -113,17 +135,26 @@ const WeekCard = ({ week }) => {
           <MenuItem
             key="deleteCart"
             onClick={() => {
-              handleDeleteWeek(week?._id);
+              handleDeleteWeek(data?._id);
             }}
           >
             <RoundButton type="delete" />
             <Typography>Delete</Typography>
           </MenuItem>,
         ]}
-      {loggedInUser && week?.userId._id !== loggedInUser._id && (
+      {loggedInUser && data?.userId._id !== loggedInUser._id && (
         <MenuItem key="saveWeek" onClick={() => handleDuplicateWeek(weekId)}>
           <RoundButton type="save" />
           <Typography>Save</Typography>
+        </MenuItem>
+      )}
+      {loggedInUser && data?.userId._id === loggedInUser._id && (
+        <MenuItem
+          key="duplicateWeek"
+          onClick={() => handleDuplicateWeek(data._id)}
+        >
+          <RoundButton type="duplicate" />
+          <Typography>Duplicate</Typography>
         </MenuItem>
       )}
     </Menu>
@@ -136,7 +167,7 @@ const WeekCard = ({ week }) => {
           <Avatar
             aria-label="userAvatar"
             className={classes.avatar}
-            src={week.userId?.avatar}
+            src={data.userId?.avatar}
           />
         }
         action={
@@ -144,7 +175,7 @@ const WeekCard = ({ week }) => {
             {!!loggedInUser && (
               <>
                 {/* all week view */}
-                {!weekId && week._id === loggedInUser.currentWeek && (
+                {!weekId && data._id === loggedInUser.currentWeek && (
                   <>
                     <RoundButton type="default" />
                   </>
@@ -152,7 +183,7 @@ const WeekCard = ({ week }) => {
                 {/* single week view*/}
                 {weekId && (
                   <>
-                    {loggedInUser._id === week.userId._id && (
+                    {loggedInUser._id === data.userId._id && (
                       <>
                         {openEditMode ? (
                           <RoundButton
@@ -182,12 +213,18 @@ const WeekCard = ({ week }) => {
           </>
         }
         title={
-          <Link to={{ pathname: `/weeks/${week._id}` }}>
-            <Typography>{week.weekName}</Typography>
-          </Link>
+          <Typography
+            className={classes.clickable}
+            onClick={() =>
+              history.push(`/users/${data.userId._id}/weeks/${data._id}`)
+            }
+          >
+            {data.name}
+          </Typography>
         }
-        subheader={`Updated ${formatTime(week.updatedTime)}`}
+        subheader={`Updated ${formatTime(data.updatedTime)}`}
       />
+
       <CardContent>
         {!openEditMode && (
           <div>
@@ -195,34 +232,34 @@ const WeekCard = ({ week }) => {
               <Grid item xs={12} lg={12}>
                 <Typography>
                   <strong>Description: </strong>
-                  {week.weekDescription}
+                  {data.description}
                 </Typography>
               </Grid>
               <Grid item xs={12} lg={6}>
                 <Typography>
-                  <strong>Calo Goal: </strong>
-                  {week.caloGoal} kCal
-                </Typography>
-              </Grid>
-              <Grid item xs={12} lg={6}>
-                <Typography>
-                  <strong>Diet: </strong>
-                  {week.weekDiet}
-                </Typography>
-              </Grid>
-              <Grid item xs={12} lg={6}>
-                <Typography>
-                  <strong>Plan Tag: </strong>
-                  {week.planTag}
+                  <strong>Calories/Day: </strong>
+                  {data.calories} kCal
                 </Typography>
               </Grid>
               <Grid item xs={12} lg={6}>
                 <Typography component="span">
                   <strong>Creator: </strong>
-                  <Link to={{ pathname: `/users/${week.userId._id}/profile` }}>
-                    {week.userId.username}
-                  </Link>
                 </Typography>
+                <Typography
+                  component="span"
+                  className={classes.clickable}
+                  onClick={() =>
+                    history.push(`/users/${data.userId._id}/profile`)
+                  }
+                >
+                  {data.userId.username}
+                </Typography>
+              </Grid>
+              <Grid item xs={12} lg={12}>
+                <Typography component="span">
+                  <strong>Tags: </strong>
+                </Typography>
+                <TagList data={data.tags} title="weekCard" />
               </Grid>
             </Grid>
           </div>
@@ -240,17 +277,24 @@ const WeekCard = ({ week }) => {
                 error={errors[field.name]}
                 required={field.required}
                 step={field.step}
+                multiline
+                minRows={field.name === 'description' ? 4 : 0}
               />
             ))}
-            <BlockButton type="submit" fullWidth>
+            <InputWithTooltip
+              label="tags"
+              tooltip='Separated by comma, Ex: "Weight Loss Program, Keto, Vegan"'
+              multiline
+              minRows={4}
+              value={tags}
+              handleChange={handleChangeTags}
+            />
+            <BlockButton type="submit" fullWidth loading={loadingUpdate}>
               Submit
             </BlockButton>
           </form>
         )}
       </CardContent>
-      {/* <CardActions disableSpacing>
-        <RoundButton type="like" />
-      </CardActions> */}
     </Card>
   );
 };

@@ -16,13 +16,14 @@ const Input = ({
   min = 0,
   max = 10000,
   step = 0.01,
+  inputProps,
+  helperText = error,
   ...rest
 }) => {
   const classes = useStyles();
   return (
     <Grid item xs={12} sm={half ? 6 : 12}>
       <TextField
-        {...rest}
         variant="outlined"
         size="small"
         className={classes.inputField}
@@ -34,7 +35,7 @@ const Input = ({
         label={label}
         value={value}
         type={type}
-        helperText={error}
+        helperText={helperText}
         error={error !== undefined}
         disabled={disabled}
         InputProps={{
@@ -46,7 +47,9 @@ const Input = ({
           min: min,
           max: max,
           step: step,
+          ...inputProps,
         }}
+        {...rest}
       />
     </Grid>
   );

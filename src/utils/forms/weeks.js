@@ -1,39 +1,27 @@
 export const weekFormFields = [
   {
-    name: 'weekName',
+    name: 'name',
     label: 'Name',
     required: true,
   },
   {
-    name: 'weekDescription',
+    name: 'description',
     label: 'Description',
     required: false,
   },
   {
-    name: 'caloGoal',
-    label: 'Calo Goal',
+    name: 'calories',
+    label: 'Calories/Day',
     required: true,
     type: 'number',
     step: 0.01,
-  },
-  {
-    name: 'weekDiet',
-    label: 'Diet',
-    required: false,
-  },
-  {
-    name: 'planTag',
-    label: 'Plan Tag',
-    required: false,
   },
 ];
 
 export const getInitialWeekForm = (isPrefilled, week = {}) => {
   return {
-    weekName: isPrefilled ? week.weekName : '',
-    weekDescription: isPrefilled ? week.weekDescription : '',
-    caloGoal: isPrefilled ? week.caloGoal : 0,
-    weekDiet: isPrefilled ? week.weekDiet : '',
-    planTag: isPrefilled ? week.planTag : '',
+    name: isPrefilled ? week.name : '',
+    description: isPrefilled ? week.description : '',
+    calories: isPrefilled ? week.calories : 0,
   };
 };

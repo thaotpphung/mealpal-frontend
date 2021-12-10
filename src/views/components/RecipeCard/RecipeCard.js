@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import useStyles from '../../../app/styles';
 import {
@@ -16,9 +16,12 @@ import {
 } from '@material-ui/core';
 import FileInputComponent from 'react-file-input-previews-base64';
 import Input from '../../common/Input/Input';
+import InputWithTooltip from '../../common/InputWithTooltip/InputWithTooltip';
 import RoundButton from '../../common/Buttons/RoundButton';
 import BlockButton from '../../common/Buttons/BlockButton';
+import TagList from '../../containers/TagList/TagList';
 import useEditMode from '../../../utils/hooks/useEditMode';
+import useInput from '../../../utils/hooks/useInput';
 import { formatTime } from '../../../utils/time';
 import useForm from '../../../utils/hooks/useForm';
 import {
@@ -32,19 +35,27 @@ import {
   recipeFormFields,
 } from '../../../utils/forms/recipes';
 
-const RecipeCard = ({ recipe }) => {
+const RecipeCard = ({ data }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { recipeId } = useParams();
+  const { loadingUpdate, recipe, error } = useSelector((state) => state.recipe);
   const { loggedInUser } = useSelector((state) => state.user);
   const history = useHistory();
   const { openEditMode, toggleOpenEditMode, handleCloseEditMode } = useEditMode(
-    () => reset()
+    () => {
+      reset();
+      resetTags();
+    }
   );
   const initialForm = {
-    ...getInitialRecipeForm(true, recipe),
-    recipeImage: recipe.recipeImage,
+    ...getInitialRecipeForm(true, data),
   };
+
+  const [tags, handleChangeTags, resetTags] = useInput(
+    data.tags.join(', ').replace(/, ([^,]*)$/, ', $1')
+  );
+
   const {
     values: recipeForm,
     handleSubmit,
@@ -53,9 +64,17 @@ const RecipeCard = ({ recipe }) => {
     errors,
     reset,
   } = useForm(initialForm, () => {
-    dispatch(updateRecipe(recipe._id, recipeForm));
-    toggleOpenEditMode(false);
+    dispatch(
+      updateRecipe(data._id, {
+        ...recipeForm,
+        tags: tags !== '' ? tags.split(',').map((tag) => tag.trim()) : [],
+      })
+    );
   });
+
+  useEffect(() => {
+    if (error === '') toggleOpenEditMode(false);
+  }, [recipe]);
 
   const handleSelectFile = (file) => {
     setRecipeForm('recipeImage', file.base64);
@@ -92,11 +111,11 @@ const RecipeCard = ({ recipe }) => {
       onClose={handleMobileMenuClose}
     >
       {loggedInUser &&
-        recipe?.userId._id === loggedInUser._id && [
+        data?.userId._id === loggedInUser._id && [
           <MenuItem
             key="addCart"
             onClick={() => {
-              dispatch(addToCartByRecipe(recipe, history));
+              dispatch(addToCartByRecipe(data, history));
             }}
           >
             <RoundButton type="shoppingCart" />
@@ -105,18 +124,17 @@ const RecipeCard = ({ recipe }) => {
           <MenuItem
             key="deleteCart"
             onClick={() => {
-              handleDeleteRecipe(recipe._id);
+              handleDeleteRecipe(data._id);
             }}
           >
             <RoundButton type="delete" />
             <Typography>Delete</Typography>
           </MenuItem>,
         ]}
-
-      {loggedInUser && recipe?.userId._id !== loggedInUser._id && (
+      {loggedInUser && data?.userId._id !== loggedInUser._id && (
         <MenuItem
-          key="saveWeek"
-          onClick={() => handleDuplicateRecipe(recipeId)}
+          key="saveRecipe"
+          onClick={() => handleDuplicateRecipe(data._id)}
         >
           <RoundButton type="save" />
           <Typography>Save</Typography>
@@ -132,7 +150,7 @@ const RecipeCard = ({ recipe }) => {
           <Avatar
             aria-label="recipe"
             className={classes.avatar}
-            src={recipe.userId?.avatar}
+            src={data.userId?.avatar}
           />
         }
         action={
@@ -140,7 +158,7 @@ const RecipeCard = ({ recipe }) => {
             {/* single recipe view*/}
             {loggedInUser && recipeId && (
               <>
-                {recipe.userId._id === loggedInUser._id && (
+                {data.userId._id === loggedInUser._id && (
                   <>
                     <>
                       {openEditMode ? (
@@ -170,103 +188,128 @@ const RecipeCard = ({ recipe }) => {
           </>
         }
         title={
-          <Link to={{ pathname: `/recipes/${recipe._id}` }}>
-            <Typography>{recipe.recipeName}</Typography>
-          </Link>
+          <Typography
+            className={classes.clickable}
+            onClick={() =>
+              history.push(`/users/${data.userId._id}/recipes/${data._id}`)
+            }
+          >
+            {data.name}
+          </Typography>
         }
-        subheader={`Last Updated ${formatTime(recipe.updatedTime)}`}
+        subheader={`Last Updated ${formatTime(data.updatedTime)}`}
       />
       <CardMedia
         component="img"
-        height="194"
+        height="200"
         image={
-          recipeForm?.recipeImage
-            ? recipeForm?.recipeImage
+          recipeForm.recipeImage
+            ? recipeForm.recipeImage
+            : data.recipeImage?.url
+            ? data.recipeImage.url
             : 'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png'
         }
-        alt={recipe.recipeName}
+        alt={data.name}
       />
+
       <CardContent>
         {!openEditMode && (
           <div>
             <Grid container spacing={1} alignItems="stretch">
               <Grid item xs={12} lg={12}>
-                <Typography>
-                  <strong>Description:</strong> {recipe?.recipeDescription}
+                <Typography className={classes.wordBreak}>
+                  <strong>Description:</strong> {data?.description}
                 </Typography>
               </Grid>
               <Grid item xs={12} lg={6}>
                 <Typography>
-                  <strong>Calories:</strong> {recipe?.calories} kCal
+                  <strong>Calories:</strong> {data?.calories} kCal
                 </Typography>
               </Grid>
               <Grid item xs={12} lg={6}>
                 <Typography>
-                  <strong>Servings:</strong> {recipe?.servings}
+                  <strong>Servings:</strong> {data?.servings}
                 </Typography>
               </Grid>
               <Grid item xs={12} lg={6}>
                 <Typography>
-                  <strong>Diet:</strong> {recipe?.recipeDiet}
+                  <strong>Time (mins):</strong> {data?.time}
                 </Typography>
               </Grid>
               <Grid item xs={12} lg={6}>
                 <Typography>
-                  <strong>Serving Size:</strong> {recipe?.servingSize}
-                </Typography>
-              </Grid>
-              <Grid item xs={12} lg={6}>
-                <Typography>
-                  <strong>Time (mins):</strong> {recipe?.time}
+                  <strong>Serving Size:</strong> {data?.servingSize}
                 </Typography>
               </Grid>
               <Grid item xs={12} lg={6}>
                 <Typography component="span">
                   <strong>Creator: </strong>
-                  <Link
-                    to={{ pathname: `/users/${recipe.userId._id}/profile` }}
-                  >
-                    {recipe.userId.username}
-                  </Link>
                 </Typography>
+                <Typography
+                  component="span"
+                  className={classes.clickable}
+                  onClick={() =>
+                    history.push(`/users/${data.userId._id}/profile`)
+                  }
+                >
+                  {data.userId.username}
+                </Typography>
+              </Grid>
+              <Grid item xs={12} lg={12}>
+                <Typography component="span">
+                  <strong>Tags: </strong>
+                </Typography>
+                <TagList data={data.tags} title="recipeCard" />
               </Grid>
             </Grid>
           </div>
         )}
         {openEditMode && (
-          <form className={classes.formContainer} onSubmit={handleSubmit}>
-            <FileInputComponent
-              labelText=""
-              labelStyle={{ display: 'none' }}
-              multiple={false}
-              callbackFunction={(file) => {
-                handleSelectFile(file);
-              }}
-              imagePreview={false}
-              buttonComponent={
-                <Button variant="outlined" color="primary">
-                  Upload
-                </Button>
-              }
-              accept="image/*"
-              parentStyle={{ textAlign: 'center', margin: '10px' }}
-            />
-            {recipeFormFields.map((field, fieldIdx) => (
-              <Input
-                key={`recipe-update-form-${field.name}-${fieldIdx}`}
-                name={field.name}
-                label={field.label}
-                value={recipeForm[field.name].toString()}
-                handleChange={handleChange}
-                error={errors[field.name]}
-                type={field.type ? field.type : 'text'}
-                required={field.required}
+          <>
+            <form className={classes.formContainer} onSubmit={handleSubmit}>
+              <FileInputComponent
+                labelText=""
+                labelStyle={{ display: 'none' }}
+                multiple={false}
+                callbackFunction={(file) => {
+                  handleSelectFile(file);
+                }}
+                imagePreview={false}
+                buttonComponent={
+                  <Button variant="outlined" color="primary">
+                    Upload
+                  </Button>
+                }
+                accept="image/*"
+                parentStyle={{ textAlign: 'center', margin: '10px' }}
               />
-            ))}
-            <BlockButton type="submit" fullWidth>
-              Submit
-            </BlockButton>
-          </form>
+              {recipeFormFields.map((field, fieldIdx) => (
+                <Input
+                  key={`recipe-update-form-${field.name}-${fieldIdx}`}
+                  name={field.name}
+                  label={field.label}
+                  value={recipeForm[field.name].toString()}
+                  handleChange={handleChange}
+                  error={errors[field.name]}
+                  type={field.type ? field.type : 'text'}
+                  required={field.required}
+                  multiline
+                  minRows={field.name === 'description' ? 4 : 0}
+                />
+              ))}
+              <InputWithTooltip
+                label="Tags"
+                tooltip='Separated by comma, Ex: "Main Course, Chicken, Keto"'
+                multiline
+                minRows={4}
+                value={tags}
+                handleChange={handleChangeTags}
+              />
+              <BlockButton type="submit" fullWidth loading={loadingUpdate}>
+                Submit
+              </BlockButton>
+            </form>
+          </>
         )}
       </CardContent>
     </Card>

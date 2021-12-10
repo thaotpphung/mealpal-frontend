@@ -5,9 +5,9 @@ import useStyles from './styles';
 import DietLogo from '../../../assets/home/undraw_diet.svg';
 import EatingTogetherLogo from '../../../assets/home/undraw_eating_together.svg';
 import ShoppingLogo from '../../../assets/home/undraw_shopping_app.svg';
-import BlockButton from '../../../views/common/Buttons/BlockButton';
+import BlockButton from '../../common/Buttons/BlockButton';
 
-const Home = () => {
+const LandingPage = () => {
   const classes = useStyles();
   const history = useHistory();
 
@@ -29,7 +29,7 @@ const Home = () => {
           <BlockButton
             handleClick={() => {
               history.push({
-                pathname: '/auth',
+                pathname: '/signin',
                 isRedirect: true,
               });
             }}
@@ -73,4 +73,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default LandingPage;
