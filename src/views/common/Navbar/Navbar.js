@@ -29,7 +29,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     dispatch(logout());
-    history.push('/auth');
+    history.push('/signin');
   };
 
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
@@ -122,7 +122,7 @@ const Navbar = () => {
       ) : (
         <MenuItem
           onClick={() => {
-            history.push('/auth');
+            history.push('/signin');
           }}
         >
           <IconButton color="inherit">
@@ -217,7 +217,7 @@ const Navbar = () => {
                     </Link>
                     <Button
                       component={RouterLink}
-                      to="/auth"
+                      to="/signin"
                       color="primary"
                       variant="outlined"
                       className={classes.link}
@@ -229,7 +229,7 @@ const Navbar = () => {
                 ) : (
                   <Button
                     component={RouterLink}
-                    to={'/auth'}
+                    to={'/signin'}
                     color="primary"
                     variant="outlined"
                     className={classes.link}

@@ -29,7 +29,7 @@ const LandingPage = () => {
           <BlockButton
             handleClick={() => {
               history.push({
-                pathname: '/auth',
+                pathname: '/signin',
                 isRedirect: true,
               });
             }}

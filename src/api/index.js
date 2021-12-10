@@ -13,17 +13,18 @@ API.interceptors.request.use((req) => {
   return req;
 });
 
-// cart
-export const sendCart = (userId, cart) =>
-  API.post(`api/users/${userId}/cart`, cart);
-
 // auth
-export const signin = (formData) => API.post('api/users/signin', formData);
-export const register = (formData) => API.post('api/users/register', formData);
-export const updatePassword = (formData) =>
-  API.patch(`api/users/changepassword`, formData);
+export const signin = (formData) => API.post('api/signin', formData);
+export const register = (formData) => API.post('api/register', formData);
+export const updatePassword = (formData) => API.patch(`api/password`, formData);
+// confirm email
 export const sendConfirmationEmail = (formData) =>
-  API.patch(`api/users/email/confirm`, formData);
+  API.post(`api/email/confirm`, formData);
+// forgot password
+export const forgotPassword = (formData) =>
+  API.post(`api/password/reset`, formData);
+export const resetPassword = (formData, token) =>
+  API.patch(`api/password/reset/${token}`, formData);
 
 // users
 export const updateUser = (userId, formData) =>
@@ -32,6 +33,9 @@ export const getUser = (userId, query = '') => {
   const url = `api/users/${userId}${query}`;
   return API.get(url);
 };
+// cart
+export const sendCart = (userId, cart) =>
+  API.post(`api/users/${userId}/cart`, cart);
 
 // weeks
 export const getWeeks = (query, isInExploreMode, userId) => {

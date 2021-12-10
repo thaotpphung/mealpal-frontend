@@ -13,12 +13,16 @@ import WeekDetailsPage from '../views/pages/WeekDetailsPage/WeekDetailsPage';
 import WeekPage from '../views/pages/WeekPage/WeekPage';
 import LandingPage from '../views/pages/LandingPage/LandingPage';
 import CartPage from '../views/pages/CartPage/CartPage';
-import AuthPage from '../views/pages/AuthPage/AuthPage';
 import ProfilePage from '../views/pages/ProfilePage/ProfilePage';
 import RecipePage from '../views/pages/RecipePage/RecipePage';
 import NotFoundPage from '../views/pages/NotFoundPage/NotFoundPage';
 import SuccessPage from '../views/pages/SuccessPage/SuccessPage';
 import RecipeDetailsPage from '../views/pages/RecipeDetailsPage/RecipeDetailsPage';
+
+import ForgotPasswordPage from '../views/pages/Auth/ForgotPasswordPage';
+import ResetPasswordPage from '../views/pages/Auth/ResetPasswordPage';
+import SignInPage from '../views/pages/Auth/SignInPage';
+import SignUpPage from '../views/pages/Auth/SignUpPage';
 
 function App() {
   const classes = useStyles();
@@ -32,6 +36,7 @@ function App() {
         <FlashMessage />
         <div className={classes.container}>
           <Switch>
+            {/* Home Page */}
             <Route
               path="/"
               exact
@@ -41,9 +46,11 @@ function App() {
                   : () => <WeekDetailsPage id={loggedInUser.currentWeek} />
               }
             />
+            {/* All Week Page */}
             {['/users/:userId/weeks', '/weeks'].map((route) => (
               <Route key={route} path={route} exact component={WeekPage} />
             ))}
+            {/* Week Details Page */}
             {['/users/:userId/weeks/:weekId', '/weeks/:weekId'].map((route) => (
               <Route
                 key={route}
@@ -52,9 +59,11 @@ function App() {
                 component={WeekDetailsPage}
               />
             ))}
+            {/* All Recipes Page */}
             {['/users/:userId/recipes', '/recipes'].map((route) => (
               <Route key={route} path={route} exact component={RecipePage} />
             ))}
+            {/* Recipe Details Page */}
             {['/users/:userId/recipes/:recipeId', '/recipes/:recipeId'].map(
               (route) => (
                 <Route
@@ -65,13 +74,31 @@ function App() {
                 />
               )
             )}
+            {/* User Profile */}
             <Route
               path="/users/:userId/profile"
               exact
               component={ProfilePage}
             />
+            {/* Cart Page */}
             {loggedInUser && <Route path="/cart" exact component={CartPage} />}
-            <Route path="/auth" exact component={AuthPage} />
+            {/* Sign In Page */}
+            <Route path="/signin" exact component={SignInPage} />
+            {/* Sign Up Page */}
+            <Route path="/signup" exact component={SignUpPage} />
+            {/* Forgot Password Page */}
+            <Route
+              path="/password/reset"
+              exact
+              component={ForgotPasswordPage}
+            />
+            {/* Reset Password Page */}
+            <Route
+              path="/password/reset/:token"
+              exact
+              component={ResetPasswordPage}
+            />
+            {/* Email Confirm Success Page */}
             {loggedInUser && (
               <Route
                 path="/users/:userId/success"
@@ -79,6 +106,7 @@ function App() {
                 component={SuccessPage}
               />
             )}
+            {/* 404 Error Page */}
             <Route path={'/404'} exact component={NotFoundPage} />
             <Route component={NotFoundPage} />
           </Switch>

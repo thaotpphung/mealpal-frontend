@@ -297,17 +297,6 @@ const DayList = ({ days, userId }) => {
     }
   );
 
-  // const firstUpdate = useRef(true);
-  // useDidMountEffect(() => {
-  //   if (firstUpdate.current) {
-  //     firstUpdate.current = false;
-  //     return;
-  //   }
-  //   if (!firstUpdate.current) {
-  //     handleChangeRecipe(...newRecipeParams, recipe);
-  //   }
-  // }, [recipe]);
-
   useDidMountEffect(() => {
     handleChangeRecipe(...newRecipeParams, recipe);
   }, [recipe]);

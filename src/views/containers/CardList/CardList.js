@@ -4,7 +4,7 @@ import useStyles from '../../../app/styles';
 import Spinner from '../../common/Spinner/Spinner';
 import EmptyMessage from '../../common/EmptyMessage/EmptyMessage';
 
-const ListAll = ({
+const CardList = ({
   component,
   loadingMore,
   loading,
@@ -68,4 +68,4 @@ const ListAll = ({
   return <Spinner />;
 };
 
-export default ListAll;
+export default CardList;

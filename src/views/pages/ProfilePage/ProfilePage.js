@@ -167,7 +167,7 @@ const ProfilePage = () => {
       confirmPassword: '',
     },
     () => {
-      dispatch(updatePassword(loggedInUser._id, passwordForm));
+      dispatch(updatePassword(passwordForm));
       toggleEditPassword(false);
     },
     validate

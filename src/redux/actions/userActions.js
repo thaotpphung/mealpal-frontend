@@ -12,12 +12,23 @@ import {
   USER_UPDATE_PASSWORD_REQUEST,
   USER_UPDATE_PASSWORD_SUCCESS,
   USER_UPDATE_PASSWORD_FAIL,
+  PASSWORD_RESET_REQUEST,
+  PASSWORD_RESET_SUCCESS,
+  PASSWORD_RESET_FAIL,
   USER_SET,
 } from '../constants/userConstants';
 import { addAlertWithTimeout } from '../actions/alertActions';
 import { clearCart } from '../actions/cartActions';
 import * as api from '../../api/index';
-export { signin, register, logout, updateUser, updatePassword, setUser };
+export {
+  signin,
+  register,
+  logout,
+  updateUser,
+  updatePassword,
+  setUser,
+  resetPassword,
+};
 import { errorMessage } from '../../constants/messages';
 
 const signin = (formData) => async (dispatch) => {
@@ -67,6 +78,53 @@ const register = (formData) => async (dispatch) => {
     );
   }
 };
+const updatePassword = (formData) => async (dispatch) => {
+  dispatch({ type: USER_UPDATE_PASSWORD_REQUEST, payload: formData });
+  try {
+    const { data } = await api.updatePassword(formData);
+    dispatch({ type: USER_UPDATE_PASSWORD_SUCCESS, payload: data });
+    localStorage.setItem(
+      'loggedInUser',
+      JSON.stringify({
+        _id: data.data.result._id,
+        token: data.data.token,
+      })
+    );
+    dispatch(addAlertWithTimeout('success', data.message));
+  } catch (error) {
+    dispatch({ type: USER_UPDATE_PASSWORD_FAIL, payload: error });
+    dispatch(
+      addAlertWithTimeout(
+        'error',
+        error.response ? error.response.data.message : errorMessage
+      )
+    );
+  }
+};
+
+const resetPassword = (formData, token) => async (dispatch) => {
+  dispatch({ type: PASSWORD_RESET_REQUEST, payload: formData });
+  try {
+    const { data } = await api.resetPassword(formData, token);
+    dispatch({ type: PASSWORD_RESET_SUCCESS, payload: data });
+    localStorage.setItem(
+      'loggedInUser',
+      JSON.stringify({
+        _id: data.data.result._id,
+        token: data.data.token,
+      })
+    );
+    dispatch(addAlertWithTimeout('success', data.message));
+  } catch (error) {
+    dispatch({ type: PASSWORD_RESET_FAIL, payload: error });
+    dispatch(
+      addAlertWithTimeout(
+        'error',
+        error.response ? error.response.data.message : errorMessage
+      )
+    );
+  }
+};
 
 const logout = () => (dispatch) => {
   localStorage.clear();
@@ -83,23 +141,6 @@ const updateUser = (userId, formData) => async (dispatch) => {
     dispatch(addAlertWithTimeout('success', 'Successfully updated user!'));
   } catch (error) {
     dispatch({ type: USER_UPDATE_FAIL, payload: error });
-    dispatch(
-      addAlertWithTimeout(
-        'error',
-        error.response ? error.response.data.message : errorMessage
-      )
-    );
-  }
-};
-
-const updatePassword = (userId, formData) => async (dispatch) => {
-  dispatch({ type: USER_UPDATE_PASSWORD_REQUEST, payload: formData });
-  try {
-    const { data } = await api.updatePassword(formData);
-    dispatch({ type: USER_UPDATE_PASSWORD_SUCCESS, payload: data });
-    dispatch(addAlertWithTimeout('success', data.message));
-  } catch (error) {
-    dispatch({ type: USER_UPDATE_PASSWORD_FAIL, payload: error });
     dispatch(
       addAlertWithTimeout(
         'error',

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import { styles } from './styles';
@@ -15,7 +15,6 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Input from '../../common/Input/Input';
-import Spinner from '../../common/Spinner/Spinner';
 import BlockButton from '../../common/Buttons/BlockButton';
 import useForm from '../../../utils/hooks/useForm';
 import useToggle from '../../../utils/hooks/useToggle';
@@ -148,13 +147,12 @@ const AuthPage = () => {
             {isRegister ? 'Sign Up' : 'Sign In'}
           </BlockButton>
           <Grid container justifyContent="flex-end">
-            <Grid item>
-              <Button onClick={switchMode}>
-                {isRegister
-                  ? 'Already have an account? Sign in'
-                  : "Don't have an account? Sign Up"}
-              </Button>
-            </Grid>
+            <Button onClick={switchMode}>
+              {isRegister
+                ? 'Already have an account? Sign in'
+                : "Don't have an account? Sign Up"}
+            </Button>
+            <Button onClick={switchMode}>Forgot Password</Button>
           </Grid>
         </form>
       </Paper>

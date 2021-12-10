@@ -12,6 +12,9 @@ import {
   USER_UPDATE_PASSWORD_REQUEST,
   USER_UPDATE_PASSWORD_SUCCESS,
   USER_UPDATE_PASSWORD_FAIL,
+  PASSWORD_RESET_REQUEST,
+  PASSWORD_RESET_SUCCESS,
+  PASSWORD_RESET_FAIL,
   USER_SET,
 } from '../constants/userConstants';
 
@@ -35,6 +38,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
 
     case USER_SIGNIN_REQUEST:
     case USER_REGISTER_REQUEST:
+    case PASSWORD_RESET_REQUEST:
       return { ...state, loading: true, error: '' };
 
     case USER_UPDATE_REQUEST:
@@ -42,28 +46,34 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return { ...state, loadingUpdate: true, error: '' };
 
     case USER_SIGNIN_SUCCESS:
-    case USER_REGISTER_SUCCESS: {
+    case USER_REGISTER_SUCCESS:
+    case PASSWORD_RESET_SUCCESS:
       return {
         ...state,
         loading: false,
         loggedInUser: action.payload.data.result,
         error: '',
       };
-    }
 
-    case USER_UPDATE_SUCCESS: {
+    case USER_UPDATE_PASSWORD_SUCCESS:
+      return {
+        ...state,
+        loadingUpdate: false,
+        loggedInUser: action.payload.data.result,
+        error: '',
+      };
+
+    case USER_UPDATE_SUCCESS:
       return {
         ...state,
         loadingUpdate: false,
         loggedInUser: { ...state.loggedInUser, ...action.payload },
         error: '',
       };
-    }
-    case USER_UPDATE_PASSWORD_SUCCESS:
-      return { ...state, loadingUpdate: false, error: action.payload };
 
     case USER_REGISTER_FAIL:
     case USER_SIGNIN_FAIL:
+    case PASSWORD_RESET_FAIL:
       return { ...state, loading: false, error: action.payload };
 
     case USER_UPDATE_FAIL:
