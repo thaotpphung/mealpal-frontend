@@ -135,14 +135,21 @@ const recipeDetailsReducer = (state = RECIPE_DETAILS_INITIAL_STATE, action) => {
 
     case RECIPE_DETAILS_SUCCESS:
     case RECIPE_CREATE_SUCCESS:
-    case RECIPE_UPDATE_SUCCESS: {
       return {
+        ...state,
         loading: false,
+        recipe: { ...state.recipe, ...action.payload },
+        error: '',
+      };
+
+    case RECIPE_UPDATE_SUCCESS:
+      return {
+        ...state,
         loadingUpdate: false,
         recipe: { ...state.recipe, ...action.payload },
         error: '',
       };
-    }
+
     case RECIPE_DELETE_SUCCESS:
       return { ...state, loading: false, error: '' };
 
