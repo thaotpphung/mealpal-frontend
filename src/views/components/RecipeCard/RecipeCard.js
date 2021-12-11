@@ -193,7 +193,7 @@ const RecipeCard = ({ data }) => {
             {data.name}
           </Typography>
         }
-        subheader={`Last Updated ${formatTime(data.updatedTime)}`}
+        subheader={`Updated ${formatTime(data.updatedTime)}`}
       />
       <CardMedia
         component="img"

@@ -64,7 +64,7 @@ const PaginatedTable = ({
       id: 'updatedTime',
       numeric: false,
       disablePadding: false,
-      label: 'Last Updated',
+      label: 'Updated',
     },
     {
       id: 'username',
