@@ -23,9 +23,11 @@ const WeekDetailsPage = ({ id = '' }) => {
     if (!location.isRedirect) {
       dispatch(getWeek(weekId ? weekId : id));
     }
-    dispatch(
-      getAllRecipesForSearching({ fields: 'name,calories,ingredients' })
-    );
+    if (id == '') {
+      dispatch(
+        getAllRecipesForSearching({ fields: 'name,calories,ingredients' })
+      );
+    }
   }, []);
 
   if (!loading && error) return <EmptyMessage />;
