@@ -4,18 +4,17 @@ import { Grid, Button, Tooltip, Chip } from '@material-ui/core';
 import useStyles from '../../../app/styles';
 import { useHistory, useParams } from 'react-router-dom';
 import SearchIcon from '@material-ui/icons/Search';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 import ExploreOutlinedIcon from '@material-ui/icons/ExploreOutlined';
 import AddBoxOutlinedIcon from '@material-ui/icons/AddBoxOutlined';
 import InputWithTooltip from '../../common/InputWithTooltip/InputWithTooltip';
 import Input from '../../common/Input/Input';
+import AutocompleteTag from '../../common/AutocompleteTag/AutocompleteTag';
 import RoundButton from '../../common/Buttons/RoundButton';
 import PopupDialog from '../../common/PopupDialog/PopupDialog';
 import RecipeCard from '../../components/RecipeCard/RecipeCard';
 import CardList from '../../containers/CardList/CardList';
 import PaginatedTable from '../../containers/PaginatedTable/PaginatedTable';
 import usePagination from '../../../utils/hooks/usePagination';
-import useInput from '../../../utils/hooks/useInput';
 import useEditMode from '../../../utils/hooks/useEditMode';
 import useForm from '../../../utils/hooks/useForm';
 import useToggle from '../../../utils/hooks/useToggle';
@@ -364,28 +363,7 @@ const RecipePage = () => {
                 step={field.step}
               />
             ))}
-            <Autocomplete
-              onChange={(event, value) => {
-                setTags(value);
-              }}
-              multiple
-              options={[]}
-              defaultValue={[]}
-              freeSolo
-              renderTags={(value, getTagProps) =>
-                value.map((option, index) => (
-                  <Chip
-                    key={`tag-${index}`}
-                    label={option}
-                    size="small"
-                    {...getTagProps({ index })}
-                  />
-                ))
-              }
-              renderInput={(params) => (
-                <Input {...params} variant="outlined" label="Tags" />
-              )}
-            />
+            <AutocompleteTag setTags={setTags} />
           </div>
         }
       />
