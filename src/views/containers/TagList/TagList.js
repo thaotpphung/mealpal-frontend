@@ -1,17 +1,7 @@
 import React from 'react';
 import { Chip } from '@material-ui/core';
 import useStyles from '../../../app/styles';
-
-const colors = [
-  '#FBF3DB',
-  '#DDEDEA',
-  '#DDEBF1',
-  '#EAE4F2',
-  '#F4DFEB',
-  '#FBE4E4',
-  '#EBECED',
-  '#FAEBDD',
-];
+import { colors } from '../../../constants/colors';
 
 const TagList = ({ data, title }) => {
   const classes = useStyles();

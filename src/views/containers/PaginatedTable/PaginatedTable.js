@@ -19,6 +19,7 @@ import PaginatedTableToolbar from './PaginatedTableToolbar';
 import Spinner from '../../common/Spinner/Spinner';
 import EmptyMessage from '../../common/EmptyMessage/EmptyMessage';
 import TagList from '../../containers/TagList/TagList';
+import { colors } from '../../../constants/colors';
 
 const PaginatedTable = ({
   handleClickDelete,
@@ -221,6 +222,10 @@ const PaginatedTable = ({
                                 <span key={`row-${index}-tag-${ingredientIdx}`}>
                                   {ingredient.ingredientName !== '' && (
                                     <Chip
+                                      style={{
+                                        backgroundColor:
+                                          colors[ingredientIdx % colors.length],
+                                      }}
                                       label={ingredient.ingredientName}
                                       className={classes.tag}
                                     />
