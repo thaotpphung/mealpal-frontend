@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Grid, Button, Tooltip } from '@material-ui/core';
+import { Grid, Button, Tooltip, Chip } from '@material-ui/core';
 import useStyles from '../../../app/styles';
 import { useHistory, useParams } from 'react-router-dom';
 import SearchIcon from '@material-ui/icons/Search';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import ExploreOutlinedIcon from '@material-ui/icons/ExploreOutlined';
 import AddBoxOutlinedIcon from '@material-ui/icons/AddBoxOutlined';
 import InputWithTooltip from '../../common/InputWithTooltip/InputWithTooltip';
@@ -162,11 +163,11 @@ const RecipePage = () => {
   };
 
   // create recipe dialog
-  const [tags, handleChangeTags, resetTags] = useInput();
+  const [tags, setTags] = useState([]);
   const { openEditMode, toggleOpenEditMode, handleCloseEditMode } = useEditMode(
     () => {
       reset();
-      resetTags();
+      setTags([]);
     }
   );
   const {
@@ -182,7 +183,7 @@ const RecipePage = () => {
         createRecipe(
           {
             ...dialogValue,
-            tags: tags !== '' ? tags.split(',').map((tag) => tag.trim()) : [],
+            tags,
             userId: loggedInUser._id,
           },
           history
@@ -363,13 +364,27 @@ const RecipePage = () => {
                 step={field.step}
               />
             ))}
-            <InputWithTooltip
-              label="Tags"
-              tooltip='Ex: "Main Course, Chicken, Keto"'
-              multiline
-              minRows={4}
-              value={tags}
-              handleChange={handleChangeTags}
+            <Autocomplete
+              onChange={(event, value) => {
+                setTags(value);
+              }}
+              multiple
+              options={[]}
+              defaultValue={[]}
+              freeSolo
+              renderTags={(value, getTagProps) =>
+                value.map((option, index) => (
+                  <Chip
+                    key={`tag-${index}`}
+                    label={option}
+                    size="small"
+                    {...getTagProps({ index })}
+                  />
+                ))
+              }
+              renderInput={(params) => (
+                <Input {...params} variant="outlined" label="Tags" />
+              )}
             />
           </div>
         }

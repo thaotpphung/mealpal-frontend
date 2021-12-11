@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import useStyles from '../../../app/styles';
 import {
+  Chip,
   Card,
   Grid,
   CardHeader,
@@ -16,12 +18,10 @@ import {
 } from '@material-ui/core';
 import FileInputComponent from 'react-file-input-previews-base64';
 import Input from '../../common/Input/Input';
-import InputWithTooltip from '../../common/InputWithTooltip/InputWithTooltip';
 import RoundButton from '../../common/Buttons/RoundButton';
 import BlockButton from '../../common/Buttons/BlockButton';
 import TagList from '../../containers/TagList/TagList';
 import useEditMode from '../../../utils/hooks/useEditMode';
-import useInput from '../../../utils/hooks/useInput';
 import { formatTime } from '../../../utils/time';
 import useForm from '../../../utils/hooks/useForm';
 import {
@@ -42,19 +42,16 @@ const RecipeCard = ({ data }) => {
   const { loadingUpdate, recipe, error } = useSelector((state) => state.recipe);
   const { loggedInUser } = useSelector((state) => state.user);
   const history = useHistory();
+  const [tags, setTags] = useState(data.tags);
   const { openEditMode, toggleOpenEditMode, handleCloseEditMode } = useEditMode(
     () => {
       reset();
-      resetTags();
+      setTags(data.tags);
     }
   );
   const initialForm = {
     ...getInitialRecipeForm(true, data),
   };
-
-  const [tags, handleChangeTags, resetTags] = useInput(
-    data.tags.join(', ').replace(/, ([^,]*)$/, ', $1')
-  );
 
   const {
     values: recipeForm,
@@ -67,7 +64,7 @@ const RecipeCard = ({ data }) => {
     dispatch(
       updateRecipe(data._id, {
         ...recipeForm,
-        tags: tags !== '' ? tags.split(',').map((tag) => tag.trim()) : [],
+        tags,
       })
     );
   });
@@ -297,13 +294,27 @@ const RecipeCard = ({ data }) => {
                   minRows={field.name === 'description' ? 4 : 0}
                 />
               ))}
-              <InputWithTooltip
-                label="Tags"
-                tooltip='Ex: "Main Course, Chicken, Keto"'
-                multiline
-                minRows={4}
-                value={tags}
-                handleChange={handleChangeTags}
+              <Autocomplete
+                onChange={(event, value) => {
+                  setTags(value);
+                }}
+                multiple
+                options={[]}
+                defaultValue={data.tags}
+                freeSolo
+                renderTags={(value, getTagProps) =>
+                  value.map((option, index) => (
+                    <Chip
+                      key={`tag-${index}`}
+                      label={option}
+                      size="small"
+                      {...getTagProps({ index })}
+                    />
+                  ))
+                }
+                renderInput={(params) => (
+                  <Input {...params} variant="outlined" label="Tags" />
+                )}
               />
               <BlockButton type="submit" fullWidth loading={loadingUpdate}>
                 Submit
