@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { styles } from './styles';
 import useStyles from '../../../app/styles';
 import List from '@material-ui/core/List';
-import Tooltip from '@material-ui/core/Tooltip';
 import Chip from '@material-ui/core/Chip';
 import Typography from '@material-ui/core/Typography';
 import ListItem from '@material-ui/core/ListItem';
@@ -15,6 +14,7 @@ import Paper from '@material-ui/core/Paper';
 import CardHeader from '../../common/CardHeader/CardHeader';
 import CardBody from '../../common/CardBody/CardBody';
 import EmptyMessage from '../../common/EmptyMessage/EmptyMessage';
+import TagList from '../../containers/TagList/TagList';
 import RoundButton from '../../common/Buttons/RoundButton';
 import { updateCart, clearCart } from '../../../redux/actions/cartActions';
 import { addAlertWithTimeout } from '../../../redux/actions/alertActions';
@@ -176,13 +176,7 @@ const CartPage = () => {
                             unmountOnExit
                           >
                             <div className={localClasses.nested}>
-                              {value.recipes.map((name, recipeIdx) => (
-                                <Chip
-                                  key={`recipe-name-${name}-${recipeIdx}`}
-                                  className={classes.tag}
-                                  label={name}
-                                />
-                              ))}
+                              <TagList data={value.recipes} />
                             </div>
                           </Collapse>
                         </div>
