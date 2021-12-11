@@ -10,7 +10,9 @@ import {
   Typography,
   Menu,
   MenuItem,
+  Chip,
 } from '@material-ui/core/';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import useStyles from '../../../app/styles';
 import {
   deleteWeek,
@@ -22,12 +24,10 @@ import { addToCartByWeek } from '../../../redux/actions/cartActions';
 import { addAlertWithTimeout } from '../../../redux/actions/alertActions';
 import useEditMode from '../../../utils/hooks/useEditMode';
 import useForm from '../../../utils/hooks/useForm';
-import useInput from '../../../utils/hooks/useInput';
 import { formatTime } from '../../../utils/time';
 import { getInitialWeekForm, weekFormFields } from '../../../utils/forms/weeks';
 import RoundButton from '../../common/Buttons/RoundButton';
 import BlockButton from '../../common/Buttons/BlockButton';
-import InputWithTooltip from '../../common/InputWithTooltip/InputWithTooltip';
 import Input from '../../common/Input/Input';
 import TagList from '../../containers/TagList/TagList';
 
@@ -38,15 +38,13 @@ const WeekCard = ({ data }) => {
   const { weekId } = useParams();
   const { loggedInUser } = useSelector((state) => state.user);
   const { loadingUpdate, error, week } = useSelector((state) => state.week);
+  const [tags, setTags] = useState(data.tags);
+  const { recipes } = useSelector((state) => state.recipeSearchList);
   const { openEditMode, toggleOpenEditMode, handleCloseEditMode } = useEditMode(
     () => {
       reset();
-      resetTags();
+      setTags(data.tags);
     }
-  );
-  const { recipes } = useSelector((state) => state.recipeSearchList);
-  const [tags, handleChangeTags, resetTags] = useInput(
-    data.tags.join(', ').replace(/, ([^,]*)$/, ', $1')
   );
 
   useEffect(() => {
@@ -63,7 +61,7 @@ const WeekCard = ({ data }) => {
     dispatch(
       updateWeek(data._id, {
         ...weekForm,
-        tags: tags !== '' ? tags.split(',').map((tag) => tag.trim()) : [],
+        tags,
       })
     );
   });
@@ -281,13 +279,27 @@ const WeekCard = ({ data }) => {
                 minRows={field.name === 'description' ? 4 : 0}
               />
             ))}
-            <InputWithTooltip
-              label="tags"
-              tooltip='Separated by comma, Ex: "Weight Loss Program, Keto, Vegan"'
-              multiline
-              minRows={4}
-              value={tags}
-              handleChange={handleChangeTags}
+            <Autocomplete
+              onChange={(event, value) => {
+                setTags(value);
+              }}
+              multiple
+              options={[]}
+              defaultValue={data.tags}
+              freeSolo
+              renderTags={(value, getTagProps) =>
+                value.map((option, index) => (
+                  <Chip
+                    key={`tag-${index}`}
+                    label={option}
+                    size="small"
+                    {...getTagProps({ index })}
+                  />
+                ))
+              }
+              renderInput={(params) => (
+                <Input {...params} variant="outlined" label="Tags" />
+              )}
             />
             <BlockButton type="submit" fullWidth loading={loadingUpdate}>
               Submit

@@ -99,7 +99,7 @@ const IngredientCard = ({
                           <Grid item xs={8} lg={3}>
                             <InputWithTooltip
                               label="Amount"
-                              tooltip="Number (Ex: 1) or Number Fraction (ex: 1 1/2)"
+                              tooltip='Ex: "1" or "1 1/2"'
                               value={item.amount.toString}
                               handleChange={(event) => {
                                 handleChangeIngredientEntry(

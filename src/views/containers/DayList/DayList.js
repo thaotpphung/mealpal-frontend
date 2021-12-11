@@ -34,12 +34,8 @@ const DayList = ({ days, userId }) => {
   const { weekId } = useParams();
   const history = useHistory();
   const localClasses = styles();
-  const { loading: loadingRecipeSearchList, recipes } = useSelector(
-    (state) => state.recipeSearchList
-  );
-  const { loading: loadingCreateNewRecipe, recipe } = useSelector(
-    (state) => state.recipe
-  );
+  const { recipes } = useSelector((state) => state.recipeSearchList);
+  const { recipe } = useSelector((state) => state.recipe);
   const { loggedInUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [isInEditDayMode, setIsInEditDayMode] = useState([]);
@@ -703,7 +699,7 @@ const DayList = ({ days, userId }) => {
                                                 <Grid item xs={8} md={6} lg={3}>
                                                   <InputWithTooltip
                                                     label="Amt"
-                                                    tooltip="Number (Ex: 1) or Number Fraction (ex: 1 1/2)"
+                                                    tooltip='Ex: "1" or "1 1/2"'
                                                     value={item.amount.toString}
                                                     handleChange={(event) => {
                                                       handleChangeIngredientEntry(
