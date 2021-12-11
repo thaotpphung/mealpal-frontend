@@ -10,9 +10,7 @@ import {
   Typography,
   Menu,
   MenuItem,
-  Chip,
 } from '@material-ui/core/';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 import useStyles from '../../../app/styles';
 import {
   deleteWeek,
@@ -30,6 +28,7 @@ import RoundButton from '../../common/Buttons/RoundButton';
 import BlockButton from '../../common/Buttons/BlockButton';
 import Input from '../../common/Input/Input';
 import TagList from '../../containers/TagList/TagList';
+import AutocompleteTag from '../../common/AutocompleteTag/AutocompleteTag';
 
 const WeekCard = ({ data }) => {
   const classes = useStyles();
@@ -279,28 +278,7 @@ const WeekCard = ({ data }) => {
                 minRows={field.name === 'description' ? 4 : 0}
               />
             ))}
-            <Autocomplete
-              onChange={(event, value) => {
-                setTags(value);
-              }}
-              multiple
-              options={[]}
-              defaultValue={data.tags}
-              freeSolo
-              renderTags={(value, getTagProps) =>
-                value.map((option, index) => (
-                  <Chip
-                    key={`tag-${index}`}
-                    label={option}
-                    size="small"
-                    {...getTagProps({ index })}
-                  />
-                ))
-              }
-              renderInput={(params) => (
-                <Input {...params} variant="outlined" label="Tags" />
-              )}
-            />
+            <AutocompleteTag setTags={setTags} defaultValue={data.tags} />
             <BlockButton type="submit" fullWidth loading={loadingUpdate}>
               Submit
             </BlockButton>

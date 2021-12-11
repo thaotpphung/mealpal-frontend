@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 import useStyles from '../../../app/styles';
 import {
-  Chip,
   Card,
   Grid,
   CardHeader,
@@ -20,6 +18,7 @@ import FileInputComponent from 'react-file-input-previews-base64';
 import Input from '../../common/Input/Input';
 import RoundButton from '../../common/Buttons/RoundButton';
 import BlockButton from '../../common/Buttons/BlockButton';
+import AutocompleteTag from '../../common/AutocompleteTag/AutocompleteTag';
 import TagList from '../../containers/TagList/TagList';
 import useEditMode from '../../../utils/hooks/useEditMode';
 import { formatTime } from '../../../utils/time';
@@ -294,28 +293,7 @@ const RecipeCard = ({ data }) => {
                   minRows={field.name === 'description' ? 4 : 0}
                 />
               ))}
-              <Autocomplete
-                onChange={(event, value) => {
-                  setTags(value);
-                }}
-                multiple
-                options={[]}
-                defaultValue={data.tags}
-                freeSolo
-                renderTags={(value, getTagProps) =>
-                  value.map((option, index) => (
-                    <Chip
-                      key={`tag-${index}`}
-                      label={option}
-                      size="small"
-                      {...getTagProps({ index })}
-                    />
-                  ))
-                }
-                renderInput={(params) => (
-                  <Input {...params} variant="outlined" label="Tags" />
-                )}
-              />
+              <AutocompleteTag setTags={setTags} defaultValue={data.tags} />
               <BlockButton type="submit" fullWidth loading={loadingUpdate}>
                 Submit
               </BlockButton>
