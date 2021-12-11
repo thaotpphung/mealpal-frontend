@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Grid, Button, Tooltip } from '@material-ui/core';
+import { Grid, Button, Tooltip, Chip } from '@material-ui/core';
 import useStyles from '../../../app/styles';
 import { useHistory, useParams } from 'react-router-dom';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import SearchIcon from '@material-ui/icons/Search';
 import ExploreOutlinedIcon from '@material-ui/icons/ExploreOutlined';
 import AddBoxOutlinedIcon from '@material-ui/icons/AddBoxOutlined';
@@ -14,7 +15,6 @@ import WeekCard from '../../components/WeekCard/WeekCard';
 import CardList from '../../containers/CardList/CardList';
 import PaginatedTable from '../../containers/PaginatedTable/PaginatedTable';
 import usePagination from '../../../utils/hooks/usePagination';
-import useInput from '../../../utils/hooks/useInput';
 import useEditMode from '../../../utils/hooks/useEditMode';
 import useForm from '../../../utils/hooks/useForm';
 import useDidMountEffect from '../../../utils/hooks/useDidMountEffect';
@@ -159,13 +159,14 @@ const WeekPage = () => {
   };
 
   // create week dialog
-  const [tags, handleChangeTags, resetTags] = useInput();
+  const [tags, setTags] = useState([]);
   const { openEditMode, toggleOpenEditMode, handleCloseEditMode } = useEditMode(
     () => {
       reset();
-      resetTags();
+      setTags([]);
     }
   );
+
   const {
     values: dialogValue,
     handleSubmit,
@@ -179,7 +180,7 @@ const WeekPage = () => {
         createWeek(
           {
             ...dialogValue,
-            tags: tags !== '' ? tags.split(',').map((tag) => tag.trim()) : [],
+            tags,
             userId: loggedInUser._id,
           },
           history
@@ -225,7 +226,13 @@ const WeekPage = () => {
       <form
         onSubmit={(event) => {
           event.preventDefault();
-          handleSubmitFilter();
+          dispatch(
+            getAllWeeks(
+              buildQuery(limit, page, sort, sortOrder),
+              isInExploreMode,
+              userId
+            )
+          );
         }}
       >
         <Grid container spacing={3} style={{ marginBottom: '8px' }}>
@@ -247,14 +254,14 @@ const WeekPage = () => {
                 value={queryFields.calories}
                 name="calories"
                 label="Calories"
-                tooltip='Exact match, Ex: "2000", or separated by comma to search by range, Ex: "0, 2000" or "0," or ",2000"'
+                tooltip='Ex: "2000", or "0, 2000" or "0," or ",2000"'
                 handleChange={handleChangeQueryField}
               />
               <InputWithTooltip
                 value={queryFields.tags}
                 label="Tags"
                 name="tags"
-                tooltip='Separated by comma, Ex: "Weight Loss Program, Keto, Vegan"'
+                tooltip='Ex: "Weight Loss Program, Keto, Vegan"'
                 handleChange={handleChangeQueryField}
               />
             </div>
@@ -343,13 +350,27 @@ const WeekPage = () => {
                 step={field.step}
               />
             ))}
-            <InputWithTooltip
-              label="Tags"
-              tooltip='Separated by comma, Ex: "Main Course, Chicken, Keto"'
-              multiline
-              minRows={4}
-              value={tags}
-              handleChange={handleChangeTags}
+            <Autocomplete
+              onChange={(event, value) => {
+                setTags(value);
+              }}
+              multiple
+              options={[]}
+              defaultValue={[]}
+              freeSolo
+              renderTags={(value, getTagProps) =>
+                value.map((option, index) => (
+                  <Chip
+                    key={`tag-${index}`}
+                    label={option}
+                    size="small"
+                    {...getTagProps({ index })}
+                  />
+                ))
+              }
+              renderInput={(params) => (
+                <Input {...params} variant="outlined" label="Tags" />
+              )}
             />
           </div>
         }

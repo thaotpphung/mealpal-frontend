@@ -98,7 +98,7 @@ function App() {
               exact
               component={ResetPasswordPage}
             />
-            {/* Email Confirm Success Page */}
+            {/* Success Page */}
             {loggedInUser && (
               <Route
                 path="/users/:userId/success"
