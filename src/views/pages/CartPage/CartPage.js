@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { styles } from './styles';
 import useStyles from '../../../app/styles';
 import List from '@material-ui/core/List';
-import Chip from '@material-ui/core/Chip';
 import Typography from '@material-ui/core/Typography';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -23,7 +22,6 @@ import { formatMixedNumber } from '../../../utils/mixedNumber';
 import { sendCart } from '../../../api/index';
 
 const CartPage = () => {
-  const classes = useStyles();
   const localClasses = styles();
   const dispatch = useDispatch();
   const { loggedInUser } = useSelector((state) => state.user);
