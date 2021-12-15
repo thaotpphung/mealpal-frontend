@@ -16,7 +16,6 @@ const RecipeDetails = ({ recipe }) => {
   const localClasses = styles();
   const dispatch = useDispatch();
   const { loggedInUser } = useSelector((state) => state.user);
-  const { loadingUpdate } = useSelector((state) => state.recipe);
 
   // instructions
   const {
