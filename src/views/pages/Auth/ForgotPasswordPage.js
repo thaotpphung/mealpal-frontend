@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { styles } from './styles';
-import { Avatar, Paper, Grid, Typography, Container } from '@material-ui/core';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import { Grid } from '@material-ui/core';
 import Input from '../../common/Input/Input';
 import BlockButton from '../../common/Buttons/BlockButton';
 import useForm from '../../../utils/hooks/useForm';

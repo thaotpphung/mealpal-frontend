@@ -139,12 +139,12 @@ const WeekCard = ({ data }) => {
             <Typography>Delete</Typography>
           </MenuItem>,
         ]}
-      {loggedInUser && data?.userId._id !== loggedInUser._id && (
-        <MenuItem key="saveWeek" onClick={() => handleDuplicateWeek(weekId)}>
+      {/* {loggedInUser && data?.userId._id !== loggedInUser._id && (
+        <MenuItem key="saveWeek" onClick={() => handleSaveWeek(data._id)}>
           <RoundButton type="save" />
           <Typography>Save</Typography>
         </MenuItem>
-      )}
+      )} */}
       {loggedInUser && data?.userId._id === loggedInUser._id && (
         <MenuItem
           key="duplicateWeek"
@@ -195,13 +195,15 @@ const WeekCard = ({ data }) => {
                         )}
                       </>
                     )}
-                    <RoundButton
-                      type="more"
-                      aria-label="show more"
-                      aria-controls={mobileMenuId}
-                      aria-haspopup="true"
-                      handleClick={handleMobileMenuOpen}
-                    />
+                    {loggedInUser && data?.userId._id === loggedInUser._id && (
+                      <RoundButton
+                        type="more"
+                        aria-label="show more"
+                        aria-controls={mobileMenuId}
+                        aria-haspopup="true"
+                        handleClick={handleMobileMenuOpen}
+                      />
+                    )}
                   </>
                 )}
               </>
