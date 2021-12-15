@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Grid, Button, Tooltip, Chip } from '@material-ui/core';
+import { Grid, Button, Tooltip } from '@material-ui/core';
 import useStyles from '../../../app/styles';
 import { useHistory, useParams } from 'react-router-dom';
 import SearchIcon from '@material-ui/icons/Search';
