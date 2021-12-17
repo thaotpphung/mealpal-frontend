@@ -24,7 +24,7 @@ import {
   RECIPE_SEARCH_LIST_SUCCESS,
   RECIPE_SEARCH_LIST_FAIL,
 } from '../constants/recipeConstants';
-import { addAlertWithTimeout } from '../actions/alertActions';
+import { addAlertWithTimeout } from './alertActions';
 import * as api from '../../api/index';
 import { errorMessage } from '../../constants/messages';
 

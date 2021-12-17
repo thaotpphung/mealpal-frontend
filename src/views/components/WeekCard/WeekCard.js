@@ -10,7 +10,7 @@ import {
   Typography,
   Menu,
   MenuItem,
-} from '@material-ui/core/';
+} from '@material-ui/core';
 import useStyles from '../../../app/styles';
 import {
   deleteWeek,

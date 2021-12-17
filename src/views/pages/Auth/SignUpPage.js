@@ -23,8 +23,7 @@ const initialState = {
 };
 
 const SignUpPage = () => {
-  const user = useSelector((state) => state.user);
-  const { loading, loggedInUser } = user;
+  const { loading, loggedInUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const history = useHistory();
   const localClasses = styles();

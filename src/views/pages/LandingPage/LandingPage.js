@@ -29,12 +29,12 @@ const LandingPage = () => {
           <BlockButton
             handleClick={() => {
               history.push({
-                pathname: '/signin',
+                pathname: '/signup',
                 isRedirect: true,
               });
             }}
           >
-            Sign Up
+            Join Now
           </BlockButton>
         </Grid>
         <Grid item xs={12} sm={6}>
