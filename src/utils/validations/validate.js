@@ -12,24 +12,9 @@ const validate = (values, optionalFields = []) => {
   return errors;
 };
 
-const validateAuth = (values, isRegister = false) => {
-  let errors = {};
-  if (!isRegister) {
-    errors = validate(values, [
-      'email',
-      'firstName',
-      'lastName',
-      'confirmPassword',
-    ]);
-  } else {
-    errors = validate(values);
-  }
-  return errors;
-};
-
 const validateAmount = (amount) => {
   const regex = /^(\d{1,5})(?: [1-9]\d{0,2}\/[1-9]\d{0,2})?$/;
   const regex2 = /^[1-9]\d{0,2}\/[1-9]\d{0,2}$/;
   return regex.test(amount) || regex2.test(amount);
 };
-export { validate, validateAuth, validateAmount };
+export { validate, validateAmount };

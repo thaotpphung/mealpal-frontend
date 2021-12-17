@@ -17,8 +17,8 @@ import {
   PASSWORD_RESET_FAIL,
   USER_SET,
 } from '../constants/userConstants';
-import { addAlertWithTimeout } from '../actions/alertActions';
-import { clearCart } from '../actions/cartActions';
+import { addAlertWithTimeout } from './alertActions';
+import { clearCart } from './cartActions';
 import * as api from '../../api/index';
 export {
   signin,

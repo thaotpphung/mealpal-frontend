@@ -24,7 +24,7 @@ import {
   WEEK_UPDATE_BY_DAY_SUCCESS,
   WEEK_UPDATE_BY_DAY_FAIL,
 } from '../constants/weekConstants';
-import { addAlertWithTimeout } from '../actions/alertActions';
+import { addAlertWithTimeout } from './alertActions';
 import * as api from '../../api/index';
 import { errorMessage } from '../../constants/messages';
 

@@ -6,7 +6,7 @@ import {
   CART_UPDATE,
   CART_CLEAR,
 } from '../constants/cartConstants';
-import { addAlertWithTimeout } from '../actions/alertActions';
+import { addAlertWithTimeout } from './alertActions';
 export {
   addToCartByRecipe,
   addToCartByMeal,

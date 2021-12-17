@@ -19,8 +19,7 @@ const initialState = {
 };
 
 const ResetPasswordPage = () => {
-  const user = useSelector((state) => state.user);
-  const { loading, loggedInUser } = user;
+  const { loading, loggedInUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const { token } = useParams();
   const history = useHistory();

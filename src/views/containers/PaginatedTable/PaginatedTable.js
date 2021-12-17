@@ -18,7 +18,7 @@ import PaginatedTableHead from './PaginatedTableHead';
 import PaginatedTableToolbar from './PaginatedTableToolbar';
 import Spinner from '../../common/Spinner/Spinner';
 import EmptyMessage from '../../common/EmptyMessage/EmptyMessage';
-import TagList from '../../containers/TagList/TagList';
+import TagList from '../TagList/TagList';
 import { colors } from '../../../constants/colors';
 
 const PaginatedTable = ({
