@@ -3,7 +3,7 @@ import { Typography } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import useStyles from './styles';
 import NotFoundLogo from '../../../assets/undraw_not_found_2.svg';
-import BlockButton from '../../../views/common/Buttons/BlockButton';
+import BlockButton from '../../common/Buttons/BlockButton';
 
 const NotFoundPage = () => {
   const classes = useStyles();

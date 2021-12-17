@@ -217,10 +217,16 @@ const WeekPage = () => {
             </span>
           </Tooltip>
         )}
-        <Button variant="contained" color="primary" onClick={handleChangeView}>
-          {views[view].icon}
-          &nbsp;{views[view].label} View
-        </Button>
+        <Tooltip title="Click to change view" placement="top">
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleChangeView}
+          >
+            {views[view].icon}
+            &nbsp;{views[view].label} View
+          </Button>
+        </Tooltip>
       </div>
       {/* search bar and action */}
       <form
@@ -287,14 +293,19 @@ const WeekPage = () => {
                     <AddBoxOutlinedIcon fontSize="small" />
                     &nbsp;Week
                   </Button>
-                  <Button
-                    variant={isInExploreMode ? 'contained' : 'outlined'}
-                    color="primary"
-                    onClick={handleChangeMode}
+                  <Tooltip
+                    title="View the community's meal plans"
+                    placement="bottom"
                   >
-                    <ExploreOutlinedIcon fontSize="small" />
-                    &nbsp;Explore
-                  </Button>
+                    <Button
+                      variant={isInExploreMode ? 'contained' : 'outlined'}
+                      color="primary"
+                      onClick={handleChangeMode}
+                    >
+                      <ExploreOutlinedIcon fontSize="small" />
+                      &nbsp;Explore
+                    </Button>
+                  </Tooltip>
                 </>
               )}
             </div>

@@ -18,7 +18,6 @@ import RecipePage from '../views/pages/RecipePage/RecipePage';
 import NotFoundPage from '../views/pages/NotFoundPage/NotFoundPage';
 import SuccessPage from '../views/pages/SuccessPage/SuccessPage';
 import RecipeDetailsPage from '../views/pages/RecipeDetailsPage/RecipeDetailsPage';
-
 import ForgotPasswordPage from '../views/pages/Auth/ForgotPasswordPage';
 import ResetPasswordPage from '../views/pages/Auth/ResetPasswordPage';
 import SignInPage from '../views/pages/Auth/SignInPage';

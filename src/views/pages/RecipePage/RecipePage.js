@@ -223,10 +223,16 @@ const RecipePage = () => {
             </span>
           </Tooltip>
         )}
-        <Button variant="contained" color="primary" onClick={handleChangeView}>
-          {views[view].icon}
-          &nbsp;{views[view].label} View
-        </Button>
+        <Tooltip title="Click to change view" placement="top">
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleChangeView}
+          >
+            {views[view].icon}
+            &nbsp;{views[view].label} View
+          </Button>
+        </Tooltip>
       </div>
       {/* search bar and action */}
       <form
@@ -300,14 +306,19 @@ const RecipePage = () => {
                     <AddBoxOutlinedIcon fontSize="small" />
                     &nbsp;Recipe
                   </Button>
-                  <Button
-                    variant={isInExploreMode ? 'contained' : 'outlined'}
-                    color="primary"
-                    onClick={handleChangeMode}
+                  <Tooltip
+                    title="View the community's recipes"
+                    placement="bottom"
                   >
-                    <ExploreOutlinedIcon fontSize="small" />
-                    &nbsp;Explore
-                  </Button>
+                    <Button
+                      variant={isInExploreMode ? 'contained' : 'outlined'}
+                      color="primary"
+                      onClick={handleChangeMode}
+                    >
+                      <ExploreOutlinedIcon fontSize="small" />
+                      &nbsp;Explore
+                    </Button>
+                  </Tooltip>
                 </>
               )}
             </div>
